@@ -1,12 +1,13 @@
 {
   "name": "common-energy",
   "version": "0.1.0",
-  "repository": "https://github.com/flyingsaucerstudio/common-energy",
+  "repository": "https://github.com/CommonEnergy/comenergy-customer-portal",
   "license": "MIT",
   "scripts": {
     "dev": "next",
     "start": "NODE_ENV=production node server.js",
-    "build": "next build && next export -o /public"
+    "build": "next build",
+    "export": "next export"
   },
   "dependencies": {
     "auth0-js": "^9.8.2",
