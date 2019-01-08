@@ -14,7 +14,6 @@ export default class Highlight extends React.Component {
         textToHighlight={this.props.content}
         searchWords={[`${this.props.highlight}`]}
         highlightStyle={{
-          color: 'var(--color-primary)',
           backgroundColor: 'transparent',
           fontWeight: '700'
         }}

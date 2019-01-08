@@ -22,8 +22,11 @@ export default class LogoIcon extends React.Component {
         <style jsx>{`
           svg {
             display: block;
-            width: 50%;
-            margin: 1.5em auto;
+            width: ${this.props.small ? '33%' : '50%'};
+            margin-top: 1.5em;
+            margin-bottom: ${this.props.small ? '1em' : '1.5em'};
+            margin-left: 0;
+            margin-right: ${this.props.small ? '0' : 'auto'};
           }
         `}</style>
       </svg>
