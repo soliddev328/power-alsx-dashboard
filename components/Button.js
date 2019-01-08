@@ -1,4 +1,5 @@
 import React from 'react';
+import Router from 'next/router';
 import ArrowIcon from './Icons/ArrowIcon';
 import FacebookIcon from './Icons/FacebookIcon';
 
@@ -42,6 +43,7 @@ export default class Button extends React.Component {
             display: flex;
             justify-content: center;
             align-items: center;
+            max-width: 350px;
             font-size: 0.875rem;
             font-family: var(--font-primary);
             font-weight: 800;
@@ -56,11 +58,11 @@ export default class Button extends React.Component {
               : '1px solid var(--color-primary)'};
             padding: 1.15em 0;
             border-radius: 1px;
-            margin: 1em 0;
+            margin: 1em auto;
           }
 
           button.share {
-            margin: 3em 0;
+            margin: 3em auto;
             margin-bottom: 1.5em;
           }
 

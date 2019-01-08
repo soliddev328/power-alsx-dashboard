@@ -1,11 +1,28 @@
 import React from 'react';
+import * as snippet from '@segment/snippet';
 import Document, { Head, Main, NextScript } from 'next/document';
 import settings from '../settings.json';
+
+const ANALYTICS_WRITE_KEY = '';
+const NODE_ENV = 'development';
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx) {
     const initialProps = await Document.getInitialProps(ctx);
     return { ...initialProps };
+  }
+
+  renderSnippet() {
+    const opts = {
+      apiKey: ANALYTICS_WRITE_KEY,
+      page: true // Set this to `false` if you want to manually fire `analytics.page()` from within your pages.
+    };
+
+    if (NODE_ENV === 'development') {
+      return snippet.max(opts);
+    }
+
+    return snippet.min(opts);
   }
 
   render() {
@@ -16,7 +33,7 @@ export default class MyDocument extends Document {
           <meta httpEquiv="x-ua-compatible" content="ie=edge" />
           <meta
             name="viewport"
-            content="width=device-width,minimum-scale=1, user-scalable=no"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no user-scalable=no"
           />
           <meta name="robots" content="noindex,nofollow" />
           <meta name="googlebot" content="noindex,nofollow" />
@@ -133,6 +150,12 @@ export default class MyDocument extends Document {
           <meta name="twitter:image" content="https://url/static/OG.jpg" />
           <meta name="twitter:image:alt" content="" />
           <link rel="stylesheet" href="/static/global.css" />
+          <script
+            src={`https://maps.googleapis.com/maps/api/js?key=${
+              settings.meta.gmapsApiKey
+            }&libraries=places`}
+          />
+          <script dangerouslySetInnerHTML={{ __html: this.renderSnippet() }} />
         </Head>
 
         <body>

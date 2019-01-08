@@ -22,14 +22,16 @@ export default class RadioCard extends React.Component {
 
         <div className="radiocard__container">
           <h3>
-            <span className="number">{this.props.number}</span>
+            <span className="control" />
             {this.props.heading}
           </h3>
-          <Highlight
-            className="paragraph"
-            content={this.props.content}
-            highlight={this.props.highlight}
-          />
+          {this.props.content && (
+            <Highlight
+              className="paragraph"
+              content={this.props.content}
+              highlight={this.props.highlight}
+            />
+          )}
         </div>
 
         <span className="shadow" />
@@ -51,6 +53,21 @@ export default class RadioCard extends React.Component {
           .radiocard__input:indeterminate + .radiocard__container {
             opacity: 1;
           }
+
+          .radiocard__input:checked + .radiocard__container > * > *,
+          .radiocard__input:checked + .radiocard__container > * {
+            color: var(--color-bg-secondary) !important;
+          }
+
+          .radiocard__input:checked + .radiocard__container {
+            color: var(--color-bg-secondary) !important;
+            background-color: var(--color-primary);
+          }
+
+          .radiocard__input:checked + .radiocard__container h3 .control {
+            border: 0.625rem solid var(--color-bg-secondary);
+            background-color: var(--color-secondary);
+          }
         `}</style>
         <style jsx>{`
           label {
@@ -64,21 +81,7 @@ export default class RadioCard extends React.Component {
             align-items: center;
             font-size: 1.05rem;
             letter-spacing: 0.62px;
-            margin-top: 0;
-          }
-
-          .number {
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            width: 2rem;
-            height: 2rem;
-            font-family: var(--font-primary);
-            font-size: 1rem;
-            color: var(--color-secondary);
-            border: 1px solid var(--color-primary);
-            border-radius: 50%;
-            margin-right: 1em;
+            margin: 0.5em auto;
           }
 
           .shadow {
@@ -96,12 +99,30 @@ export default class RadioCard extends React.Component {
             z-index: 1;
           }
 
+          .control {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--color-bg-secondary);
+            width: 2rem;
+            height: 2rem;
+            font-family: var(--font-primary);
+            font-size: 1rem;
+            color: var(--color-secondary);
+            border: 1px solid var(--color-primary);
+            border-radius: 50%;
+            margin-right: 1em;
+          }
+
           .radiocard__container {
             position: relative;
             background-color: var(--color-bg-primary);
+            border: 1px solid var(--color-primary);
             border-radius: 5px;
             padding: 10px;
-            transition: opacity 200ms cubic-bezier(0.39, 0.575, 0.565, 1);
+            transition: opacity 200ms cubic-bezier(0.39, 0.575, 0.565, 1),
+              color 200ms cubic-bezier(0.39, 0.575, 0.565, 1),
+              background-color 200ms cubic-bezier(0.39, 0.575, 0.565, 1);
             z-index: 10;
           }
         `}</style>

@@ -33,12 +33,25 @@ export default class SingleStep extends React.Component {
 
   render() {
     return (
-      <Fragment>
-        {this.props.title && <p className="title">{this.props.title}</p>}
-        {this.props.prefix && this.renderPrefix()}
+      <div className="content">
+        <div className="heading">
+          {this.props.toast && <p className="title">{this.props.toast}</p>}
+          {this.props.prefix && this.renderPrefix()}
+          {this.props.title && <p className="title">{this.props.title}</p>}
+        </div>
+        {this.props.image && (
+          <figure>
+            <img src={this.props.image.src} alt={this.props.image.alt} />
+          </figure>
+        )}
         {this.props.children}
         {this.props.suffix && this.renderSuffix()}
         <style jsx>{`
+          .content {
+            max-width: 80%;
+            height: 75%;
+            margin: 0 auto;
+          }
           p {
             font-size: 1.1rem;
             text-align: center;
@@ -46,6 +59,13 @@ export default class SingleStep extends React.Component {
             line-height: 1.44;
           }
           p.title {
+            color: #000;
+            margin-bottom: 0;
+          }
+          p.title + p.title {
+            margin-top: 0;
+          }
+          .heading {
             margin-bottom: 1.5em;
           }
           p.prefix,
@@ -54,6 +74,12 @@ export default class SingleStep extends React.Component {
             font-size: 1rem;
             opacity: 0.5;
             font-weight: 400;
+          }
+          figure {
+            margin: 0;
+          }
+          img {
+            max-width: 100%;
           }
         `}</style>
         <style jsx global>{`
@@ -68,7 +94,7 @@ export default class SingleStep extends React.Component {
             font-weight: 400;
           }
         `}</style>
-      </Fragment>
+      </div>
     );
   }
 }

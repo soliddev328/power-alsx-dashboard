@@ -1,4 +1,7 @@
 import React from 'react';
+import GiftIcon from './Icons/GiftIcon';
+import MoneyIcon from './Icons/MoneyIcon';
+import SignupIcon from './Icons/SignupIcon';
 import CrossIcon from './Icons/CrossIcon';
 import DiscountIcon from './Icons/DiscountIcon';
 import CalendarIcon from './Icons/CalendarIcon';
@@ -18,23 +21,41 @@ export default class BulletItem extends React.Component {
       return <CalendarIcon />;
     } else if (this.props.bulletIcon === 'co2') {
       return <Co2Icon />;
+    } else if (this.props.bulletIcon === 'signup') {
+      return <SignupIcon />;
+    } else if (this.props.bulletIcon === 'gift') {
+      return <GiftIcon />;
+    } else if (this.props.bulletIcon === 'money') {
+      return <MoneyIcon />;
     }
   }
 
   render() {
     return (
       <div className="wrapper">
-        {this.props.bulletIcon && this.BulletIcon()}
+        <div className="icon">{this.props.bulletIcon && this.BulletIcon()}</div>
         <p>{this.props.content}</p>
         <style jsx>{`
           .wrapper {
-            margin: 1em 0;
+            display: grid;
+            grid-template-columns: 1fr 5fr;
+            align-items: center;
+            margin: 0;
+            margin-bottom: 10px;
+          }
+
+          .wrapper .icon {
+            display: flex;
+            align-self: center;
+            justify-self: flex-end;
           }
 
           p {
             display: inline;
-            font-size: 1.125rem;
+            color: var(--color-font);
+            font-size: 0.8rem;
             font-weight: 800;
+            margin: 0;
             margin-left: 1.5em;
             opacity: 1;
           }
