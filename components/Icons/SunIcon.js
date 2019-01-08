@@ -29,7 +29,7 @@ export default class SunIcon extends React.Component {
             justify-content: center;
             align-items: center;
             position: relative;
-            margin: 0 5px;
+            margin: 5px;
             overflow: hidden;
             transition: all 300ms ease-in-out;
           }
