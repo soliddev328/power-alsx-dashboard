@@ -14,18 +14,20 @@ class Dashboard extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
-  }
-
-  static async getInitialProps({ query }) {
-    const props = {
-      code: query.code
+    this.state = {
+      name: ''
     };
-
-    return props;
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    let storedName = '';
+
+    if (localStorage.getItem('username')) {
+      storedName = JSON.parse(localStorage.getItem('username'));
+    }
+
+    this.setState({ name: storedName });
+  }
 
   renderDashboard() {
     return (
@@ -35,61 +37,63 @@ class Dashboard extends React.Component {
           <div className="user-data">
             <h2>
               Welcome{' '}
-              <span className="highlight">
-                Jane{' '}
-                <svg
-                  width="49px"
-                  height="41px"
-                  viewBox="0 0 49 41"
-                  version="1.1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  xmlnsXlink="http://www.w3.org/1999/xlink"
-                >
-                  <g
-                    id="Page-1"
-                    stroke="none"
-                    strokeWidth="1"
-                    fill="none"
-                    fillRule="evenodd"
-                    strokeLinecap="square"
+              {this.state.name && (
+                <span className="highlight">
+                  {this.state.name.firstName}{' '}
+                  <svg
+                    width="49px"
+                    height="41px"
+                    viewBox="0 0 49 41"
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlnsXlink="http://www.w3.org/1999/xlink"
                   >
                     <g
-                      id="01-dashboard-mobile"
-                      transform="translate(-192.000000, -87.000000)"
-                      stroke="#41EF8B"
-                      strokeWidth="4"
+                      id="Page-1"
+                      stroke="none"
+                      strokeWidth="1"
+                      fill="none"
+                      fillRule="evenodd"
+                      strokeLinecap="square"
                     >
                       <g
-                        id="burst"
-                        transform="translate(221.291499, 101.518692) scale(-1, 1) rotate(-35.000000) translate(-221.291499, -101.518692) translate(197.791499, 89.000000)"
+                        id="01-dashboard-mobile"
+                        transform="translate(-192.000000, -87.000000)"
+                        stroke="#41EF8B"
+                        strokeWidth="4"
                       >
-                        <path
-                          d="M22.9677322,0.219626168 L22.9677322,12.5309289"
-                          id="Line-3"
-                        />
-                        <path
-                          d="M34.7430452,7.46904606 L34.6664713,18.9201941"
-                          id="Line-3-Copy"
-                          transform="translate(34.704758, 13.194620) rotate(43.000000) translate(-34.704758, -13.194620) "
-                        />
-                        <path
-                          d="M9.58463414,7.13720049 L9.50806023,18.5883485"
-                          id="Line-3-Copy-2"
-                          transform="translate(9.546347, 12.862775) scale(-1, 1) rotate(43.000000) translate(-9.546347, -12.862775) "
-                        />
-                        <path
-                          d="M10.0582353,24.7496981 L0.0361764282,24.7496981"
-                          id="Line-2"
-                        />
-                        <path
-                          d="M46.9554315,24.7496981 L36.9333727,24.7496981"
-                          id="Line-2-Copy"
-                        />
+                        <g
+                          id="burst"
+                          transform="translate(221.291499, 101.518692) scale(-1, 1) rotate(-35.000000) translate(-221.291499, -101.518692) translate(197.791499, 89.000000)"
+                        >
+                          <path
+                            d="M22.9677322,0.219626168 L22.9677322,12.5309289"
+                            id="Line-3"
+                          />
+                          <path
+                            d="M34.7430452,7.46904606 L34.6664713,18.9201941"
+                            id="Line-3-Copy"
+                            transform="translate(34.704758, 13.194620) rotate(43.000000) translate(-34.704758, -13.194620) "
+                          />
+                          <path
+                            d="M9.58463414,7.13720049 L9.50806023,18.5883485"
+                            id="Line-3-Copy-2"
+                            transform="translate(9.546347, 12.862775) scale(-1, 1) rotate(43.000000) translate(-9.546347, -12.862775) "
+                          />
+                          <path
+                            d="M10.0582353,24.7496981 L0.0361764282,24.7496981"
+                            id="Line-2"
+                          />
+                          <path
+                            d="M46.9554315,24.7496981 L36.9333727,24.7496981"
+                            id="Line-2-Copy"
+                          />
+                        </g>
                       </g>
                     </g>
-                  </g>
-                </svg>
-              </span>
+                  </svg>
+                </span>
+              )}
             </h2>
             <NotificationIcon number="2" />
           </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import Router from 'next/router';
 import { Formik, Form } from 'formik';
+import axios from 'axios';
 import GeoSuggest from '../../components/GeoSuggest';
 import Header from '../../components/Header';
 import Input from '../../components/Input';
@@ -16,18 +17,15 @@ class Step2 extends React.Component {
     };
   }
 
-  static async getInitialProps({ query }) {
-    const props = {
-      name: {
-        firstName: query.firstName,
-        lastName: query.lastName
-      }
-    };
+  componentDidMount() {
+    let storedName = '';
 
-    return props;
+    if (localStorage.getItem('username')) {
+      storedName = JSON.parse(localStorage.getItem('username'));
+    }
+
+    this.setState({ name: storedName });
   }
-
-  componentDidMount() {}
 
   capitalize(word) {
     return word && word[0].toUpperCase() + word.slice(1);
@@ -49,7 +47,7 @@ class Step2 extends React.Component {
         <Header />
         <SingleStep
           toast={`Nice to meet you ${this.capitalize(
-            this.props.name.firstName
+            this.state.name.firstName
           )}.`}
           title="What is your home address?"
         >
@@ -59,14 +57,30 @@ class Step2 extends React.Component {
               apt: ''
             }}
             onSubmit={values => {
-              Router.push({
-                pathname: '/onboarding/step3',
-                query: {
-                  firstName: this.props.name.firstName,
-                  lastName: this.props.name.lastName,
-                  street: values.address.description,
-                  postalCode: this.getPostalCode(values),
-                  apt: values.apt
+              const address = {
+                street: values.address.description,
+                postalCode: this.getPostalCode(values),
+                apt: values.apt ? values.apt : ''
+              };
+
+              localStorage.setItem('address', JSON.stringify(address));
+
+              axios(
+                `https://comenergy-api-staging.herokuapp.com/v1/zipcodes/${
+                  address.postalCode
+                }`
+              ).then(response => {
+                if (
+                  response.data.data.geostatus != 'Live' &&
+                  response.data.data.geostatus != 'Near-Term'
+                ) {
+                  Router.push({
+                    pathname: '/onboarding/sorry'
+                  });
+                } else {
+                  Router.push({
+                    pathname: '/onboarding/step3'
+                  });
                 }
               });
             }}

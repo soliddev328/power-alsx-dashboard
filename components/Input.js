@@ -26,7 +26,7 @@ export default class Input extends React.Component {
           validate={this.props.required}
           onInvalid={this.applyValidation}
           onInput={this.customSetCustomValidity}
-          autoComplete={this.props.autocomplete}
+          autoComplete={this.props.autoComplete}
           autoFocus={this.props.autoFocus}
           {...this.props}
         />
