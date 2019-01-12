@@ -1,22 +1,30 @@
 import React from 'react';
 import Router from 'next/router';
-import { Formik, Form } from 'formik';
 import Header from '../../components/Header';
-import Input from '../../components/Input';
 import SingleStep from '../../components/SingleStep';
 import Button from '../../components/Button';
 import CTA from '../../components/CTA';
 
-class Step13 extends React.Component {
+class Step12 extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      shared: false
+      shared: false,
+      canonicalUrl: ''
     };
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    const canonicalUrl =
+      document.querySelector("meta[property='canonical']") || null;
+
+    if (canonicalUrl) {
+      this.setState({
+        canonicalUrl: canonicalUrl.getAttribute('content')
+      });
+    }
+  }
 
   share() {
     this.setState({ shared: true });
@@ -40,18 +48,26 @@ class Step13 extends React.Component {
           <Button
             primary
             onClick={() => {
+              localStorage.setItem('usercreated', true);
               Router.push({
-                pathname: '/dashboard',
-                query: {
-                  code: 1
-                }
+                pathname: '/dashboard'
               });
             }}
             disabled={!this.state.shared}
           >
             Finish!
           </Button>
-          <CTA secondary>Skip this step</CTA>
+          <CTA
+            secondary
+            onClick={() => {
+              localStorage.setItem('usercreated', true);
+              Router.push({
+                pathname: '/dashboard'
+              });
+            }}
+          >
+            Skip this step
+          </CTA>
         </SingleStep>
         <style jsx>{`
           main {
@@ -65,4 +81,4 @@ class Step13 extends React.Component {
   }
 }
 
-export default Step13;
+export default Step12;

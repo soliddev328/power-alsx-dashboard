@@ -7,6 +7,10 @@ import Input from '../../components/Input';
 import SingleStep from '../../components/SingleStep';
 import Button from '../../components/Button';
 import CTA from '../../components/CTA';
+import CONSTANTS from '../../globals';
+
+const { API } =
+  CONSTANTS.NODE_ENV !== 'production' ? CONSTANTS.dev : CONSTANTS.prod;
 
 class Step7 extends React.Component {
   constructor(props) {
@@ -58,15 +62,12 @@ class Step7 extends React.Component {
             }}
             onSubmit={values => {
               axios
-                .put(
-                  'https://comenergy-api-staging.herokuapp.com/v1/subscribers/utilities/link',
-                  {
-                    leadId: this.state.leadId,
-                    utility: this.state.utility,
-                    utilityUsername: values.utilityUser,
-                    utilityPwd: values.utilityPassword
-                  }
-                )
+                .put(`${API}/v1/subscribers/utilities/link`, {
+                  leadId: this.state.leadId,
+                  utility: this.state.utility,
+                  utilityUsername: values.utilityUser,
+                  utilityPwd: values.utilityPassword
+                })
                 .then(function(response) {
                   localStorage.setItem(
                     'linkedUtility',

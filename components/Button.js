@@ -1,5 +1,4 @@
 import React from 'react';
-import Router from 'next/router';
 import ArrowIcon from './Icons/ArrowIcon';
 import FacebookIcon from './Icons/FacebookIcon';
 

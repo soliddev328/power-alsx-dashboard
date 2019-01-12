@@ -94,7 +94,7 @@ class Step8 extends React.Component {
     return (
       <main>
         <Header />
-        {this.state.linkedUtility && !this.state.linkedUtility.data
+        {this.state.linkedUtility && this.state.linkedUtility.data
           ? this.renderLoader()
           : this.renderManualConnect()}
         <style jsx>{`

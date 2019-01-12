@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import Router from 'next/router';
 import { CardElement, injectStripe } from 'react-stripe-elements';
+import Button from '../components/Button';
+import CONSTANTS from '../globals';
+
+const { API } =
+  CONSTANTS.NODE_ENV !== 'production' ? CONSTANTS.dev : CONSTANTS.prod;
 
 class CheckoutForm extends Component {
   constructor(props) {
@@ -8,29 +14,83 @@ class CheckoutForm extends Component {
     this.submit = this.submit.bind(this);
   }
 
-  async submit(ev) {
-    debugger;
-    let { token } = await this.props.stripe.createToken({
-      name: this.props.name
-    });
+  componentDidMount() {
+    let storedLeadId = '';
 
-    let response = await axios.post('/charge', {
-      stripeToken: token.id,
-      email: this.props.email,
-      leadId: this.props.leadId
-    });
+    if (localStorage.getItem('leadId')) {
+      storedLeadId = localStorage.getItem('leadId');
+    }
 
-    console.log(response);
+    this.setState({ leadId: storedLeadId });
+  }
 
-    if (response.ok) console.log('Purchase Complete!');
+  submit(ev) {
+    ev.preventDefault();
+    if (this.props.stripe) {
+      this.props.stripe.createToken({ type: 'card' }).then(payload => {
+        axios.put(`${API}/v1/subscribers`, {
+          leadId: this.state.leadId,
+          stripeToken: payload.id
+        });
+        Router.push({
+          pathname: '/onboarding/step12'
+        });
+      });
+    } else {
+      console.log('Form submitted before Stripe.js loaded.');
+    }
   }
 
   render() {
     return (
       <div className="checkout">
-        <p>Would you like to complete the purchase?</p>
-        <CardElement />
-        <button onClick={this.submit}>Send</button>
+        <div className="card">
+          <CardElement
+            style={{
+              base: {
+                color: 'var(--color-primary)',
+                fontSize: '16px',
+                fontFamily: '"Poppins", sans-serif',
+                fontSmoothing: 'antialiased',
+                '::placeholder': {
+                  color: '#2479ff'
+                }
+              },
+              invalid: {
+                color: '#e5424d',
+                ':focus': {
+                  color: '#303238'
+                }
+              }
+            }}
+          />
+        </div>
+        <Button primary onClick={this.submit}>
+          Next
+        </Button>
+        <style jsx>{`
+          .card {
+            margin: 2rem 0;
+          }
+        `}</style>
+        <style jsx global>{`
+          .StripeElement {
+            background-color: white;
+            padding: 0.8em 1em;
+            border-radius: 3px;
+            border: 1px solid transparent;
+            caret-color: var(--color-secondary);
+            transition: box-shadow 200ms ease-in;
+          }
+
+          .StripeElement--invalid {
+            border-color: #fa755a;
+          }
+
+          .StripeElement--webkit-autofill {
+            background-color: #fefde5 !important;
+          }
+        `}</style>
       </div>
     );
   }

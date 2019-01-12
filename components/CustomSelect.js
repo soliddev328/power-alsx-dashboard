@@ -1,6 +1,10 @@
 import React from 'react';
 import Select, { components } from 'react-select';
 import axios from 'axios';
+import CONSTANTS from '../globals';
+
+const { API } =
+  CONSTANTS.NODE_ENV !== 'production' ? CONSTANTS.dev : CONSTANTS.prod;
 
 export default class CustomSelect extends React.Component {
   constructor(props) {
@@ -37,9 +41,7 @@ export default class CustomSelect extends React.Component {
   getOptions(code) {
     if (code && this.state.options === null) {
       let newOptions = [];
-      axios(
-        `https://comenergy-api-staging.herokuapp.com/v1/zipcodes/${code}`
-      ).then(response => {
+      axios(`${API}/v1/zipcodes/${code}`).then(response => {
         const utilities = response.data.data.utilities.split(',');
         const terms =
           response.data.data.agreement.termsLink ||

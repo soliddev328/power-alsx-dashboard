@@ -7,6 +7,10 @@ import Input from '../../components/Input';
 import Phoneinput from '../../components/Phoneinput';
 import SingleStep from '../../components/SingleStep';
 import Button from '../../components/Button';
+import CONSTANTS from '../../globals';
+
+const { API } =
+  CONSTANTS.NODE_ENV !== 'production' ? CONSTANTS.dev : CONSTANTS.prod;
 
 class Step5 extends React.Component {
   constructor(props) {
@@ -40,15 +44,12 @@ class Step5 extends React.Component {
             }}
             onSubmit={values => {
               axios
-                .post(
-                  'https://comenergy-api-staging.herokuapp.com/v1/subscribers',
-                  {
-                    FirstName: this.state.name.firstName,
-                    LastName: this.state.name.lastName,
-                    Phone: values.phoneNumber,
-                    Email: values.emailAddress
-                  }
-                )
+                .post(`${API}/v1/subscribers`, {
+                  FirstName: this.state.name.firstName,
+                  LastName: this.state.name.lastName,
+                  Phone: values.phoneNumber,
+                  Email: values.emailAddress
+                })
                 .then(function(response) {
                   localStorage.setItem('leadId', response.data.data.leadId);
                   Router.push({
