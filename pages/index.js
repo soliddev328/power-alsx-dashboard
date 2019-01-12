@@ -26,12 +26,9 @@ class Index extends React.Component {
               lastName: ''
             }}
             onSubmit={values => {
+              localStorage.setItem('username', JSON.stringify(values));
               Router.push({
-                pathname: '/onboarding/step2',
-                query: {
-                  firstName: values.firstName,
-                  lastName: values.lastName
-                }
+                pathname: '/onboarding/step2'
               });
             }}
             render={props => (

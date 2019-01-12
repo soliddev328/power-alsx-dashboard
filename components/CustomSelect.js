@@ -7,45 +7,23 @@ export default class CustomSelect extends React.Component {
     super(props);
 
     this.state = {
-      options: this.getOptions(props.postalCode)
+      address: '',
+      options: null
     };
   }
 
-  getOptions(code) {
-    let options = [];
+  componentDidMount() {
+    let storedAddress = '';
 
-    axios
-      .get(`https://comenergy-api-staging.herokuapp.com/v1/zipcodes/${code}`)
-      .then(function(response) {
-        // debugger;
-        // options.push({
-        // })
-        console.log(response.data);
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
+    if (localStorage.getItem('address')) {
+      storedAddress = localStorage.getItem('address');
+    }
 
-    options.push(
-      {
-        code: '1',
-        image: {
-          src: '/static/images/utilities/pg&e.png',
-          altText: 'Utility logo'
-        },
-        label: 'PG&E'
-      },
-      {
-        code: '0',
-        image: {
-          src: '/static/images/utilities/placeholder.png',
-          altText: 'Utility logo'
-        },
-        label: 'None'
-      }
-    );
+    this.setState({ address: JSON.parse(storedAddress) });
+  }
 
-    return options;
+  componentDidUpdate() {
+    this.getOptions(this.state.address.postalCode);
   }
 
   handleChange = value => {
@@ -56,26 +34,42 @@ export default class CustomSelect extends React.Component {
     this.props.onBlur(this.props.fieldname, true);
   };
 
-  render() {
-    const options = [
-      {
-        code: '1',
-        image: {
-          src: '/static/images/utilities/pg&e.png',
-          altText: 'Utility logo'
-        },
-        label: 'PG&E'
-      },
-      {
-        code: '0',
-        image: {
-          src: '/static/images/utilities/placeholder.png',
-          altText: 'Utility logo'
-        },
-        label: 'None'
-      }
-    ];
+  getOptions(code) {
+    if (code && this.state.options === null) {
+      let newOptions = [];
+      axios(
+        `https://comenergy-api-staging.herokuapp.com/v1/zipcodes/${code}`
+      ).then(response => {
+        const utilities = response.data.data.utilities.split(',');
+        const terms =
+          response.data.data.agreement.termsLink ||
+          response.data.data.agreement.link ||
+          '';
+        const conditions =
+          response.data.data.agreement.conditionsLink ||
+          response.data.data.agreement.link ||
+          '';
 
+        utilities.map((item, i) => {
+          const imageName = item.replace(/\s/g, '');
+          newOptions.push({
+            code: i + 1,
+            image: {
+              src: `/static/images/utilities/${imageName}.png`,
+              altText: 'Utility logo'
+            },
+            terms: terms,
+            conditions: conditions,
+            label: item
+          });
+        });
+
+        this.setState({ options: newOptions });
+      });
+    }
+  }
+
+  render() {
     const { Option } = components;
     const CustomOption = props => (
       <Option {...props}>
@@ -88,37 +82,40 @@ export default class CustomSelect extends React.Component {
       </Option>
     );
     const getOptionValue = option => option.code;
-
     return (
-      <div style={{ margin: '1rem 0' }}>
-        <label className="select__label" htmlFor={this.props.fieldname}>
-          {this.props.label}
-        </label>
-        <Select
-          isSearchable={false}
-          components={{
-            SingleValue: CustomOption,
-            Option: props => (
-              <Option {...props}>
-                <img
-                  className="select__option-icon"
-                  src={props.data.image.src}
-                  alt={props.data.image.altText}
-                />
-                {props.data.label}
-              </Option>
-            )
-          }}
-          getOptionValue={getOptionValue}
-          className="select__wrapper"
-          classNamePrefix="select"
-          id={this.props.fieldname}
-          name={this.props.fieldname}
-          options={this.state.options ? this.state.options : options}
-          onChange={this.handleChange}
-          onBlur={this.handleBlur}
-          value={this.props.value}
-        />
+      <React.Fragment>
+        {this.state.options && (
+          <div style={{ margin: '1rem 0' }}>
+            <label className="select__label" htmlFor={this.props.fieldname}>
+              {this.props.label}
+            </label>
+            <Select
+              isSearchable={false}
+              components={{
+                SingleValue: CustomOption,
+                Option: props => (
+                  <Option {...props}>
+                    <img
+                      className="select__option-icon"
+                      src={props.data.image.src}
+                      alt={props.data.image.altText}
+                    />
+                    {props.data.label}
+                  </Option>
+                )
+              }}
+              getOptionValue={getOptionValue}
+              className="select__wrapper"
+              classNamePrefix="select"
+              id={this.props.fieldname}
+              name={this.props.fieldname}
+              options={this.state.options}
+              onChange={this.handleChange}
+              onBlur={this.handleBlur}
+              value={this.props.value}
+            />
+          </div>
+        )}
         <style jsx global>{`
           .select__label {
             pointer-events: none;
@@ -173,12 +170,6 @@ export default class CustomSelect extends React.Component {
             font-weight: 700;
           }
 
-           {
-            /* .select__option + div {
-            display: none;
-          } */
-          }
-
           .select__option-icon {
             display: inline-block;
             width: 30px;
@@ -186,7 +177,7 @@ export default class CustomSelect extends React.Component {
             background-color: #fff;
           }
         `}</style>
-      </div>
+      </React.Fragment>
     );
   }
 }
