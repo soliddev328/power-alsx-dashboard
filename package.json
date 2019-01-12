@@ -1,18 +1,18 @@
 {
   "name": "common-energy",
   "version": "0.1.0",
-  "repository": "https://github.com/CommonEnergy/comenergy-customer-portal",
+  "repository": "https://github.com/flyingsaucerstudio/common-energy",
   "license": "MIT",
   "scripts": {
     "dev": "next",
     "start": "NODE_ENV=production node server.js",
-    "build": "next build",
-    "export": "next export"
+    "build": "next build && next export -o /public"
   },
   "dependencies": {
     "@segment/snippet": "^4.4.0",
     "axios": "^0.18.0",
     "formik": "^1.4.0",
+    "formik-persist": "^1.1.0",
     "next": "^7.0.2",
     "next-ga": "^2.3.4",
     "prop-types": "^15.6.2",
@@ -22,8 +22,10 @@
     "react-ga": "^2.5.3",
     "react-geosuggest": "^2.9.0",
     "react-highlight-words": "^0.14.0",
+    "react-phone-input-auto-format": "^0.1.0",
     "react-select": "^2.2.0",
     "react-spinners": "^0.4.8",
+    "react-stripe-elements": "^2.0.1",
     "yup": "^0.26.6"
   },
   "devDependencies": {

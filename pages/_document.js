@@ -150,6 +150,7 @@ export default class MyDocument extends Document {
           <meta name="twitter:image" content="https://url/static/OG.jpg" />
           <meta name="twitter:image:alt" content="" />
           <link rel="stylesheet" href="/static/global.css" />
+          <script src="https://js.stripe.com/v3/" />
           <script
             src={`https://maps.googleapis.com/maps/api/js?key=${
               settings.meta.gmapsApiKey

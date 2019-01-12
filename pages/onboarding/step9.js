@@ -10,18 +10,6 @@ import CTA from '../../components/CTA';
 class Step9 extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      name: ''
-    };
-  }
-
-  static async getInitialProps({ query }) {
-    const props = {
-      name: query.name
-    };
-
-    return props;
   }
 
   componentDidMount() {}
@@ -47,7 +35,7 @@ class Step9 extends React.Component {
             primary
             onClick={() => {
               Router.push({
-                pathname: '/onboarding/step11'
+                pathname: '/onboarding/step10'
               });
             }}
           >

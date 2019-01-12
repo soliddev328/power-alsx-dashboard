@@ -4,36 +4,26 @@ import { Formik, Form } from 'formik';
 import axios from 'axios';
 import Header from '../../components/Header';
 import Input from '../../components/Input';
+import Phoneinput from '../../components/Phoneinput';
 import SingleStep from '../../components/SingleStep';
 import Button from '../../components/Button';
 
 class Step5 extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      acceptedTermsAndConditions: ''
-    };
   }
 
-  static async getInitialProps({ query }) {
-    const props = {
-      name: {
-        firstName: query.firstName,
-        lastName: query.lastName
-      },
-      address: {
-        street: query.street,
-        apt: query.apt
-      },
-      currentUtility: query.currentUtility,
-      acceptedTermsAndConditions: query.acceptedTermsAndConditions
-    };
+  componentDidMount() {
+    let storedName = '';
 
-    return props;
+    if (localStorage.getItem('username')) {
+      storedName = JSON.parse(localStorage.getItem('username'));
+    }
+
+    this.setState({
+      name: storedName
+    });
   }
-
-  componentDidMount() {}
 
   render() {
     return (
@@ -49,27 +39,20 @@ class Step5 extends React.Component {
               emailAddress: ''
             }}
             onSubmit={values => {
-              const props = this.props;
               axios
                 .post(
                   'https://comenergy-api-staging.herokuapp.com/v1/subscribers',
                   {
-                    FirstName: props.name.firstName,
-                    LastName: props.name.lastName,
+                    FirstName: this.state.name.firstName,
+                    LastName: this.state.name.lastName,
                     Phone: values.phoneNumber,
                     Email: values.emailAddress
                   }
                 )
                 .then(function(response) {
+                  localStorage.setItem('leadId', response.data.data.leadId);
                   Router.push({
-                    pathname: '/onboarding/step6',
-                    query: {
-                      name: props.name.firstName,
-                      address: props.address.street,
-                      currentUtility: props.currentUtility,
-                      phoneNumber: values.phoneNumber,
-                      emailAddress: values.emailAddress
-                    }
+                    pathname: '/onboarding/step6'
                   });
                 })
                 .catch(function(error) {
@@ -77,26 +60,30 @@ class Step5 extends React.Component {
                 });
             }}
             render={props => (
-              <React.Fragment>
-                <Form>
-                  <Input type="tel" label="Phone" fieldname="phoneNumber" />
-                  <Input
-                    type="email"
-                    label="Email"
-                    fieldname="emailAddress"
-                    required
-                  />
-                  <Button
-                    primary
-                    disabled={
-                      !props.values.phoneNumber != '' ||
-                      !props.values.emailAddress != ''
-                    }
-                  >
-                    Next
-                  </Button>
-                </Form>
-              </React.Fragment>
+              <Form>
+                <Phoneinput
+                  value={props.values.phoneNumber}
+                  onChangeEvent={props.setFieldValue}
+                  onBlurEvent={props.setFieldTouched}
+                  label="Phone"
+                  fieldname="phoneNumber"
+                />
+                <Input
+                  type="email"
+                  label="Email"
+                  fieldname="emailAddress"
+                  required
+                />
+                <Button
+                  primary
+                  disabled={
+                    !props.values.phoneNumber != '' ||
+                    !props.values.emailAddress != ''
+                  }
+                >
+                  Next
+                </Button>
+              </Form>
             )}
           />
         </SingleStep>

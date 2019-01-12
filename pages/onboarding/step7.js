@@ -1,6 +1,7 @@
 import React from 'react';
 import Router from 'next/router';
 import { Formik, Form } from 'formik';
+import axios from 'axios';
 import Header from '../../components/Header';
 import Input from '../../components/Input';
 import SingleStep from '../../components/SingleStep';
@@ -12,19 +13,27 @@ class Step7 extends React.Component {
     super(props);
 
     this.state = {
-      name: ''
+      currentUtility: ''
     };
   }
 
-  static async getInitialProps({ query }) {
-    const props = {
-      name: query.name
-    };
+  componentDidMount() {
+    let storedLeadId = '';
+    let storedUtility = '';
 
-    return props;
+    if (localStorage.getItem('leadId')) {
+      storedLeadId = localStorage.getItem('leadId');
+    }
+
+    if (localStorage.getItem('utility')) {
+      storedUtility = JSON.parse(localStorage.getItem('utility'));
+    }
+
+    this.setState({
+      leadId: storedLeadId,
+      utility: storedUtility.label
+    });
   }
-
-  componentDidMount() {}
 
   render() {
     return (
@@ -34,34 +43,52 @@ class Step7 extends React.Component {
           toast="Ok great."
           title="Now let's connect your account and get you saving!"
         >
+          {this.state.currentUtility && (
+            <figure>
+              <img
+                src={this.state.currentUtility.image.src}
+                alt={this.state.currentUtility.image.altText}
+              />
+            </figure>
+          )}
           <Formik
             initialValues={{
               utilityUser: '',
               utilityPassword: ''
             }}
             onSubmit={values => {
-              Router.push({
-                pathname: '/onboarding/step8',
-                query: {
-                  utilityUser: values.utilityUser,
-                  utilityPassword: values.utilityPassword
-                }
-              });
+              axios
+                .put(
+                  'https://comenergy-api-staging.herokuapp.com/v1/subscribers/utilities/link',
+                  {
+                    leadId: this.state.leadId,
+                    utility: this.state.utility,
+                    utilityUsername: values.utilityUser,
+                    utilityPwd: values.utilityPassword
+                  }
+                )
+                .then(function(response) {
+                  localStorage.setItem(
+                    'linkedUtility',
+                    JSON.stringify(response.data)
+                  );
+                  Router.push({
+                    pathname: '/onboarding/step8'
+                  });
+                })
+                .catch(function(error) {
+                  console.log(error);
+                });
             }}
             render={props => (
               <React.Fragment>
-                <figure>
-                  <img
-                    src="/static/images/utilities/brand.png"
-                    alt="national grid brand logo"
-                  />
-                </figure>
                 <Form>
                   <Input label="User name" fieldname="utilityUser" />
                   <Input
                     type="password"
                     label="Password"
                     fieldname="utilityPassword"
+                    autoComplete="no"
                   />
                   <Button
                     primary

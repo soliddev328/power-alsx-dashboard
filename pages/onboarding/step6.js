@@ -1,6 +1,7 @@
 import React from 'react';
 import Router from 'next/router';
 import { Formik, Form } from 'formik';
+import axios from 'axios';
 import Header from '../../components/Header';
 import RadioCard from '../../components/RadioCard';
 import SingleStep from '../../components/SingleStep';
@@ -9,21 +10,31 @@ import Button from '../../components/Button';
 class Step6 extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      name: ''
-    };
   }
 
-  static async getInitialProps({ query }) {
-    const props = {
-      name: query.name
-    };
+  componentDidMount() {
+    let storedLeadId = '';
+    let storedUtility = '';
+    let storedAgreementChecked = false;
 
-    return props;
+    if (localStorage.getItem('leadId')) {
+      storedLeadId = localStorage.getItem('leadId');
+    }
+    if (localStorage.getItem('utility')) {
+      storedUtility = JSON.parse(localStorage.getItem('utility'));
+    }
+    if (localStorage.getItem('acceptedTermsAndConditions')) {
+      storedAgreementChecked = JSON.parse(
+        localStorage.getItem('acceptedTermsAndConditions')
+      );
+    }
+
+    this.setState({
+      leadId: storedLeadId,
+      utility: storedUtility.label,
+      agreedTermsAndConditions: storedAgreementChecked
+    });
   }
-
-  componentDidMount() {}
 
   render() {
     return (
@@ -38,12 +49,24 @@ class Step6 extends React.Component {
               billingMethod: ''
             }}
             onSubmit={values => {
-              Router.push({
-                pathname: '/onboarding/step7',
-                query: {
-                  billingMethod: values.billingMethod
-                }
-              });
+              localStorage.setItem('billingMethod', JSON.stringify(values));
+              axios
+                .put(
+                  'https://comenergy-api-staging.herokuapp.com/v1/subscribers',
+                  {
+                    leadId: this.state.leadId,
+                    agreementChecked: this.state.agreedTermsAndConditions,
+                    utility: this.state.utility
+                  }
+                )
+                .then(function(response) {
+                  Router.push({
+                    pathname: '/onboarding/step7'
+                  });
+                })
+                .catch(function(error) {
+                  console.log(error);
+                });
             }}
             render={props => (
               <React.Fragment>

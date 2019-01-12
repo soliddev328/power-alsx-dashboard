@@ -6,31 +6,12 @@ import SingleStep from '../../components/SingleStep';
 import Button from '../../components/Button';
 import CustomSelect from '../../components/CustomSelect';
 
-class Step2 extends React.Component {
+class Step3 extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      address: ''
-    };
   }
 
-  static async getInitialProps({ query }) {
-    const props = {
-      name: { firstName: query.firstName, lastName: query.lastName },
-      address: {
-        street: query.street,
-        postalCode: query.postalCode,
-        apt: query.apt
-      }
-    };
-
-    return props;
-  }
-
-  componentDidMount() {
-    console.log(this.props.address.postalCode);
-  }
+  componentDidMount() {}
 
   render() {
     return (
@@ -42,36 +23,38 @@ class Step2 extends React.Component {
               currentUtility: ''
             }}
             onSubmit={values => {
+              localStorage.setItem(
+                'utility',
+                JSON.stringify(values.currentUtility)
+              );
+
               Router.push({
-                pathname: '/onboarding/step4',
-                query: {
-                  firstName: this.props.name.firstName,
-                  lastName: this.props.name.lastName,
-                  street: this.props.address.street,
-                  apt: this.props.address.apt,
-                  currentUtility: values.currentUtility.code
-                }
+                pathname: '/onboarding/step4'
               });
             }}
-            render={props => (
-              <React.Fragment>
-                <Form>
-                  <CustomSelect
-                    postalCode={this.props.address.postalCode}
-                    value={props.values.currentUtility}
-                    onChange={props.setFieldValue}
-                    onBlur={props.setFieldTouched}
-                    error={props.errors.topics}
-                    touched={props.touched.topics}
-                    label="Utility Name"
-                    fieldname="currentUtility"
-                  />
-                  <Button primary disabled={!props.values.currentUtility != ''}>
-                    Next
-                  </Button>
-                </Form>
-              </React.Fragment>
-            )}
+            render={props => {
+              return (
+                <React.Fragment>
+                  <Form>
+                    <CustomSelect
+                      value={props.values.currentUtility}
+                      onChange={props.setFieldValue}
+                      onBlur={props.setFieldTouched}
+                      error={props.errors.topics}
+                      touched={props.touched.topics}
+                      label="Utility Name"
+                      fieldname="currentUtility"
+                    />
+                    <Button
+                      primary
+                      disabled={!props.values.currentUtility != ''}
+                    >
+                      Next
+                    </Button>
+                  </Form>
+                </React.Fragment>
+              );
+            }}
           />
         </SingleStep>
         <style jsx>{`
@@ -86,4 +69,4 @@ class Step2 extends React.Component {
   }
 }
 
-export default Step2;
+export default Step3;
