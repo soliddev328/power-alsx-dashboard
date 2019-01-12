@@ -15,18 +15,22 @@ class Dashboard extends React.Component {
     super(props);
 
     this.state = {
-      name: ''
+      isAbleToSeeDashboard: ''
     };
   }
 
   componentDidMount() {
+    let usercreated = '';
     let storedName = '';
 
+    if (localStorage.getItem('usercreated')) {
+      usercreated = localStorage.getItem('usercreated');
+    }
     if (localStorage.getItem('username')) {
       storedName = JSON.parse(localStorage.getItem('username'));
     }
 
-    this.setState({ name: storedName });
+    this.setState({ isAbleToSeeDashboard: usercreated, name: storedName });
   }
 
   renderDashboard() {
@@ -102,7 +106,7 @@ class Dashboard extends React.Component {
         <section>
           <div className="pane">
             <h2>
-              Hey Jane <span className="accent">!</span>
+              Hey {this.state.name.firstName} <span className="accent">!</span>
             </h2>
             <p>
               Lorem ipsum dolor, sit amet consectetur adipisicing elit.
@@ -159,6 +163,10 @@ class Dashboard extends React.Component {
             align-items: center;
           }
 
+          .user-data h2 {
+            font-size: 1.6rem;
+          }
+
           .pane {
             background-color: var(--color-bg-primary);
             border: 1px solid var(--color-primary);
@@ -187,7 +195,7 @@ class Dashboard extends React.Component {
             position: absolute;
             right: 0;
             top: 0;
-            transform: translate(50%, -15%);
+            transform: translate(40%, -15%) scale(0.8);
           }
         `}</style>
       </main>
@@ -223,7 +231,9 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    return this.props.code == 1 ? this.renderDashboard() : this.renderError();
+    return this.state.isAbleToSeeDashboard
+      ? this.renderDashboard()
+      : this.renderError();
   }
 }
 

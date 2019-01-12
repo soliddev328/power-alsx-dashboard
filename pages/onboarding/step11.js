@@ -1,17 +1,15 @@
 import React from 'react';
-import Router from 'next/router';
-import { Formik, Form } from 'formik';
 import { Elements, StripeProvider } from 'react-stripe-elements';
-
 import Header from '../../components/Header';
 import SingleStep from '../../components/SingleStep';
-import Button from '../../components/Button';
-import Input from '../../components/Input';
-import CTA from '../../components/CTA';
-import BankCard from '../../components/BankCard';
+import Plaid from '../../components/Plaid';
 import Checkout from '../../components/Checkout';
+import CONSTANTS from '../../globals';
 
-class Step12 extends React.Component {
+const { STRIPE_KEY } =
+  CONSTANTS.NODE_ENV !== 'production' ? CONSTANTS.dev : CONSTANTS.prod;
+
+class Step11 extends React.Component {
   constructor(props) {
     super(props);
 
@@ -23,120 +21,23 @@ class Step12 extends React.Component {
     };
   }
 
-  static async getInitialProps({ query }) {
-    const props = {
-      paymentMethod: query.paymentMethod
-    };
-
-    return props;
-  }
-
   componentDidMount() {
-    this.setState({ stripe: window.Stripe('pk_test_12345') });
+    let storedPaymentMethod = '';
+
+    if (localStorage.getItem('paymentMethod')) {
+      storedPaymentMethod = JSON.parse(localStorage.getItem('paymentMethod'));
+    }
+
+    this.setState({
+      paymentMethod: storedPaymentMethod.paymentMethod,
+      stripe: window.Stripe(STRIPE_KEY)
+    });
   }
 
   renderBankLink() {
     return (
       <SingleStep title="Link your account">
-        <div className="container">
-          <BankCard
-            code="1"
-            accent="#1A59A3"
-            image={{
-              src: '/static/images/banks/Chase.png',
-              altText: 'Chase bank logo'
-            }}
-          />
-          <BankCard
-            code="2"
-            largeIcon
-            accent="#D4373A"
-            image={{
-              src: '/static/images/banks/BofA.png',
-              altText: 'Bank of America logo'
-            }}
-          />
-          <BankCard
-            code="3"
-            accent="#C33239"
-            image={{
-              src: '/static/images/banks/WellsFargo.png',
-              altText: 'Wells fargo logo'
-            }}
-          />
-          <BankCard
-            code="4"
-            accent="#23407F"
-            image={{
-              src: '/static/images/banks/Citi.png',
-              altText: 'Citi logo'
-            }}
-          />
-          <BankCard
-            code="5"
-            accent="#011E6F"
-            image={{
-              src: '/static/images/banks/USBank.png',
-              altText: 'United States Bank Stadium logo'
-            }}
-          />
-          <BankCard
-            code="6"
-            accent="#0F3155"
-            image={{
-              src: '/static/images/banks/USAA.png',
-              altText: 'USAA logo'
-            }}
-          />
-          <BankCard
-            code="7"
-            accent="#789633"
-            image={{
-              src: '/static/images/banks/Fidelity.png',
-              altText: 'Fidelity logo'
-            }}
-          />
-          <BankCard
-            code="8"
-            accent="#EB8535"
-            image={{
-              src: '/static/images/banks/PNC.png',
-              altText: 'PNC logo'
-            }}
-          />
-          <BankCard
-            code="9"
-            accent="#C33E39"
-            image={{
-              src: '/static/images/banks/CapitalOne.png',
-              altText: 'Capital One logo'
-            }}
-          />
-          <BankCard
-            code="10"
-            accent="#55AF57"
-            image={{
-              src: '/static/images/banks/TD.png',
-              altText: 'TD Bank logo'
-            }}
-          />
-          <BankCard
-            code="11"
-            accent="#EE9D2E"
-            image={{
-              src: '/static/images/banks/SunTrust.png',
-              altText: 'SunTrust logo'
-            }}
-          />
-          <BankCard
-            code="12"
-            accent="#15559E"
-            image={{
-              src: '/static/images/banks/NavyFederal.png',
-              altText: 'Navy Federal logo'
-            }}
-          />
-        </div>
+        <Plaid />
         <style jsx>{`
           .container {
             display: grid;
@@ -161,82 +62,6 @@ class Step12 extends React.Component {
             </em>
           </p>
           <img className="cards" src="/static/images/banks/cards.png" alt="" />
-          <Formik
-            initialValues={{
-              cardNumber: '',
-              expirationMonth: '',
-              expirationYear: '',
-              cvv: ''
-            }}
-            onSubmit={values => {
-              Router.push({
-                pathname: '/onboarding/step12'
-              });
-            }}
-            render={props => (
-              <React.Fragment>
-                <Form>
-                  <Input
-                    type="number"
-                    label="Card Number"
-                    fieldname="cardNumber"
-                    autoComplete="cc-number"
-                  />
-                  <div className="two-columns">
-                    <Input
-                      type="number"
-                      label="Expiration month (MM)"
-                      fieldname="expirationMonth"
-                      autoComplete="cc-exp"
-                    />
-                    <Input
-                      type="number"
-                      label="Expiration year (YYYY)"
-                      fieldname="expirationYear"
-                      autoComplete="cc-exp"
-                    />
-                    <Input
-                      type="password"
-                      label="CVC"
-                      fieldname="cvc"
-                      autoComplete="cc-csc"
-                    />
-                    <CTA>What is this?</CTA>
-                  </div>
-                  <p className="small">
-                    <svg
-                      width="14"
-                      height="18"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M13.9952011 10.470321c0-.92422-.7617776-1.67188-1.7018596-1.67032h-.5030834l-.0015915-3.9382c-.0023882-2.682-2.2256466-4.863999-4.957474-4.861799C4.0985501.002346 1.876979 2.184401 1.876979 4.865601l.0023882 3.9382h-.1775076C.7625723 8.806145 0 9.553801 0 10.475681l.0039798 5.853999C.0039798 17.25156.7657573 18 1.7058393 18l10.5923011-.00625C13.2374277 17.99375 14 17.24609 14 16.32343l-.0047989-5.853109zm-10.2882666-1.6664l-.0023883-3.9382c-.0023862-1.69376 1.4017601-3.0718 3.1259332-3.0742 1.7257401 0 3.1298028 1.37812 3.1322481 3.0704l.0023863 3.9382-6.2581793.0038z"
-                        fill="#2479FF"
-                        fillRule="evenodd"
-                      />
-                    </svg>
-                    All your information is 128 bit encrypted
-                  </p>
-                </Form>
-                <Button
-                  primary
-                  disabled={
-                    !props.values.cardNumber != '' ||
-                    !props.values.expirationMonth != '' ||
-                    !props.values.expirationYear != '' ||
-                    !props.values.cvc != ''
-                  }
-                  onClick={() => {
-                    Router.push({
-                      pathname: '/onboarding/step12'
-                    });
-                  }}
-                >
-                  Next
-                </Button>
-              </React.Fragment>
-            )}
-          />
           <StripeProvider stripe={this.state.stripe}>
             <Elements>
               <Checkout stripe={this.state.stripe} name={this.props.name} />
@@ -295,7 +120,9 @@ class Step12 extends React.Component {
     return (
       <main>
         <Header />
-        {this.props.paymentMethod == 'automatic'
+        {console.log(this.state.paymentMethod)}
+        {this.state.paymentMethod &&
+        this.state.paymentMethod.indexOf('automatic') === 0
           ? this.renderBankLink()
           : this.renderCreditCard()}
         <style jsx>{`
@@ -310,4 +137,4 @@ class Step12 extends React.Component {
   }
 }
 
-export default Step12;
+export default Step11;

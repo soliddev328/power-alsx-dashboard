@@ -7,6 +7,10 @@ import Header from '../../components/Header';
 import Input from '../../components/Input';
 import SingleStep from '../../components/SingleStep';
 import Button from '../../components/Button';
+import CONSTANTS from '../../globals';
+
+const { API } =
+  CONSTANTS.NODE_ENV !== 'production' ? CONSTANTS.dev : CONSTANTS.prod;
 
 class Step2 extends React.Component {
   constructor(props) {
@@ -32,7 +36,9 @@ class Step2 extends React.Component {
   }
 
   getPostalCode(values) {
-    const components = values ? values.address.gmaps.address_components : null;
+    const components = values.address
+      ? values.address.gmaps.address_components
+      : null;
 
     const postalCode = components
       ? components.find(x => x.types[0] == 'postal_code')
@@ -65,24 +71,22 @@ class Step2 extends React.Component {
 
               localStorage.setItem('address', JSON.stringify(address));
 
-              axios(
-                `https://comenergy-api-staging.herokuapp.com/v1/zipcodes/${
-                  address.postalCode
-                }`
-              ).then(response => {
-                if (
-                  response.data.data.geostatus != 'Live' &&
-                  response.data.data.geostatus != 'Near-Term'
-                ) {
-                  Router.push({
-                    pathname: '/onboarding/sorry'
-                  });
-                } else {
-                  Router.push({
-                    pathname: '/onboarding/step3'
-                  });
+              axios(`${API}/v1/zipcodes/${address.postalCode}`).then(
+                response => {
+                  if (
+                    response.data.data.geostatus != 'Live' &&
+                    response.data.data.geostatus != 'Near-Term'
+                  ) {
+                    Router.push({
+                      pathname: '/onboarding/sorry'
+                    });
+                  } else {
+                    Router.push({
+                      pathname: '/onboarding/step3'
+                    });
+                  }
                 }
-              });
+              );
             }}
             render={props => (
               <React.Fragment>
