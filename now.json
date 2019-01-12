@@ -1,11 +1,11 @@
 {
-  "name": "commonenergy",
+  "name": "Commonenergy Customer Portal",
   "version": 2,
   "builds": [{
     "src": "next.config.js",
     "use": "@now/next"
   }],
   "alias": [
-    "commonenergy.basement.studio"
+    "my.commonenergy.us"
   ]
 }
