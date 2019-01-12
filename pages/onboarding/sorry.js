@@ -27,8 +27,7 @@ class Sorry extends React.Component {
             }}
             onSubmit={values => {
               Router.push({
-                pathname: '/',
-                query: { email: values.email }
+                pathname: '/'
               });
             }}
             render={props => (

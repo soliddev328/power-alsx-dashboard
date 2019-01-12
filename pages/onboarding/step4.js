@@ -1,6 +1,6 @@
 import React from 'react';
 import Router from 'next/router';
-import { Formik, Form, withFormik } from 'formik';
+import { Form, withFormik } from 'formik';
 import Header from '../../components/Header';
 import Checkbox from '../../components/Checkbox';
 import BulletItem from '../../components/BulletItem';

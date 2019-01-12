@@ -6,7 +6,7 @@ import RadioCard from '../../components/RadioCard';
 import SingleStep from '../../components/SingleStep';
 import Button from '../../components/Button';
 
-class Step11 extends React.Component {
+class Step10 extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -23,6 +23,7 @@ class Step11 extends React.Component {
               paymentMethod: ''
             }}
             onSubmit={values => {
+              localStorage.setItem('paymentMethod', JSON.stringify(values));
               Router.push({
                 pathname: '/onboarding/step11'
               });
@@ -89,4 +90,4 @@ class Step11 extends React.Component {
   }
 }
 
-export default Step11;
+export default Step10;

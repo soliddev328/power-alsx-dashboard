@@ -2,9 +2,10 @@ import React from 'react';
 import * as snippet from '@segment/snippet';
 import Document, { Head, Main, NextScript } from 'next/document';
 import settings from '../settings.json';
+import CONSTANTS from '../globals';
 
-const ANALYTICS_WRITE_KEY = '';
-const NODE_ENV = 'development';
+const { SEGMENT_KEY } =
+  CONSTANTS.NODE_ENV !== 'production' ? CONSTANTS.dev : CONSTANTS.prod;
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx) {
@@ -14,11 +15,11 @@ export default class MyDocument extends Document {
 
   renderSnippet() {
     const opts = {
-      apiKey: ANALYTICS_WRITE_KEY,
+      apiKey: SEGMENT_KEY,
       page: true // Set this to `false` if you want to manually fire `analytics.page()` from within your pages.
     };
 
-    if (NODE_ENV === 'development') {
+    if (CONSTANTS.NODE_ENV !== 'production') {
       return snippet.max(opts);
     }
 
@@ -151,6 +152,7 @@ export default class MyDocument extends Document {
           <meta name="twitter:image:alt" content="" />
           <link rel="stylesheet" href="/static/global.css" />
           <script src="https://js.stripe.com/v3/" />
+          <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js" />
           <script
             src={`https://maps.googleapis.com/maps/api/js?key=${
               settings.meta.gmapsApiKey

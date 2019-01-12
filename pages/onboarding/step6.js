@@ -6,6 +6,10 @@ import Header from '../../components/Header';
 import RadioCard from '../../components/RadioCard';
 import SingleStep from '../../components/SingleStep';
 import Button from '../../components/Button';
+import CONSTANTS from '../../globals';
+
+const { API } =
+  CONSTANTS.NODE_ENV !== 'production' ? CONSTANTS.dev : CONSTANTS.prod;
 
 class Step6 extends React.Component {
   constructor(props) {
@@ -51,14 +55,11 @@ class Step6 extends React.Component {
             onSubmit={values => {
               localStorage.setItem('billingMethod', JSON.stringify(values));
               axios
-                .put(
-                  'https://comenergy-api-staging.herokuapp.com/v1/subscribers',
-                  {
-                    leadId: this.state.leadId,
-                    agreementChecked: this.state.agreedTermsAndConditions,
-                    utility: this.state.utility
-                  }
-                )
+                .put(`${API}/v1/subscribers`, {
+                  leadId: this.state.leadId,
+                  agreementChecked: this.state.agreedTermsAndConditions,
+                  utility: this.state.utility
+                })
                 .then(function(response) {
                   Router.push({
                     pathname: '/onboarding/step7'

@@ -1,11 +1,8 @@
 import React from 'react';
 import Router from 'next/router';
-import { Formik, Form } from 'formik';
 import Header from '../../components/Header';
-import { FadeLoader } from 'react-spinners';
 import SingleStep from '../../components/SingleStep';
 import Button from '../../components/Button';
-import CTA from '../../components/CTA';
 
 class Step9 extends React.Component {
   constructor(props) {
