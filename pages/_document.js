@@ -1,11 +1,11 @@
-import React from 'react';
-import * as snippet from '@segment/snippet';
-import Document, { Head, Main, NextScript } from 'next/document';
-import settings from '../settings.json';
-import CONSTANTS from '../globals';
+import React from "react";
+import * as snippet from "@segment/snippet";
+import Document, { Head, Main, NextScript } from "next/document";
+import settings from "../settings.json";
+import CONSTANTS from "../globals";
 
 const { FB_APP_ID, SEGMENT_KEY } =
-  CONSTANTS.NODE_ENV !== 'production' ? CONSTANTS.dev : CONSTANTS.prod;
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx) {
@@ -19,7 +19,7 @@ export default class MyDocument extends Document {
       page: true // Set this to `false` if you want to manually fire `analytics.page()` from within your pages.
     };
 
-    if (CONSTANTS.NODE_ENV !== 'production') {
+    if (CONSTANTS.NODE_ENV !== "production") {
       return snippet.max(opts);
     }
 
@@ -184,6 +184,24 @@ export default class MyDocument extends Document {
           />
           <script
             dangerouslySetInnerHTML={{ __html: this.renderSegmentSnippet() }}
+          />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `window['_fs_debug'] = false;
+            window['_fs_host'] = 'fullstory.com';
+            window['_fs_org'] = '7ZZDY';
+            window['_fs_namespace'] = 'FS';
+            (function(m,n,e,t,l,o,g,y){
+                if (e in m) {if(m.console && m.console.log) { m.console.log('FullStory namespace conflict. Please set window["_fs_namespace"].');} return;}
+                g=m[e]=function(a,b){g.q?g.q.push([a,b]):g._api(a,b);};g.q=[];
+                o=n.createElement(t);o.async=1;o.src='https://'+_fs_host+'/s/fs.js';
+                y=n.getElementsByTagName(t)[0];y.parentNode.insertBefore(o,y);
+                g.identify=function(i,v){g(l,{uid:i});if(v)g(l,v)};g.setUserVars=function(v){g(l,v)};
+                y="rec";g.shutdown=function(i,v){g(y,!1)};g.restart=function(i,v){g(y,!0)};
+                g.identifyAccount=function(i,v){o='account';v=v||{};v.acctId=i;g(o,v)};
+                g.clearUserCookie=function(){};
+            })(window,document,window['_fs_namespace'],'script','user');`
+            }}
           />
         </Head>
 
