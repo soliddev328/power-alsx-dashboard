@@ -95,7 +95,6 @@ class Step7 extends React.Component {
           utilityPassword: ''
         }}
         onSubmit={values => {
-          console.log('start submitting');
           axios
             .put(`${API}/v1/subscribers/utilities/link`, {
               leadId: this.state.leadId,
@@ -104,15 +103,12 @@ class Step7 extends React.Component {
               utilityPwd: values.utilityPassword
             })
             .then(function(response) {
-              console.log('start responding');
               localStorage.setItem(
                 'linkedUtility',
                 JSON.stringify(response.data)
               );
-              if (response.data && response.data.data[0]) {
-                console.log('first if passed');
+              if (response.data.data && response.data.data[0]) {
                 if (response.data.data[0].hasLoggedIn) {
-                  console.log('second if passed');
                   Router.push({
                     pathname: '/onboarding/step8'
                   });
@@ -125,6 +121,13 @@ class Step7 extends React.Component {
                   });
                   errorMessage = '';
                 }
+              } else {
+                Router.push({
+                  pathname: '/onboarding/step9',
+                  query: {
+                    partiallyConnected: true
+                  }
+                });
               }
             })
             .catch(function(error) {

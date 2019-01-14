@@ -11,6 +11,18 @@ class Step9 extends React.Component {
 
   componentDidMount() {}
 
+  static async getInitialProps({ req, query, params }) {
+    if (req) {
+      try {
+        return { query: req.query, params: req.params };
+      } catch (err) {
+        return { query: req.query, params: req.params };
+      }
+    }
+
+    return { query, params };
+  }
+
   render() {
     return (
       <main>
@@ -26,7 +38,15 @@ class Step9 extends React.Component {
                 />
               </g>
             </svg>
-            <h2>You're connected!</h2>
+            {this.props.query && !this.props.query.partiallyConnected && (
+              <h2>You're connected!</h2>
+            )}
+            {this.props.query && this.props.query.partiallyConnected && (
+              <p className="message">
+                We are connecting your account and will contact you if we need
+                more information
+              </p>
+            )}
           </div>
           <Button
             primary
@@ -50,6 +70,9 @@ class Step9 extends React.Component {
             flex-direction: column;
             align-items: center;
             justify-content: center;
+          }
+          .message {
+            text-align: center;
           }
         `}</style>
       </main>
