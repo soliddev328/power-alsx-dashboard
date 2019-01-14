@@ -18,14 +18,10 @@ export default class Phoneinput extends React.Component {
     return (
       <div className="input__wrapper">
         <PhoneInput
-          name={this.props.fieldname}
-          id={this.props.fieldname}
           onChange={this.handleChange}
           onBlur={this.handleBlur}
-          value={this.props.value}
-          {...this.props}
+          placeholder={this.props.label}
         />
-        <label htmlFor={this.props.fieldname}>{this.props.label}</label>
       </div>
     );
   }

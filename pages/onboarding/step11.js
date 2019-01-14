@@ -36,7 +36,7 @@ class Step11 extends React.Component {
 
   renderBankLink() {
     return (
-      <SingleStep title="Link your account">
+      <SingleStep>
         <Plaid />
         <style jsx>{`
           .container {
@@ -120,7 +120,6 @@ class Step11 extends React.Component {
     return (
       <main>
         <Header />
-        {console.log(this.state.paymentMethod)}
         {this.state.paymentMethod &&
         this.state.paymentMethod.indexOf('automatic') === 0
           ? this.renderBankLink()
