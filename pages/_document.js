@@ -4,7 +4,7 @@ import Document, { Head, Main, NextScript } from 'next/document';
 import settings from '../settings.json';
 import CONSTANTS from '../globals';
 
-const { SEGMENT_KEY } =
+const { FB_APP_ID, SEGMENT_KEY } =
   CONSTANTS.NODE_ENV !== 'production' ? CONSTANTS.dev : CONSTANTS.prod;
 
 export default class MyDocument extends Document {
@@ -162,7 +162,7 @@ export default class MyDocument extends Document {
             dangerouslySetInnerHTML={{
               __html: `window.fbAsyncInit = function() {
               FB.init({
-                appId: '1861844694112540',
+                appId: ${FB_APP_ID},
                 autoLogAppEvents: true,
                 xfbml: true,
                 version: 'v3.2'
