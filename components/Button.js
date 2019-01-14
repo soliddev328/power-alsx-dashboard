@@ -36,6 +36,7 @@ export default class Button extends React.Component {
             line-height: normal;
             cursor: pointer;
             transition: all 200ms ease-in-out;
+            user-select: none;
           }
 
           button {

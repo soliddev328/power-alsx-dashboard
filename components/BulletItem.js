@@ -41,7 +41,7 @@ export default class BulletItem extends React.Component {
             grid-template-columns: 1fr 5fr;
             align-items: center;
             margin: 0;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
           }
 
           .wrapper .icon {

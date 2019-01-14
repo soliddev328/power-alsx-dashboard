@@ -10,10 +10,14 @@ export default class CustomSelect extends React.Component {
   constructor(props) {
     super(props);
 
+    this.inputField = React.createRef();
+
     this.state = {
       address: '',
       options: null
     };
+
+    this.scrollOnFocus = this.scrollOnFocus.bind(this);
   }
 
   componentDidMount() {
@@ -24,6 +28,12 @@ export default class CustomSelect extends React.Component {
     }
 
     this.setState({ address: JSON.parse(storedAddress) });
+  }
+
+  scrollOnFocus() {
+    setTimeout(() => {
+      window.scrollTo(0, this.inputField.current.getBoundingClientRect().top);
+    }, 200);
   }
 
   componentDidUpdate() {
@@ -85,7 +95,7 @@ export default class CustomSelect extends React.Component {
     );
     const getOptionValue = option => option.code;
     return (
-      <React.Fragment>
+      <div ref={this.inputField} onClick={this.scrollOnFocus}>
         {this.state.options && (
           <div style={{ margin: '1rem 0' }}>
             <label className="select__label" htmlFor={this.props.fieldname}>
@@ -179,7 +189,7 @@ export default class CustomSelect extends React.Component {
             background-color: #fff;
           }
         `}</style>
-      </React.Fragment>
+      </div>
     );
   }
 }
