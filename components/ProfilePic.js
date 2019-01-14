@@ -16,8 +16,8 @@ export default class ProfilePic extends React.Component {
             border: 1px solid var(--color-primary);
             overflow: hidden;
             border-radius: 50%;
-            width: 4.68rem;
-            height: 4.68rem;
+            width: 3.5rem;
+            height: 3.5rem;
           }
           img {
             object-fit: cover;
