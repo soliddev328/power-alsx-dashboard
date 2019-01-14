@@ -35,7 +35,7 @@ class Index extends React.Component {
               <React.Fragment>
                 <Form>
                   <div className="two-columns two-columns--responsive">
-                    <Input label="Name" fieldname="firstName" autoFocus />
+                    <Input label="First Name" fieldname="firstName" autoFocus />
                     <Input label="Last Name" fieldname="lastName" />
                   </div>
                   <Button
