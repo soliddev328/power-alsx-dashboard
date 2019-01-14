@@ -13,7 +13,7 @@ export default class MyDocument extends Document {
     return { ...initialProps };
   }
 
-  renderSnippet() {
+  renderSegmentSnippet() {
     const opts = {
       apiKey: SEGMENT_KEY,
       page: true // Set this to `false` if you want to manually fire `analytics.page()` from within your pages.
@@ -158,7 +158,33 @@ export default class MyDocument extends Document {
               settings.meta.gmapsApiKey
             }&libraries=places`}
           />
-          <script dangerouslySetInnerHTML={{ __html: this.renderSnippet() }} />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `window.fbAsyncInit = function() {
+              FB.init({
+                appId: '1861844694112540',
+                autoLogAppEvents: true,
+                xfbml: true,
+                version: 'v3.2'
+              });
+            };
+
+            (function(d, s, id) {
+              var js,
+                fjs = d.getElementsByTagName(s)[0];
+              if (d.getElementById(id)) {
+                return;
+              }
+              js = d.createElement(s);
+              js.id = id;
+              js.src = 'https://connect.facebook.net/en_US/sdk.js';
+              fjs.parentNode.insertBefore(js, fjs);
+            })(document, 'script', 'facebook-jssdk');`
+            }}
+          />
+          <script
+            dangerouslySetInnerHTML={{ __html: this.renderSegmentSnippet() }}
+          />
         </Head>
 
         <body>

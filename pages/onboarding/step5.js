@@ -43,6 +43,7 @@ class Step5 extends React.Component {
               emailAddress: ''
             }}
             onSubmit={values => {
+              localStorage.setItem('email', values.emailAddress);
               axios
                 .post(`${API}/v1/subscribers`, {
                   FirstName: this.state.name.firstName,

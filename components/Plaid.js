@@ -1,9 +1,10 @@
 import ReactPlaid from 'react-plaid';
 import React from 'react';
-import Button from '../components/Button';
+import axios from 'axios';
+import Router from 'next/router';
 import CONSTANTS from '../globals';
 
-const { PLAID_KEY } =
+const { PLAID_KEY, API } =
   CONSTANTS.NODE_ENV !== 'production' ? CONSTANTS.dev : CONSTANTS.prod;
 const PLAID_ENV =
   CONSTANTS.NODE_ENV !== 'production' ? 'sandbox' : 'production';
@@ -16,30 +17,53 @@ export default class Plaid extends React.Component {
       plaidData: []
     };
   }
+
+  componentDidMount() {
+    let storedLeadId = '';
+    if (localStorage.getItem('leadId')) {
+      storedLeadId = localStorage.getItem('leadId');
+    }
+
+    this.setState({
+      leadId: storedLeadId
+    });
+  }
+
   render() {
     return (
-      <div>
-        <Button onClick={() => this.setState({ open: true })}>
-          Open Plaid
-        </Button>
-        {this.state.plaidData.map(({ institution }) => (
-          <div>
-            {institution.name} - {institution.type}
-          </div>
-        ))}
-        <ReactPlaid
-          clientName="Client Name"
-          product={['auth']}
-          apiKey={PLAID_KEY}
-          env={PLAID_ENV}
-          open={this.state.open}
-          onSuccess={(token, metaData) => {
-            // HEROKU /v1/plaid/auth
-            this.setState({ plaidData: metaData });
-          }}
-          onExit={() => this.setState({ open: false })}
-        />
-      </div>
+      <ReactPlaid
+        clientName="Client Name"
+        product={['auth']}
+        apiKey={PLAID_KEY}
+        env={PLAID_ENV}
+        open={true}
+        onSuccess={(token, metadata) => {
+          axios
+            .post(`${API}/v1/plaid/auth`, {
+              public_token: token,
+              accounts: metadata.accounts,
+              institution: metadata.institution,
+              link_session_id: metadata.link_session_id,
+              item: this.state.leadId
+            })
+            .then(() => {
+              Router.push({
+                pathname: '/onboarding/step12'
+              });
+            });
+        }}
+        onExit={(err, metadata) => {
+          if (err !== null) {
+            axios.post(`${API}/v1/plaid/error`, {
+              error: err,
+              status: metadata.status,
+              institution: metadata.institution,
+              link_session_id: metadata.link_session_id,
+              item: this.state.leadId
+            });
+          }
+        }}
+      />
     );
   }
 }

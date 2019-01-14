@@ -16,12 +16,17 @@ class CheckoutForm extends Component {
 
   componentDidMount() {
     let storedLeadId = '';
+    let storedEmail = '';
 
     if (localStorage.getItem('leadId')) {
       storedLeadId = localStorage.getItem('leadId');
     }
 
-    this.setState({ leadId: storedLeadId });
+    if (localStorage.getItem('email')) {
+      storedEmail = localStorage.getItem('email');
+    }
+
+    this.setState({ leadId: storedLeadId, email: storedEmail });
   }
 
   submit(ev) {
@@ -30,7 +35,8 @@ class CheckoutForm extends Component {
       this.props.stripe.createToken({ type: 'card' }).then(payload => {
         axios.put(`${API}/v1/subscribers`, {
           leadId: this.state.leadId,
-          stripeToken: payload.id
+          email: this.state.email,
+          stripeToken: payload.token.id
         });
         Router.push({
           pathname: '/onboarding/step12'
