@@ -27,7 +27,19 @@ class Step12 extends React.Component {
   }
 
   share() {
-    this.setState({ shared: true });
+    let shareCompleted = false;
+    FB.ui(
+      {
+        method: 'share',
+        href: window.location.href
+      },
+      function(response) {
+        if (response) {
+          shareCompleted = true;
+        }
+      }
+    );
+    this.setState({ shared: shareCompleted });
   }
 
   render() {

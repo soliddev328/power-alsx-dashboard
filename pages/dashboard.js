@@ -8,7 +8,6 @@ import SunIcon from '../components/Icons/SunIcon';
 import LeafIcon from '../components/Icons/LeafIcon';
 import LightningIcon from '../components/Icons/LightningIcon';
 import BagIcon from '../components/Icons/BagIcon';
-import NotificationIcon from '../components/Icons/NotificationIcon';
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -99,7 +98,6 @@ class Dashboard extends React.Component {
                 </span>
               )}
             </h2>
-            <NotificationIcon number="2" />
           </div>
         </section>
 
@@ -114,9 +112,6 @@ class Dashboard extends React.Component {
               quae voluptate ipsam quidem atque, sequi temporibus fugit quos ex!
               Eveniet.
             </p>
-            <a href="/" className="link">
-              Complete sign up
-            </a>
           </div>
         </section>
 

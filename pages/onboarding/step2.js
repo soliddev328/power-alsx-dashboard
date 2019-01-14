@@ -63,8 +63,15 @@ class Step2 extends React.Component {
               apt: ''
             }}
             onSubmit={values => {
+              const arrayAddress = values.address.description.split(',');
+              const street = arrayAddress[0];
+              const city = arrayAddress[1].replace(/\s/g, '');
+              const state = arrayAddress[2].replace(/\s/g, '');
+
               const address = {
-                street: values.address.description,
+                street: street,
+                city: city,
+                state: state,
                 postalCode: this.getPostalCode(values),
                 apt: values.apt ? values.apt : ''
               };

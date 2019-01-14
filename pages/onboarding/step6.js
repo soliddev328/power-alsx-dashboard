@@ -20,6 +20,7 @@ class Step6 extends React.Component {
     let storedLeadId = '';
     let storedUtility = '';
     let storedAgreementChecked = false;
+    let storedAddress = '';
 
     if (localStorage.getItem('leadId')) {
       storedLeadId = localStorage.getItem('leadId');
@@ -32,10 +33,14 @@ class Step6 extends React.Component {
         localStorage.getItem('acceptedTermsAndConditions')
       );
     }
+    if (localStorage.getItem('address')) {
+      storedAddress = JSON.parse(localStorage.getItem('address'));
+    }
 
     this.setState({
       leadId: storedLeadId,
       utility: storedUtility.label,
+      address: storedAddress,
       agreedTermsAndConditions: storedAgreementChecked
     });
   }
@@ -57,7 +62,11 @@ class Step6 extends React.Component {
               axios
                 .put(`${API}/v1/subscribers`, {
                   leadId: this.state.leadId,
-                  agreementChecked: this.state.agreedTermsAndConditions,
+                  street: this.state.address.street,
+                  state: this.state.address.state,
+                  city: this.state.address.city,
+                  postalCode: this.state.address.postalCode,
+                  agreementChecked: !!this.state.agreedTermsAndConditions,
                   utility: this.state.utility
                 })
                 .then(function(response) {
