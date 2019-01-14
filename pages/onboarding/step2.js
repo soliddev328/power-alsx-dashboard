@@ -111,7 +111,7 @@ class Step2 extends React.Component {
                     error={props.errors.topics}
                     touched={props.touched.topics}
                   />
-                  <Input label="Apartament No." fieldname="apt" />
+                  <Input label="Apartment No." fieldname="apt" />
                   <Button primary disabled={!props.values.address != ''}>
                     Next
                   </Button>
