@@ -4,6 +4,8 @@ import { Field } from 'formik';
 export default class Input extends React.Component {
   constructor(props) {
     super(props);
+    this.inputField = React.createRef();
+    this.scrollOnFocus = this.scrollOnFocus.bind(this);
   }
 
   applyValidation(x) {
@@ -15,9 +17,19 @@ export default class Input extends React.Component {
     e.target.setCustomValidity('');
   }
 
+  scrollOnFocus() {
+    setTimeout(() => {
+      window.scrollTo(0, this.inputField.current.getBoundingClientRect().top);
+    }, 300);
+  }
+
   render() {
     return (
-      <div className="input__wrapper">
+      <div
+        ref={this.inputField}
+        onClick={this.scrollOnFocus}
+        className="input__wrapper"
+      >
         <Field
           type={this.props.type ? this.props.type : 'text'}
           component="input"
@@ -26,7 +38,7 @@ export default class Input extends React.Component {
           validate={this.props.required}
           onInvalid={this.applyValidation}
           onInput={this.customSetCustomValidity}
-          autoComplete={this.props.autoComplete}
+          autoComplete="off"
           autoFocus={this.props.autoFocus}
           {...this.props}
         />

@@ -62,6 +62,11 @@ class CustomForm extends React.Component {
         >
           Let's do this!
         </Button>
+        <style jsx>{`
+          .disclaimer {
+            text-align: center;
+          }
+        `}</style>
       </Form>
     );
   }

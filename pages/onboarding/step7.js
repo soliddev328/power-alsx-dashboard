@@ -49,11 +49,13 @@ class Step7 extends React.Component {
       .join('&');
 
     axios(`${API}/v1/utilities/?${generatedParams}`).then(response => {
-      this.setState({
-        forgotPwdLink: response.data.data[0].forgotPwdLink,
-        forgotEmailLink: response.data.data[0].forgotEmailLink,
-        createLoginLink: response.data.data[0].createLoginLink
-      });
+      if (response.data.data) {
+        this.setState({
+          forgotPwdLink: response.data.data[0].forgotPwdLink,
+          forgotEmailLink: response.data.data[0].forgotEmailLink,
+          createLoginLink: response.data.data[0].createLoginLink
+        });
+      }
     });
   }
 
