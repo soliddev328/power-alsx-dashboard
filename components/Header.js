@@ -27,7 +27,7 @@ export default class Header extends React.Component {
             width: 100%;
             border-bottom: 1px solid var(--color-secondary);
             padding: 0 1.25rem;
-            margin-bottom: 3rem;
+            margin-bottom: 2.2rem;
           }
 
           .bubble {
