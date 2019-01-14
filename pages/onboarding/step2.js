@@ -44,7 +44,7 @@ class Step2 extends React.Component {
       ? components.find(x => x.types[0] == 'postal_code')
       : null;
 
-    return postalCode.long_name;
+    return postalCode ? postalCode.long_name : '';
   }
 
   render() {
@@ -64,9 +64,13 @@ class Step2 extends React.Component {
             }}
             onSubmit={values => {
               const arrayAddress = values.address.description.split(',');
-              const street = arrayAddress[0];
-              const city = arrayAddress[1].replace(/\s/g, '');
-              const state = arrayAddress[2].replace(/\s/g, '');
+              const street = arrayAddress[0] ? arrayAddress[0] : '';
+              const city = arrayAddress[1]
+                ? arrayAddress[1].replace(/\s/g, '')
+                : '';
+              const state = arrayAddress[2]
+                ? arrayAddress[2].replace(/\s/g, '')
+                : '';
 
               const address = {
                 street: street,

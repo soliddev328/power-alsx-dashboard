@@ -4,10 +4,14 @@ import Geosuggest from 'react-geosuggest';
 export default class GeoSuggest extends React.Component {
   constructor(props) {
     super(props);
+    this.inputField = React.createRef();
+    this.scrollOnFocus = this.scrollOnFocus.bind(this);
   }
 
   handleChange = value => {
-    this.props.onChange(this.props.fieldname, value);
+    if (value.description) {
+      this.props.onChange(this.props.fieldname, value);
+    }
   };
 
   handleBlur = () => {
@@ -20,9 +24,15 @@ export default class GeoSuggest extends React.Component {
     }
   };
 
+  scrollOnFocus() {
+    setTimeout(() => {
+      window.scrollTo(0, this.inputField.current.getBoundingClientRect().top);
+    }, 200);
+  }
+
   render() {
     return (
-      <React.Fragment>
+      <div ref={this.inputField} onClick={this.scrollOnFocus}>
         <Geosuggest
           onSuggestSelect={this.handleSuggestSelect}
           placeholder={this.props.label}
@@ -72,7 +82,7 @@ export default class GeoSuggest extends React.Component {
             background-color: var(--color-primary);
           }
         `}</style>
-      </React.Fragment>
+      </div>
     );
   }
 }

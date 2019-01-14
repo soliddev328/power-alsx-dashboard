@@ -48,12 +48,11 @@ export default class SingleStep extends React.Component {
         {this.props.suffix && this.renderSuffix()}
         <style jsx>{`
           .content {
-            max-width: 80%;
-            height: 75%;
+            max-width: 90%;
             margin: 0 auto;
           }
           p {
-            font-size: 1.1rem;
+            font-size: 1rem;
             text-align: center;
             font-weight: 700;
             line-height: 1.44;
@@ -61,6 +60,7 @@ export default class SingleStep extends React.Component {
           p.title {
             color: #000;
             margin-bottom: 0;
+            margin-top: 5px;
           }
           p.title + p.title {
             margin-top: 0;
