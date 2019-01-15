@@ -183,7 +183,6 @@ class Step7 extends React.Component {
           utilityAccountNumber: ''
         }}
         onSubmit={values => {
-          this.setState({ isLoading: true });
           axios
             .put(`${API}/v1/subscribers`, {
               leadId: this.state.leadId,

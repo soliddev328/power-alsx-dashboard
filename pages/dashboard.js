@@ -40,11 +40,11 @@ class Dashboard extends React.Component {
         <section>
           <div className="pane">
             <h2>
-              Welcome to Common Energy <span className="accent">!</span>
+              Welcome to Common Energy<span className="accent">!</span>
             </h2>
             <p>
-              We’re delighted to have you as a customer and to provide you with
-              100% clean, lower cost Electricity.
+              We’re delighted to have you as a customer and to provide you
+              with 100% clean, lower cost Electricity.
             </p>
             <p>The connection process will take 4-8 weeks.</p>
             <p>Here’s what happens next:</p>
@@ -106,6 +106,7 @@ class Dashboard extends React.Component {
           }
 
           .pane h2 {
+            text-align: center;
             margin-top: 0;
           }
 
@@ -123,6 +124,7 @@ class Dashboard extends React.Component {
           }
 
           .accent {
+            padding: 0;
             color: var(--color-secondary);
           }
 

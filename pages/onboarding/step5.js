@@ -70,12 +70,7 @@ class Step5 extends React.Component {
                   label="Phone"
                   fieldname="phoneNumber"
                 />
-                <Input
-                  type="email"
-                  label="Email"
-                  fieldname="emailAddress"
-                  required
-                />
+                <Input type="email" label="Email" fieldname="emailAddress" />
                 <Button
                   primary
                   disabled={
