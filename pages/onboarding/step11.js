@@ -1,9 +1,9 @@
-import React from 'react';
-import Router from 'next/router';
-import Header from '../../components/Header';
-import SingleStep from '../../components/SingleStep';
-import Button from '../../components/Button';
-import CTA from '../../components/CTA';
+import React from "react";
+import Router from "next/router";
+import Header from "../../components/Header";
+import SingleStep from "../../components/SingleStep";
+import Button from "../../components/Button";
+import CTA from "../../components/CTA";
 
 class Step11 extends React.Component {
   constructor(props) {
@@ -11,7 +11,7 @@ class Step11 extends React.Component {
 
     this.state = {
       shared: false,
-      canonicalUrl: ''
+      canonicalUrl: ""
     };
   }
 
@@ -21,7 +21,7 @@ class Step11 extends React.Component {
 
     if (canonicalUrl) {
       this.setState({
-        canonicalUrl: canonicalUrl.getAttribute('content')
+        canonicalUrl: canonicalUrl.getAttribute("content")
       });
     }
   }
@@ -30,8 +30,8 @@ class Step11 extends React.Component {
     let shareCompleted = false;
     FB.ui(
       {
-        method: 'share',
-        href: window.location.href
+        method: "share",
+        href: "https://www.commonenergy.us"
       },
       function(response) {
         if (response) {
@@ -51,8 +51,8 @@ class Step11 extends React.Component {
           title="Before you go help us spread the word and receive a free month of electricity for each referral!"
           highlight="free month of electricity"
           image={{
-            src: '/static/images/share/share.png',
-            alt: 'An illustration of people enjoying renewable energy'
+            src: "/static/images/share/share.png",
+            alt: "An illustration of people enjoying renewable energy"
           }}
         >
           <Button primary share="facebook" onClick={() => this.share()}>
@@ -61,9 +61,9 @@ class Step11 extends React.Component {
           <Button
             primary
             onClick={() => {
-              localStorage.setItem('usercreated', true);
+              localStorage.setItem("usercreated", true);
               Router.push({
-                pathname: '/dashboard'
+                pathname: "/dashboard"
               });
             }}
             disabled={!this.state.shared}
@@ -73,9 +73,9 @@ class Step11 extends React.Component {
           <CTA
             secondary
             onClick={() => {
-              localStorage.setItem('usercreated', true);
+              localStorage.setItem("usercreated", true);
               Router.push({
-                pathname: '/dashboard'
+                pathname: "/dashboard"
               });
             }}
           >
