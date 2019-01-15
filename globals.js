@@ -9,7 +9,7 @@ module.exports = {
   },
   prod: {
     API: "https://api.commonenergy.us",
-    SEGMENT_KEY: "zAFMGeybdkriupfPqCYanAHc9HUNhAug",
+    SEGMENT_KEY: "5zpSiwIkrWVXtGA2t2Xvuv42XQYYErAB",
     STRIPE_KEY: "pk_live_MxPO1LbCVcS8l7SnDOiGfBmQ",
     PLAID_KEY: "6a39ce056577235f452bcf275b5191",
     FB_APP_ID: "1861844694112540"
