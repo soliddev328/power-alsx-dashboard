@@ -32,20 +32,24 @@ class CustomForm extends React.Component {
     return (
       <Form>
         <div className="content">
-          <BulletItem content="Free signup" bulletIcon="money" />
+          <BulletItem
+            content="Clean energy credits each month"
+            bulletIcon="dollar"
+          />
           <BulletItem
             content="$2,276 estimated total savings*"
             bulletIcon="gift"
           />
           <BulletItem
-            content="72,000 pounds of CO2 prevented in your community"
+            content="72,000 pounds of CO2 prevented"
             bulletIcon="co2"
           />
           <BulletItem
-            content="One unified monthly statement from Common Energy"
+            content="One unified monthly statement"
             bulletIcon="discount"
           />
           <BulletItem content="No cancelation fees" bulletIcon="cross" />
+          <BulletItem content="Free signup" bulletIcon="money" />
         </div>
         <Checkbox fieldname="acceptedTermsAndConditions">
           <p className="checkbox__label">
@@ -99,7 +103,7 @@ class Step4 extends React.Component {
         <Header />
         <SingleStep
           toast="Great news!"
-          title="We've got a project in your area. We can lower your costs and your emissions right away!"
+          title="We’ve got a project in your area. We can lower your costs and emissions! Here's what we can offer:"
         >
           <EnhancedCustomForm
             agreement={{

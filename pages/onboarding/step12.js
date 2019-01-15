@@ -47,15 +47,15 @@ class Step12 extends React.Component {
       <main>
         <Header />
         <SingleStep
-          toast="Spread the word."
-          title="Connect 10 friends and get free electricity for a year!"
+          toast="Help us spread the word:"
+          title="Receive a free month of electricity for each referral!"
           image={{
             src: '/static/images/share/share.png',
             alt: 'An illustration of people enjoying renewable energy'
           }}
         >
           <Button primary share="facebook" onClick={() => this.share()}>
-            Share this on Facebook
+            Share this image on Facebook
           </Button>
           <Button
             primary
