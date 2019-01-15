@@ -45,7 +45,7 @@ class CheckoutForm extends Component {
           stripeToken: payload.token.id
         });
         Router.push({
-          pathname: '/onboarding/step12'
+          pathname: '/onboarding/step11'
         });
       });
     } else {
