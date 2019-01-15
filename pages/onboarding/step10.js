@@ -17,7 +17,7 @@ class Step10 extends React.Component {
     return (
       <main>
         <Header />
-        <SingleStep title="Select your payment method">
+        <SingleStep title="Going forward you will pay Common Energy a lower amount for your electricity, instead of your utility:">
           <Formik
             initialValues={{
               paymentMethod: ''
@@ -47,6 +47,9 @@ class Step10 extends React.Component {
                     content="A 2.9% processing fee is applied to cover transaction costs."
                     highlight="2.9%"
                   />
+                  <Button primary disabled={!props.values.paymentMethod != ''}>
+                    Next
+                  </Button>
                   <p className="small">
                     <svg
                       width="14"
@@ -61,9 +64,6 @@ class Step10 extends React.Component {
                     </svg>
                     All your information is 128 bit encrypted
                   </p>
-                  <Button primary disabled={!props.values.paymentMethod != ''}>
-                    Next
-                  </Button>
                 </Form>
               </React.Fragment>
             )}

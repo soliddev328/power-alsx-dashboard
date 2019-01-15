@@ -1,5 +1,6 @@
 import React from 'react';
 import GiftIcon from './Icons/GiftIcon';
+import DollarIcon from './Icons/DollarIcon';
 import MoneyIcon from './Icons/MoneyIcon';
 import SignupIcon from './Icons/SignupIcon';
 import CrossIcon from './Icons/CrossIcon';
@@ -27,6 +28,8 @@ export default class BulletItem extends React.Component {
       return <GiftIcon />;
     } else if (this.props.bulletIcon === 'money') {
       return <MoneyIcon />;
+    } else if (this.props.bulletIcon === 'dollar') {
+      return <DollarIcon />;
     }
   }
 

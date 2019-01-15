@@ -25,10 +25,25 @@ class Step8 extends React.Component {
     });
   }
 
+  static async getInitialProps({ req, query, params }) {
+    if (req) {
+      try {
+        return { query: req.query, params: req.params };
+      } catch (err) {
+        return { query: req.query, params: req.params };
+      }
+    }
+
+    return { query, params };
+  }
+
   renderLoader() {
     setTimeout(() => {
       Router.push({
-        pathname: '/onboarding/step9'
+        pathname: '/onboarding/step9',
+        query: {
+          partiallyConnected: this.props.query.partiallyConnected
+        }
       });
     }, 4000);
 

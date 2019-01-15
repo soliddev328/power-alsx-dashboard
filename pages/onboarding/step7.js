@@ -2,6 +2,7 @@ import React from 'react';
 import Router from 'next/router';
 import { Formik, Form } from 'formik';
 import axios from 'axios';
+import { FadeLoader } from 'react-spinners';
 import Header from '../../components/Header';
 import Input from '../../components/Input';
 import SingleStep from '../../components/SingleStep';
@@ -16,6 +17,7 @@ class Step7 extends React.Component {
     super(props);
 
     this.state = {
+      isLoading: false,
       currentUtility: '',
       forgotPwdLink: '',
       forgotEmailLink: '',
@@ -87,7 +89,6 @@ class Step7 extends React.Component {
   }
 
   renderUtilityLogin() {
-    let errorMessage = '';
     return (
       <Formik
         initialValues={{
@@ -95,6 +96,7 @@ class Step7 extends React.Component {
           utilityPassword: ''
         }}
         onSubmit={values => {
+          this.setState({ isLoading: true });
           axios
             .put(`${API}/v1/subscribers/utilities/link`, {
               leadId: this.state.leadId,
@@ -102,7 +104,7 @@ class Step7 extends React.Component {
               utilityUsername: values.utilityUser,
               utilityPwd: values.utilityPassword
             })
-            .then(function(response) {
+            .then(response => {
               localStorage.setItem(
                 'linkedUtility',
                 JSON.stringify(response.data)
@@ -113,13 +115,13 @@ class Step7 extends React.Component {
                     pathname: '/onboarding/step8'
                   });
                 } else {
+                  this.setState({ isLoading: false });
                   Router.push({
                     pathname: '/onboarding/step7',
                     query: {
                       error: true
                     }
                   });
-                  errorMessage = '';
                 }
               } else {
                 Router.push({
@@ -168,14 +170,18 @@ class Step7 extends React.Component {
           utilityAccountNumber: ''
         }}
         onSubmit={values => {
+          this.setState({ isLoading: true });
           axios
             .put(`${API}/v1/subscribers`, {
               leadId: this.state.leadId,
               utilityAccountNumber: values.utilityAccountNumber
             })
-            .then(function() {
+            .then(() => {
               Router.push({
-                pathname: '/onboarding/step8'
+                pathname: '/onboarding/step9',
+                query: {
+                  partiallyConnected: true
+                }
               });
             })
             .catch(function(error) {
@@ -199,13 +205,65 @@ class Step7 extends React.Component {
     );
   }
 
+  renderForms() {
+    const canLinkAccount =
+      this.state.billingMethod &&
+      this.state.billingMethod.billingMethod.indexOf('paper') !== 0;
+
+    return canLinkAccount
+      ? this.renderUtilityLogin()
+      : this.renderAskForUtilityAccount();
+  }
+
+  renderLoader() {
+    return (
+      <React.Fragment>
+        <div className="loading">
+          <FadeLoader
+            className="spinner"
+            height={15}
+            width={4}
+            radius={1}
+            color={'#FF69A0'}
+            loading={true}
+          />
+          <p>Connecting your account</p>
+        </div>
+        <p className="suffix">(this may take up to 10 seconds)</p>
+        <style jsx>{`
+          .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .loading p {
+            font-size: 1rem;
+            text-align: center;
+          }
+
+          p.suffix {
+            font-size: 0.8rem;
+          }
+        `}</style>
+      </React.Fragment>
+    );
+  }
+
   render() {
+    const canLinkAccount =
+      this.state.billingMethod &&
+      this.state.billingMethod.billingMethod.indexOf('paper') !== 0;
     return (
       <main>
         <Header />
         <SingleStep
-          toast="Ok great."
-          title="Now let's connect your account and get you saving!"
+          toast={canLinkAccount ? 'Ok great.' : 'No problem!'}
+          title={
+            canLinkAccount
+              ? "Let's connect your account and get you saving!"
+              : 'We can use your account number to get you connected and saving.'
+          }
         >
           {this.state.currentUtility && (
             <figure>
@@ -221,27 +279,26 @@ class Step7 extends React.Component {
               login.
             </p>
           )}
-          {this.state.billingMethod &&
-          this.state.billingMethod.billingMethod.indexOf('paper') === 0
-            ? this.renderAskForUtilityAccount()
-            : this.renderUtilityLogin()}
-          <div className="links">
-            {this.state.createLoginLink && (
-              <a className="cta" href={this.state.createLoginLink}>
-                Create an account
-              </a>
-            )}
-            {this.state.forgotEmailLink && (
-              <a className="cta" href={this.state.forgotEmailLink}>
-                Forgot username
-              </a>
-            )}
-            {this.state.forgotPwdLink && (
-              <a className="cta" href={this.state.forgotPwdLink}>
-                Forgot password
-              </a>
-            )}
-          </div>
+          {this.state.isLoading ? this.renderLoader() : this.renderForms()}
+          {canLinkAccount && (
+            <div className="links">
+              {this.state.createLoginLink && (
+                <a className="cta" href={this.state.createLoginLink}>
+                  Create an account
+                </a>
+              )}
+              {this.state.forgotEmailLink && (
+                <a className="cta" href={this.state.forgotEmailLink}>
+                  Forgot username
+                </a>
+              )}
+              {this.state.forgotPwdLink && (
+                <a className="cta" href={this.state.forgotPwdLink}>
+                  Forgot password
+                </a>
+              )}
+            </div>
+          )}
         </SingleStep>
         <style jsx>{`
           main {
