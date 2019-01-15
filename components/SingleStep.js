@@ -19,15 +19,15 @@ export default class SingleStep extends React.Component {
     );
   }
 
-  renderSuffix() {
+  renderTitle() {
     return this.props.highlight ? (
       <Highlight
-        className="suffix"
-        content={this.props.suffix}
+        className="title"
+        content={this.props.title}
         highlight={this.props.highlight}
       />
     ) : (
-      <p className="suffix">{this.props.suffix}</p>
+      <p className="title">{this.props.title}</p>
     );
   }
 
@@ -37,7 +37,7 @@ export default class SingleStep extends React.Component {
         <div className="heading">
           {this.props.toast && <p className="title">{this.props.toast}</p>}
           {this.props.prefix && this.renderPrefix()}
-          {this.props.title && <p className="title">{this.props.title}</p>}
+          {this.props.title && this.renderTitle()}
         </div>
         {this.props.image && (
           <figure>
@@ -77,14 +77,17 @@ export default class SingleStep extends React.Component {
           }
           figure {
             margin: 0;
+            text-align: center;
           }
           img {
-            max-width: 100%;
+            max-width: 65%;
           }
         `}</style>
         <style jsx global>{`
           p.prefix,
+          p.title,
           p.suffix,
+          span.title,
           span.prefix,
           span.suffix {
             display: block;
@@ -92,6 +95,9 @@ export default class SingleStep extends React.Component {
             font-family: var(--font-primary);
             font-size: 1rem;
             font-weight: 400;
+          }
+          span.title mark {
+            color: var(--color-secondary) !important;
           }
         `}</style>
       </div>
