@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import Router from 'next/router';
-import { CardElement, injectStripe } from 'react-stripe-elements';
+import {
+  injectStripe,
+  CardNumberElement,
+  CardExpiryElement,
+  CardCVCElement,
+  PostalCodeElement
+} from 'react-stripe-elements';
 import Button from '../components/Button';
 import CONSTANTS from '../globals';
 
@@ -51,9 +57,11 @@ class CheckoutForm extends Component {
     return (
       <div className="checkout">
         <div className="card">
-          <CardElement
+          <CardNumberElement
+            placeholder="Card Number"
             style={{
               base: {
+                margin: '5px',
                 color: 'var(--color-primary)',
                 fontSize: '16px',
                 fontFamily: '"Poppins", sans-serif',
@@ -70,6 +78,66 @@ class CheckoutForm extends Component {
               }
             }}
           />
+          <div className="three-columns">
+            <CardExpiryElement
+              style={{
+                base: {
+                  color: 'var(--color-primary)',
+                  fontSize: '16px',
+                  fontFamily: '"Poppins", sans-serif',
+                  fontSmoothing: 'antialiased',
+                  '::placeholder': {
+                    color: '#2479ff'
+                  }
+                },
+                invalid: {
+                  color: '#e5424d',
+                  ':focus': {
+                    color: '#303238'
+                  }
+                }
+              }}
+            />
+            <CardCVCElement
+              style={{
+                base: {
+                  color: 'var(--color-primary)',
+                  fontSize: '16px',
+                  fontFamily: '"Poppins", sans-serif',
+                  fontSmoothing: 'antialiased',
+                  '::placeholder': {
+                    color: '#2479ff'
+                  }
+                },
+                invalid: {
+                  color: '#e5424d',
+                  ':focus': {
+                    color: '#303238'
+                  }
+                }
+              }}
+            />
+            <PostalCodeElement
+              placeholder="Zip Code"
+              style={{
+                base: {
+                  color: 'var(--color-primary)',
+                  fontSize: '16px',
+                  fontFamily: '"Poppins", sans-serif',
+                  fontSmoothing: 'antialiased',
+                  '::placeholder': {
+                    color: '#2479ff'
+                  }
+                },
+                invalid: {
+                  color: '#e5424d',
+                  ':focus': {
+                    color: '#303238'
+                  }
+                }
+              }}
+            />
+          </div>
         </div>
         <Button primary onClick={this.submit}>
           Next
@@ -77,10 +145,16 @@ class CheckoutForm extends Component {
         <style jsx>{`
           .card {
             margin: 2rem 0;
+            margin-bottom: 10px;
+          }
+          .three-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
           }
         `}</style>
         <style jsx global>{`
           .StripeElement {
+            margin: 10px;
             background-color: white;
             padding: 0.8em 1em;
             border-radius: 3px;
