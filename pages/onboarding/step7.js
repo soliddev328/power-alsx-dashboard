@@ -90,76 +90,89 @@ class Step7 extends React.Component {
 
   renderUtilityLogin() {
     return (
-      <Formik
-        initialValues={{
-          utilityUser: '',
-          utilityPassword: ''
-        }}
-        onSubmit={values => {
-          this.setState({ isLoading: true });
-          axios
-            .put(`${API}/v1/subscribers/utilities/link`, {
-              leadId: this.state.leadId,
-              utility: this.state.utility,
-              utilityUsername: values.utilityUser,
-              utilityPwd: values.utilityPassword
-            })
-            .then(response => {
-              localStorage.setItem(
-                'linkedUtility',
-                JSON.stringify(response.data)
-              );
-              if (response.data.data && response.data.data[0]) {
-                if (response.data.data[0].hasLoggedIn) {
+      <React.Fragment>
+        {this.props.query && this.props.query.error && (
+          <p className="error">
+            There was a problem connecting, could you please verify your login.
+          </p>
+        )}
+        <Formik
+          initialValues={{
+            utilityUser: '',
+            utilityPassword: ''
+          }}
+          onSubmit={values => {
+            this.setState({ isLoading: true });
+
+            axios
+              .put(`${API}/v1/subscribers/utilities/link`, {
+                leadId: this.state.leadId,
+                utility: this.state.utility,
+                utilityUsername: values.utilityUser,
+                utilityPwd: values.utilityPassword
+              })
+              .then(response => {
+                localStorage.setItem(
+                  'linkedUtility',
+                  JSON.stringify(response.data)
+                );
+                if (response.data.data && response.data.data[0]) {
+                  if (response.data.data[0].hasLoggedIn) {
+                    localStorage.setItem('partialConnection', false);
+                    Router.push({
+                      pathname: '/onboarding/step8'
+                    });
+                  } else {
+                    this.setState({ isLoading: false });
+                    Router.push({
+                      pathname: '/onboarding/step7',
+                      query: {
+                        error: true
+                      }
+                    });
+                  }
+                } else {
+                  localStorage.setItem('partialConnection', true);
                   Router.push({
                     pathname: '/onboarding/step8'
                   });
-                } else {
-                  this.setState({ isLoading: false });
-                  Router.push({
-                    pathname: '/onboarding/step7',
-                    query: {
-                      error: true
-                    }
-                  });
                 }
-              } else {
-                Router.push({
-                  pathname: '/onboarding/step9',
-                  query: {
-                    partiallyConnected: true
-                  }
-                });
-              }
-            })
-            .catch(function(error) {
-              console.log(error);
-            });
-        }}
-        render={props => (
-          <React.Fragment>
-            <Form>
-              <Input label="User name" fieldname="utilityUser" />
-              <Input
-                type="password"
-                label="Password"
-                fieldname="utilityPassword"
-                autoComplete="no"
-              />
+              })
+              .catch(function(error) {
+                console.log(error);
+              });
+          }}
+          render={props => (
+            <React.Fragment>
+              <Form>
+                <Input label="User name" fieldname="utilityUser" />
+                <Input
+                  type="password"
+                  label="Password"
+                  fieldname="utilityPassword"
+                  autoComplete="no"
+                />
 
-              <Button
-                primary
-                disabled={
-                  !props.values.utilityUser != '' ||
-                  !props.values.utilityPassword != ''
-                }
-              >
-                Next
-              </Button>
-            </Form>
-          </React.Fragment>
-        )}
-      />
+                <Button
+                  primary
+                  disabled={
+                    !props.values.utilityUser != '' ||
+                    !props.values.utilityPassword != ''
+                  }
+                >
+                  Next
+                </Button>
+              </Form>
+            </React.Fragment>
+          )}
+        />
+        <style jsx>{`
+          .error {
+            text-align: center;
+            color: red;
+          }
+        `}</style>
+      </React.Fragment>
     );
   }
 
@@ -177,11 +190,9 @@ class Step7 extends React.Component {
               utilityAccountNumber: values.utilityAccountNumber
             })
             .then(() => {
+              localStorage.setItem('partialConnection', true);
               Router.push({
-                pathname: '/onboarding/step9',
-                query: {
-                  partiallyConnected: true
-                }
+                pathname: '/onboarding/step8'
               });
             })
             .catch(function(error) {
@@ -273,14 +284,8 @@ class Step7 extends React.Component {
               />
             </figure>
           )}
-          {this.props.query && this.props.query.error && (
-            <p className="error">
-              There was a problem connecting, could you please verify your
-              login.
-            </p>
-          )}
           {this.state.isLoading ? this.renderLoader() : this.renderForms()}
-          {canLinkAccount && (
+          {!this.state.isLoading && canLinkAccount && (
             <div className="links">
               {this.state.createLoginLink && (
                 <a className="cta" href={this.state.createLoginLink}>
@@ -325,11 +330,6 @@ class Step7 extends React.Component {
             flex-direction: column;
             align-items: center;
             justify-content: center;
-          }
-
-          .error {
-            text-align: center;
-            color: red;
           }
         `}</style>
       </main>
