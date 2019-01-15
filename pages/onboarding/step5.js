@@ -44,6 +44,7 @@ class Step5 extends React.Component {
             }}
             onSubmit={values => {
               localStorage.setItem('email', values.emailAddress);
+              localStorage.setItem('phone', values.phoneNumber);
               axios
                 .post(`${API}/v1/subscribers`, {
                   FirstName: this.state.name.firstName,
@@ -66,11 +67,15 @@ class Step5 extends React.Component {
                 <Phoneinput
                   value={props.values.phoneNumber}
                   onChangeEvent={props.setFieldValue}
-                  onBlurEvent={props.setFieldTouched}
                   label="Phone"
                   fieldname="phoneNumber"
                 />
-                <Input type="email" label="Email" fieldname="emailAddress" />
+                <Input
+                  type="email"
+                  label="Email"
+                  fieldname="emailAddress"
+                  required
+                />
                 <Button
                   primary
                   disabled={
