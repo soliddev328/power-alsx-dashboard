@@ -125,6 +125,7 @@ export default class CustomSelect extends React.Component {
               onChange={this.handleChange}
               onBlur={this.handleBlur}
               value={this.props.value}
+              placeholder="Select your utility"
             />
           </div>
         )}

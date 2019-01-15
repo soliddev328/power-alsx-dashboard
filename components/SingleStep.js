@@ -48,7 +48,7 @@ export default class SingleStep extends React.Component {
         {this.props.suffix && this.renderSuffix()}
         <style jsx>{`
           .content {
-            max-width: 90%;
+            max-width: 87%;
             margin: 0 auto;
           }
           p {

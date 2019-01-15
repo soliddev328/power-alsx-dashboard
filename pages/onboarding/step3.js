@@ -29,7 +29,7 @@ class Step3 extends React.Component {
               );
 
               Router.push({
-                pathname: '/onboarding/step4'
+                pathname: '/onboarding/searching'
               });
             }}
             render={props => {
@@ -42,14 +42,13 @@ class Step3 extends React.Component {
                       onBlur={props.setFieldTouched}
                       error={props.errors.topics}
                       touched={props.touched.topics}
-                      label="Utility Name"
                       fieldname="currentUtility"
                     />
                     <Button
                       primary
                       disabled={!props.values.currentUtility != ''}
                     >
-                      Next
+                      Check For Savings
                     </Button>
                   </Form>
                 </React.Fragment>
