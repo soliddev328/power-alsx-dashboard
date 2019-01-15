@@ -34,8 +34,8 @@ class Step5 extends React.Component {
       <main>
         <Header />
         <SingleStep
-          toast="Great"
-          title="What phone number and email would you like to use to create your account?"
+          toast="Ok, now for the fun stuff!"
+          title="What email and phone number would you like to use to create your account?"
         >
           <Formik
             initialValues={{
