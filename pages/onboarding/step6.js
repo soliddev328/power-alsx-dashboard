@@ -49,10 +49,7 @@ class Step6 extends React.Component {
     return (
       <main>
         <Header />
-        <SingleStep
-          toast="Ok, now the fun stuff."
-          title="How do you receive your electricity bill today?"
-        >
+        <SingleStep title="Do you have an on-line account with your electric utility?">
           <Formik
             initialValues={{
               billingMethod: ''
@@ -85,13 +82,13 @@ class Step6 extends React.Component {
                     number="1"
                     name="billingMethod"
                     value="electronic"
-                    heading="Email or On-Line"
+                    heading="Yes"
                   />
                   <RadioCard
                     number="2"
                     name="billingMethod"
                     value="paper"
-                    heading="Paper/Mail"
+                    heading="No"
                   />
                   <Button primary disabled={!props.values.billingMethod != ''}>
                     Next

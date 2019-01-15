@@ -53,14 +53,8 @@ class Step11 extends React.Component {
 
   renderCreditCard() {
     return (
-      <SingleStep title="Pay by Credit Card">
+      <SingleStep title="Please enter your credit card information">
         <div className="container">
-          <p className="prefix">
-            <em>
-              A <span className="highlight">2.9%</span> processing fee is
-              applied to cover transaction costs
-            </em>
-          </p>
           <img className="cards" src="/static/images/banks/cards.png" alt="" />
           <StripeProvider stripe={this.state.stripe}>
             <Elements>
