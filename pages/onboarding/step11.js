@@ -1,123 +1,86 @@
 import React from 'react';
-import { Elements, StripeProvider } from 'react-stripe-elements';
+import Router from 'next/router';
 import Header from '../../components/Header';
 import SingleStep from '../../components/SingleStep';
-import Plaid from '../../components/Plaid';
-import Checkout from '../../components/Checkout';
-import CONSTANTS from '../../globals';
-
-const { STRIPE_KEY } =
-  CONSTANTS.NODE_ENV !== 'production' ? CONSTANTS.dev : CONSTANTS.prod;
+import Button from '../../components/Button';
+import CTA from '../../components/CTA';
 
 class Step11 extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      name: '',
-      email: '',
-      paymentMethod: '',
-      stripe: null
+      shared: false,
+      canonicalUrl: ''
     };
   }
 
   componentDidMount() {
-    let storedPaymentMethod = '';
+    const canonicalUrl =
+      document.querySelector("meta[property='canonical']") || null;
 
-    if (localStorage.getItem('paymentMethod')) {
-      storedPaymentMethod = JSON.parse(localStorage.getItem('paymentMethod'));
+    if (canonicalUrl) {
+      this.setState({
+        canonicalUrl: canonicalUrl.getAttribute('content')
+      });
     }
-
-    this.setState({
-      paymentMethod: storedPaymentMethod.paymentMethod,
-      stripe: window.Stripe(STRIPE_KEY)
-    });
   }
 
-  renderBankLink() {
-    return (
-      <SingleStep>
-        <Plaid />
-        <style jsx>{`
-          .container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            grid-column-gap: 15px;
-            grid-row-gap: 20px;
-            justify-items: center;
-          }
-        `}</style>
-      </SingleStep>
+  share() {
+    let shareCompleted = false;
+    FB.ui(
+      {
+        method: 'share',
+        href: window.location.href
+      },
+      function(response) {
+        if (response) {
+          shareCompleted = true;
+        }
+      }
     );
-  }
-
-  renderCreditCard() {
-    return (
-      <SingleStep title="Please enter your credit card information">
-        <div className="container">
-          <img className="cards" src="/static/images/banks/cards.png" alt="" />
-          <StripeProvider stripe={this.state.stripe}>
-            <Elements>
-              <Checkout stripe={this.state.stripe} name={this.props.name} />
-            </Elements>
-          </StripeProvider>
-        </div>
-        <style jsx>{`
-          p {
-            text-align: center;
-            vertical-align: middle;
-          }
-
-          p.small {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-          }
-
-          p svg {
-            margin-right: 10px;
-          }
-
-          em .highlight {
-            color: var(--color-primary);
-            font-weight: 700;
-          }
-
-          .cards {
-            display: block;
-            max-width: 35%;
-            margin: 0 auto;
-            margin-bottom: 1em;
-          }
-
-          .container h5 {
-            display: inline-block;
-            font-size: 1rem;
-            font-weight: 700;
-            position: relative;
-            color: #ff69a0;
-          }
-
-          .container h5 svg {
-            position: absolute;
-            right: 0;
-            bottom: 0;
-            transform: translate(50%, 30%);
-          }
-        `}</style>
-      </SingleStep>
-    );
+    this.setState({ shared: shareCompleted });
   }
 
   render() {
     return (
       <main>
         <Header />
-        {this.state.paymentMethod &&
-        this.state.paymentMethod.indexOf('automatic') === 0
-          ? this.renderBankLink()
-          : this.renderCreditCard()}
+        <SingleStep
+          toast="Help us spread the word:"
+          title="Receive a free month of electricity for each referral!"
+          image={{
+            src: '/static/images/share/share.png',
+            alt: 'An illustration of people enjoying renewable energy'
+          }}
+        >
+          <Button primary share="facebook" onClick={() => this.share()}>
+            Share this image on Facebook
+          </Button>
+          <Button
+            primary
+            onClick={() => {
+              localStorage.setItem('usercreated', true);
+              Router.push({
+                pathname: '/dashboard'
+              });
+            }}
+            disabled={!this.state.shared}
+          >
+            Finish!
+          </Button>
+          <CTA
+            secondary
+            onClick={() => {
+              localStorage.setItem('usercreated', true);
+              Router.push({
+                pathname: '/dashboard'
+              });
+            }}
+          >
+            Skip this step
+          </CTA>
+        </SingleStep>
         <style jsx>{`
           main {
             height: 88vh;

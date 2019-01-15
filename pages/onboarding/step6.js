@@ -49,7 +49,7 @@ class Step6 extends React.Component {
     return (
       <main>
         <Header />
-        <SingleStep title="Do you have an on-line account with your electric utility?">
+        <SingleStep title="Do you have an on-line account with your electric utility?">
           <Formik
             initialValues={{
               billingMethod: ''
