@@ -25,9 +25,12 @@ export default class GeoSuggest extends React.Component {
   };
 
   scrollOnFocus() {
-    setTimeout(() => {
-      window.scrollTo(0, this.inputField.current.getBoundingClientRect().top);
-    }, 200);
+    if (this.inputField) {
+      const offset = this.inputField.current.getBoundingClientRect().top;
+      setTimeout(() => {
+        window.scrollTo(0, offset);
+      }, 500);
+    }
   }
 
   render() {

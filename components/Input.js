@@ -18,9 +18,12 @@ export default class Input extends React.Component {
   }
 
   scrollOnFocus() {
-    setTimeout(() => {
-      window.scrollTo(0, this.inputField.current.getBoundingClientRect().top);
-    }, 300);
+    if (this.inputField) {
+      const offset = this.inputField.current.getBoundingClientRect().top;
+      setTimeout(() => {
+        window.scrollTo(0, offset);
+      }, 500);
+    }
   }
 
   render() {
@@ -38,7 +41,6 @@ export default class Input extends React.Component {
           validate={this.props.required}
           onInvalid={this.applyValidation}
           onInput={this.customSetCustomValidity}
-          autoComplete="off"
           autoFocus={this.props.autoFocus}
           {...this.props}
         />
@@ -65,7 +67,6 @@ export default class Input extends React.Component {
 
           input + label {
             position: absolute;
-            pointer-events: none;
             font-family: var(--font-primary);
             font-size: 0.75rem;
             font-weight: 600;
@@ -76,7 +77,6 @@ export default class Input extends React.Component {
             text-transform: capitalize;
             transform: translateY(-50%);
             transition: opacity 400ms cubic-bezier(0.075, 0.82, 0.165, 1);
-            z-index: 11;
           }
 
           input[value]:not([value='']) + label {
