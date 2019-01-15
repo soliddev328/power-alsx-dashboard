@@ -23,6 +23,7 @@
     "react-ga": "^2.5.3",
     "react-geosuggest": "^2.9.0",
     "react-highlight-words": "^0.14.0",
+    "react-number-format": "^4.0.6",
     "react-phone-input-auto-format": "^0.1.0",
     "react-plaid": "^0.8.0",
     "react-select": "^2.2.0",

@@ -67,6 +67,7 @@ class Step5 extends React.Component {
                 <Phoneinput
                   value={props.values.phoneNumber}
                   onChangeEvent={props.setFieldValue}
+                  onBlurEvent={props.setFieldTouched}
                   label="Phone"
                   fieldname="phoneNumber"
                 />
