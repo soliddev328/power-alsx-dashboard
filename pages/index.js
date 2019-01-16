@@ -1,10 +1,10 @@
-import React from 'react';
-import Router from 'next/router';
-import { Formik, Form } from 'formik';
-import Header from '../components/Header';
-import Input from '../components/Input';
-import SingleStep from '../components/SingleStep';
-import Button from '../components/Button';
+import React from "react";
+import Router from "next/router";
+import { Formik, Form } from "formik";
+import Header from "../components/Header";
+import Input from "../components/Input";
+import SingleStep from "../components/SingleStep";
+import Button from "../components/Button";
 
 class Index extends React.Component {
   constructor(props) {
@@ -13,7 +13,9 @@ class Index extends React.Component {
     this.state = {};
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    global.analytics.track("Sign-Up Initiated", {});
+  }
 
   render() {
     return (
@@ -22,13 +24,13 @@ class Index extends React.Component {
         <SingleStep title="Hi! I'm Scott. Let's see if we can save you money with lower cost clean electricity!">
           <Formik
             initialValues={{
-              firstName: '',
-              lastName: ''
+              firstName: "",
+              lastName: ""
             }}
             onSubmit={values => {
-              localStorage.setItem('username', JSON.stringify(values));
+              localStorage.setItem("username", JSON.stringify(values));
               Router.push({
-                pathname: '/onboarding/step2'
+                pathname: "/onboarding/step2"
               });
             }}
             render={props => (
@@ -41,8 +43,8 @@ class Index extends React.Component {
                   <Button
                     primary
                     disabled={
-                      !props.values.firstName != '' ||
-                      !props.values.lastName != ''
+                      !props.values.firstName != "" ||
+                      !props.values.lastName != ""
                     }
                   >
                     Next
