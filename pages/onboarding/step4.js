@@ -118,7 +118,7 @@ class Step4 extends React.Component {
         <Header />
         <SingleStep
           toast="Great news!"
-          title="We’ve got a project in your area. We can lower your costs and emissions! Here's what we can offer:"
+          title="We've got a project in your area. We can lower your costs and emissions! Here's what we can offer:"
         >
           <EnhancedCustomForm
             agreement={{
