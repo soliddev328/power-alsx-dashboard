@@ -1,7 +1,6 @@
 import React from 'react';
 import Router from 'next/router';
 import { Formik, Form } from 'formik';
-import axios from 'axios';
 import Header from '../../components/Header';
 import RadioCard from '../../components/RadioCard';
 import SingleStep from '../../components/SingleStep';
@@ -56,24 +55,9 @@ class Step6 extends React.Component {
             }}
             onSubmit={values => {
               localStorage.setItem('billingMethod', JSON.stringify(values));
-              axios
-                .put(`${API}/v1/subscribers`, {
-                  leadId: this.state.leadId,
-                  street: this.state.address.street,
-                  state: this.state.address.state,
-                  city: this.state.address.city,
-                  postalCode: this.state.address.postalCode,
-                  agreementChecked: !!this.state.agreedTermsAndConditions,
-                  utility: this.state.utility
-                })
-                .then(function(response) {
-                  Router.push({
-                    pathname: '/onboarding/step7'
-                  });
-                })
-                .catch(function(error) {
-                  console.log(error);
-                });
+              Router.push({
+                pathname: '/onboarding/step7'
+              });
             }}
             render={props => (
               <React.Fragment>
