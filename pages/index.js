@@ -15,6 +15,19 @@ class Index extends React.Component {
 
   componentDidMount() {
     global.analytics.track("Sign-Up Initiated", {});
+    if (this.props && this.props.query.partner) {
+      localStorage.setItem("Partner", this.props.query.partner);
+    }
+    if (this.props && this.props.query.advocate) {
+      localStorage.setItem("Referrer", this.props.query.advocate);
+    }
+    if (this.props && this.props.query.rep) {
+      localStorage.setItem("SalesRep", this.props.query.rep);
+    }
+  }
+
+  static getInitialProps({ query }) {
+    return { query };
   }
 
   render() {
