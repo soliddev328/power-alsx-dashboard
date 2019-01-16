@@ -16,6 +16,10 @@ class Step11 extends React.Component {
   }
 
   componentDidMount() {
+    if (localStorage.getItem("leadId")) {
+      global.analytics.track("Sign-Up Completed", {});
+    }
+
     const canonicalUrl =
       document.querySelector("meta[property='canonical']") || null;
 
