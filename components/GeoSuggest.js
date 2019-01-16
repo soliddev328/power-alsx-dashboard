@@ -29,7 +29,7 @@ export default class GeoSuggest extends React.Component {
       const offset = this.inputField.current.getBoundingClientRect().top;
       setTimeout(() => {
         window.scrollTo(0, offset);
-      }, 500);
+      }, 200);
     }
   }
 
@@ -42,6 +42,7 @@ export default class GeoSuggest extends React.Component {
           onChange={this.handleChange}
           onBlur={this.handleBlur}
           value={this.props.value}
+          country="us"
         />
         <style jsx global>{`
           .geosuggest {
