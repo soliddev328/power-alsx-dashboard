@@ -1,16 +1,16 @@
-import React from 'react';
-import Router from 'next/router';
-import { Formik, Form } from 'formik';
-import axios from 'axios';
-import Phoneinput from '../../components/Phoneinput';
-import Header from '../../components/Header';
-import Input from '../../components/Input';
-import SingleStep from '../../components/SingleStep';
-import Button from '../../components/Button';
-import CONSTANTS from '../../globals';
+import React from "react";
+import Router from "next/router";
+import { Formik, Form } from "formik";
+import axios from "axios";
+import Phoneinput from "../../components/Phoneinput";
+import Header from "../../components/Header";
+import Input from "../../components/Input";
+import SingleStep from "../../components/SingleStep";
+import Button from "../../components/Button";
+import CONSTANTS from "../../globals";
 
 const { API } =
-  CONSTANTS.NODE_ENV !== 'production' ? CONSTANTS.dev : CONSTANTS.prod;
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 class Step5 extends React.Component {
   constructor(props) {
@@ -18,31 +18,49 @@ class Step5 extends React.Component {
   }
 
   componentDidMount() {
-    let storedName = '';
-    let storedUtility = '';
+    let storedName = "";
+    let storedUtility = "";
     let storedAgreementChecked = false;
-    let storedAddress = '';
+    let storedAddress = "";
+    let storedPartner = "";
+    let storedReferrer = "";
+    let storedSalesRep = "";
 
-    if (localStorage.getItem('utility')) {
-      storedUtility = JSON.parse(localStorage.getItem('utility'));
+    if (localStorage.getItem("utility")) {
+      storedUtility = JSON.parse(localStorage.getItem("utility"));
     }
-    if (localStorage.getItem('acceptedTermsAndConditions')) {
+
+    if (localStorage.getItem("acceptedTermsAndConditions")) {
       storedAgreementChecked = JSON.parse(
-        localStorage.getItem('acceptedTermsAndConditions')
+        localStorage.getItem("acceptedTermsAndConditions")
       );
     }
-    if (localStorage.getItem('address')) {
-      storedAddress = JSON.parse(localStorage.getItem('address'));
+
+    if (localStorage.getItem("address")) {
+      storedAddress = JSON.parse(localStorage.getItem("address"));
     }
 
-    if (localStorage.getItem('username')) {
-      storedName = JSON.parse(localStorage.getItem('username'));
+    if (localStorage.getItem("username")) {
+      storedName = JSON.parse(localStorage.getItem("username"));
+    }
+
+    if (localStorage.getItem("Partner")) {
+      storedPartner = localStorage.getItem("Partner");
+    }
+    if (localStorage.getItem("Referrer")) {
+      storedReferrer = localStorage.getItem("Referrer");
+    }
+    if (localStorage.getItem("SalesRep")) {
+      storedSalesRep = localStorage.getItem("SalesRep");
     }
 
     this.setState({
       name: storedName,
       utility: storedUtility.label,
       address: storedAddress,
+      referrer: storedReferrer,
+      partner: storedPartner,
+      salesRep: storedSalesRep,
       agreedTermsAndConditions: storedAgreementChecked
     });
   }
@@ -57,18 +75,24 @@ class Step5 extends React.Component {
         >
           <Formik
             initialValues={{
-              phoneNumber: '',
-              emailAddress: ''
+              phoneNumber: "",
+              emailAddress: ""
             }}
             onSubmit={values => {
-              localStorage.setItem('email', values.emailAddress);
-              localStorage.setItem('phone', values.phoneNumber);
+              localStorage.setItem("email", values.emailAddress);
+              localStorage.setItem("phone", values.phoneNumber);
+              console.log("partner: ", this.state.partner);
+              console.log("salesRep: ", this.state.salesRep);
+              console.log("referrer: ", this.state.referrer);
               axios
                 .post(`${API}/v1/subscribers`, {
                   FirstName: this.state.name.firstName,
                   LastName: this.state.name.lastName,
                   Phone: values.phoneNumber,
                   Email: values.emailAddress,
+                  Referrer: this.state.referrer,
+                  Partner: this.state.partner,
+                  SalesRep: this.state.salesRep,
                   street: this.state.address.street,
                   state: this.state.address.state,
                   city: this.state.address.city,
@@ -77,9 +101,9 @@ class Step5 extends React.Component {
                   utility: this.state.utility
                 })
                 .then(function(response) {
-                  localStorage.setItem('leadId', response.data.data.leadId);
+                  localStorage.setItem("leadId", response.data.data.leadId);
                   Router.push({
-                    pathname: '/onboarding/step6'
+                    pathname: "/onboarding/step6"
                   });
                 })
                 .catch(function(error) {
@@ -104,8 +128,8 @@ class Step5 extends React.Component {
                 <Button
                   primary
                   disabled={
-                    !props.values.phoneNumber != '' ||
-                    !props.values.emailAddress != ''
+                    !props.values.phoneNumber != "" ||
+                    !props.values.emailAddress != ""
                   }
                 >
                   Next
