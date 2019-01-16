@@ -105,9 +105,6 @@ class Step5 extends React.Component {
 
                   // Call Segement events
                   global.analytics.identify(response.data.data.leadId, {
-                    name: `${this.state.name.firstName} ${
-                      this.state.name.lastName
-                    }`,
                     email: values.emailAddress
                   });
                   global.analytics.track("Lead Created", {});
