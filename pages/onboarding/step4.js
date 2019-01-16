@@ -53,8 +53,23 @@ class CustomForm extends React.Component {
         </div>
         <Checkbox fieldname="acceptedTermsAndConditions">
           <p className="checkbox__label">
-            I accept the <a href={this.props.agreement.terms}>terms</a> and{' '}
-            <a href={this.props.agreement.conditions}>conditions</a>.
+            I accept the{' '}
+            <a
+              href={this.props.agreement.terms}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              terms
+            </a>{' '}
+            and{' '}
+            <a
+              href={this.props.agreement.conditions}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              conditions
+            </a>
+            .
           </p>
         </Checkbox>
         <p className="disclaimer">
