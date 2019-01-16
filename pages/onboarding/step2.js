@@ -52,7 +52,7 @@ class Step2 extends React.Component {
       <main>
         <Header />
         <SingleStep
-          toast={`Nice to meet you ${this.capitalize(
+          prefix={`Nice to meet you ${this.capitalize(
             this.state.name.firstName
           )}.`}
           title="What is your home address?"

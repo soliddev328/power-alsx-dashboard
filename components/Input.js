@@ -17,12 +17,12 @@ export default class Input extends React.Component {
     e.target.setCustomValidity('');
   }
 
-  scrollOnFocus() {
+  scrollOnFocus(e) {
     if (this.inputField) {
       const offset = this.inputField.current.getBoundingClientRect().top;
       setTimeout(() => {
         window.scrollTo(0, offset);
-      }, 500);
+      }, 200);
     }
   }
 
