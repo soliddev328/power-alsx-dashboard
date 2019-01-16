@@ -43,14 +43,19 @@ class CheckoutForm extends Component {
     ev.preventDefault();
     if (this.props.stripe) {
       this.props.stripe.createToken({ type: 'card' }).then(payload => {
-        axios.put(`${API}/v1/subscribers`, {
-          leadId: this.state.leadId,
-          email: this.state.email,
-          stripeToken: payload.token.id
-        });
-        Router.push({
-          pathname: '/onboarding/step11'
-        });
+        if (payload.token) {
+          axios
+            .put(`${API}/v1/subscribers`, {
+              leadId: this.state.leadId,
+              email: this.state.email,
+              stripeToken: payload.token.id
+            })
+            .then(() => {
+              Router.push({
+                pathname: '/onboarding/step11'
+              });
+            });
+        }
       });
     } else {
       console.log('Form submitted before Stripe.js loaded.');
