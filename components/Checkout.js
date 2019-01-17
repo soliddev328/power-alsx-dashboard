@@ -63,7 +63,6 @@ class CheckoutForm extends Component {
   }
 
   render() {
-    const error = this.state ? this.state.errorMessage : null;
     return (
       <div className="checkout">
         <div className="card">
@@ -90,6 +89,8 @@ class CheckoutForm extends Component {
             onChange={event => {
               if (event.error) {
                 this.setState({ errorMessage: event.error.message });
+              } else {
+                this.setState({ errorMessage: '' });
               }
             }}
           />
@@ -116,6 +117,8 @@ class CheckoutForm extends Component {
               onChange={event => {
                 if (event.error) {
                   this.setState({ errorMessage: event.error.message });
+                } else {
+                  this.setState({ errorMessage: '' });
                 }
               }}
             />
@@ -141,6 +144,8 @@ class CheckoutForm extends Component {
               onChange={event => {
                 if (event.error) {
                   this.setState({ errorMessage: event.error.message });
+                } else {
+                  this.setState({ errorMessage: '' });
                 }
               }}
             />
@@ -167,12 +172,16 @@ class CheckoutForm extends Component {
               onChange={event => {
                 if (event.error) {
                   this.setState({ errorMessage: event.error.message });
+                } else {
+                  this.setState({ errorMessage: '' });
                 }
               }}
             />
           </div>
         </div>
-        {error && <p className="error">{error}</p>}
+        {this.state && this.state.errorMessage && (
+          <p className="error">{this.state.errorMessage}</p>
+        )}
         <Button primary onClick={this.submit}>
           Next
         </Button>
