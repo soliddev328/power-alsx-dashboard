@@ -4,7 +4,7 @@ import Document, { Head, Main, NextScript } from "next/document";
 import settings from "../settings.json";
 import CONSTANTS from "../globals";
 
-const { FB_APP_ID, SEGMENT_KEY } =
+const { FB_APP_ID, SEGMENT_KEY, FULLSTORY_KEY } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 export default class MyDocument extends Document {
@@ -189,7 +189,7 @@ export default class MyDocument extends Document {
             dangerouslySetInnerHTML={{
               __html: `window['_fs_debug'] = false;
             window['_fs_host'] = 'fullstory.com';
-            window['_fs_org'] = '7ZZDY';
+            window['_fs_org'] = ${FULLSTORY_KEY};
             window['_fs_namespace'] = 'FS';
             (function(m,n,e,t,l,o,g,y){
                 if (e in m) {if(m.console && m.console.log) { m.console.log('FullStory namespace conflict. Please set window["_fs_namespace"].');} return;}
