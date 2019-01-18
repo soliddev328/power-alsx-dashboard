@@ -1,31 +1,31 @@
-import React from 'react';
-import Router from 'next/router';
-import { Formik, Form } from 'formik';
-import axios from 'axios';
-import GeoSuggest from '../../components/GeoSuggest';
-import Header from '../../components/Header';
-import Input from '../../components/Input';
-import SingleStep from '../../components/SingleStep';
-import Button from '../../components/Button';
-import CONSTANTS from '../../globals';
+import React from "react";
+import Router from "next/router";
+import { Formik, Form } from "formik";
+import axios from "axios";
+import GeoSuggest from "../../components/GeoSuggest";
+import Header from "../../components/Header";
+import Input from "../../components/Input";
+import SingleStep from "../../components/SingleStep";
+import Button from "../../components/Button";
+import CONSTANTS from "../../globals";
 
 const { API } =
-  CONSTANTS.NODE_ENV !== 'production' ? CONSTANTS.dev : CONSTANTS.prod;
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 class Step2 extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      name: ''
+      name: ""
     };
   }
 
   componentDidMount() {
-    let storedName = '';
+    let storedName = "";
 
-    if (localStorage.getItem('username')) {
-      storedName = JSON.parse(localStorage.getItem('username'));
+    if (localStorage.getItem("username")) {
+      storedName = JSON.parse(localStorage.getItem("username"));
     }
 
     this.setState({ name: storedName });
@@ -41,10 +41,22 @@ class Step2 extends React.Component {
       : null;
 
     const postalCode = components
-      ? components.find(x => x.types[0] == 'postal_code')
+      ? components.find(x => x.types[0] == "postal_code")
       : null;
 
-    return postalCode ? postalCode.long_name : '';
+    return postalCode ? postalCode.long_name : "";
+  }
+
+  getStateAddress(values) {
+    const components = values.address
+      ? values.address.gmaps.address_components
+      : null;
+    console.log(values.address.gmaps.address_components);
+    const state = components
+      ? components.find(x => x.types[0] == "administrative_area_level_1")
+      : null;
+
+    return state ? state.short_name : "";
   }
 
   render() {
@@ -59,41 +71,38 @@ class Step2 extends React.Component {
         >
           <Formik
             initialValues={{
-              address: '',
-              apt: ''
+              address: "",
+              apt: ""
             }}
             onSubmit={values => {
-              const arrayAddress = values.address.description.split(',');
-              const street = arrayAddress[0] ? arrayAddress[0] : '';
+              const arrayAddress = values.address.description.split(",");
+              const street = arrayAddress[0] ? arrayAddress[0] : "";
               const city = arrayAddress[1]
-                ? arrayAddress[1].replace(/\s/g, '')
-                : '';
-              const state = arrayAddress[2]
-                ? arrayAddress[2].replace(/\s/g, '')
-                : '';
+                ? arrayAddress[1].replace(/\s/g, "")
+                : "";
 
               const address = {
                 street: street,
                 city: city,
-                state: state,
+                state: this.getStateAddress(values),
                 postalCode: this.getPostalCode(values),
-                apt: values.apt ? values.apt : ''
+                apt: values.apt ? values.apt : ""
               };
 
-              localStorage.setItem('address', JSON.stringify(address));
+              localStorage.setItem("address", JSON.stringify(address));
 
               axios(`${API}/v1/zipcodes/${address.postalCode}`).then(
                 response => {
                   if (
-                    response.data.data.geostatus != 'Live' &&
-                    response.data.data.geostatus != 'Near-Term'
+                    response.data.data.geostatus != "Live" &&
+                    response.data.data.geostatus != "Near-Term"
                   ) {
                     Router.push({
-                      pathname: '/onboarding/sorry'
+                      pathname: "/onboarding/sorry"
                     });
                   } else {
                     Router.push({
-                      pathname: '/onboarding/step3'
+                      pathname: "/onboarding/step3"
                     });
                   }
                 }
@@ -112,7 +121,7 @@ class Step2 extends React.Component {
                     touched={props.touched.topics}
                   />
                   <Input label="Apartment No." fieldname="apt" />
-                  <Button primary disabled={!props.values.address != ''}>
+                  <Button primary disabled={!props.values.address != ""}>
                     Next
                   </Button>
                 </Form>
