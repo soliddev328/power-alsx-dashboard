@@ -1,11 +1,11 @@
-import React from 'react';
-import Router from 'next/router';
-import { Form, withFormik } from 'formik';
-import Header from '../../components/Header';
-import Checkbox from '../../components/Checkbox';
-import BulletItem from '../../components/BulletItem';
-import SingleStep from '../../components/SingleStep';
-import Button from '../../components/Button';
+import React from "react";
+import Router from "next/router";
+import { Form, withFormik } from "formik";
+import Header from "../../components/Header";
+import Checkbox from "../../components/Checkbox";
+import BulletItem from "../../components/BulletItem";
+import SingleStep from "../../components/SingleStep";
+import Button from "../../components/Button";
 
 const formikEnhancer = withFormik({
   mapPropsToValues: props => {
@@ -17,14 +17,14 @@ const formikEnhancer = withFormik({
   mapValuesToPayload: x => x,
   handleSubmit: payload => {
     localStorage.setItem(
-      'acceptedTermsAndConditions',
+      "acceptedTermsAndConditions",
       JSON.stringify(payload.acceptedTermsAndConditions)
     );
     Router.push({
-      pathname: '/onboarding/step5'
+      pathname: "/onboarding/step5"
     });
   },
-  displayName: 'CustomForm'
+  displayName: "CustomForm"
 });
 
 class CustomForm extends React.Component {
@@ -53,15 +53,15 @@ class CustomForm extends React.Component {
         </div>
         <Checkbox fieldname="acceptedTermsAndConditions">
           <p className="checkbox__label">
-            I accept the{' '}
+            I accept the{" "}
             <a
               href={this.props.agreement.terms}
               target="_blank"
               rel="noopener noreferrer"
             >
               terms
-            </a>{' '}
-            and{' '}
+            </a>{" "}
+            and{" "}
             <a
               href={this.props.agreement.conditions}
               target="_blank"
@@ -98,15 +98,16 @@ class Step4 extends React.Component {
     super(props);
 
     this.state = {
-      currentUtility: ''
+      currentUtility: ""
     };
   }
 
   componentDidMount() {
-    let utility = '';
+    global.analytics.page("Step 4");
+    let utility = "";
 
-    if (localStorage.getItem('utility')) {
-      utility = JSON.parse(localStorage.getItem('utility'));
+    if (localStorage.getItem("utility")) {
+      utility = JSON.parse(localStorage.getItem("utility"));
     }
 
     this.setState({ currentUtility: utility });

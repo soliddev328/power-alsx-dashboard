@@ -1,31 +1,33 @@
-import React from 'react';
-import { Elements, StripeProvider } from 'react-stripe-elements';
-import Header from '../../components/Header';
-import SingleStep from '../../components/SingleStep';
-import Plaid from '../../components/Plaid';
-import Checkout from '../../components/Checkout';
-import CONSTANTS from '../../globals';
+import React from "react";
+import { Elements, StripeProvider } from "react-stripe-elements";
+import Header from "../../components/Header";
+import SingleStep from "../../components/SingleStep";
+import Plaid from "../../components/Plaid";
+import Checkout from "../../components/Checkout";
+import CONSTANTS from "../../globals";
 
 const { STRIPE_KEY } =
-  CONSTANTS.NODE_ENV !== 'production' ? CONSTANTS.dev : CONSTANTS.prod;
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 class Step10 extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      name: '',
-      email: '',
-      paymentMethod: '',
+      name: "",
+      email: "",
+      paymentMethod: "",
       stripe: null
     };
   }
 
   componentDidMount() {
-    let storedPaymentMethod = '';
+    global.analytics.page("Step 10");
 
-    if (localStorage.getItem('paymentMethod')) {
-      storedPaymentMethod = JSON.parse(localStorage.getItem('paymentMethod'));
+    let storedPaymentMethod = "";
+
+    if (localStorage.getItem("paymentMethod")) {
+      storedPaymentMethod = JSON.parse(localStorage.getItem("paymentMethod"));
     }
 
     this.setState({
@@ -115,7 +117,7 @@ class Step10 extends React.Component {
       <main>
         <Header />
         {this.state.paymentMethod &&
-        this.state.paymentMethod.indexOf('automatic') === 0
+        this.state.paymentMethod.indexOf("automatic") === 0
           ? this.renderBankLink()
           : this.renderCreditCard()}
         <style jsx>{`

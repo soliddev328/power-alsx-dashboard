@@ -14,6 +14,7 @@ class Index extends React.Component {
   }
 
   componentDidMount() {
+    global.analytics.page("Step 1");
     global.analytics.track("Sign-Up Initiated", {});
     if (this.props && this.props.query.partner) {
       localStorage.setItem("Partner", this.props.query.partner);

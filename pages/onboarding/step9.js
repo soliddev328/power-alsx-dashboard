@@ -1,17 +1,19 @@
-import React from 'react';
-import Router from 'next/router';
-import { Formik, Form } from 'formik';
-import Header from '../../components/Header';
-import RadioCard from '../../components/RadioCard';
-import SingleStep from '../../components/SingleStep';
-import Button from '../../components/Button';
+import React from "react";
+import Router from "next/router";
+import { Formik, Form } from "formik";
+import Header from "../../components/Header";
+import RadioCard from "../../components/RadioCard";
+import SingleStep from "../../components/SingleStep";
+import Button from "../../components/Button";
 
 class Step9 extends React.Component {
   constructor(props) {
     super(props);
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    global.analytics.page("Step 9");
+  }
 
   render() {
     return (
@@ -20,12 +22,12 @@ class Step9 extends React.Component {
         <SingleStep title="Going forward you will pay Common Energy a lower amount for your electricity, instead of your utility:">
           <Formik
             initialValues={{
-              paymentMethod: ''
+              paymentMethod: ""
             }}
             onSubmit={values => {
-              localStorage.setItem('paymentMethod', JSON.stringify(values));
+              localStorage.setItem("paymentMethod", JSON.stringify(values));
               Router.push({
-                pathname: '/onboarding/step10'
+                pathname: "/onboarding/step10"
               });
             }}
             render={props => (
@@ -47,7 +49,7 @@ class Step9 extends React.Component {
                     content="A 2.9% processing fee is applied to cover transaction costs."
                     highlight="2.9%"
                   />
-                  <Button primary disabled={!props.values.paymentMethod != ''}>
+                  <Button primary disabled={!props.values.paymentMethod != ""}>
                     Next
                   </Button>
                   <p className="small">
