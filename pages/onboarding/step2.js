@@ -52,7 +52,7 @@ class Step2 extends React.Component {
     const components = values.address
       ? values.address.gmaps.address_components
       : null;
-    console.log(values.address.gmaps.address_components);
+
     const state = components
       ? components.find(x => x.types[0] == "administrative_area_level_1")
       : null;
