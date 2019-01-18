@@ -15,7 +15,7 @@ class Step8 extends React.Component {
     let storedPartialConnection = false;
 
     if (localStorage.getItem("partialConnection")) {
-      storedPartialConnection = localStorage.getItem("leadId");
+      storedPartialConnection = localStorage.getItem("partialConnection");
     }
 
     this.setState({
