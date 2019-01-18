@@ -1,17 +1,19 @@
-import React from 'react';
-import Router from 'next/router';
-import { Formik, Form } from 'formik';
-import Header from '../../components/Header';
-import SingleStep from '../../components/SingleStep';
-import Button from '../../components/Button';
-import CustomSelect from '../../components/CustomSelect';
+import React from "react";
+import Router from "next/router";
+import { Formik, Form } from "formik";
+import Header from "../../components/Header";
+import SingleStep from "../../components/SingleStep";
+import Button from "../../components/Button";
+import CustomSelect from "../../components/CustomSelect";
 
 class Step3 extends React.Component {
   constructor(props) {
     super(props);
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    global.analytics.page("Step 3");
+  }
 
   render() {
     return (
@@ -20,16 +22,16 @@ class Step3 extends React.Component {
         <SingleStep title="And who provides your electric service today?">
           <Formik
             initialValues={{
-              currentUtility: ''
+              currentUtility: ""
             }}
             onSubmit={values => {
               localStorage.setItem(
-                'utility',
+                "utility",
                 JSON.stringify(values.currentUtility)
               );
 
               Router.push({
-                pathname: '/onboarding/searching'
+                pathname: "/onboarding/searching"
               });
             }}
             render={props => {
@@ -46,7 +48,7 @@ class Step3 extends React.Component {
                     />
                     <Button
                       primary
-                      disabled={!props.values.currentUtility != ''}
+                      disabled={!props.values.currentUtility != ""}
                     >
                       Check For Savings
                     </Button>

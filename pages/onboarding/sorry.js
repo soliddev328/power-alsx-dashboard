@@ -1,15 +1,15 @@
-import React from 'react';
-import Router from 'next/router';
-import { Formik, Form } from 'formik';
-import axios from 'axios';
-import Input from '../../components/Input';
-import Header from '../../components/Header';
-import SingleStep from '../../components/SingleStep';
-import Button from '../../components/Button';
-import CONSTANTS from '../../globals';
+import React from "react";
+import Router from "next/router";
+import { Formik, Form } from "formik";
+import axios from "axios";
+import Input from "../../components/Input";
+import Header from "../../components/Header";
+import SingleStep from "../../components/SingleStep";
+import Button from "../../components/Button";
+import CONSTANTS from "../../globals";
 
 const { API } =
-  CONSTANTS.NODE_ENV !== 'production' ? CONSTANTS.dev : CONSTANTS.prod;
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 class Sorry extends React.Component {
   constructor(props) {
@@ -17,14 +17,16 @@ class Sorry extends React.Component {
   }
 
   componentDidMount() {
-    let storedName = '';
-    let storedAddress = '';
+    global.analytics.page("Out of area");
 
-    if (localStorage.getItem('username')) {
-      storedName = JSON.parse(localStorage.getItem('username'));
+    let storedName = "";
+    let storedAddress = "";
+
+    if (localStorage.getItem("username")) {
+      storedName = JSON.parse(localStorage.getItem("username"));
     }
-    if (localStorage.getItem('address')) {
-      storedAddress = JSON.parse(localStorage.getItem('address'));
+    if (localStorage.getItem("address")) {
+      storedAddress = JSON.parse(localStorage.getItem("address"));
     }
 
     this.setState({ name: storedName, address: storedAddress });
@@ -40,7 +42,7 @@ class Sorry extends React.Component {
         >
           <Formik
             initialValues={{
-              email: ''
+              email: ""
             }}
             onSubmit={values => {
               axios
@@ -50,13 +52,13 @@ class Sorry extends React.Component {
                   street: this.state.address.street,
                   state: this.state.address.state,
                   city: this.state.address.city,
-                  Phone: '9999999999',
+                  Phone: "9999999999",
                   Email: values.email
                 })
                 .then(function(response) {
                   console.log(response);
                   Router.push({
-                    pathname: '/'
+                    pathname: "/"
                   });
                 })
                 .catch(function(error) {
@@ -67,7 +69,7 @@ class Sorry extends React.Component {
               <React.Fragment>
                 <Form>
                   <Input label="email" fieldname="email" />
-                  <Button primary disabled={!props.values.email != ''}>
+                  <Button primary disabled={!props.values.email != ""}>
                     Next
                   </Button>
                 </Form>

@@ -1,32 +1,34 @@
-import React from 'react';
-import Router from 'next/router';
-import Header from '../components/Header';
-import Button from '../components/Button';
-import AppHeader from '../components/AppHeader';
-import Card from '../components/Card';
-import SunIcon from '../components/Icons/SunIcon';
-import LeafIcon from '../components/Icons/LeafIcon';
-import LightningIcon from '../components/Icons/LightningIcon';
-import BagIcon from '../components/Icons/BagIcon';
+import React from "react";
+import Router from "next/router";
+import Header from "../components/Header";
+import Button from "../components/Button";
+import AppHeader from "../components/AppHeader";
+import Card from "../components/Card";
+import SunIcon from "../components/Icons/SunIcon";
+import LeafIcon from "../components/Icons/LeafIcon";
+import LightningIcon from "../components/Icons/LightningIcon";
+import BagIcon from "../components/Icons/BagIcon";
 
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      isAbleToSeeDashboard: ''
+      isAbleToSeeDashboard: ""
     };
   }
 
   componentDidMount() {
-    let usercreated = '';
-    let storedName = '';
+    global.analytics.page("Dashboard");
 
-    if (localStorage.getItem('usercreated')) {
-      usercreated = localStorage.getItem('usercreated');
+    let usercreated = "";
+    let storedName = "";
+
+    if (localStorage.getItem("usercreated")) {
+      usercreated = localStorage.getItem("usercreated");
     }
-    if (localStorage.getItem('username')) {
-      storedName = JSON.parse(localStorage.getItem('username'));
+    if (localStorage.getItem("username")) {
+      storedName = JSON.parse(localStorage.getItem("username"));
     }
 
     this.setState({ isAbleToSeeDashboard: usercreated, name: storedName });
@@ -43,8 +45,8 @@ class Dashboard extends React.Component {
               Welcome to Common Energy<span className="accent">!</span>
             </h2>
             <p>
-              We’re delighted to have you as a customer and to provide you
-              with 100% clean, lower cost Electricity.
+              We’re delighted to have you as a customer and to provide you with
+              100% clean, lower cost Electricity.
             </p>
             <p>The connection process will take 4-8 weeks.</p>
             <p>Here’s what happens next:</p>
@@ -154,7 +156,7 @@ class Dashboard extends React.Component {
           primary
           onClick={() => {
             Router.push({
-              pathname: '/'
+              pathname: "/"
             });
           }}
         >
