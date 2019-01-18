@@ -16,6 +16,7 @@ class Step11 extends React.Component {
   }
 
   componentDidMount() {
+    global.analytics.page("Step 11");
     if (localStorage.getItem("leadId")) {
       global.analytics.track("Sign-Up Completed", {});
     }

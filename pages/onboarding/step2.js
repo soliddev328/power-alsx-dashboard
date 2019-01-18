@@ -22,6 +22,7 @@ class Step2 extends React.Component {
   }
 
   componentDidMount() {
+    global.analytics.page("Step 2");
     let storedName = "";
 
     if (localStorage.getItem("username")) {

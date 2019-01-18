@@ -16,7 +16,7 @@ export default class MyDocument extends Document {
   renderSegmentSnippet() {
     const opts = {
       apiKey: SEGMENT_KEY,
-      page: true // Set this to `false` if you want to manually fire `analytics.page()` from within your pages.
+      page: false // Set this to `false` if you want to manually fire `analytics.page()` from within your pages.
     };
 
     if (CONSTANTS.NODE_ENV !== "production") {

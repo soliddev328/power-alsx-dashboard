@@ -18,6 +18,8 @@ class Step5 extends React.Component {
   }
 
   componentDidMount() {
+    global.analytics.page("Step 5");
+
     let storedName = "";
     let storedUtility = "";
     let storedAgreementChecked = false;

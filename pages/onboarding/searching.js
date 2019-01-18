@@ -1,8 +1,8 @@
-import React from 'react';
-import Router from 'next/router';
-import Header from '../../components/Header';
-import { FadeLoader } from 'react-spinners';
-import SingleStep from '../../components/SingleStep';
+import React from "react";
+import Router from "next/router";
+import Header from "../../components/Header";
+import { FadeLoader } from "react-spinners";
+import SingleStep from "../../components/SingleStep";
 
 class Step8 extends React.Component {
   constructor(props) {
@@ -11,12 +11,14 @@ class Step8 extends React.Component {
     this.state = {};
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    global.analytics.page("Searching");
+  }
 
   renderLoader() {
     setTimeout(() => {
       Router.push({
-        pathname: '/onboarding/step4'
+        pathname: "/onboarding/step4"
       });
     }, 3000);
 
@@ -28,7 +30,7 @@ class Step8 extends React.Component {
             height={15}
             width={4}
             radius={1}
-            color={'#FF69A0'}
+            color={"#FF69A0"}
             loading={true}
           />
           <p>Searching for clean energy projects in your area...</p>

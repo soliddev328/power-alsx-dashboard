@@ -1,8 +1,8 @@
-import React from 'react';
-import Router from 'next/router';
-import Header from '../../components/Header';
-import SingleStep from '../../components/SingleStep';
-import Button from '../../components/Button';
+import React from "react";
+import Router from "next/router";
+import Header from "../../components/Header";
+import SingleStep from "../../components/SingleStep";
+import Button from "../../components/Button";
 
 class Step8 extends React.Component {
   constructor(props) {
@@ -10,10 +10,12 @@ class Step8 extends React.Component {
   }
 
   componentDidMount() {
+    global.analytics.page("Step 8");
+
     let storedPartialConnection = false;
 
-    if (localStorage.getItem('partialConnection')) {
-      storedPartialConnection = localStorage.getItem('leadId');
+    if (localStorage.getItem("partialConnection")) {
+      storedPartialConnection = localStorage.getItem("leadId");
     }
 
     this.setState({
@@ -51,7 +53,7 @@ class Step8 extends React.Component {
             primary
             onClick={() => {
               Router.push({
-                pathname: '/onboarding/step9'
+                pathname: "/onboarding/step9"
               });
             }}
           >
