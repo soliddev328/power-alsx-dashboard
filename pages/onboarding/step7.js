@@ -84,6 +84,7 @@ class Step7 extends React.Component {
       {
         leadId: storedLeadId,
         utility: storedUtility.label,
+        currentUtility: storedUtility,
         billingMethod: storedBillingMethod
       },
       this.getLinks()
@@ -277,7 +278,7 @@ class Step7 extends React.Component {
               : "We can use your account number to get you connected and saving."
           }
         >
-          {this.state.currentUtility && (
+          {this.state && this.state.currentUtility && (
             <figure>
               <img
                 src={this.state.currentUtility.image.src}
