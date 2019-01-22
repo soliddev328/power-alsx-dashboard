@@ -52,8 +52,7 @@ class Step11 extends React.Component {
       <main>
         <Header />
         <SingleStep
-          toast="Congratulations you're all set!"
-          title="Before you go help us spread the word and receive a free month of electricity for each referral!"
+          title="Congratulations you're all set! Before you go help us spread the word and receive a free month of electricity for each referral!"
           highlight="free month of electricity"
           image={{
             src: "/static/images/share/share.png",
