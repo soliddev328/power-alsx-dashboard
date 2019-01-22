@@ -263,6 +263,17 @@ class Step7 extends React.Component {
     );
   }
 
+  renderText() {
+    const canLinkAccount =
+      this.state.billingMethod &&
+      this.state.billingMethod.billingMethod.indexOf("paper") !== 0;
+    const text = canLinkAccount
+      ? "Ok great. Let's connect your account and get you saving!"
+      : "No problem! We can use your account number to get you connected and saving.";
+
+    return this.state.isLoading ? "" : text;
+  }
+
   render() {
     const canLinkAccount =
       this.state.billingMethod &&
@@ -270,15 +281,8 @@ class Step7 extends React.Component {
     return (
       <main>
         <Header />
-        <SingleStep
-          toast={canLinkAccount ? "Ok great." : "No problem!"}
-          title={
-            canLinkAccount
-              ? "Let's connect your account and get you saving!"
-              : "We can use your account number to get you connected and saving."
-          }
-        >
-          {this.state && this.state.currentUtility && (
+        <SingleStep title={this.renderText()}>
+          {this.state && this.state.currentUtility && !this.state.isLoading && (
             <figure>
               <img
                 src={this.state.currentUtility.image.src}
