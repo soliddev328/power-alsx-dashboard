@@ -52,7 +52,6 @@ class Step2 extends React.Component {
     const components = values.address
       ? values.address.gmaps.address_components
       : null;
-
     const state = components
       ? components.find(x => x.types[0] == "administrative_area_level_1")
       : null;
@@ -65,10 +64,9 @@ class Step2 extends React.Component {
       <main>
         <Header />
         <SingleStep
-          prefix={`Nice to meet you ${this.capitalize(
+          title={`Nice to meet you ${this.capitalize(
             this.state.name.firstName
-          )}.`}
-          title="What is your home address?"
+          )}. What is your home address?`}
         >
           <Formik
             initialValues={{
