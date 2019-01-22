@@ -52,7 +52,7 @@ class Step8 extends React.Component {
               />
             </g>
           </svg>
-          <h3>Congratulations, you're connected!</h3>
+          <p>Congratulations, you're connected!</p>
         </React.Fragment>
       );
     }
