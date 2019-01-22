@@ -1,13 +1,13 @@
-import ReactPlaid from 'react-plaid';
-import React from 'react';
-import axios from 'axios';
-import Router from 'next/router';
-import CONSTANTS from '../globals';
+import ReactPlaid from "react-plaid";
+import React from "react";
+import axios from "axios";
+import Router from "next/router";
+import CONSTANTS from "../globals";
 
 const { PLAID_KEY, API } =
-  CONSTANTS.NODE_ENV !== 'production' ? CONSTANTS.dev : CONSTANTS.prod;
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 const PLAID_ENV =
-  CONSTANTS.NODE_ENV !== 'production' ? 'sandbox' : 'production';
+  CONSTANTS.NODE_ENV !== "production" ? "sandbox" : "production";
 
 export default class Plaid extends React.Component {
   constructor(props, context) {
@@ -19,9 +19,9 @@ export default class Plaid extends React.Component {
   }
 
   componentDidMount() {
-    let storedLeadId = '';
-    if (localStorage.getItem('leadId')) {
-      storedLeadId = localStorage.getItem('leadId');
+    let storedLeadId = "";
+    if (localStorage.getItem("leadId")) {
+      storedLeadId = localStorage.getItem("leadId");
     }
 
     this.setState({
@@ -33,7 +33,7 @@ export default class Plaid extends React.Component {
     return (
       <ReactPlaid
         clientName="Client Name"
-        product={['auth']}
+        product={["auth"]}
         apiKey={PLAID_KEY}
         env={PLAID_ENV}
         open={true}
@@ -48,7 +48,7 @@ export default class Plaid extends React.Component {
             })
             .then(() => {
               Router.push({
-                pathname: '/onboarding/step11'
+                pathname: "/onboarding/step11"
               });
             });
         }}
@@ -62,6 +62,9 @@ export default class Plaid extends React.Component {
               item: this.state.leadId
             });
           }
+          Router.push({
+            pathname: "/onboarding/step9"
+          });
         }}
       />
     );
