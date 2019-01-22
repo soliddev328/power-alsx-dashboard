@@ -15,12 +15,23 @@ export default class GeoSuggest extends React.Component {
   };
 
   handleBlur = () => {
+    const nextField = document.getElementById('apt');
+
+    if (nextField) {
+      nextField.focus();
+    }
+
     this.props.onBlur(this.props.fieldname, true);
   };
 
   handleSuggestSelect = e => {
     if (e) {
+      const nextField = document.getElementById('apt');
       this.handleChange(e);
+
+      if (nextField) {
+        nextField.focus();
+      }
     }
   };
 
