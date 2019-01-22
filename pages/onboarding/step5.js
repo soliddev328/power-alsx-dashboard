@@ -71,10 +71,7 @@ class Step5 extends React.Component {
     return (
       <main>
         <Header />
-        <SingleStep
-          toast="Ok, now for the fun stuff!"
-          title="What email and phone number would you like to use to create your account?"
-        >
+        <SingleStep title="Ok, now for the fun stuff! What email and phone number would you like to use to create your account?">
           <Formik
             initialValues={{
               phoneNumber: "",
@@ -83,9 +80,6 @@ class Step5 extends React.Component {
             onSubmit={values => {
               localStorage.setItem("email", values.emailAddress);
               localStorage.setItem("phone", values.phoneNumber);
-              console.log("partner: ", this.state.partner);
-              console.log("salesRep: ", this.state.salesRep);
-              console.log("referrer: ", this.state.referrer);
               axios
                 .post(`${API}/v1/subscribers`, {
                   FirstName: this.state.name.firstName,
