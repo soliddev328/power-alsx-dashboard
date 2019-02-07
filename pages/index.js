@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import Input from "../components/Input";
 import SingleStep from "../components/SingleStep";
 import Button from "../components/Button";
+import Cookie from "js-cookie";
 
 class Index extends React.Component {
   constructor(props) {
@@ -16,15 +17,28 @@ class Index extends React.Component {
   componentDidMount() {
     global.analytics.page("Step 1");
     global.analytics.track("Sign-Up Initiated", {});
+    let customerReferralCookie = Cookie.get("customer_referral");
+    let partnerReferralCookie = Cookie.get("partner_referral");
+    let salesRepCookie = Cookie.get("ce_rep_referral");
+
+    if (partnerReferralCookie)
+      localStorage.setItem("Partner", partnerReferralCookie);
     if (this.props && this.props.query.partner) {
       localStorage.setItem("Partner", this.props.query.partner);
     }
+    if (customerReferralCookie)
+      localStorage.setItem("Referrer", customerReferralCookie);
     if (this.props && this.props.query.advocate) {
       localStorage.setItem("Referrer", this.props.query.advocate);
     }
+    if (salesRepCookie) localStorage.setItem("SalesRep", salesRepCookie);
     if (this.props && this.props.query.rep) {
       localStorage.setItem("SalesRep", this.props.query.rep);
     }
+  }
+
+  capitalize(word) {
+    return word && word[0].toUpperCase() + word.slice(1);
   }
 
   static getInitialProps({ query }) {
