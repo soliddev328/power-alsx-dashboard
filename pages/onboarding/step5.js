@@ -27,25 +27,24 @@ class Step5 extends React.Component {
     let storedPartner = "";
     let storedReferrer = "";
     let storedSalesRep = "";
+    let storedUtmCampaign = "";
+    let storedUtmMedium = "";
+    let storedUtmSource = "";
 
     if (localStorage.getItem("utility")) {
       storedUtility = JSON.parse(localStorage.getItem("utility"));
     }
-
     if (localStorage.getItem("acceptedTermsAndConditions")) {
       storedAgreementChecked = JSON.parse(
         localStorage.getItem("acceptedTermsAndConditions")
       );
     }
-
     if (localStorage.getItem("address")) {
       storedAddress = JSON.parse(localStorage.getItem("address"));
     }
-
     if (localStorage.getItem("username")) {
       storedName = JSON.parse(localStorage.getItem("username"));
     }
-
     if (localStorage.getItem("Partner")) {
       storedPartner = localStorage.getItem("Partner");
     }
@@ -55,6 +54,15 @@ class Step5 extends React.Component {
     if (localStorage.getItem("SalesRep")) {
       storedSalesRep = localStorage.getItem("SalesRep");
     }
+    if (localStorage.getItem("UtmCampaign")) {
+      storedUtmCampaign = localStorage.getItem("UtmCampaign");
+    }
+    if (localStorage.getItem("UtmMedium")) {
+      storedUtmMedium = localStorage.getItem("UtmMedium");
+    }
+    if (localStorage.getItem("UtmSource")) {
+      storedUtmSource = localStorage.getItem("UtmSource");
+    }
 
     this.setState({
       name: storedName,
@@ -63,6 +71,9 @@ class Step5 extends React.Component {
       referrer: storedReferrer,
       partner: storedPartner,
       salesRep: storedSalesRep,
+      utmCampaign: storedUtmCampaign,
+      utmMedium: storedUtmMedium,
+      utmSource: storedUtmSource,
       agreedTermsAndConditions: storedAgreementChecked
     });
   }
@@ -94,7 +105,10 @@ class Step5 extends React.Component {
                   city: this.state.address.city,
                   postalCode: this.state.address.postalCode,
                   agreementChecked: !!this.state.agreedTermsAndConditions,
-                  utility: this.state.utility
+                  utility: this.state.utility,
+                  utmCampaign: this.state.utmCampaign,
+                  utmMedium: this.state.utmMedium,
+                  utmSource: this.state.utmSource
                 })
                 .then(function(response) {
                   localStorage.setItem("leadId", response.data.data.leadId);
