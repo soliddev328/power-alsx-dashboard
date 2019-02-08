@@ -48,7 +48,7 @@ class CustomForm extends React.Component {
             content="One unified monthly statement"
             bulletIcon="discount"
           />
-          <BulletItem content="No cancelation fees" bulletIcon="cross" />
+          <BulletItem content="No cancellation fees" bulletIcon="cross" />
           <BulletItem content="Free signup" bulletIcon="money" />
         </div>
         <Checkbox fieldname="acceptedTermsAndConditions">
