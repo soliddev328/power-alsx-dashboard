@@ -35,6 +35,15 @@ class Index extends React.Component {
     if (this.props && this.props.query.rep) {
       localStorage.setItem("SalesRep", this.props.query.rep);
     }
+
+    if (this.props) {
+      if (this.props.query.utm_campaign)
+        localStorage.setItem("UtmCampaign", this.props.query.utm_campaign);
+      if (this.props.query.utm_source)
+        localStorage.setItem("UtmSource", this.props.query.utm_source);
+      if (this.props.query.utm_medium)
+        localStorage.setItem("UtmMedium", this.props.query.utm_medium);
+    }
   }
 
   capitalize(word) {
