@@ -20,7 +20,7 @@ class Step8 extends React.Component {
       Router.push({
         pathname: "/onboarding/step4"
       });
-    }, 3000);
+    }, 2000);
 
     return (
       <SingleStep>
