@@ -79,7 +79,7 @@ class Sorry extends React.Component {
                 })
                 .then(function(response) {
                   Router.push({
-                    pathname: "/"
+                    pathname: "https://www.commonenergy.us"
                   });
                 })
                 .catch(function(error) {
