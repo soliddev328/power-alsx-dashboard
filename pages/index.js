@@ -36,6 +36,13 @@ class Index extends React.Component {
       localStorage.setItem("SalesRep", this.props.query.rep);
     }
 
+    let utmCampaignCookie = Cookie.get("_ce_campaign");
+    let utmSourceCookie = Cookie.get("_ce_source");
+    let utmMediumCookie = Cookie.get("_ce_medium");
+    if (utmCampaignCookie)
+      localStorage.setItem("UtmCampaign", utmCampaignCookie);
+    if (utmSourceCookie) localStorage.setItem("UtmSource", utmSourceCookie);
+    if (utmMediumCookie) localStorage.setItem("UtmMedium", utmMediumCookie);
     if (this.props) {
       if (this.props.query.utm_campaign)
         localStorage.setItem("UtmCampaign", this.props.query.utm_campaign);
