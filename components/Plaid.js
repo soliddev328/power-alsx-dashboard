@@ -32,7 +32,7 @@ export default class Plaid extends React.Component {
   render() {
     return (
       <ReactPlaid
-        clientName="Client Name"
+        clientName="Common Energy"
         product={["auth"]}
         apiKey={PLAID_KEY}
         env={PLAID_ENV}
