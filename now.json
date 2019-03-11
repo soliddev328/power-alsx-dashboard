@@ -7,5 +7,10 @@
   }],
   "alias": [
     "my.commonenergy.us"
+  ],
+  "routes": [
+    { "src": "/sitemap.xml", "dest": "/static/sitemap.xml" },
+    { "src": "/robots.txt", "dest": "/static/robots.txt" },
+    { "src": "/favicon.ico", "dest": "/static/favicon.ico" }
   ]
 }
