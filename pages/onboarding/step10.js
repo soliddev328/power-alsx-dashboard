@@ -1,12 +1,17 @@
 import React from "react";
+import { Formik, Form } from "formik";
+import axios from "axios";
 import { Elements, StripeProvider } from "react-stripe-elements";
 import Header from "../../components/Header";
+import Input from "../../components/Input";
+import Button from "../../components/Button";
 import SingleStep from "../../components/SingleStep";
 import Plaid from "../../components/Plaid";
 import Checkout from "../../components/Checkout";
 import CONSTANTS from "../../globals";
+import Router from "next/router";
 
-const { STRIPE_KEY } =
+const { STRIPE_KEY, API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 class Step10 extends React.Component {
@@ -16,6 +21,7 @@ class Step10 extends React.Component {
     this.state = {
       name: "",
       email: "",
+      errorMessage: "",
       paymentMethod: "",
       stripe: null
     };
@@ -25,13 +31,19 @@ class Step10 extends React.Component {
     global.analytics.page("Step 10");
 
     let storedPaymentMethod = "";
+    let storedLeadId = "";
 
     if (localStorage.getItem("paymentMethod")) {
       storedPaymentMethod = JSON.parse(localStorage.getItem("paymentMethod"));
     }
 
+    if (localStorage.getItem("leadId")) {
+      storedLeadId = localStorage.getItem("leadId");
+    }
+
     this.setState({
       paymentMethod: storedPaymentMethod.paymentMethod,
+      leadId: storedLeadId,
       stripe: window.Stripe(STRIPE_KEY)
     });
   }
@@ -112,14 +124,113 @@ class Step10 extends React.Component {
     );
   }
 
+  updateInfo(values) {
+    if (values.bankAccountNumber !== values.bankAccountNumberConfirmation) {
+      this.setState({
+        errorMessage: "Bank account number and confirmation don't match"
+      });
+    } else if (values.bankRoutingNumber.length !== 9) {
+      this.setState({
+        errorMessage: "Bank Routing Number should have 9 digits"
+      });
+    } else if (values.bankAccountNumber.length < 4) {
+      this.setState({
+        errorMessage: "Bank Account Number should have at least 4 digits"
+      });
+    } else {
+      axios
+        .put(`${API}/v1/subscribers`, {
+          leadId: this.state.leadId,
+          bank: values.bankName,
+          bankRoutingNumber: values.bankRoutingNumber,
+          bankAccountNumber: values.bankAccountNumber
+        })
+        .then(response => {
+          Router.push({
+            pathname: "/onboarding/step11"
+          });
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  }
+
+  renderManualDataInsert() {
+    return (
+      <SingleStep title="Please provide the following information.">
+        <Formik
+          initialValues={{
+            bankName: "",
+            bankRoutingNumber: "",
+            bankAccountNumber: "",
+            bankAccountNumberConfirmation: ""
+          }}
+          onSubmit={values => {
+            this.updateInfo(values);
+          }}
+          render={props => (
+            <Form>
+              <Input type="text" label="Bank Name" fieldname="bankName" />
+              <Input
+                type="text"
+                label="Bank Routing Number (9 digits)"
+                fieldname="bankRoutingNumber"
+                maxLength="9"
+              />
+              <Input
+                type="text"
+                label="Bank Account Number (4 digits min)"
+                fieldname="bankAccountNumber"
+              />
+              <Input
+                type="text"
+                label="Bank Account Number Confirmation"
+                fieldname="bankAccountNumberConfirmation"
+              />
+              <p className="error">{this.state.errorMessage}</p>
+              <Button
+                primary
+                disabled={
+                  !props.values.bankName != "" ||
+                  !props.values.bankRoutingNumber != "" ||
+                  !props.values.bankAccountNumber != "" ||
+                  !props.values.bankAccountNumberConfirmation != ""
+                }
+              >
+                Next
+              </Button>
+            </Form>
+          )}
+        />
+        <style jsx>{`
+          .error {
+            height: 23px;
+            color: red;
+            text-align: center;
+          }
+        `}</style>
+      </SingleStep>
+    );
+  }
+
+  renderForm() {
+    const { paymentMethod } = this.state;
+    if (paymentMethod === "automatic") {
+      return this.renderBankLink();
+    } else if (paymentMethod === "creditCard") {
+      return this.renderCreditCard();
+    } else {
+      return this.renderManualDataInsert();
+    }
+  }
+
   render() {
+    const { paymentMethod } = this.state;
     return (
       <main>
         <Header />
-        {this.state.paymentMethod &&
-        this.state.paymentMethod.indexOf("automatic") === 0
-          ? this.renderBankLink()
-          : this.renderCreditCard()}
+        {paymentMethod && this.renderForm()}
         <style jsx>{`
           main {
             height: 88vh;

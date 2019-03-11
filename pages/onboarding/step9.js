@@ -37,10 +37,18 @@ class Step9 extends React.Component {
                     number="1"
                     name="paymentMethod"
                     value="automatic"
-                    heading="Automatic Payment"
+                    heading="Automatic Payment via Bank Link"
                     content="Receive an additional $25 credit with automatic deductions from your bank account"
                     highlight="$25 credit"
                   />
+                    <RadioCard
+                      number="3"
+                      name="paymentMethod"
+                      value="manualBanking"
+                      heading="Automatic Payment via ACH"
+                      content="Receive an additional $25 credit with automatic deductions from your bank account"
+                      highlight="$25 credit"
+                    />
                   <RadioCard
                     number="2"
                     name="paymentMethod"
