@@ -32,24 +32,21 @@ class CustomForm extends React.Component {
     return (
       <Form>
         <div className="content">
-          <BulletItem
+          {/* <BulletItem
             content="Clean energy credits each month"
             bulletIcon="dollar"
-          />
+          /> */}
+          <BulletItem content="$10-$20 monthly savings*" bulletIcon="gift" />
           <BulletItem
-            content="$2,276 estimated total savings*"
-            bulletIcon="gift"
-          />
-          <BulletItem
-            content="72,000 pounds of CO2 prevented"
+            content="90% reduction in carbon emissions"
             bulletIcon="co2"
           />
-          <BulletItem
+          {/* <BulletItem
             content="One unified monthly statement"
             bulletIcon="discount"
           />
           <BulletItem content="No cancellation fees" bulletIcon="cross" />
-          <BulletItem content="Free signup" bulletIcon="money" />
+          <BulletItem content="Free signup" bulletIcon="money" /> */}
         </div>
         <Checkbox fieldname="acceptedTermsAndConditions">
           <p className="checkbox__label">
@@ -73,7 +70,7 @@ class CustomForm extends React.Component {
           </p>
         </Checkbox>
         <p className="disclaimer">
-          *Based on a 10% contracted discount to your utility over twenty years
+          *Estimated based on a 10% contracted discount to your utility
         </p>
         <Button
           primary
