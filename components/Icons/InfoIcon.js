@@ -1,10 +1,6 @@
-import React from 'react';
+import React from "react";
 
 export default class InfoIcon extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div className="wrapper">
@@ -43,7 +39,7 @@ export default class InfoIcon extends React.Component {
           }
 
           .tooltip:before {
-            content: '';
+            content: "";
             display: block;
             position: absolute;
             top: 100%;

@@ -20,8 +20,8 @@ export default class Plaid extends React.Component {
 
   componentDidMount() {
     let storedLeadId = "";
-    if (localStorage.getItem("leadId")) {
-      storedLeadId = localStorage.getItem("leadId");
+    if (window.localStorage.getItem("leadId")) {
+      storedLeadId = window.localStorage.getItem("leadId");
     }
 
     this.setState({
@@ -32,35 +32,61 @@ export default class Plaid extends React.Component {
   render() {
     return (
       <ReactPlaid
-        clientName="Common Energy"
+        clientName="Client Name"
         product={["auth"]}
         apiKey={PLAID_KEY}
         env={PLAID_ENV}
-        open={true}
+        open
         onSuccess={(token, metadata) => {
-          axios
-            .post(`${API}/v1/plaid/auth`, {
-              public_token: token,
-              accounts: metadata.accounts,
-              institution: metadata.institution,
-              link_session_id: metadata.link_session_id,
-              item: this.state.leadId
-            })
-            .then(() => {
-              Router.push({
-                pathname: "/onboarding/step11"
-              });
+          window.firebase
+            .auth()
+            .currentUser.getIdToken(true)
+            .then(function(idToken) {
+              axios
+                .post(
+                  `${API}/v1/plaid/auth`,
+                  {
+                    public_token: token,
+                    accounts: metadata.accounts,
+                    institution: metadata.institution,
+                    link_session_id: metadata.link_session_id,
+                    item: this.state.leadId
+                  },
+                  {
+                    headers: {
+                      Authorization: `  ${idToken}`
+                    }
+                  }
+                )
+                .then(() => {
+                  Router.push({
+                    pathname: "/onboarding/step11"
+                  });
+                });
             });
         }}
         onExit={(err, metadata) => {
           if (err !== null) {
-            axios.post(`${API}/v1/plaid/error`, {
-              error: err,
-              status: metadata.status,
-              institution: metadata.institution,
-              link_session_id: metadata.link_session_id,
-              item: this.state.leadId
-            });
+            window.firebase
+              .auth()
+              .currentUser.getIdToken(true)
+              .then(idToken => {
+                axios.post(
+                  `${API}/v1/plaid/error`,
+                  {
+                    error: err,
+                    status: metadata.status,
+                    institution: metadata.institution,
+                    link_session_id: metadata.link_session_id,
+                    item: this.state.leadId
+                  },
+                  {
+                    headers: {
+                      Authorization: idToken
+                    }
+                  }
+                );
+              });
           }
           Router.push({
             pathname: "/onboarding/step9"

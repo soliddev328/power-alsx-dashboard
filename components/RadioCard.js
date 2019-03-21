@@ -1,12 +1,8 @@
-import React from 'react';
-import { Field } from 'formik';
-import Highlight from './Highlight';
+import React from "react";
+import { Field } from "formik";
+import Highlight from "./Highlight";
 
 export default class RadioCard extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <label>

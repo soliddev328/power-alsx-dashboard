@@ -25,8 +25,8 @@ class Step2 extends React.Component {
     global.analytics.page("Step 2");
     let storedName = "";
 
-    if (localStorage.getItem("username")) {
-      storedName = JSON.parse(localStorage.getItem("username"));
+    if (window.localStorage.getItem("username")) {
+      storedName = JSON.parse(window.localStorage.getItem("username"));
     }
 
     this.setState({ name: storedName });
@@ -42,7 +42,7 @@ class Step2 extends React.Component {
       : null;
 
     const postalCode = components
-      ? components.find(x => x.types[0] == "postal_code")
+      ? components.find(x => x.types[0] === "postal_code")
       : null;
 
     return postalCode ? postalCode.long_name : "";
@@ -53,7 +53,7 @@ class Step2 extends React.Component {
       ? values.address.gmaps.address_components
       : null;
     const state = components
-      ? components.find(x => x.types[0] == "administrative_area_level_1")
+      ? components.find(x => x.types[0] === "administrative_area_level_1")
       : null;
 
     return state ? state.short_name : "";
@@ -88,13 +88,14 @@ class Step2 extends React.Component {
                 apt: values.apt ? values.apt : ""
               };
 
-              localStorage.setItem("address", JSON.stringify(address));
+              window.localStorage.setItem("address", JSON.stringify(address));
 
-              axios(`${API}/v1/zipcodes/${address.postalCode}`).then(
-                response => {
+              axios
+                .get(`${API}/v1/zipcodes/${address.postalCode}`)
+                .then(response => {
                   if (
-                    response.data.data.geostatus != "Live" &&
-                    response.data.data.geostatus != "Near-Term"
+                    response.data.data.geostatus !== "Live" &&
+                    response.data.data.geostatus !== "Near-Term"
                   ) {
                     Router.push({
                       pathname: "/onboarding/sorry"
@@ -104,8 +105,7 @@ class Step2 extends React.Component {
                       pathname: "/onboarding/step3"
                     });
                   }
-                }
-              );
+                });
             }}
             render={props => (
               <React.Fragment>
@@ -120,7 +120,7 @@ class Step2 extends React.Component {
                     touched={props.touched.topics}
                   />
                   <Input label="Apartment No." fieldname="apt" />
-                  <Button primary disabled={!props.values.address != ""}>
+                  <Button primary disabled={!!props.values.address !== true}>
                     Next
                   </Button>
                 </Form>

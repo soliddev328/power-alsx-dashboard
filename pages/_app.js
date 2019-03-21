@@ -1,9 +1,9 @@
-import App, { Container } from 'next/app';
-import Head from 'next/head';
-import Router from 'next/router';
-import React from 'react';
-import withGA from 'next-ga';
-import settings from '../settings.json';
+import App, { Container } from "next/app";
+import Head from "next/head";
+import Router from "next/router";
+import React from "react";
+import withGA from "next-ga";
+import settings from "../settings.json";
 
 class MyApp extends App {
   static async getInitialProps({ Component, router, ctx }) {
@@ -29,4 +29,4 @@ class MyApp extends App {
   }
 }
 
-export default withGA('', Router)(MyApp);
+export default withGA("", Router)(MyApp);

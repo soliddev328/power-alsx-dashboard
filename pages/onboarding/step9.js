@@ -7,25 +7,38 @@ import SingleStep from "../../components/SingleStep";
 import Button from "../../components/Button";
 
 class Step9 extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     global.analytics.page("Step 9");
+  }
+
+  static async getInitialProps({ query }) {
+    const props = {
+      displayMessage: query.onboardingNotFinished
+    };
+
+    return props;
   }
 
   render() {
     return (
       <main>
         <Header />
-        <SingleStep title="Going forward you will pay Common Energy a lower amount for your electricity, instead of your utility:">
+        <SingleStep
+          title={
+            this.props.displayMessage
+              ? "Going forward you will pay Common Energy a lower amount for your electricity, instead of your utility:"
+              : "Going forward you will pay Common Energy a lower amount for your electricity, instead of your utility:"
+          }
+        >
           <Formik
             initialValues={{
               paymentMethod: ""
             }}
             onSubmit={values => {
-              localStorage.setItem("paymentMethod", JSON.stringify(values));
+              window.localStorage.setItem(
+                "paymentMethod",
+                JSON.stringify(values)
+              );
               Router.push({
                 pathname: "/onboarding/step10"
               });
@@ -37,7 +50,15 @@ class Step9 extends React.Component {
                     number="1"
                     name="paymentMethod"
                     value="automatic"
-                    heading="Automatic Payment"
+                    heading="Automatic Payment via Bank Link"
+                    content="Receive an additional $25 credit with automatic deductions from your bank account"
+                    highlight="$25 credit"
+                  />
+                  <RadioCard
+                    number="3"
+                    name="paymentMethod"
+                    value="manualBanking"
+                    heading="Automatic Payment via ACH"
                     content="Receive an additional $25 credit with automatic deductions from your bank account"
                     highlight="$25 credit"
                   />
@@ -49,7 +70,10 @@ class Step9 extends React.Component {
                     content="A 2.9% processing fee is applied to cover transaction costs."
                     highlight="2.9%"
                   />
-                  <Button primary disabled={!props.values.paymentMethod != ""}>
+                  <Button
+                    primary
+                    disabled={!!props.values.paymentMethod !== true}
+                  >
                     Next
                   </Button>
                   <p className="small">
