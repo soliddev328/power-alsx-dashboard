@@ -16,7 +16,7 @@ const formikEnhancer = withFormik({
   },
   mapValuesToPayload: x => x,
   handleSubmit: payload => {
-    localStorage.setItem(
+    window.localStorage.setItem(
       "acceptedTermsAndConditions",
       JSON.stringify(payload.acceptedTermsAndConditions)
     );
@@ -48,7 +48,7 @@ class CustomForm extends React.Component {
             content="One unified monthly statement"
             bulletIcon="discount"
           />
-          <BulletItem content="No cancellation fees" bulletIcon="cross" />
+          <BulletItem content="No cancelation fees" bulletIcon="cross" />
           <BulletItem content="Free signup" bulletIcon="money" />
         </div>
         <Checkbox fieldname="acceptedTermsAndConditions">
@@ -106,8 +106,8 @@ class Step4 extends React.Component {
     global.analytics.page("Step 4");
     let utility = "";
 
-    if (localStorage.getItem("utility")) {
-      utility = JSON.parse(localStorage.getItem("utility"));
+    if (window.localStorage.getItem("utility")) {
+      utility = JSON.parse(window.localStorage.getItem("utility"));
     }
 
     this.setState({ currentUtility: utility });

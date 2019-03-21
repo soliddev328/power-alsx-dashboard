@@ -1,10 +1,6 @@
-import React from 'react';
+import React from "react";
 
 export default class Blockquote extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div className="wrapper">
@@ -34,7 +30,7 @@ export default class Blockquote extends React.Component {
         )}
         {this.props.cite && (
           <cite>
-            {this.props.cite.name} - {this.props.cite.city},{' '}
+            {this.props.cite.name} - {this.props.cite.city},{" "}
             {this.props.cite.state}
           </cite>
         )}

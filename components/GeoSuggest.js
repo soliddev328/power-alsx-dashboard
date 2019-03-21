@@ -1,39 +1,42 @@
-import React from 'react';
-import Geosuggest from 'react-geosuggest';
+import React from "react";
+import Geosuggest from "react-geosuggest";
 
 export default class GeoSuggest extends React.Component {
   constructor(props) {
     super(props);
     this.inputField = React.createRef();
     this.scrollOnFocus = this.scrollOnFocus.bind(this);
+    this.handleSuggestSelect = this.handleSuggestSelect.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange = value => {
+  handleChange(value) {
     if (value.description) {
       this.props.onChange(this.props.fieldname, value);
     }
-  };
+  }
 
-  handleBlur = () => {
-    const nextField = document.getElementById('apt');
+  handleBlur() {
+    const nextField = document.getElementById("apt");
 
     if (nextField) {
       nextField.focus();
     }
 
     this.props.onBlur(this.props.fieldname, true);
-  };
+  }
 
-  handleSuggestSelect = e => {
+  handleSuggestSelect(e) {
     if (e) {
-      const nextField = document.getElementById('apt');
+      const nextField = document.getElementById("apt");
       this.handleChange(e);
 
       if (nextField) {
         nextField.focus();
       }
     }
-  };
+  }
 
   scrollOnFocus() {
     if (this.inputField) {

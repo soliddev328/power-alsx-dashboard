@@ -31,7 +31,7 @@ class Step8 extends React.Component {
             width={4}
             radius={1}
             color={"#FF69A0"}
-            loading={true}
+            loading
           />
           <p>Searching for clean energy projects in your area...</p>
         </div>

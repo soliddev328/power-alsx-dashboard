@@ -1,18 +1,20 @@
-import React from 'react';
-import NumberFormat from 'react-number-format';
+import React from "react";
+import NumberFormat from "react-number-format";
 
 export default class Phoneinput extends React.Component {
   constructor(props) {
     super(props);
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
+  }
+  handleChange(e) {
+    this.props.onChangeEvent(this.props.fieldname, e.target.value);
   }
 
-  handleChange = e => {
-    this.props.onChangeEvent(this.props.fieldname, e.target.value);
-  };
-
-  handleBlur = () => {
+  handleBlur() {
     this.props.onBlurEvent(this.props.fieldname, true);
-  };
+  }
 
   render() {
     return (
@@ -32,8 +34,8 @@ export default class Phoneinput extends React.Component {
             border-radius: 3px;
             background-image: none;
             background-color: ${this.props.secondary
-              ? '#F6F9FF'
-              : 'var(--color-bg-primary)'};
+              ? "#F6F9FF"
+              : "var(--color-bg-primary)"};
             box-shadow: none;
             font-family: var(--font-primary);
             font-size: 1.125rem;
@@ -61,7 +63,7 @@ export default class Phoneinput extends React.Component {
             z-index: 11;
           }
 
-          input[value]:not([value='']) + label {
+          input[value]:not([value=""]) + label {
             opacity: 0;
           }
 

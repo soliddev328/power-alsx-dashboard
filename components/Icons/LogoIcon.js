@@ -1,10 +1,6 @@
-import React from 'react';
+import React from "react";
 
 export default class LogoIcon extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 834 119">
@@ -22,11 +18,11 @@ export default class LogoIcon extends React.Component {
         <style jsx>{`
           svg {
             display: block;
-            width: ${this.props.small ? '33%' : '50%'};
+            width: ${this.props.small ? "33%" : "50%"};
             margin-top: 1.5em;
-            margin-bottom: ${this.props.small ? '1em' : '1.5em'};
-            margin-left: 0;
-            margin-right: ${this.props.small ? '0' : 'auto'};
+            margin-bottom: ${this.props.small ? "1em" : "1.5em"};
+            margin-left: ${this.props.small ? "0" : "auto"};
+            margin-right: ${this.props.small ? "0" : "auto"};
           }
         `}</style>
       </svg>

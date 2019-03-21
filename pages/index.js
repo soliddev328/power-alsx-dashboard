@@ -1,60 +1,87 @@
 import React from "react";
 import Router from "next/router";
 import { Formik, Form } from "formik";
-import Header from "../components/Header";
-import Input from "../components/Input";
+import axios from "axios";
 import SingleStep from "../components/SingleStep";
+import Header from "../components/Header";
+import Separator from "../components/Separator";
+import Input from "../components/Input";
 import Button from "../components/Button";
-import Cookie from "js-cookie";
+import CONSTANTS from "../globals";
+
+const { API } =
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 class Index extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {};
+    this.state = {
+      error: {
+        code: false,
+        message: ""
+      }
+    };
   }
 
-  componentDidMount() {
-    global.analytics.page("Step 1");
-    global.analytics.track("Sign-Up Initiated", {});
-    let customerReferralCookie = Cookie.get("customer_referral");
-    let partnerReferralCookie = Cookie.get("partner_referral");
-    let salesRepCookie = Cookie.get("ce_rep_referral");
+  componentDidMount() {}
 
-    if (partnerReferralCookie)
-      localStorage.setItem("Partner", partnerReferralCookie);
-    if (this.props && this.props.query.partner) {
-      localStorage.setItem("Partner", this.props.query.partner);
-    }
-    if (customerReferralCookie)
-      localStorage.setItem("Referrer", customerReferralCookie);
-    if (this.props && this.props.query.advocate) {
-      localStorage.setItem("Referrer", this.props.query.advocate);
-    }
-    if (salesRepCookie) localStorage.setItem("SalesRep", salesRepCookie);
-    if (this.props && this.props.query.rep) {
-      localStorage.setItem("SalesRep", this.props.query.rep);
-    }
+  autenticate(values) {
+    window.firebase
+      .auth()
+      .signInWithEmailAndPassword(values.emailAddress, values.password)
+      .catch(error => {
+        this.setState({ error: { code: error.code, message: error.message } });
+      })
+      .then(firebaseData => {
+        if (!this.state.error.code) {
+          window.firebase
+            .auth()
+            .currentUser.getIdToken(true)
+            .then(idToken => {
+              axios
+                .get(`${API}/v1/subscribers/${firebaseData.user.uid}`, {
+                  headers: {
+                    Authorization: idToken
+                  }
+                })
+                .then(response => {
+                  const user = response.data.data;
+                  window.localStorage.setItem("leadId", user.leadId);
+                  console.log(user);
 
-    let utmCampaignCookie = Cookie.get("_ce_campaign");
-    let utmSourceCookie = Cookie.get("_ce_source");
-    let utmMediumCookie = Cookie.get("_ce_medium");
-    if (utmCampaignCookie)
-      localStorage.setItem("UtmCampaign", utmCampaignCookie);
-    if (utmSourceCookie) localStorage.setItem("UtmSource", utmSourceCookie);
-    if (utmMediumCookie) localStorage.setItem("UtmMedium", utmMediumCookie);
-    if (this.props) {
-      if (this.props.query.utm_campaign)
-        localStorage.setItem("UtmCampaign", this.props.query.utm_campaign);
-      if (this.props.query.utm_source)
-        localStorage.setItem("UtmSource", this.props.query.utm_source);
-      if (this.props.query.utm_medium)
-        localStorage.setItem("UtmMedium", this.props.query.utm_medium);
-    }
-  }
-
-  capitalize(word) {
-    return word && word[0].toUpperCase() + word.slice(1);
+                  if (user.signupCompleted) {
+                    Router.push({
+                      pathname: "/dashboard"
+                    });
+                  } else if (!user.phone) {
+                    Router.push({
+                      pathname: "/onboarding/step5.1",
+                      query: {
+                        onboardingNotFinished: true
+                      }
+                    });
+                  } else if (!user.milestones.utilityInfoCompleted) {
+                    Router.push({
+                      pathname: "/onboarding/step6",
+                      query: {
+                        onboardingNotFinished: true
+                      }
+                    });
+                  } else if (!user.milestones.bankInfoCompleted) {
+                    Router.push({
+                      pathname: "/onboarding/step9",
+                      query: {
+                        onboardingNotFinished: true
+                      }
+                    });
+                  }
+                })
+                .catch(error => {
+                  console.log(error);
+                });
+            });
+        }
+      });
   }
 
   static getInitialProps({ query }) {
@@ -64,45 +91,87 @@ class Index extends React.Component {
   render() {
     return (
       <main>
-        <Header />
-        <SingleStep title="Hi! I'm Scott. Let's see if we can save you money with lower cost clean electricity!">
+        <Header first />
+        <SingleStep prefix="Enter your email address to sign in or create an account">
           <Formik
             initialValues={{
-              firstName: "",
-              lastName: ""
+              emailAddress: "",
+              password: ""
             }}
             onSubmit={values => {
-              localStorage.setItem("username", JSON.stringify(values));
-              Router.push({
-                pathname: "/onboarding/step2"
-              });
+              this.autenticate(values);
             }}
             render={props => (
               <React.Fragment>
                 <Form>
-                  <div className="two-columns two-columns--responsive">
-                    <Input label="First Name" fieldname="firstName" autoFocus />
-                    <Input label="Last Name" fieldname="lastName" />
-                  </div>
+                  <Input
+                    label="Email"
+                    fieldname="emailAddress"
+                    type="email"
+                    required
+                    autoFocus
+                  />
+                  <Input
+                    label="Password"
+                    fieldname="password"
+                    type="password"
+                    required
+                  />
+                  <p className="error">{this.state.error.message}</p>
                   <Button
                     primary
                     disabled={
-                      !props.values.firstName != "" ||
-                      !props.values.lastName != ""
+                      !!props.values.emailAddress !== true ||
+                      !!props.values.password !== true
                     }
+                    onClick={() => {
+                      this.setState({
+                        error: {
+                          code: false,
+                          message: ""
+                        }
+                      });
+                    }}
                   >
-                    Next
+                    Sign in
                   </Button>
                 </Form>
               </React.Fragment>
             )}
           />
+          <div className="link">
+            <a href="/forgot-password" className="cta">
+              Forgot password?
+            </a>
+          </div>
+          <Separator text="I don't have an account" />
+          <Button
+            primary
+            onClick={() => {
+              Router.push({
+                pathname: "/onboarding/step1"
+              });
+            }}
+          >
+            Sign Up
+          </Button>
         </SingleStep>
         <style jsx>{`
           main {
             height: 88vh;
             max-width: 700px;
             margin: 0 auto;
+          }
+          .error {
+            height: 52px;
+            margin: 0;
+            padding: 1em 0;
+            text-align: center;
+          }
+          .link {
+            display: flex;
+            justify-content: center;
+            margin: 25px 0;
           }
         `}</style>
       </main>

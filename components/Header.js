@@ -1,26 +1,24 @@
-import React from 'react';
-import LogoIcon from './Icons/LogoIcon';
-import ProfilePic from './ProfilePic';
+import React from "react";
+import LogoIcon from "./Icons/LogoIcon";
+import ProfilePic from "./ProfilePic";
 
 export default class Header extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {}
 
   render() {
     return (
       <header>
-        <LogoIcon small />
-        <div className="bubble">
-          <ProfilePic
-            image={{
-              src: '/static/images/people/scott.jpg',
-              altText: 'A smiling girl'
-            }}
-          />
-        </div>
+        {this.props.first ? <LogoIcon /> : <LogoIcon small />}
+        {!this.props.first && (
+          <div className="bubble">
+            <ProfilePic
+              image={{
+                src: "/static/images/people/scott.jpg",
+                altText: "A smiling girl"
+              }}
+            />
+          </div>
+        )}
         <style jsx>{`
           header {
             position: relative;

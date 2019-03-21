@@ -1,34 +1,30 @@
-import React from 'react';
-import GiftIcon from './Icons/GiftIcon';
-import DollarIcon from './Icons/DollarIcon';
-import MoneyIcon from './Icons/MoneyIcon';
-import SignupIcon from './Icons/SignupIcon';
-import CrossIcon from './Icons/CrossIcon';
-import DiscountIcon from './Icons/DiscountIcon';
-import CalendarIcon from './Icons/CalendarIcon';
-import Co2Icon from './Icons/Co2Icon';
+import React from "react";
+import GiftIcon from "./Icons/GiftIcon";
+import DollarIcon from "./Icons/DollarIcon";
+import MoneyIcon from "./Icons/MoneyIcon";
+import SignupIcon from "./Icons/SignupIcon";
+import CrossIcon from "./Icons/CrossIcon";
+import DiscountIcon from "./Icons/DiscountIcon";
+import CalendarIcon from "./Icons/CalendarIcon";
+import Co2Icon from "./Icons/Co2Icon";
 
 export default class BulletItem extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   BulletIcon() {
-    if (this.props.bulletIcon === 'cross') {
+    if (this.props.bulletIcon === "cross") {
       return <CrossIcon />;
-    } else if (this.props.bulletIcon === 'discount') {
+    } else if (this.props.bulletIcon === "discount") {
       return <DiscountIcon />;
-    } else if (this.props.bulletIcon === 'calendar') {
+    } else if (this.props.bulletIcon === "calendar") {
       return <CalendarIcon />;
-    } else if (this.props.bulletIcon === 'co2') {
+    } else if (this.props.bulletIcon === "co2") {
       return <Co2Icon />;
-    } else if (this.props.bulletIcon === 'signup') {
+    } else if (this.props.bulletIcon === "signup") {
       return <SignupIcon />;
-    } else if (this.props.bulletIcon === 'gift') {
+    } else if (this.props.bulletIcon === "gift") {
       return <GiftIcon />;
-    } else if (this.props.bulletIcon === 'money') {
+    } else if (this.props.bulletIcon === "money") {
       return <MoneyIcon />;
-    } else if (this.props.bulletIcon === 'dollar') {
+    } else if (this.props.bulletIcon === "dollar") {
       return <DollarIcon />;
     }
   }

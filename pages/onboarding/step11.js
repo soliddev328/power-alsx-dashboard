@@ -13,11 +13,13 @@ class Step11 extends React.Component {
       shared: false,
       canonicalUrl: ""
     };
+
+    this.share = this.share.bind(this);
   }
 
   componentDidMount() {
     global.analytics.page("Step 11");
-    if (localStorage.getItem("leadId")) {
+    if (window.localStorage.getItem("leadId")) {
       global.analytics.track("Sign-Up Completed", {});
     }
 
@@ -33,12 +35,12 @@ class Step11 extends React.Component {
 
   share() {
     let shareCompleted = false;
-    FB.ui(
+    window.FB.ui(
       {
         method: "share",
         href: "https://www.commonenergy.us"
       },
-      function(response) {
+      response => {
         if (response) {
           shareCompleted = true;
         }
@@ -65,7 +67,7 @@ class Step11 extends React.Component {
           <Button
             primary
             onClick={() => {
-              localStorage.setItem("usercreated", true);
+              window.localStorage.setItem("usercreated", true);
               Router.push({
                 pathname: "/dashboard"
               });
@@ -77,7 +79,7 @@ class Step11 extends React.Component {
           <CTA
             secondary
             onClick={() => {
-              localStorage.setItem("usercreated", true);
+              window.localStorage.setItem("usercreated", true);
               Router.push({
                 pathname: "/dashboard"
               });

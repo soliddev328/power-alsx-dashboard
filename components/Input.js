@@ -1,5 +1,5 @@
-import React from 'react';
-import { Field } from 'formik';
+import React from "react";
+import { Field } from "formik";
 
 export default class Input extends React.Component {
   constructor(props) {
@@ -9,12 +9,12 @@ export default class Input extends React.Component {
   }
 
   applyValidation(x) {
-    const msg = 'Please enter a valid email address';
+    const msg = "Please enter a valid email address";
     x.target.setCustomValidity(msg);
   }
 
   customSetCustomValidity(e) {
-    e.target.setCustomValidity('');
+    e.target.setCustomValidity("");
   }
 
   scrollOnFocus(e) {
@@ -34,11 +34,11 @@ export default class Input extends React.Component {
         className="input__wrapper"
       >
         <Field
-          type={this.props.type ? this.props.type : 'text'}
+          type={this.props.type ? this.props.type : "text"}
           component="input"
           name={this.props.fieldname}
           id={this.props.fieldname}
-          validate={this.props.required}
+          validate={this.props.validator ? this.props.validator : false}
           onInvalid={this.applyValidation}
           onInput={this.customSetCustomValidity}
           autoFocus={this.props.autoFocus}
@@ -52,8 +52,8 @@ export default class Input extends React.Component {
             border-radius: 3px;
             background-image: none;
             background-color: ${this.props.secondary
-              ? '#F6F9FF'
-              : 'var(--color-bg-primary)'};
+              ? "#F6F9FF"
+              : "var(--color-bg-primary)"};
             box-shadow: none;
             font-family: var(--font-primary);
             font-size: 1.125rem;
@@ -77,10 +77,7 @@ export default class Input extends React.Component {
             text-transform: capitalize;
             transform: translateY(-50%);
             transition: opacity 400ms cubic-bezier(0.075, 0.82, 0.165, 1);
-          }
-
-          input[value]:not([value='']) + label {
-            opacity: 0;
+            pointer-events: none;
           }
 
           .input__wrapper {
