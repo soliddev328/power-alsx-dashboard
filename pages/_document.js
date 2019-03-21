@@ -4,7 +4,7 @@ import Document, { Head, Main, NextScript } from "next/document";
 import settings from "../settings.json";
 import CONSTANTS from "../globals";
 
-const { FB_APP_ID, SEGMENT_KEY, FULLSTORY_KEY } =
+const { FB_APP_ID, SEGMENT_KEY, FULLSTORY_KEY, FIREBASE } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 export default class MyDocument extends Document {
@@ -201,6 +201,21 @@ export default class MyDocument extends Document {
                 g.identifyAccount=function(i,v){o='account';v=v||{};v.acctId=i;g(o,v)};
                 g.clearUserCookie=function(){};
             })(window,document,window['_fs_namespace'],'script','user');`
+            }}
+          />
+          <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase-app.js" />
+          <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase-auth.js" />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `var config = {
+                apiKey: "${FIREBASE.APIKEY}",
+                authDomain: "${FIREBASE.PROJECTID}.firebaseapp.com",
+                databaseURL: "https://${FIREBASE.DATABASE}.firebaseio.com",
+                projectId: "${FIREBASE.PROJECTID}",
+                storageBucket: "${FIREBASE.BUCKET}.appspot.com",
+                messagingSenderId: "${FIREBASE.SENDERID}",
+              };
+              firebase.initializeApp(config);`
             }}
           />
         </Head>

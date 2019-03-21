@@ -1,17 +1,13 @@
-import React from 'react';
-import InfoIcon from './Icons/InfoIcon';
+import React from "react";
+import InfoIcon from "./Icons/InfoIcon";
 
 export default class CTA extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <button
-        className={this.props.secondary ? 'secondary' : ''}
+        className={this.props.secondary ? "secondary" : ""}
         onClick={this.props.onClick}
-        type={this.props.type ? this.props.type : 'submit'}
+        type={this.props.type ? this.props.type : "submit"}
       >
         <span>{this.props.children}</span>
         {this.props.info && this.props.info.length && (

@@ -3,11 +3,6 @@ import Router from "next/router";
 import Header from "../components/Header";
 import Button from "../components/Button";
 import AppHeader from "../components/AppHeader";
-import Card from "../components/Card";
-import SunIcon from "../components/Icons/SunIcon";
-import LeafIcon from "../components/Icons/LeafIcon";
-import LightningIcon from "../components/Icons/LightningIcon";
-import BagIcon from "../components/Icons/BagIcon";
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -24,11 +19,11 @@ class Dashboard extends React.Component {
     let usercreated = "";
     let storedName = "";
 
-    if (localStorage.getItem("usercreated")) {
-      usercreated = localStorage.getItem("usercreated");
+    if (window.localStorage.getItem("usercreated")) {
+      usercreated = window.localStorage.getItem("usercreated");
     }
-    if (localStorage.getItem("username")) {
-      storedName = JSON.parse(localStorage.getItem("username"));
+    if (window.localStorage.getItem("username")) {
+      storedName = JSON.parse(window.localStorage.getItem("username"));
     }
 
     this.setState({ isAbleToSeeDashboard: usercreated, name: storedName });

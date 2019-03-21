@@ -1,10 +1,6 @@
-import React from 'react';
+import React from "react";
 
 export default class ArrowIcon extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <svg width="15" height="15" xmlns="http://www.w3.org/2000/svg">

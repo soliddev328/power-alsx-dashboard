@@ -7,10 +7,6 @@ import Button from "../../components/Button";
 import CustomSelect from "../../components/CustomSelect";
 
 class Step3 extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     global.analytics.page("Step 3");
   }
@@ -25,7 +21,7 @@ class Step3 extends React.Component {
               currentUtility: ""
             }}
             onSubmit={values => {
-              localStorage.setItem(
+              window.localStorage.setItem(
                 "utility",
                 JSON.stringify(values.currentUtility)
               );
@@ -48,7 +44,7 @@ class Step3 extends React.Component {
                     />
                     <Button
                       primary
-                      disabled={!props.values.currentUtility != ""}
+                      disabled={!!props.values.currentUtility !== true}
                     >
                       Check For Savings
                     </Button>

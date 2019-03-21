@@ -16,9 +16,9 @@ class Step8 extends React.Component {
 
     let storedPartialConnection = false;
 
-    if (localStorage.getItem("partialConnection")) {
+    if (window.localStorage.getItem("partialConnection")) {
       storedPartialConnection = JSON.parse(
-        localStorage.getItem("partialConnection")
+        window.localStorage.getItem("partialConnection")
       );
     }
 

@@ -1,17 +1,13 @@
-import React from 'react';
-import Router from 'next/router';
+import React from "react";
+import Router from "next/router";
 
 export default class BankCard extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <button
         onClick={() => {
           Router.push({
-            pathname: '/onboarding/step13',
+            pathname: "/onboarding/step13",
             query: {
               bankCode: this.props.code
             }
@@ -26,7 +22,7 @@ export default class BankCard extends React.Component {
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: ${this.props.largeIcon ? '1rem 0.5rem' : '1rem 1.5rem'};
+            padding: ${this.props.largeIcon ? "1rem 0.5rem" : "1rem 1.5rem"};
             border-radius: 5px;
             margin: 0;
             background-color: ${this.props.accent};

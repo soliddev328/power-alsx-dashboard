@@ -5,16 +5,8 @@ import Header from "../../components/Header";
 import RadioCard from "../../components/RadioCard";
 import SingleStep from "../../components/SingleStep";
 import Button from "../../components/Button";
-import CONSTANTS from "../../globals";
-
-const { API } =
-  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 class Step6 extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     global.analytics.page("Step 6");
 
@@ -23,19 +15,19 @@ class Step6 extends React.Component {
     let storedAgreementChecked = false;
     let storedAddress = "";
 
-    if (localStorage.getItem("leadId")) {
-      storedLeadId = localStorage.getItem("leadId");
+    if (window.localStorage.getItem("leadId")) {
+      storedLeadId = window.localStorage.getItem("leadId");
     }
-    if (localStorage.getItem("utility")) {
-      storedUtility = JSON.parse(localStorage.getItem("utility"));
+    if (window.localStorage.getItem("utility")) {
+      storedUtility = JSON.parse(window.localStorage.getItem("utility"));
     }
-    if (localStorage.getItem("acceptedTermsAndConditions")) {
+    if (window.localStorage.getItem("acceptedTermsAndConditions")) {
       storedAgreementChecked = JSON.parse(
-        localStorage.getItem("acceptedTermsAndConditions")
+        window.localStorage.getItem("acceptedTermsAndConditions")
       );
     }
-    if (localStorage.getItem("address")) {
-      storedAddress = JSON.parse(localStorage.getItem("address"));
+    if (window.localStorage.getItem("address")) {
+      storedAddress = JSON.parse(window.localStorage.getItem("address"));
     }
 
     this.setState({
@@ -46,17 +38,34 @@ class Step6 extends React.Component {
     });
   }
 
+  static async getInitialProps({ query }) {
+    const props = {
+      displayMessage: query.onboardingNotFinished
+    };
+
+    return props;
+  }
+
   render() {
     return (
       <main>
         <Header />
-        <SingleStep title="Do you have an on-line account with your electric utility?">
+        <SingleStep
+          title={
+            this.props.displayMessage
+              ? "You've completed most steps, we only need your utility information, Do you have an on-line account with your electric utility?"
+              : "Do you have an on-line account with your electric utility?"
+          }
+        >
           <Formik
             initialValues={{
               billingMethod: ""
             }}
             onSubmit={values => {
-              localStorage.setItem("billingMethod", JSON.stringify(values));
+              window.localStorage.setItem(
+                "billingMethod",
+                JSON.stringify(values)
+              );
               Router.push({
                 pathname: "/onboarding/step7"
               });
@@ -76,7 +85,10 @@ class Step6 extends React.Component {
                     value="paper"
                     heading="No"
                   />
-                  <Button primary disabled={!props.values.billingMethod != ""}>
+                  <Button
+                    primary
+                    disabled={!!props.values.billingMethod !== true}
+                  >
                     Next
                   </Button>
                 </Form>

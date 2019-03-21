@@ -1,14 +1,7 @@
-import React from 'react';
-import LogoIcon from './Icons/LogoIcon';
-import ProfilePic from './ProfilePic';
+import React from "react";
+import LogoIcon from "./Icons/LogoIcon";
 
 export default class Header extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  componentDidMount() {}
-
   render() {
     return (
       <div className="wrapper">

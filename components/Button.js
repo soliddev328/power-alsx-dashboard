@@ -1,22 +1,18 @@
-import React from 'react';
-import ArrowIcon from './Icons/ArrowIcon';
-import FacebookIcon from './Icons/FacebookIcon';
+import React from "react";
+import ArrowIcon from "./Icons/ArrowIcon";
+import FacebookIcon from "./Icons/FacebookIcon";
 
 export default class Button extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   shareIcon() {
-    if (this.props.share == 'facebook') return <FacebookIcon />;
+    if (this.props.share === "facebook") return <FacebookIcon />;
   }
 
   render() {
     return (
       <button
-        type={this.props.type ? this.props.type : 'submit'}
+        type={this.props.type ? this.props.type : "submit"}
         onClick={this.props.onClick}
-        className={this.props.share ? 'share' : ''}
+        className={this.props.share ? "share" : ""}
         disabled={this.props.disabled}
       >
         {this.props.share && this.shareIcon()}
@@ -48,14 +44,14 @@ export default class Button extends React.Component {
             font-family: var(--font-primary);
             font-weight: 800;
             color: ${this.props.primary
-              ? 'var(--color-bg-primary)'
-              : 'var(--color-primary)'};
+              ? "var(--color-bg-primary)"
+              : "var(--color-primary)"};
             background-color: ${this.props.primary
-              ? 'var(--color-primary)'
-              : 'var(--color-bg-primary)'};
+              ? "var(--color-primary)"
+              : "var(--color-bg-primary)"};
             border: ${this.props.primary
-              ? 'none'
-              : '1px solid var(--color-primary)'};
+              ? "none"
+              : "1px solid var(--color-primary)"};
             padding: 1.15em 0;
             border-radius: 1px;
             margin: 1em auto;

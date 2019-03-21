@@ -1,12 +1,7 @@
-import React, { Fragment } from 'react';
-import Input from './Input';
-import Highlight from './Highlight';
+import React from "react";
+import Highlight from "./Highlight";
 
 export default class SingleStep extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   renderPrefix() {
     return this.props.highlight ? (
       <Highlight
@@ -31,6 +26,10 @@ export default class SingleStep extends React.Component {
     );
   }
 
+  renderSuffix() {
+    return <p className="suffix">{this.props.suffix}</p>;
+  }
+
   render() {
     return (
       <div className="content">
@@ -38,6 +37,7 @@ export default class SingleStep extends React.Component {
           {this.props.toast && <p className="title">{this.props.toast}</p>}
           {this.props.prefix && this.renderPrefix()}
           {this.props.title && this.renderTitle()}
+          {this.props.suffix && this.renderSuffix()}
         </div>
         {this.props.image && (
           <figure>
@@ -45,7 +45,6 @@ export default class SingleStep extends React.Component {
           </figure>
         )}
         {this.props.children}
-        {this.props.suffix && this.renderSuffix()}
         <style jsx>{`
           .content {
             max-width: 87%;
@@ -68,13 +67,6 @@ export default class SingleStep extends React.Component {
           .heading {
             margin-bottom: 1.5em;
           }
-          p.prefix,
-          p.suffix {
-            text-align: center;
-            font-size: 1rem;
-            opacity: 0.5;
-            font-weight: 400;
-          }
           figure {
             margin: 0;
             text-align: center;
@@ -96,6 +88,12 @@ export default class SingleStep extends React.Component {
             font-size: 1rem;
             font-weight: 400;
           }
+
+          p.suffix,
+          span.suffix {
+            font-size: 0.8em;
+          }
+
           span.title mark {
             color: var(--color-secondary) !important;
           }
