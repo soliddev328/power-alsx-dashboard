@@ -50,7 +50,8 @@ class CustomForm extends React.Component {
         </div>
         <Checkbox fieldname="acceptedTermsAndConditions">
           <p className="checkbox__label">
-            I accept the{" "}
+            I authorize Common Energy to act as my Agent and to enroll me in a
+            clean energy savings program, according to these{" "}
             <a
               href={this.props.agreement.terms}
               target="_blank"
