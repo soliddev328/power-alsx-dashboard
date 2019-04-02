@@ -1,48 +1,41 @@
 import React from "react";
-import { Field } from "formik";
-
-export default class Input extends React.Component {
+import zip from "zippo";
+export default class ZipCodeInput extends React.Component {
   constructor(props) {
     super(props);
-    this.inputField = React.createRef();
-    this.scrollOnFocus = this.scrollOnFocus.bind(this);
+
+    this.state = {
+      code: ""
+    };
   }
 
-  applyValidation(x) {
-    const msg = "Please enter a valid email address";
-    x.target.setCustomValidity(msg);
-  }
+  format = event => {
+    let { value } = event.target;
 
-  customSetCustomValidity(e) {
-    e.target.setCustomValidity("");
-  }
+    this.setState({
+      code: zip.parse(value)
+    });
+  };
 
-  scrollOnFocus(e) {
-    if (this.inputField) {
-      const offset = this.inputField.current.getBoundingClientRect().top;
-      setTimeout(() => {
-        window.scrollTo(0, offset);
-      }, 200);
-    }
-  }
+  handleChange = e => {
+    this.props.onChangeEvent(this.props.fieldname, e.target.value);
+  };
+
+  handleBlur = () => {
+    this.props.onBlurEvent(this.props.fieldname, true);
+  };
 
   render() {
     return (
-      <div
-        ref={this.inputField}
-        onClick={this.scrollOnFocus}
-        className="input__wrapper"
-      >
-        <Field
-          type={this.props.type ? this.props.type : "text"}
-          component="input"
+      <div className="input__wrapper">
+        <input
+          type="number"
+          pattern="[0-9]*"
+          onChange={this.handleChange}
+          onBlur={this.handleBlur}
+          value={this.props.value}
           name={this.props.fieldname}
           id={this.props.fieldname}
-          validate={this.props.required}
-          onInvalid={this.applyValidation}
-          onInput={this.customSetCustomValidity}
-          autoFocus={this.props.autoFocus}
-          {...this.props}
         />
         <label htmlFor={this.props.fieldname}>{this.props.label}</label>
         <style jsx global>{`
@@ -67,6 +60,7 @@ export default class Input extends React.Component {
 
           input + label {
             position: absolute;
+            pointer-events: none;
             font-family: var(--font-primary);
             font-size: 0.75rem;
             font-weight: 600;
@@ -77,11 +71,12 @@ export default class Input extends React.Component {
             text-transform: capitalize;
             transform: translateY(-50%);
             transition: opacity 400ms cubic-bezier(0.075, 0.82, 0.165, 1);
-            opacity: 0;
+            z-index: 11;
           }
 
-          input[value=""] + label {
-            opacity: 1;
+          input:focus + label,
+          input[value]:not([value=""]) + label {
+            opacity: 0;
           }
 
           .input__wrapper {
