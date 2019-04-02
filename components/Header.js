@@ -1,6 +1,6 @@
-import React from 'react';
-import LogoIcon from './Icons/LogoIcon';
-import ProfilePic from './ProfilePic';
+import React from "react";
+import LogoIcon from "./Icons/LogoIcon";
+import ProfilePic from "./ProfilePic";
 
 export default class Header extends React.Component {
   constructor(props) {
@@ -16,8 +16,8 @@ export default class Header extends React.Component {
         <div className="bubble">
           <ProfilePic
             image={{
-              src: '/static/images/people/scott.jpg',
-              altText: 'A smiling girl'
+              src: "/static/images/people/martin.jpg",
+              altText: "A smiling employee"
             }}
           />
         </div>
