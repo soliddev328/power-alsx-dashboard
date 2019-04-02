@@ -24,13 +24,18 @@ class Step6 extends React.Component {
     global.analytics.page("Step 6");
 
     let storedLeadId = "";
+    let storedName = "";
 
     if (localStorage.getItem("leadId")) {
       storedLeadId = localStorage.getItem("leadId");
     }
+    if (localStorage.getItem("username")) {
+      storedName = JSON.parse(localStorage.getItem("username"));
+    }
 
     this.setState({
-      leadId: storedLeadId
+      leadId: storedLeadId,
+      name: storedName
     });
   }
 
