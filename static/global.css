@@ -222,19 +222,9 @@ hr {
   align-items: center;
 }
 
-/* .two-columns--responsive {
-  grid-template-columns: 1fr;
-} */
-
 @media (min-width: 800px) {
   .two-columns--responsive {
     grid-template-columns: repeat(2, 1fr);
-  }
-
-  .two-columns .input__wrapper,
-  .two-columns--responsive .input__wrapper,
-  .two-columns--responsive .input__wrapper:last-of-type {
-    margin-bottom: 0 !important;
   }
 }
 

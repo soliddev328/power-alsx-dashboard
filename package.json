@@ -21,11 +21,12 @@
     "react-ga": "^2.5.7",
     "react-geosuggest": "^2.10.0",
     "react-highlight-words": "^0.16.0",
-    "react-number-format": "^4.0.6",
+    "react-number-format": "^4.0.7",
     "react-plaid": "^0.9.0",
     "react-select": "^2.4.1",
     "react-spinners": "^0.5.3",
-    "react-stripe-elements": "^2.0.3"
+    "react-stripe-elements": "^2.0.3",
+    "zippo": "^1.0.1"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
