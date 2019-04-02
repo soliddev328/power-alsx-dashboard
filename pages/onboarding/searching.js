@@ -4,7 +4,7 @@ import Header from "../../components/Header";
 import { FadeLoader } from "react-spinners";
 import SingleStep from "../../components/SingleStep";
 
-class Step8 extends React.Component {
+class Searching extends React.Component {
   constructor(props) {
     super(props);
 
@@ -18,7 +18,7 @@ class Step8 extends React.Component {
   renderLoader() {
     setTimeout(() => {
       Router.push({
-        pathname: "/onboarding/step4"
+        pathname: "/onboarding/step3"
       });
     }, 2000);
 
@@ -73,4 +73,4 @@ class Step8 extends React.Component {
   }
 }
 
-export default Step8;
+export default Searching;

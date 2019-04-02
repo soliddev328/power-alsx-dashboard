@@ -1,79 +1,326 @@
 import React from "react";
 import Router from "next/router";
+import { Formik, Form } from "formik";
+import axios from "axios";
+import { FadeLoader } from "react-spinners";
 import Header from "../../components/Header";
+import Input from "../../components/Input";
 import SingleStep from "../../components/SingleStep";
 import Button from "../../components/Button";
+import Stepper from "../../components/Stepper";
+import CONSTANTS from "../../globals";
+
+const { API } =
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 class Step8 extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      isLoading: false,
+      currentUtility: "",
+      forgotPwdLink: "",
+      forgotEmailLink: "",
+      createLoginLink: ""
+    };
+  }
+
+  static async getInitialProps({ req, query, params }) {
+    if (req) {
+      try {
+        return { query: req.query, params: req.params };
+      } catch (err) {
+        return { query: req.query, params: req.params };
+      }
+    }
+
+    return { query, params };
+  }
+
+  getLinks() {
+    let storedAddress = JSON.parse(localStorage.getItem("address"));
+    let storedUtility = JSON.parse(localStorage.getItem("utility"));
+
+    const rawParams = {
+      utility: encodeURIComponent(storedUtility.label),
+      state: storedAddress.state
+    };
+
+    const generatedParams = Object.entries(rawParams)
+      .map(([key, val]) => `${key}=${val}`)
+      .join("&");
+
+    axios(`${API}/v1/utilities/?${generatedParams}`).then(response => {
+      if (response.data.data) {
+        this.setState({
+          forgotPwdLink: response.data.data[0].forgotPwdLink,
+          forgotEmailLink: response.data.data[0].forgotEmailLink,
+          createLoginLink: response.data.data[0].createLoginLink
+        });
+      }
+    });
   }
 
   componentDidMount() {
     global.analytics.page("Step 8");
 
-    let storedPartialConnection = false;
+    let storedLeadId = "";
+    let storedUtility = "";
+    let storedBillingMethod = "";
 
-    if (localStorage.getItem("partialConnection")) {
-      storedPartialConnection = JSON.parse(
-        localStorage.getItem("partialConnection")
-      );
+    if (localStorage.getItem("leadId")) {
+      storedLeadId = localStorage.getItem("leadId");
     }
 
-    this.setState({
-      partialConnection: storedPartialConnection
-    });
-  }
-
-  renderContent() {
-    if (this.state.partialConnection) {
-      return (
-        <p className="message">
-          We are connecting your account and will contact you if we need more
-          information
-          <style jsx>{`
-            .message {
-              text-align: center;
-            }
-          `}</style>
-        </p>
-      );
-    } else {
-      return (
-        <React.Fragment>
-          <svg width="55" height="55" xmlns="http://www.w3.org/2000/svg">
-            <g fill="none" fillRule="evenodd">
-              <circle cx="27.5" cy="27.5" r="27.5" fill="#41EF8B" />
-              <path
-                d="M32.9977909 21.3976621c1.6389735-1.6389735 4.2050581.8556542 2.494699 2.494699l-10.262155 10.333588c-.712883.6414974-1.7817447.6414974-2.494699 0l-5.1310774-5.2025105c-1.6389731-1.6389736.8556542-4.1336251 2.4946989-2.494699l3.9195632 3.9195632 8.9789703-9.0506407z"
-                fill="#FFF"
-              />
-            </g>
-          </svg>
-          <p>Congratulations, you're connected!</p>
-        </React.Fragment>
-      );
+    if (localStorage.getItem("utility")) {
+      storedUtility = JSON.parse(localStorage.getItem("utility"));
     }
+
+    if (localStorage.getItem("billingMethod")) {
+      storedBillingMethod = JSON.parse(localStorage.getItem("billingMethod"));
+    }
+
+    this.setState(
+      {
+        leadId: storedLeadId,
+        utility: storedUtility.label,
+        currentUtility: storedUtility,
+        billingMethod: storedBillingMethod
+      },
+      this.getLinks()
+    );
   }
 
-  render() {
+  renderUtilityLogin() {
     return (
-      <main>
-        <Header />
-        <SingleStep>
-          <div className="loading">{this.renderContent()}</div>
-          <Button
-            primary
-            onClick={() => {
+      <React.Fragment>
+        {this.props.query && this.props.query.error && (
+          <p className="error">
+            There was a problem connecting, could you please verify your login.
+          </p>
+        )}
+        <Formik
+          initialValues={{
+            utilityUser: "",
+            utilityPassword: ""
+          }}
+          onSubmit={values => {
+            this.setState({ isLoading: true });
+
+            axios
+              .put(`${API}/v1/subscribers/utilities/link`, {
+                leadId: this.state.leadId,
+                utility: this.state.utility,
+                utilityUsername: values.utilityUser,
+                utilityPwd: values.utilityPassword
+              })
+              .then(response => {
+                localStorage.setItem(
+                  "linkedUtility",
+                  JSON.stringify(response.data)
+                );
+                if (response.data.data && response.data.data[0]) {
+                  if (response.data.data[0].hasLoggedIn) {
+                    localStorage.setItem("partialConnection", false);
+                    Router.push({
+                      pathname: "/onboarding/step9"
+                    });
+                  } else {
+                    this.setState({ isLoading: false });
+                    Router.push({
+                      pathname: "/onboarding/step8",
+                      query: {
+                        error: true
+                      }
+                    });
+                  }
+                } else {
+                  localStorage.setItem("partialConnection", true);
+                  Router.push({
+                    pathname: "/onboarding/step9"
+                  });
+                }
+              })
+              .catch(function(error) {
+                console.log(error);
+              });
+          }}
+          render={props => (
+            <React.Fragment>
+              <Form>
+                <Input label="User name" fieldname="utilityUser" />
+                <Input
+                  type="password"
+                  label="Password"
+                  fieldname="utilityPassword"
+                  autoComplete="no"
+                />
+
+                <Button
+                  primary
+                  disabled={
+                    !props.values.utilityUser != "" ||
+                    !props.values.utilityPassword != ""
+                  }
+                >
+                  Next
+                </Button>
+              </Form>
+            </React.Fragment>
+          )}
+        />
+        <style jsx>{`
+          .error {
+            text-align: center;
+            color: red;
+          }
+        `}</style>
+      </React.Fragment>
+    );
+  }
+
+  renderAskForUtilityAccount() {
+    return (
+      <Formik
+        initialValues={{
+          utilityAccountNumber: ""
+        }}
+        onSubmit={values => {
+          axios
+            .put(`${API}/v1/subscribers`, {
+              leadId: this.state.leadId,
+              utilityAccountNumber: values.utilityAccountNumber
+            })
+            .then(() => {
+              localStorage.setItem("partialConnection", true);
               Router.push({
                 pathname: "/onboarding/step9"
               });
-            }}
-          >
-            Next
-          </Button>
+            })
+            .catch(function(error) {
+              console.log(error);
+            });
+        }}
+        render={props => (
+          <React.Fragment>
+            <Form>
+              <Input label="Account Number" fieldname="utilityAccountNumber" />
+              <Button
+                primary
+                disabled={!props.values.utilityAccountNumber != ""}
+              >
+                Next
+              </Button>
+            </Form>
+          </React.Fragment>
+        )}
+      />
+    );
+  }
+
+  renderForms() {
+    const canLinkAccount =
+      this.state.billingMethod &&
+      this.state.billingMethod.billingMethod.indexOf("paper") !== 0;
+
+    return canLinkAccount
+      ? this.renderUtilityLogin()
+      : this.renderAskForUtilityAccount();
+  }
+
+  renderLoader() {
+    return (
+      <React.Fragment>
+        <div className="loading">
+          <FadeLoader
+            className="spinner"
+            height={15}
+            width={4}
+            radius={1}
+            color={"#FF69A0"}
+            loading={true}
+          />
+          <p>Connecting your account</p>
+        </div>
+        <p className="suffix">(this may take up to 10 seconds)</p>
+        <style jsx>{`
+          .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .loading p {
+            font-size: 1rem;
+            text-align: center;
+          }
+
+          p.suffix {
+            font-size: 0.8rem;
+          }
+        `}</style>
+      </React.Fragment>
+    );
+  }
+
+  renderText() {
+    const canLinkAccount =
+      this.state.billingMethod &&
+      this.state.billingMethod.billingMethod.indexOf("paper") !== 0;
+    const text = canLinkAccount
+      ? "Ok great. Let's connect your account and get you saving!"
+      : "No problem! We can use your account number to get you connected and saving.";
+
+    return this.state.isLoading ? "" : text;
+  }
+
+  render() {
+    const canLinkAccount =
+      this.state.billingMethod &&
+      this.state.billingMethod.billingMethod.indexOf("paper") !== 0;
+    return (
+      <main>
+        <Header />
+        <SingleStep title={this.renderText()}>
+          {this.state && this.state.currentUtility && !this.state.isLoading && (
+            <figure>
+              <img
+                src={this.state.currentUtility.image.src}
+                alt={this.state.currentUtility.image.altText}
+              />
+            </figure>
+          )}
+          {this.state.isLoading ? this.renderLoader() : this.renderForms()}
+          {!this.state.isLoading && canLinkAccount && (
+            <div className="links">
+              {this.state.createLoginLink && (
+                <a className="cta" href={this.state.createLoginLink}>
+                  Create an account
+                </a>
+              )}
+              {this.state.forgotEmailLink && (
+                <a className="cta" href={this.state.forgotEmailLink}>
+                  Forgot username
+                </a>
+              )}
+              {this.state.forgotPwdLink && (
+                <a className="cta" href={this.state.forgotPwdLink}>
+                  Forgot password
+                </a>
+              )}
+            </div>
+          )}
+          {!this.state.isLoading && (
+            <Stepper>
+              <li className="steplist__step steplist__step-done">1</li>
+              <li className="steplist__step steplist__step-done">2</li>
+              <li className="steplist__step steplist__step-done">3</li>
+              <li className="steplist__step steplist__step-done">4</li>
+              <li className="steplist__step steplist__step-doing">5</li>
+              <li className="steplist__step">6</li>
+            </Stepper>
+          )}
         </SingleStep>
         <style jsx>{`
           main {
@@ -81,14 +328,25 @@ class Step8 extends React.Component {
             max-width: 700px;
             margin: 0 auto;
           }
-          .loading {
+          figure {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+            margin: 0;
+            margin-bottom: 1em;
+            padding: 1em;
+          }
+
+          img {
+            max-width: 60%;
+          }
+
+          .links {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-          }
-          h3 {
-            text-align: center;
           }
         `}</style>
       </main>

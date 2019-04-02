@@ -1,131 +1,80 @@
 import React from "react";
 import Router from "next/router";
 import { Formik, Form } from "formik";
-import axios from "axios";
-import GeoSuggest from "../../components/GeoSuggest";
 import Header from "../../components/Header";
-import Input from "../../components/Input";
 import SingleStep from "../../components/SingleStep";
 import Button from "../../components/Button";
-import CONSTANTS from "../../globals";
-
-const { API } =
-  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
+import CustomSelect from "../../components/CustomSelect";
 
 class Step2 extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      name: ""
+      address: "",
+      postalCode: ""
     };
   }
 
   componentDidMount() {
     global.analytics.page("Step 2");
-    let storedName = "";
 
-    if (localStorage.getItem("username")) {
-      storedName = JSON.parse(localStorage.getItem("username"));
+    let storedAddress = "";
+    let storedPostalCode = "";
+
+    if (localStorage.getItem("address")) {
+      storedAddress = JSON.parse(localStorage.getItem("address"));
     }
 
-    this.setState({ name: storedName });
-  }
+    if (localStorage.getItem("postalCode")) {
+      storedPostalCode = JSON.parse(localStorage.getItem("postalCode"));
+    }
 
-  capitalize(word) {
-    return word && word[0].toUpperCase() + word.slice(1);
-  }
-
-  getPostalCode(values) {
-    const components = values.address
-      ? values.address.gmaps.address_components
-      : null;
-
-    const postalCode = components
-      ? components.find(x => x.types[0] == "postal_code")
-      : null;
-
-    return postalCode ? postalCode.long_name : "";
-  }
-
-  getStateAddress(values) {
-    const components = values.address
-      ? values.address.gmaps.address_components
-      : null;
-    const state = components
-      ? components.find(x => x.types[0] == "administrative_area_level_1")
-      : null;
-
-    return state ? state.short_name : "";
+    this.setState({ address: storedAddress, postalCode: storedPostalCode });
   }
 
   render() {
     return (
       <main>
         <Header />
-        <SingleStep
-          title={`Nice to meet you ${this.capitalize(
-            this.state.name.firstName
-          )}. What is your home address?`}
-        >
+        <SingleStep title="And who provides your electric service today?">
           <Formik
             initialValues={{
-              address: "",
-              apt: ""
+              currentUtility: ""
             }}
             onSubmit={values => {
-              const arrayAddress = values.address.description.split(",");
-              const street = arrayAddress[0] ? arrayAddress[0] : "";
-              const city = arrayAddress[1]
-                ? arrayAddress[1].replace(/\s/g, "")
-                : "";
+              localStorage.setItem(
+                "utility",
+                JSON.stringify(values.currentUtility)
+              );
 
-              const address = {
-                street: street,
-                city: city,
-                state: this.getStateAddress(values),
-                postalCode: this.getPostalCode(values),
-                apt: values.apt ? values.apt : ""
-              };
-
-              localStorage.setItem("address", JSON.stringify(address));
-
-              axios(`${API}/v1/zipcodes/${address.postalCode}`).then(
-                response => {
-                  if (
-                    response.data.data.geostatus != "Live" &&
-                    response.data.data.geostatus != "Near-Term"
-                  ) {
-                    Router.push({
-                      pathname: "/onboarding/sorry"
-                    });
-                  } else {
-                    Router.push({
-                      pathname: "/onboarding/step3"
-                    });
-                  }
-                }
+              Router.push({
+                pathname: "/onboarding/searching"
+              });
+            }}
+            render={props => {
+              return (
+                <React.Fragment>
+                  <Form>
+                    <CustomSelect
+                      zipCode={this.state.postalCode}
+                      value={props.values.currentUtility}
+                      onChange={props.setFieldValue}
+                      onBlur={props.setFieldTouched}
+                      error={props.errors.topics}
+                      touched={props.touched.topics}
+                      fieldname="currentUtility"
+                    />
+                    <Button
+                      primary
+                      disabled={!props.values.currentUtility != ""}
+                    >
+                      Check For Savings
+                    </Button>
+                  </Form>
+                </React.Fragment>
               );
             }}
-            render={props => (
-              <React.Fragment>
-                <Form>
-                  <GeoSuggest
-                    label="Address"
-                    fieldname="address"
-                    value={props.values.address}
-                    onChange={props.setFieldValue}
-                    onBlur={props.setFieldTouched}
-                    error={props.errors.topics}
-                    touched={props.touched.topics}
-                  />
-                  <Input label="Apartment No." fieldname="apt" />
-                  <Button primary disabled={!props.values.address != ""}>
-                    Next
-                  </Button>
-                </Form>
-              </React.Fragment>
-            )}
           />
         </SingleStep>
         <style jsx>{`
