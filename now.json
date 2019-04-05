@@ -18,7 +18,6 @@
     { "src": "/onboarding/step8", "dest": "/pages/onboarding/step8" },
     { "src": "/onboarding/step9", "dest": "/pages/onboarding/step9" },
     { "src": "/onboarding/step10", "dest": "/pages/onboarding/step10" },
-    { "src": "/onboarding/step11", "dest": "/pages/onboarding/step11" },
-    { "src": "/onboarding/step12", "dest": "/pages/onboarding/step12" }
+    { "src": "/onboarding/step11", "dest": "/pages/onboarding/step11" }
   ]
 }

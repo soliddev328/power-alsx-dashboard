@@ -47,8 +47,10 @@ export default class Plaid extends React.Component {
               item: this.state.leadId
             })
             .then(() => {
+              global.analytics.track("Sign-Up Completed", {});
+              localStorage.setItem("usercreated", true);
               Router.push({
-                pathname: "/onboarding/step12"
+                pathname: "/dashboard"
               });
             });
         }}
