@@ -52,10 +52,6 @@ class Dashboard extends React.Component {
             <p>Here’s what happens next:</p>
             <ul>
               <li>
-                Common Energy will configure your electricity account to receive
-                clean energy
-              </li>
-              <li>
                 Common Energy will connect your account to a lower cost, clean
                 energy source
               </li>
