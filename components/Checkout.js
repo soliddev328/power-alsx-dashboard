@@ -1,18 +1,18 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import Router from 'next/router';
+import React, { Component } from "react";
+import axios from "axios";
+import Router from "next/router";
 import {
   injectStripe,
   CardNumberElement,
   CardExpiryElement,
   CardCVCElement,
   PostalCodeElement
-} from 'react-stripe-elements';
-import Button from '../components/Button';
-import CONSTANTS from '../globals';
+} from "react-stripe-elements";
+import Button from "../components/Button";
+import CONSTANTS from "../globals";
 
 const { API } =
-  CONSTANTS.NODE_ENV !== 'production' ? CONSTANTS.dev : CONSTANTS.prod;
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 class CheckoutForm extends Component {
   constructor(props) {
@@ -21,15 +21,15 @@ class CheckoutForm extends Component {
   }
 
   componentDidMount() {
-    let storedLeadId = '';
-    let storedEmail = '';
+    let storedLeadId = "";
+    let storedEmail = "";
 
-    if (localStorage.getItem('leadId')) {
-      storedLeadId = localStorage.getItem('leadId');
+    if (localStorage.getItem("leadId")) {
+      storedLeadId = localStorage.getItem("leadId");
     }
 
-    if (localStorage.getItem('email')) {
-      storedEmail = localStorage.getItem('email');
+    if (localStorage.getItem("email")) {
+      storedEmail = localStorage.getItem("email");
     }
 
     this.setState({
@@ -42,7 +42,7 @@ class CheckoutForm extends Component {
   submit(ev) {
     ev.preventDefault();
     if (this.props.stripe) {
-      this.props.stripe.createToken({ type: 'card' }).then(payload => {
+      this.props.stripe.createToken({ type: "card" }).then(payload => {
         if (payload.token) {
           axios
             .put(`${API}/v1/subscribers`, {
@@ -51,14 +51,16 @@ class CheckoutForm extends Component {
               stripeToken: payload.token.id
             })
             .then(() => {
+              global.analytics.track("Sign-Up Completed", {});
+              localStorage.setItem("usercreated", true);
               Router.push({
-                pathname: '/onboarding/step11'
+                pathname: "/dashboard"
               });
             });
         }
       });
     } else {
-      console.log('Form submitted before Stripe.js loaded.');
+      console.log("Form submitted before Stripe.js loaded.");
     }
   }
 
@@ -70,19 +72,19 @@ class CheckoutForm extends Component {
             placeholder="Card Number"
             style={{
               base: {
-                margin: '5px',
-                color: 'var(--color-primary)',
-                fontSize: '16px',
+                margin: "5px",
+                color: "var(--color-primary)",
+                fontSize: "16px",
                 fontFamily: '"Poppins", sans-serif',
-                fontSmoothing: 'antialiased',
-                '::placeholder': {
-                  color: '#2479ff'
+                fontSmoothing: "antialiased",
+                "::placeholder": {
+                  color: "#2479ff"
                 }
               },
               invalid: {
-                color: '#e5424d',
-                ':focus': {
-                  color: '#303238'
+                color: "#e5424d",
+                ":focus": {
+                  color: "#303238"
                 }
               }
             }}
@@ -90,7 +92,7 @@ class CheckoutForm extends Component {
               if (event.error) {
                 this.setState({ errorMessage: event.error.message });
               } else {
-                this.setState({ errorMessage: '' });
+                this.setState({ errorMessage: "" });
               }
             }}
           />
@@ -98,19 +100,19 @@ class CheckoutForm extends Component {
             <CardExpiryElement
               style={{
                 base: {
-                  color: 'var(--color-primary)',
-                  fontSize: '16px',
+                  color: "var(--color-primary)",
+                  fontSize: "16px",
                   fontFamily: '"Poppins", sans-serif',
-                  fontSmoothing: 'antialiased',
-                  '::placeholder': {
-                    fontSize: '12px',
-                    color: '#2479ff'
+                  fontSmoothing: "antialiased",
+                  "::placeholder": {
+                    fontSize: "12px",
+                    color: "#2479ff"
                   }
                 },
                 invalid: {
-                  color: '#e5424d',
-                  ':focus': {
-                    color: '#303238'
+                  color: "#e5424d",
+                  ":focus": {
+                    color: "#303238"
                   }
                 }
               }}
@@ -118,26 +120,26 @@ class CheckoutForm extends Component {
                 if (event.error) {
                   this.setState({ errorMessage: event.error.message });
                 } else {
-                  this.setState({ errorMessage: '' });
+                  this.setState({ errorMessage: "" });
                 }
               }}
             />
             <CardCVCElement
               style={{
                 base: {
-                  color: 'var(--color-primary)',
-                  fontSize: '16px',
+                  color: "var(--color-primary)",
+                  fontSize: "16px",
                   fontFamily: '"Poppins", sans-serif',
-                  fontSmoothing: 'antialiased',
-                  '::placeholder': {
-                    fontSize: '12px',
-                    color: '#2479ff'
+                  fontSmoothing: "antialiased",
+                  "::placeholder": {
+                    fontSize: "12px",
+                    color: "#2479ff"
                   }
                 },
                 invalid: {
-                  color: '#e5424d',
-                  ':focus': {
-                    color: '#303238'
+                  color: "#e5424d",
+                  ":focus": {
+                    color: "#303238"
                   }
                 }
               }}
@@ -145,7 +147,7 @@ class CheckoutForm extends Component {
                 if (event.error) {
                   this.setState({ errorMessage: event.error.message });
                 } else {
-                  this.setState({ errorMessage: '' });
+                  this.setState({ errorMessage: "" });
                 }
               }}
             />
@@ -153,19 +155,19 @@ class CheckoutForm extends Component {
               placeholder="Zip Code"
               style={{
                 base: {
-                  color: 'var(--color-primary)',
-                  fontSize: '16px',
+                  color: "var(--color-primary)",
+                  fontSize: "16px",
                   fontFamily: '"Poppins", sans-serif',
-                  fontSmoothing: 'antialiased',
-                  '::placeholder': {
-                    fontSize: '12px',
-                    color: '#2479ff'
+                  fontSmoothing: "antialiased",
+                  "::placeholder": {
+                    fontSize: "12px",
+                    color: "#2479ff"
                   }
                 },
                 invalid: {
-                  color: '#e5424d',
-                  ':focus': {
-                    color: '#303238'
+                  color: "#e5424d",
+                  ":focus": {
+                    color: "#303238"
                   }
                 }
               }}
@@ -173,7 +175,7 @@ class CheckoutForm extends Component {
                 if (event.error) {
                   this.setState({ errorMessage: event.error.message });
                 } else {
-                  this.setState({ errorMessage: '' });
+                  this.setState({ errorMessage: "" });
                 }
               }}
             />
