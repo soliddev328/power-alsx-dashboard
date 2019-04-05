@@ -155,8 +155,10 @@ class Step11 extends React.Component {
           bankAccountNumber: values.bankAccountNumber
         })
         .then(response => {
+          global.analytics.track("Sign-Up Completed", {});
+          localStorage.setItem("usercreated", true);
           Router.push({
-            pathname: "/onboarding/step12"
+            pathname: "/dashboard"
           });
         })
         .catch(error => {
