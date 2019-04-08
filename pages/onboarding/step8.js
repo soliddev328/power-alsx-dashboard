@@ -268,10 +268,12 @@ class Step8 extends React.Component {
     const canLinkAccount =
       this.state.billingMethod &&
       this.state.billingMethod.billingMethod.indexOf("paper") !== 0;
-    const text = canLinkAccount
+    let text = canLinkAccount
       ? "Ok great. Let's connect your account and get you saving!"
       : "No problem! We can use your account number to get you connected and saving.";
 
+    if (this.state.currentUtility && this.state.currentUtility.paperOnly)
+      text = "We can use your account number to get you connected and saving.";
     return this.state.isLoading ? "" : text;
   }
 
