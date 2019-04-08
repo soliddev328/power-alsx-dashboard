@@ -25,6 +25,7 @@ class Step6 extends React.Component {
 
     let storedLeadId = "";
     let storedName = "";
+    let storedUtilityPaperOnly = false;
 
     if (localStorage.getItem("leadId")) {
       storedLeadId = localStorage.getItem("leadId");
@@ -33,9 +34,16 @@ class Step6 extends React.Component {
       storedName = JSON.parse(localStorage.getItem("username"));
     }
 
+    if (localStorage.getItem("utility")) {
+      let storedUtility = JSON.parse(localStorage.getItem("utility"));
+      if (storedUtility && storedUtility.paperOnly)
+        storedUtilityPaperOnly = true;
+    }
+
     this.setState({
       leadId: storedLeadId,
-      name: storedName
+      name: storedName,
+      storedUtilityPaperOnly
     });
   }
 
@@ -64,9 +72,21 @@ class Step6 extends React.Component {
                   phone: values.phoneNumber
                 })
                 .then(response => {
-                  Router.push({
-                    pathname: "/onboarding/step7"
-                  });
+                  if (this.state.storedUtilityPaperOnly) {
+                    localStorage.setItem(
+                      "billingMethod",
+                      JSON.stringify({
+                        billingMethod: "paper"
+                      })
+                    );
+                    Router.push({
+                      pathname: "/onboarding/step8"
+                    });
+                  } else {
+                    Router.push({
+                      pathname: "/onboarding/step7"
+                    });
+                  }
                 })
                 .catch(error => {
                   console.log(error);
