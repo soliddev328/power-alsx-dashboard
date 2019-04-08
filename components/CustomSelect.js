@@ -65,7 +65,7 @@ export default class CustomSelect extends React.Component {
 
         utilities.map((item, i) => {
           const imageName = item.replace(/\s/g, "");
-          newOptions.push({
+          const utilityInfo = {
             code: i + 1,
             image: {
               src: imageName
@@ -76,7 +76,9 @@ export default class CustomSelect extends React.Component {
             terms: terms,
             conditions: conditions,
             label: item
-          });
+          };
+          if (item == "ConEd" || item == "ORU") utilityInfo.paperOnly = true;
+          newOptions.push(utilityInfo);
         });
 
         this.setState({ options: newOptions });
