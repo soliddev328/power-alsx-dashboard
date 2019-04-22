@@ -21,6 +21,9 @@ class Sorry extends React.Component {
 
     let storedName = "";
     let storedAddress = "";
+    let storedPartner = "";
+    let storedReferrer = "";
+    let storedSalesRep = "";
     let storedUtmCampaign = "";
     let storedUtmMedium = "";
     let storedUtmSource = "";
@@ -30,6 +33,15 @@ class Sorry extends React.Component {
     }
     if (localStorage.getItem("address")) {
       storedAddress = JSON.parse(localStorage.getItem("address"));
+    }
+    if (localStorage.getItem("Partner")) {
+      storedPartner = localStorage.getItem("Partner");
+    }
+    if (localStorage.getItem("Referrer")) {
+      storedReferrer = localStorage.getItem("Referrer");
+    }
+    if (localStorage.getItem("SalesRep")) {
+      storedSalesRep = localStorage.getItem("SalesRep");
     }
     if (localStorage.getItem("UtmCampaign")) {
       storedUtmCampaign = localStorage.getItem("UtmCampaign");
@@ -44,6 +56,9 @@ class Sorry extends React.Component {
     this.setState({
       name: storedName,
       address: storedAddress,
+      referrer: storedReferrer,
+      partner: storedPartner,
+      salesRep: storedSalesRep,
       utmCampaign: storedUtmCampaign,
       utmMedium: storedUtmMedium,
       utmSource: storedUtmSource
@@ -65,14 +80,13 @@ class Sorry extends React.Component {
             onSubmit={values => {
               axios
                 .post(`${API}/v1/subscribers`, {
-                  FirstName: this.state.name.firstName,
-                  LastName: this.state.name.lastName,
-                  street: this.state.address.street,
-                  state: this.state.address.state,
-                  city: this.state.address.city,
+                  LastName: values.email,
                   postalCode: this.state.address.postalCode,
                   Phone: "9999999999",
                   Email: values.email,
+                  Referrer: this.state.referrer,
+                  Partner: this.state.partner,
+                  SalesRep: this.state.salesRep,
                   utmCampaign: this.state.utmCampaign,
                   utmMedium: this.state.utmMedium,
                   utmSource: this.state.utmSource
