@@ -48,7 +48,13 @@ class Dashboard extends React.Component {
               We’re delighted to have you as a customer and to provide you with
               100% clean, lower cost Electricity.
             </p>
-            <p>The connection process will take 4-8 weeks.</p>
+            <p>
+              The connection timing will vary by location and utility. In some
+              cases, Common Energy can connect you to a project in as little as
+              2 - 4 weeks. In other cases, your enrollment will literally help
+              build a new clean energy project, which may take a couple months.
+              We will keep you posted along the way!
+            </p>
             <p>Here’s what happens next:</p>
             <ul>
               <li>
