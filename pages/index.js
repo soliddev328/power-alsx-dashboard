@@ -23,7 +23,15 @@ class Index extends React.Component {
     };
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    // window.firebase.auth().onAuthStateChanged(user => {
+    //   if (user) {
+    //     Router.push({
+    //       pathname: '/dashboard'
+    //     })
+    //   }
+    // })
+  }
 
   autenticate(values) {
     window.firebase
@@ -47,7 +55,6 @@ class Index extends React.Component {
                 .then(response => {
                   const user = response.data.data;
                   window.localStorage.setItem("leadId", user.leadId);
-                  console.log(user);
 
                   if (user.signupCompleted) {
                     Router.push({
@@ -55,18 +62,30 @@ class Index extends React.Component {
                     });
                   } else if (!user.phone) {
                     Router.push({
-                      pathname: "/onboarding/step5.1",
-                      query: {
-                        onboardingNotFinished: true
-                      }
-                    });
-                  } else if (!user.milestones.utilityInfoCompleted) {
-                    Router.push({
                       pathname: "/onboarding/step6",
                       query: {
                         onboardingNotFinished: true
                       }
                     });
+                  } else if (!user.milestones.utilityInfoCompleted) {
+                    if (user.milestones.utilityPaperOnly) {
+                      localStorage.setItem(
+                        "billingMethod",
+                        JSON.stringify({
+                          billingMethod: "paper"
+                        })
+                      );
+                      Router.push({
+                        pathname: "/onboarding/step8"
+                      });
+                    } else {
+                      Router.push({
+                        pathname: "/onboarding/step7",
+                        query: {
+                          onboardingNotFinished: true
+                        }
+                      });
+                    }
                   } else if (!user.milestones.bankInfoCompleted) {
                     Router.push({
                       pathname: "/onboarding/step9",
@@ -76,9 +95,7 @@ class Index extends React.Component {
                     });
                   }
                 })
-                .catch(error => {
-                  console.log(error);
-                });
+                .catch(() => {});
             });
         }
       });
@@ -158,6 +175,7 @@ class Index extends React.Component {
         </SingleStep>
         <style jsx>{`
           main {
+            display: block;
             height: 88vh;
             max-width: 700px;
             margin: 0 auto;

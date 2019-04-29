@@ -32,6 +32,10 @@ export default class MyDocument extends Document {
         <Head>
           <meta charSet="utf-8" />
           <meta httpEquiv="x-ua-compatible" content="ie=edge" />
+          <script
+            src="https://cdn.polyfill.io/v2/polyfill.min.js"
+            noModule="nomodule"
+          />
           <meta
             name="viewport"
             content="width=device-width, initial-scale=1, shrink-to-fit=no user-scalable=no"
@@ -103,7 +107,6 @@ export default class MyDocument extends Document {
             sizes="96x96"
             href="/static/favicon/favicon-96x96.png"
           />
-          <link rel="manifest" href="/static/favicon/site.webmanifest" />
           <link
             rel="mask-icon"
             href="/static/favicon/safari-pinned-tab.svg"

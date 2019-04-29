@@ -1,18 +1,18 @@
-import React from "react";
+import React from 'react'
 
 export default class CrossIcon extends React.Component {
-  render() {
+  render () {
     return (
-      <span className="wrapper">
-        <svg width="12" height="12" xmlns="http://www.w3.org/2000/svg">
+      <span className='wrapper'>
+        <svg width='12' height='12' xmlns='http://www.w3.org/2000/svg'>
           <g
-            fillRule="nonzero"
-            stroke="#FFF"
-            strokeWidth="2.5"
-            fill="none"
-            strokeLinecap="round"
+            fillRule='nonzero'
+            stroke='#FFF'
+            strokeWidth='2.5'
+            fill='none'
+            strokeLinecap='round'
           >
-            <path d="M2 2l8.67857143 8.55005952M10.678572 2l-8.67857143 8.55005952" />
+            <path d='M2 2l8.67857143 8.55005952M10.678572 2l-8.67857143 8.55005952' />
           </g>
         </svg>
         <style jsx>{`
@@ -24,7 +24,7 @@ export default class CrossIcon extends React.Component {
             width: 2.3rem;
             height: 2.3rem;
             margin: 0;
-            background-color: var(--color-primary);
+            background-color: #2479ff;
             font-weight: 700;
             border-radius: 50%;
             overflow: hidden;
@@ -32,6 +32,6 @@ export default class CrossIcon extends React.Component {
           }
         `}</style>
       </span>
-    );
+    )
   }
 }

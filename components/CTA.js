@@ -35,7 +35,9 @@ export default class CTA extends React.Component {
             align-items: center;
             justify-content: center;
             font-size: 0.875rem;
-            font-family: var(--font-primary);
+            font-family: "Poppins", -apple-system, BlinkMacSystemFont,
+              "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+              "Helvetica Neue", sans-serif;
             font-weight: 800;
             color: #a8a8ba;
             margin: 1em auto;
@@ -46,16 +48,16 @@ export default class CTA extends React.Component {
             flex: 0 0 auto;
             padding: 0.3em;
             transition: all 350ms ease-in;
-            box-shadow: inset 0 -2px 0 0 var(--color-primary);
+            box-shadow: inset 0 -2px 0 0 #2479ff;
           }
 
           .secondary span {
-            box-shadow: inset 0 -1px 0 0 var(--color-primary);
+            box-shadow: inset 0 -1px 0 0 #2479ff;
           }
 
           button:hover span {
-            color: var(--color-bg-primary);
-            box-shadow: inset 0 -3em 0 0 var(--color-primary);
+            color: #fff;
+            box-shadow: inset 0 -3em 0 0 #2479ff;
           }
 
           .secondary {

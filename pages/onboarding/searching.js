@@ -1,26 +1,28 @@
-import React from "react";
-import Router from "next/router";
-import Header from "../../components/Header";
-import { FadeLoader } from "react-spinners";
-import SingleStep from "../../components/SingleStep";
+import React from 'react'
+import Router from 'next/router'
+import Header from '../../components/Header'
+import { FadeLoader } from 'react-spinners'
+import SingleStep from '../../components/SingleStep'
 
-class Step8 extends React.Component {
+class Searching extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
-    this.state = {};
+    this.state = {}
   }
 
   componentDidMount() {
-    global.analytics.page("Searching");
+    global.analytics.page('Searching')
   }
 
   renderLoader() {
-    setTimeout(() => {
-      Router.push({
-        pathname: "/onboarding/step4"
-      });
-    }, 2000);
+    if (typeof window !== 'undefined') {
+      setTimeout(() => {
+        Router.push({
+          pathname: '/onboarding/step3'
+        })
+      }, 3000)
+    }
 
     return (
       <SingleStep>
@@ -30,7 +32,7 @@ class Step8 extends React.Component {
             height={15}
             width={4}
             radius={1}
-            color={"#FF69A0"}
+            color={'#FF69A0'}
             loading
           />
           <p>Searching for clean energy projects in your area...</p>
@@ -53,7 +55,7 @@ class Step8 extends React.Component {
           }
         `}</style>
       </SingleStep>
-    );
+    )
   }
 
   render() {
@@ -63,14 +65,15 @@ class Step8 extends React.Component {
         {this.renderLoader()}
         <style jsx>{`
           main {
+            display: block;
             height: 88vh;
             max-width: 700px;
             margin: 0 auto;
           }
         `}</style>
       </main>
-    );
+    )
   }
 }
 
-export default Step8;
+export default Searching

@@ -2,10 +2,12 @@ import React from "react";
 import Router from "next/router";
 import { Formik, Form } from "formik";
 import axios from "axios";
+import GeoSuggest from "../../components/GeoSuggest";
 import Header from "../../components/Header";
 import Input from "../../components/Input";
 import SingleStep from "../../components/SingleStep";
 import Button from "../../components/Button";
+import Stepper from "../../components/Stepper";
 import CONSTANTS from "../../globals";
 
 const { API } =
@@ -16,218 +18,170 @@ class Step5 extends React.Component {
     super(props);
 
     this.state = {
-      error: {
-        code: false,
-        message: ""
-      }
+      postalCode: "",
+      errorMessage: ""
     };
   }
 
   componentDidMount() {
     global.analytics.page("Step 5");
+    let storedPostalCode = "";
+    let storedLeadId = "";
 
-    let storedName = "";
-    let storedUtility = "";
-    let storedAgreementChecked = false;
-    let storedAddress = "";
-    let storedPartner = "";
-    let storedReferrer = "";
-    let storedSalesRep = "";
-    let storedUtmCampaign = "";
-    let storedUtmMedium = "";
-    let storedUtmSource = "";
-
-    if (window.localStorage.getItem("utility")) {
-      storedUtility = JSON.parse(window.localStorage.getItem("utility"));
+    if (localStorage.getItem("postalCode")) {
+      storedPostalCode = JSON.parse(localStorage.getItem("postalCode"));
     }
-    if (window.localStorage.getItem("acceptedTermsAndConditions")) {
-      storedAgreementChecked = JSON.parse(
-        window.localStorage.getItem("acceptedTermsAndConditions")
-      );
+    if (localStorage.getItem("postalCode")) {
+      storedPostalCode = JSON.parse(localStorage.getItem("postalCode"));
     }
-    if (window.localStorage.getItem("address")) {
-      storedAddress = JSON.parse(window.localStorage.getItem("address"));
-    }
-    if (window.localStorage.getItem("username")) {
-      storedName = JSON.parse(window.localStorage.getItem("username"));
-    }
-    if (window.localStorage.getItem("Partner")) {
-      storedPartner = window.localStorage.getItem("Partner");
-    }
-    if (window.localStorage.getItem("Referrer")) {
-      storedReferrer = window.localStorage.getItem("Referrer");
-    }
-    if (window.localStorage.getItem("SalesRep")) {
-      storedSalesRep = window.localStorage.getItem("SalesRep");
-    }
-    if (window.localStorage.getItem("UtmCampaign")) {
-      storedUtmCampaign = window.localStorage.getItem("UtmCampaign");
-    }
-    if (window.localStorage.getItem("UtmMedium")) {
-      storedUtmMedium = window.localStorage.getItem("UtmMedium");
-    }
-    if (window.localStorage.getItem("UtmSource")) {
-      storedUtmSource = window.localStorage.getItem("UtmSource");
+    if (localStorage.getItem("leadId")) {
+      storedLeadId = localStorage.getItem("leadId");
     }
 
-    this.setState({
-      name: storedName,
-      utility: storedUtility.label,
-      address: storedAddress,
-      referrer: storedReferrer,
-      partner: storedPartner,
-      salesRep: storedSalesRep,
-      utmCampaign: storedUtmCampaign,
-      utmMedium: storedUtmMedium,
-      utmSource: storedUtmSource,
-      agreedTermsAndConditions: storedAgreementChecked,
-      pageLoaded: true
-    });
+    this.setState({ postalCode: storedPostalCode, leadId: storedLeadId });
   }
 
-  autenticate(values) {
-    if (values.password === values.passwordConfirmation) {
-      window.firebase
-        .auth()
-        .createUserWithEmailAndPassword(values.emailAddress, values.password)
-        .catch(error => {
-          this.setState({
-            error: { code: error.code, message: error.message }
-          });
-        })
-        .then(userCredential => {
-          window.localStorage.setItem(
-            "firebaseUserId",
-            userCredential.user.uid
-          );
-          window.firebase
-            .auth()
-            .currentUser.getIdToken(true)
-            .then(idToken => {
-              axios
-                .post(
-                  `${API}/v1/subscribers`,
-                  {
-                    FirstName: this.state.name.firstName,
-                    LastName: this.state.name.lastName,
-                    Email: values.emailAddress,
-                    Phone: "",
-                    Referrer: this.state.referrer,
-                    Partner: this.state.partner,
-                    SalesRep: this.state.salesRep,
-                    street: this.state.address.street,
-                    state: this.state.address.state,
-                    city: this.state.address.city,
-                    postalCode: this.state.address.postalCode,
-                    agreementChecked: !!this.state.agreedTermsAndConditions,
-                    utility: this.state.utility,
-                    utmCampaign: this.state.utmCampaign,
-                    utmMedium: this.state.utmMedium,
-                    utmSource: this.state.utmSource,
-                    firebaseUserId: userCredential.user.uid
-                  },
-                  {
-                    headers: {
-                      Authorization: idToken
-                    }
-                  }
-                )
-                .then(response => {
-                  window.localStorage.setItem(
-                    "leadId",
-                    response.data.data.leadId
-                  );
+  getPostalCode(values) {
+    const components = values.address
+      ? values.address.gmaps.address_components
+      : null;
 
-                  // Call Segement events
-                  global.analytics.identify(response.data.data.leadId, {
-                    email: values.emailAddress
-                  });
-                  global.analytics.track("Lead Created", {});
+    const postalCode = components
+      ? components.find(x => x.types[0] == "postal_code")
+      : null;
 
-                  if (!this.state.error.code) {
-                    Router.push({
-                      pathname: "/onboarding/step5.1"
-                    });
-                  }
-                });
-            });
-        });
-    } else {
-      this.setState({
-        error: { code: "6", message: "Passwords do not match" }
-      });
-    }
+    return postalCode ? postalCode.long_name : "";
+  }
+
+  getStateAddress(values) {
+    const components = values.address
+      ? values.address.gmaps.address_components
+      : null;
+    const state = components
+      ? components.find(x => x.types[0] == "administrative_area_level_1")
+      : null;
+
+    return state ? state.short_name : "";
   }
 
   render() {
     return (
       <main>
         <Header />
-        <SingleStep title="Ok, now for the fun stuff. Let’s create your account!">
+        <SingleStep title="And what is your name and address please?">
           <Formik
             initialValues={{
-              emailAddress: "",
-              password: "",
-              passwordConfirmation: ""
+              firstName: "",
+              lastName: "",
+              address: ""
             }}
             onSubmit={values => {
-              window.localStorage.setItem("email", values.emailAddress);
-              this.autenticate(values);
+              const arrayAddress = values.address.description.split(",");
+              const street = arrayAddress[0] ? arrayAddress[0] : "";
+              const city = arrayAddress[1]
+                ? arrayAddress[1].replace(/\s/g, "")
+                : "";
+
+              const address = {
+                street: street,
+                city: city,
+                state: this.getStateAddress(values),
+                postalCode: this.getPostalCode(values),
+                apt: values.apt ? values.apt : ""
+              };
+
+              const name = {
+                firstName: values.firstName,
+                lastName: values.lastName
+              };
+
+              localStorage.setItem("address", JSON.stringify(address));
+              localStorage.setItem("username", JSON.stringify(name));
+
+              if (address.postalCode === this.state.postalCode) {
+                window.firebase
+                  .auth()
+                  .currentUser.getIdToken(true)
+                  .then(idToken => {
+                    axios
+                      .put(
+                        `${API}/v1/subscribers`,
+                        {
+                          leadId: this.state.leadId,
+                          firstName: values.firstName,
+                          lastName: values.lastName,
+                          street: address.street,
+                          state: address.state,
+                          city: address.city
+                        },
+                        {
+                          headers: {
+                            Authorization: idToken
+                          }
+                        }
+                      )
+                      .then(() => {
+                        Router.push({
+                          pathname: "/onboarding/step6"
+                        });
+                      })
+                      .catch(() => {});
+                  });
+              } else {
+                this.setState({
+                  errorMessage:
+                    "Address has different zip code than the one initially provided."
+                });
+              }
             }}
             render={props => (
-              <React.Fragment>
-                <Form>
-                  <Input
-                    type="email"
-                    label="Email"
-                    fieldname="emailAddress"
-                    required
-                  />
-                  <Input
-                    type="password"
-                    label="Password"
-                    fieldname="password"
-                    required
-                  />
-                  <Input
-                    type="password"
-                    label="Confirm Password"
-                    fieldname="passwordConfirmation"
-                    required
-                  />
-                  <p className="error">{this.state.error.message}</p>
-                  <Button
-                    primary
-                    disabled={
-                      !!props.values.emailAddress !== true ||
-                      !!props.values.password !== true
-                    }
-                    onClick={() => {
-                      this.setState({
-                        error: {
-                          code: false,
-                          message: ""
-                        }
-                      });
-                    }}
-                  >
-                    Next
-                  </Button>
-                </Form>
-              </React.Fragment>
+              <Form>
+                <div className="two-columns two-columns--responsive">
+                  <Input label="First Name" fieldname="firstName" autoFocus />
+                  <Input label="Last Name" fieldname="lastName" />
+                </div>
+                <GeoSuggest
+                  label="Address"
+                  fieldname="address"
+                  value={props.values.address}
+                  onChange={props.setFieldValue}
+                  onBlur={props.setFieldTouched}
+                  error={props.errors.topics}
+                  touched={props.touched.topics}
+                />
+                <p className="error">{this.state.errorMessage}</p>
+                <Button
+                  primary
+                  disabled={
+                    !props.values.firstName != "" ||
+                    !props.values.lastName != "" ||
+                    !props.values.address != ""
+                  }
+                >
+                  Next
+                </Button>
+              </Form>
             )}
           />
+          <Stepper>
+            <li className="steplist__step steplist__step-doing">1</li>
+            <li className="steplist__step">2</li>
+            <li className="steplist__step">3</li>
+            <li className="steplist__step">4</li>
+            <li className="steplist__step">5</li>
+            <li className="steplist__step">6</li>
+          </Stepper>
         </SingleStep>
         <style jsx>{`
           main {
+            display: block;
             height: 88vh;
             max-width: 700px;
             margin: 0 auto;
           }
           .error {
-            height: 52px;
-            margin: 0;
-            padding: 1em 0;
+            height: 45px;
+            color: red;
             text-align: center;
           }
         `}</style>

@@ -17,7 +17,7 @@ export default class Input extends React.Component {
     e.target.setCustomValidity("");
   }
 
-  scrollOnFocus(e) {
+  scrollOnFocus() {
     if (this.inputField) {
       const offset = this.inputField.current.getBoundingClientRect().top;
       setTimeout(() => {
@@ -51,26 +51,28 @@ export default class Input extends React.Component {
             border: 1px solid transparent;
             border-radius: 3px;
             background-image: none;
-            background-color: ${this.props.secondary
-              ? "#F6F9FF"
-              : "var(--color-bg-primary)"};
+            background-color: ${this.props.secondary ? "#F6F9FF" : "#fff"};
             box-shadow: none;
-            font-family: var(--font-primary);
+            font-family: "Poppins", -apple-system, BlinkMacSystemFont,
+              "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+              "Helvetica Neue", sans-serif;
             font-size: 1.125rem;
             font-weight: 700;
             padding: 0.8em 1em;
             width: 100%;
             z-index: 10;
-            caret-color: var(--color-secondary);
+            caret-color: #41ef8b;
             transition: border-color 200ms ease-in;
           }
 
           input + label {
             position: absolute;
-            font-family: var(--font-primary);
+            font-family: "Poppins", -apple-system, BlinkMacSystemFont,
+              "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+              "Helvetica Neue", sans-serif;
             font-size: 0.75rem;
             font-weight: 600;
-            color: var(--color-primary);
+            color: #2479ff;
             letter-spacing: 0.7px;
             left: 1.5em;
             top: 50%;
@@ -84,6 +86,8 @@ export default class Input extends React.Component {
             position: relative;
             height: 3.75rem;
             width: 100%;
+            max-width: 350px;
+            margin: 0 auto;
             margin-bottom: 0.5rem;
           }
 

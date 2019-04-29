@@ -13,23 +13,18 @@ export default class CustomSelect extends React.Component {
     this.inputField = React.createRef();
 
     this.state = {
-      address: "",
       options: null
     };
 
     this.scrollOnFocus = this.scrollOnFocus.bind(this);
-    this.handleBlur = this.handleBlur.bind(this);
-    this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount() {
-    let storedAddress = "";
+    this.getOptions(this.props.zipCode);
+  }
 
-    if (window.localStorage.getItem("address")) {
-      storedAddress = window.localStorage.getItem("address");
-    }
-
-    this.setState({ address: JSON.parse(storedAddress) });
+  componentDidUpdate() {
+    this.getOptions(this.props.zipCode);
   }
 
   scrollOnFocus() {
@@ -41,17 +36,13 @@ export default class CustomSelect extends React.Component {
     }
   }
 
-  componentDidUpdate() {
-    this.getOptions(this.state.address.postalCode);
-  }
-
-  handleChange(value) {
+  handleChange = value => {
     this.props.onChange(this.props.fieldname, value);
-  }
+  };
 
-  handleBlur() {
+  handleBlur = () => {
     this.props.onBlur(this.props.fieldname, true);
-  }
+  };
 
   getOptions(code) {
     if (code && this.state.options === null) {
@@ -59,27 +50,35 @@ export default class CustomSelect extends React.Component {
 
       axios(`${API}/v1/zipcodes/${code}`).then(response => {
         const utilities = response.data.data.utilities.split(",");
-        const terms =
-          response.data.data.agreement.termsLink ||
-          response.data.data.agreement.link ||
-          "";
-        const conditions =
-          response.data.data.agreement.conditionsLink ||
-          response.data.data.agreement.link ||
-          "";
+        let terms = "";
+        let conditions = "";
+
+        if (response.data.data.agreement) {
+          terms =
+            response.data.data.agreement.termsLink ||
+            response.data.data.agreement.link;
+
+          conditions =
+            response.data.data.agreement.conditionsLink ||
+            response.data.data.agreement.link;
+        }
 
         utilities.map((item, i) => {
           const imageName = item.replace(/\s/g, "");
-          newOptions.push({
+          const utilityInfo = {
             code: i + 1,
             image: {
-              src: `/static/images/utilities/${imageName}.png`,
+              src: imageName
+                ? `/static/images/utilities/${imageName}.png`
+                : "/static/images/utilities/placeholder.png",
               altText: "Utility logo"
             },
             terms: terms,
             conditions: conditions,
             label: item
-          });
+          };
+          if (item == "ConEd" || item == "ORU") utilityInfo.paperOnly = true;
+          newOptions.push(utilityInfo);
         });
 
         this.setState({ options: newOptions });
@@ -138,10 +137,12 @@ export default class CustomSelect extends React.Component {
         <style jsx global>{`
           .select__label {
             pointer-events: none;
-            font-family: var(--font-primary);
+            font-family: "Poppins", -apple-system, BlinkMacSystemFont,
+              "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+              "Helvetica Neue", sans-serif;
             font-size: 0.75rem;
             font-weight: 600;
-            color: var(--color-primary);
+            color: #2479ff;
             letter-spacing: 0.7px;
             left: 1.5em;
             text-transform: capitalize;
@@ -152,6 +153,8 @@ export default class CustomSelect extends React.Component {
             position: relative;
             height: 3.75rem;
             width: 100%;
+            max-width: 350px;
+            margin: 0 auto;
             margin-top: 0.5rem;
           }
 
@@ -176,7 +179,7 @@ export default class CustomSelect extends React.Component {
           }
 
           .select__dropdown-indicator {
-            color: var(--color-primary);
+            color: #2479ff;
           }
 
           .select__value-container .select__option {

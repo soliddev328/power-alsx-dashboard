@@ -3,9 +3,14 @@ import Router from "next/router";
 import { Formik, Form } from "formik";
 import Cookie from "js-cookie";
 import Header from "../../components/Header";
-import Input from "../../components/Input";
+import ZipCodeInput from "../../components/ZipcodeInput";
 import SingleStep from "../../components/SingleStep";
 import Button from "../../components/Button";
+import axios from "axios";
+import CONSTANTS from "../../globals";
+
+const { API } =
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 class Step1 extends React.Component {
   constructor(props) {
@@ -66,32 +71,44 @@ class Step1 extends React.Component {
     return (
       <main>
         <Header />
-        <SingleStep title="Hi! I'm Scott. Let's see if we can save you money with lower cost clean electricity!">
+        <SingleStep title="Hi, I'm Martin! Let's see if we have a project in your area. What is your zip code?">
           <Formik
             initialValues={{
-              firstName: "",
-              lastName: ""
+              postalCode: ""
             }}
             onSubmit={values => {
-              window.localStorage.setItem("username", JSON.stringify(values));
-              Router.push({
-                pathname: "/onboarding/step2"
-              });
+              localStorage.setItem(
+                "postalCode",
+                JSON.stringify(values.postalCode)
+              );
+              axios(`${API}/v1/zipcodes/${values.postalCode}`).then(
+                response => {
+                  if (
+                    response.data.data.geostatus != "Live" &&
+                    response.data.data.geostatus != "Near-Term"
+                  ) {
+                    Router.push({
+                      pathname: "/onboarding/sorry"
+                    });
+                  } else {
+                    Router.push({
+                      pathname: "/onboarding/step2"
+                    });
+                  }
+                }
+              );
             }}
             render={props => (
               <React.Fragment>
                 <Form>
-                  <div className="two-columns two-columns--responsive">
-                    <Input label="First Name" fieldname="firstName" autoFocus />
-                    <Input label="Last Name" fieldname="lastName" />
-                  </div>
-                  <Button
-                    primary
-                    disabled={
-                      !!props.values.firstName !== true ||
-                      !!props.values.lastName !== true
-                    }
-                  >
+                  <ZipCodeInput
+                    value={props.values.postalCode}
+                    onChangeEvent={props.setFieldValue}
+                    onBlurEvent={props.setFieldTouched}
+                    label="ZipCode"
+                    fieldname="postalCode"
+                  />
+                  <Button primary disabled={!props.values.postalCode != ""}>
                     Next
                   </Button>
                 </Form>
@@ -101,6 +118,7 @@ class Step1 extends React.Component {
         </SingleStep>
         <style jsx>{`
           main {
+            display: block;
             height: 88vh;
             max-width: 700px;
             margin: 0 auto;

@@ -51,7 +51,7 @@ export default class BulletItem extends React.Component {
 
           p {
             display: inline;
-            color: var(--color-font);
+            color: --color-font;
             font-size: 0.8rem;
             font-weight: 800;
             margin: 0;

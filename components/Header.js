@@ -23,7 +23,7 @@ export default class Header extends React.Component {
           header {
             position: relative;
             width: 100%;
-            border-bottom: 1px solid var(--color-secondary);
+            border-bottom: 1px solid #41ef8b;
             padding: 0 1.25rem;
             margin-bottom: 2.2rem;
           }

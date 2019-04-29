@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 
 export default class InfoIcon extends React.Component {
   render() {
@@ -32,29 +32,29 @@ export default class InfoIcon extends React.Component {
             margin: 0.8em 0;
             border-radius: 1px;
             font-size: 14px;
-            background-color: var(--color-font);
-            color: var(--color-bg-primary);
+            background-color: --color-font;
+            color: #fff;
             opacity: 0;
             transition: all 200ms ease-in-out;
           }
 
           .tooltip:before {
-            content: "";
+            content: '';
             display: block;
             position: absolute;
             top: 100%;
             right: 0;
             width: 0;
             height: 0;
-            border-top: 0.4em solid var(--color-font);
-            border-left: 0.4em solid var(--color-bg-primary);
-            border-right: 0.4em solid var(--color-bg-primary);
+            border-top: 0.4em solid --color-font;
+            border-left: 0.4em solid #fff;
+            border-right: 0.4em solid #fff;
           }
           .wrapper:hover .tooltip {
             opacity: 1;
           }
         `}</style>
       </div>
-    );
+    )
   }
 }
