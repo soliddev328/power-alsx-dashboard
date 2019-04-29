@@ -24,12 +24,12 @@ class CheckoutForm extends Component {
     let storedLeadId = "";
     let storedEmail = "";
 
-    if (window.localStorage.getItem("leadId")) {
-      storedLeadId = window.localStorage.getItem("leadId");
+    if (localStorage.getItem("leadId")) {
+      storedLeadId = localStorage.getItem("leadId");
     }
 
-    if (window.localStorage.getItem("email")) {
-      storedEmail = window.localStorage.getItem("email");
+    if (localStorage.getItem("email")) {
+      storedEmail = localStorage.getItem("email");
     }
 
     this.setState({
@@ -44,34 +44,21 @@ class CheckoutForm extends Component {
     if (this.props.stripe) {
       this.props.stripe.createToken({ type: "card" }).then(payload => {
         if (payload.token) {
-          window.firebase
-            .auth()
-            .currentUser.getIdToken(true)
-            .then(idToken => {
-              axios
-                .put(
-                  `${API}/v1/subscribers`,
-                  {
-                    leadId: this.state.leadId,
-                    email: this.state.email,
-                    stripeToken: payload.token.id
-                  },
-                  {
-                    headers: {
-                      Authorization: idToken
-                    }
-                  }
-                )
-                .then(() => {
-                  Router.push({
-                    pathname: "/onboarding/step11"
-                  });
-                });
+          axios
+            .put(`${API}/v1/subscribers`, {
+              leadId: this.state.leadId,
+              email: this.state.email,
+              stripeToken: payload.token.id
+            })
+            .then(() => {
+              global.analytics.track("Sign-Up Completed", {});
+              localStorage.setItem("usercreated", true);
+              Router.push({
+                pathname: "/dashboard"
+              });
             });
         }
       });
-    } else {
-      console.log("Form submitted before Stripe.js loaded.");
     }
   }
 
@@ -84,7 +71,7 @@ class CheckoutForm extends Component {
             style={{
               base: {
                 margin: "5px",
-                color: "var(--color-primary)",
+                color: "#2479ff",
                 fontSize: "16px",
                 fontFamily: '"Poppins", sans-serif',
                 fontSmoothing: "antialiased",
@@ -111,7 +98,7 @@ class CheckoutForm extends Component {
             <CardExpiryElement
               style={{
                 base: {
-                  color: "var(--color-primary)",
+                  color: "#2479ff",
                   fontSize: "16px",
                   fontFamily: '"Poppins", sans-serif',
                   fontSmoothing: "antialiased",
@@ -138,7 +125,7 @@ class CheckoutForm extends Component {
             <CardCVCElement
               style={{
                 base: {
-                  color: "var(--color-primary)",
+                  color: "#2479ff",
                   fontSize: "16px",
                   fontFamily: '"Poppins", sans-serif',
                   fontSmoothing: "antialiased",
@@ -166,7 +153,7 @@ class CheckoutForm extends Component {
               placeholder="Zip Code"
               style={{
                 base: {
-                  color: "var(--color-primary)",
+                  color: "#2479ff",
                   fontSize: "16px",
                   fontFamily: '"Poppins", sans-serif',
                   fontSmoothing: "antialiased",
@@ -220,7 +207,7 @@ class CheckoutForm extends Component {
             padding: 0.8em 1em;
             border-radius: 3px;
             border: 1px solid transparent;
-            caret-color: var(--color-secondary);
+            caret-color: #41ef8b;
             transition: box-shadow 200ms ease-in;
           }
 

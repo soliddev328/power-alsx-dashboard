@@ -64,15 +64,21 @@ export default class GeoSuggest extends React.Component {
           }
 
           .geosuggest__input-wrapper {
+            max-width: 350px;
+            margin: 0 auto;
             margin-bottom: 0.5em;
           }
 
           .geosuggest__suggests-wrapper {
             position: absolute;
+            left: 50%;
             border-radius: 3px;
+            max-width: 350px;
+            margin: 0 auto;
             width: 100%;
             z-index: 100;
-            background-color: var(--color-bg-primary);
+            background-color: #fff;
+            transform: translateX(-50%);
           }
 
           .geosuggest__suggests {
@@ -96,8 +102,8 @@ export default class GeoSuggest extends React.Component {
 
           .geosuggest__item--active,
           .geosuggest__item:hover {
-            color: var(--color-bg-primary);
-            background-color: var(--color-primary);
+            color: #fff;
+            background-color: #2479ff;
           }
         `}</style>
       </div>

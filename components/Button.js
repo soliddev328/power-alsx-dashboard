@@ -41,17 +41,13 @@ export default class Button extends React.Component {
             align-items: center;
             max-width: 350px;
             font-size: 0.875rem;
-            font-family: var(--font-primary);
+            font-family: "Poppins", -apple-system, BlinkMacSystemFont,
+              "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+              "Helvetica Neue", sans-serif;
             font-weight: 800;
-            color: ${this.props.primary
-              ? "var(--color-bg-primary)"
-              : "var(--color-primary)"};
-            background-color: ${this.props.primary
-              ? "var(--color-primary)"
-              : "var(--color-bg-primary)"};
-            border: ${this.props.primary
-              ? "none"
-              : "1px solid var(--color-primary)"};
+            color: ${this.props.primary ? "#fff" : "#2479ff"};
+            background-color: ${this.props.primary ? "#2479ff" : "#fff"};
+            border: ${this.props.primary ? "none" : "1px solid #2479ff"};
             padding: 1.15em 0;
             border-radius: 1px;
             margin: 1em auto;

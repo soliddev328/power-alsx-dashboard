@@ -16,10 +16,12 @@ export default class RadioCard extends React.Component {
         <style jsx>{`
           label {
             display: flex;
-            align-items: center;
+            align-items: start;
             justify-content: center;
             cursor: pointer;
-            font-family: var(--font-primary);
+            font-family: "Poppins", -apple-system, BlinkMacSystemFont,
+              "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+              "Helvetica Neue", sans-serif;
             position: relative;
             color: #555e80;
             margin: 0.5rem 0;
@@ -40,15 +42,15 @@ export default class RadioCard extends React.Component {
             line-height: 1rem;
             text-align: center;
             content: url("/static/icon/check.svg");
-            background-color: var(--color-bg-primary);
-            border: 1px solid var(--color-primary);
+            background-color: #fff;
+            border: 1px solid #2479ff;
             border-radius: 2px;
             transition: background-color 200ms
               cubic-bezier(0.39, 0.575, 0.565, 1);
           }
 
           input[type="checkbox"]:checked:after {
-            background-color: var(--color-primary);
+            background-color: #2479ff;
           }
         `}</style>
       </label>

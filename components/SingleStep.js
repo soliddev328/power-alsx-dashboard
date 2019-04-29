@@ -84,7 +84,9 @@ export default class SingleStep extends React.Component {
           span.suffix {
             display: block;
             text-align: center;
-            font-family: var(--font-primary);
+            font-family: "Poppins", -apple-system, BlinkMacSystemFont,
+              "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+              "Helvetica Neue", sans-serif;
             font-size: 1rem;
             font-weight: 400;
           }
@@ -95,7 +97,7 @@ export default class SingleStep extends React.Component {
           }
 
           span.title mark {
-            color: var(--color-secondary) !important;
+            color: #41ef8b !important;
           }
         `}</style>
       </div>
