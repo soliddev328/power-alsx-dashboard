@@ -20,7 +20,7 @@ class Step10 extends React.Component {
     return (
       <main>
         <Header />
-        <SingleStep title="Going forward you will pay Common Energy a lower amount for your electricity, instead of your utility:">
+        <SingleStep title="Going forward, instead of paying your utility you will pay Common Energy a lower amount for your electricity:">
           <Formik
             initialValues={{
               paymentMethod: ""
