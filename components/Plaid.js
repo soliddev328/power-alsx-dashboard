@@ -20,8 +20,8 @@ export default class Plaid extends React.Component {
 
   componentDidMount() {
     let storedLeadId = "";
-    if (window.localStorage.getItem("leadId")) {
-      storedLeadId = window.localStorage.getItem("leadId");
+    if (localStorage.getItem("leadId")) {
+      storedLeadId = localStorage.getItem("leadId");
     }
 
     this.setState({
@@ -32,64 +32,40 @@ export default class Plaid extends React.Component {
   render() {
     return (
       <ReactPlaid
-        clientName="Client Name"
+        clientName="Common Energy"
         product={["auth"]}
         apiKey={PLAID_KEY}
         env={PLAID_ENV}
-        open
+        open={true}
         onSuccess={(token, metadata) => {
-          window.firebase
-            .auth()
-            .currentUser.getIdToken(true)
-            .then(function(idToken) {
-              axios
-                .post(
-                  `${API}/v1/plaid/auth`,
-                  {
-                    public_token: token,
-                    accounts: metadata.accounts,
-                    institution: metadata.institution,
-                    link_session_id: metadata.link_session_id,
-                    item: this.state.leadId
-                  },
-                  {
-                    headers: {
-                      Authorization: `  ${idToken}`
-                    }
-                  }
-                )
-                .then(() => {
-                  Router.push({
-                    pathname: "/onboarding/step11"
-                  });
-                });
+          axios
+            .post(`${API}/v1/plaid/auth`, {
+              public_token: token,
+              accounts: metadata.accounts,
+              institution: metadata.institution,
+              link_session_id: metadata.link_session_id,
+              item: this.state.leadId
+            })
+            .then(() => {
+              global.analytics.track("Sign-Up Completed", {});
+              localStorage.setItem("usercreated", true);
+              Router.push({
+                pathname: "/dashboard"
+              });
             });
         }}
         onExit={(err, metadata) => {
           if (err !== null) {
-            window.firebase
-              .auth()
-              .currentUser.getIdToken(true)
-              .then(idToken => {
-                axios.post(
-                  `${API}/v1/plaid/error`,
-                  {
-                    error: err,
-                    status: metadata.status,
-                    institution: metadata.institution,
-                    link_session_id: metadata.link_session_id,
-                    item: this.state.leadId
-                  },
-                  {
-                    headers: {
-                      Authorization: idToken
-                    }
-                  }
-                );
-              });
+            axios.post(`${API}/v1/plaid/error`, {
+              error: err,
+              status: metadata.status,
+              institution: metadata.institution,
+              link_session_id: metadata.link_session_id,
+              item: this.state.leadId
+            });
           }
           Router.push({
-            pathname: "/onboarding/step9"
+            pathname: "/onboarding/step10"
           });
         }}
       />

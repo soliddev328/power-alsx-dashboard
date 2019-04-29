@@ -93,6 +93,7 @@ export default class forgotPassword extends React.Component {
         </SingleStep>
         <style jsx>{`
           main {
+            display: block;
             height: 88vh;
             max-width: 700px;
             margin: 0 auto;

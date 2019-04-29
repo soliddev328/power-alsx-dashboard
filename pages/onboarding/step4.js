@@ -1,146 +1,231 @@
 import React from "react";
 import Router from "next/router";
-import { Form, withFormik } from "formik";
+import { Formik, Form } from "formik";
+import axios from "axios";
 import Header from "../../components/Header";
-import Checkbox from "../../components/Checkbox";
-import BulletItem from "../../components/BulletItem";
+import Input from "../../components/Input";
 import SingleStep from "../../components/SingleStep";
 import Button from "../../components/Button";
+import Stepper from "../../components/Stepper";
+import CONSTANTS from "../../globals";
 
-const formikEnhancer = withFormik({
-  mapPropsToValues: props => {
-    return {
-      terms: props.agreement.terms,
-      conditions: props.agreement.conditions
-    };
-  },
-  mapValuesToPayload: x => x,
-  handleSubmit: payload => {
-    window.localStorage.setItem(
-      "acceptedTermsAndConditions",
-      JSON.stringify(payload.acceptedTermsAndConditions)
-    );
-    Router.push({
-      pathname: "/onboarding/step5"
-    });
-  },
-  displayName: "CustomForm"
-});
-
-class CustomForm extends React.Component {
-  render() {
-    return (
-      <Form>
-        <div className="content">
-          <BulletItem
-            content="Clean energy credits each month"
-            bulletIcon="dollar"
-          />
-          <BulletItem
-            content="$2,276 estimated total savings*"
-            bulletIcon="gift"
-          />
-          <BulletItem
-            content="72,000 pounds of CO2 prevented"
-            bulletIcon="co2"
-          />
-          <BulletItem
-            content="One unified monthly statement"
-            bulletIcon="discount"
-          />
-          <BulletItem content="No cancelation fees" bulletIcon="cross" />
-          <BulletItem content="Free signup" bulletIcon="money" />
-        </div>
-        <Checkbox fieldname="acceptedTermsAndConditions">
-          <p className="checkbox__label">
-            I accept the{" "}
-            <a
-              href={this.props.agreement.terms}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              terms
-            </a>{" "}
-            and{" "}
-            <a
-              href={this.props.agreement.conditions}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              conditions
-            </a>
-            .
-          </p>
-        </Checkbox>
-        <p className="disclaimer">
-          *Based on a 10% contracted discount to your utility over twenty years
-        </p>
-        <Button
-          primary
-          disabled={!this.props.values.acceptedTermsAndConditions}
-        >
-          Let's do this!
-        </Button>
-        <style jsx>{`
-          .disclaimer {
-            text-align: center;
-          }
-        `}</style>
-      </Form>
-    );
-  }
-}
-
-const EnhancedCustomForm = formikEnhancer(CustomForm);
+const { API } =
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 class Step4 extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      currentUtility: ""
+      error: {
+        code: false,
+        message: ""
+      }
     };
   }
 
   componentDidMount() {
     global.analytics.page("Step 4");
-    let utility = "";
 
-    if (window.localStorage.getItem("utility")) {
-      utility = JSON.parse(window.localStorage.getItem("utility"));
+    let storedPostalCode = "";
+    let storedUtility = "";
+    let storedAgreementChecked = false;
+    let storedPartner = "";
+    let storedReferrer = "";
+    let storedSalesRep = "";
+    let storedUtmCampaign = "";
+    let storedUtmMedium = "";
+    let storedUtmSource = "";
+
+    if (localStorage.getItem("utility")) {
+      storedUtility = JSON.parse(localStorage.getItem("utility"));
+    }
+    if (localStorage.getItem("acceptedTermsAndConditions")) {
+      storedAgreementChecked = JSON.parse(
+        localStorage.getItem("acceptedTermsAndConditions")
+      );
+    }
+    if (localStorage.getItem("postalCode")) {
+      storedPostalCode = JSON.parse(localStorage.getItem("postalCode"));
+    }
+    if (localStorage.getItem("Partner")) {
+      storedPartner = localStorage.getItem("Partner");
+    }
+    if (localStorage.getItem("Referrer")) {
+      storedReferrer = localStorage.getItem("Referrer");
+    }
+    if (localStorage.getItem("SalesRep")) {
+      storedSalesRep = localStorage.getItem("SalesRep");
+    }
+    if (localStorage.getItem("UtmCampaign")) {
+      storedUtmCampaign = localStorage.getItem("UtmCampaign");
+    }
+    if (localStorage.getItem("UtmMedium")) {
+      storedUtmMedium = localStorage.getItem("UtmMedium");
+    }
+    if (localStorage.getItem("UtmSource")) {
+      storedUtmSource = localStorage.getItem("UtmSource");
     }
 
-    this.setState({ currentUtility: utility });
+    this.setState({
+      utility: storedUtility.label,
+      postalCode: storedPostalCode,
+      referrer: storedReferrer,
+      partner: storedPartner,
+      salesRep: storedSalesRep,
+      utmCampaign: storedUtmCampaign,
+      utmMedium: storedUtmMedium,
+      utmSource: storedUtmSource,
+      agreedTermsAndConditions: storedAgreementChecked
+    });
+  }
+
+  autenticate(values) {
+    if (values.password === values.passwordConfirmation) {
+      window.firebase
+        .auth()
+        .createUserWithEmailAndPassword(values.emailAddress, values.password)
+        .catch(error => {
+          this.setState({
+            error: { code: error.code, message: error.message }
+          });
+        })
+        .then(userCredential => {
+          if (userCredential) {
+            window.localStorage.setItem(
+              "firebaseUserId",
+              userCredential.user.uid
+            );
+            window.firebase
+              .auth()
+              .currentUser.getIdToken(true)
+              .then(idToken => {
+                axios
+                  .post(
+                    `${API}/v1/subscribers`,
+                    {
+                      Email: values.emailAddress,
+                      Password: values.password,
+                      Referrer: this.state.referrer,
+                      Partner: this.state.partner,
+                      SalesRep: this.state.salesRep,
+                      postalCode: this.state.postalCode,
+                      agreementChecked: !!this.state.agreedTermsAndConditions,
+                      utility: this.state.utility,
+                      utmCampaign: this.state.utmCampaign,
+                      utmMedium: this.state.utmMedium,
+                      utmSource: this.state.utmSource,
+                      firebaseUserId: userCredential.user.uid
+                    },
+                    {
+                      headers: {
+                        Authorization: idToken
+                      }
+                    }
+                  )
+                  .then(response => {
+                    window.localStorage.setItem(
+                      "leadId",
+                      response.data.data.leadId
+                    );
+
+                    // Call Segement events
+                    global.analytics.identify(response.data.data.leadId, {
+                      email: values.emailAddress
+                    });
+                    global.analytics.track("Lead Created", {});
+
+                    Router.push({
+                      pathname: "/onboarding/step5"
+                    });
+                  });
+              });
+          }
+        });
+    } else {
+      this.setState({
+        error: { code: "6", message: "Passwords do not match" }
+      });
+    }
   }
 
   render() {
     return (
       <main>
         <Header />
-        <SingleStep title="Great news! We've got a project in your area. We can lower your costs and emissions! Here's what we can offer:">
-          <EnhancedCustomForm
-            agreement={{
-              terms: this.state.currentUtility.terms,
-              conditions: this.state.currentUtility.conditions
+        <SingleStep title="Ok, now for the fun stuff. Let's create your account!">
+          <Formik
+            initialValues={{
+              emailAddress: "",
+              password: "",
+              passwordConfirmation: ""
             }}
+            onSubmit={values => {
+              window.localStorage.setItem("email", values.emailAddress);
+              this.autenticate(values);
+            }}
+            render={props => (
+              <Form>
+                <Input
+                  type="email"
+                  label="Email"
+                  fieldname="emailAddress"
+                  required
+                />
+                <Input
+                  type="password"
+                  label="Password"
+                  fieldname="password"
+                  required
+                />
+                <Input
+                  type="password"
+                  label="Confirm Password"
+                  fieldname="passwordConfirmation"
+                  required
+                />
+                <p className="error">{this.state.error.message}</p>
+                <Button
+                  primary
+                  disabled={
+                    !!props.values.emailAddress !== true ||
+                    !!props.values.password !== true
+                  }
+                  onClick={() => {
+                    this.setState({
+                      error: {
+                        code: false,
+                        message: ""
+                      }
+                    });
+                  }}
+                >
+                  Next
+                </Button>
+              </Form>
+            )}
           />
+          <Stepper>
+            <li className="steplist__step steplist__step-doing">1</li>
+            <li className="steplist__step">2</li>
+            <li className="steplist__step">3</li>
+            <li className="steplist__step">4</li>
+            <li className="steplist__step">5</li>
+            <li className="steplist__step">6</li>
+          </Stepper>
         </SingleStep>
         <style jsx>{`
           main {
+            display: block;
             height: 88vh;
             max-width: 700px;
             margin: 0 auto;
           }
-          .content {
-            margin: 0 auto;
-          }
-          .disclaimer {
+          .error {
+            height: 52px;
+            margin: 0;
+            padding: 1em 0;
             text-align: center;
-            font-size: 0.8rem;
-            margin-top: 0;
-          }
-          .checkbox__label {
-            margin: 0.5em;
           }
         `}</style>
       </main>

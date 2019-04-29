@@ -14,19 +14,27 @@ class Dashboard extends React.Component {
   }
 
   componentDidMount() {
-    global.analytics.page("Dashboard");
+    window.firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        global.analytics.page("Dashboard");
 
-    let usercreated = "";
-    let storedName = "";
+        let usercreated = "";
+        let storedName = "";
 
-    if (window.localStorage.getItem("usercreated")) {
-      usercreated = window.localStorage.getItem("usercreated");
-    }
-    if (window.localStorage.getItem("username")) {
-      storedName = JSON.parse(window.localStorage.getItem("username"));
-    }
+        if (window.localStorage.getItem("usercreated")) {
+          usercreated = window.localStorage.getItem("usercreated");
+        }
+        if (window.localStorage.getItem("username")) {
+          storedName = JSON.parse(window.localStorage.getItem("username"));
+        }
 
-    this.setState({ isAbleToSeeDashboard: usercreated, name: storedName });
+        this.setState({ isAbleToSeeDashboard: usercreated, name: storedName });
+      } else {
+        Router.push({
+          pathname: "/"
+        });
+      }
+    });
   }
 
   renderDashboard() {
@@ -40,11 +48,11 @@ class Dashboard extends React.Component {
               Welcome to Common Energy<span className="accent">!</span>
             </h2>
             <p>
-              We’re delighted to have you as a customer and to provide you with
+              We're delighted to have you as a customer and to provide you with
               100% clean, lower cost Electricity.
             </p>
             <p>The connection process will take 4-8 weeks.</p>
-            <p>Here’s what happens next:</p>
+            <p>Here's what happens next:</p>
             <ul>
               <li>
                 Common Energy will configure your electricity account to receive
@@ -68,6 +76,7 @@ class Dashboard extends React.Component {
 
         <style jsx>{`
           main {
+            display: block;
             max-width: 700px;
             margin: 0 auto;
             margin-top: 100px;
@@ -96,8 +105,8 @@ class Dashboard extends React.Component {
           }
 
           .pane {
-            background-color: var(--color-bg-primary);
-            border: 1px solid var(--color-primary);
+            background-color: #fff;
+            border: 1px solid #2479ff;
             border-radius: 3px;
             padding: 1rem;
           }
@@ -122,11 +131,11 @@ class Dashboard extends React.Component {
 
           .accent {
             padding: 0;
-            color: var(--color-secondary);
+            color: #41ef8b;
           }
 
           .highlight {
-            color: var(--color-primary);
+            color: #2479ff;
             position: relative;
           }
 
@@ -159,6 +168,7 @@ class Dashboard extends React.Component {
         </Button>
         <style jsx>{`
           main {
+            display: block;
             height: 88vh;
             max-width: 700px;
             margin: 0 auto;
@@ -172,7 +182,11 @@ class Dashboard extends React.Component {
   render() {
     return this.state.isAbleToSeeDashboard
       ? this.renderDashboard()
-      : this.renderError();
+      : () => {
+          Router.push({
+            pathname: "/"
+          });
+        };
   }
 }
 

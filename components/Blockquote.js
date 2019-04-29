@@ -14,7 +14,7 @@ export default class Blockquote extends React.Component {
             <svg width="18" height="16" xmlns="http://www.w3.org/2000/svg">
               <text
                 transform="translate(-134 -11)"
-                fill="var(--color-primary)"
+                fill="#2479ff"
                 fillRule="evenodd"
                 fontFamily="Montserrat-Medium, Montserrat"
                 fontSize="54"
@@ -61,14 +61,16 @@ export default class Blockquote extends React.Component {
           }
 
           cite {
-            font-family: var(--font-primary);
+            font-family: "Poppins", -apple-system, BlinkMacSystemFont,
+              "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+              "Helvetica Neue", sans-serif;
             font-size: 12px;
             font-weight: 800;
             font-style: normal;
             line-height: 1.2em;
             letter-spacing: 2.5px;
             text-transform: uppercase;
-            color: var(--color-primary);
+            color: #2479ff;
           }
         `}</style>
       </div>

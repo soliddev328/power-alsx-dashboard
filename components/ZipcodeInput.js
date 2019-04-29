@@ -1,28 +1,39 @@
 import React from "react";
-import NumberFormat from "react-number-format";
-
-export default class Phoneinput extends React.Component {
+import zip from "zippo";
+export default class ZipCodeInput extends React.Component {
   constructor(props) {
     super(props);
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleBlur = this.handleBlur.bind(this);
-  }
-  handleChange(e) {
-    this.props.onChangeEvent(this.props.fieldname, e.target.value);
+    this.state = {
+      code: ""
+    };
   }
 
-  handleBlur() {
+  format = event => {
+    let { value } = event.target;
+
+    this.setState({
+      code: zip.parse(value)
+    });
+  };
+
+  handleChange = e => {
+    this.props.onChangeEvent(this.props.fieldname, e.target.value);
+  };
+
+  handleBlur = () => {
     this.props.onBlurEvent(this.props.fieldname, true);
-  }
+  };
 
   render() {
     return (
       <div className="input__wrapper">
-        <NumberFormat
+        <input
+          type="number"
+          pattern="[0-9]*"
           onChange={this.handleChange}
           onBlur={this.handleBlur}
-          format="(###) ###-####"
+          value={this.props.value}
           name={this.props.fieldname}
           id={this.props.fieldname}
         />
@@ -65,6 +76,7 @@ export default class Phoneinput extends React.Component {
             z-index: 11;
           }
 
+          input:focus + label,
           input[value]:not([value=""]) + label {
             opacity: 0;
           }

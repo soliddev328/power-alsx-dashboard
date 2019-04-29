@@ -2,36 +2,32 @@
   "name": "common-energy",
   "version": "0.1.0",
   "repository": "https://github.com/flyingsaucerstudio/common-energy",
-  "license": "MIT",
+  "main": "index.js",
   "scripts": {
     "dev": "next",
     "start": "next start",
     "build": "next build && next export -o /public"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
+    "@babel/polyfill": "^7.4.3",
     "@segment/snippet": "^4.4.0",
     "axios": "^0.18.0",
-    "formik": "^1.5.1",
+    "formik": "^1.5.2",
     "js-cookie": "^2.2.0",
-    "next": "^8.0.3",
-    "next-ga": "^2.3.4",
-    "prop-types": "^15.7.2",
-    "query-string": "^6.3.0",
-    "react": "^16.8.4",
-    "react-dom": "^16.8.4",
-    "react-geosuggest": "^2.10.0",
+    "next": "^8.1.0",
+    "query-string": "^6.4.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-geosuggest": "^2.12.0",
     "react-highlight-words": "^0.16.0",
-    "react-number-format": "^4.0.6",
+    "react-number-format": "^4.0.7",
     "react-plaid": "^0.9.0",
-    "react-select": "^2.4.1",
-    "react-spinners": "^0.5.3",
-    "react-stripe-elements": "^2.0.3"
-  },
-  "devDependencies": {
-    "babel-eslint": "^10.0.1",
-    "eslint": "^5.15.1",
-    "eslint-plugin-babel": "^5.3.0",
-    "eslint-plugin-prettier": "^3.0.0",
-    "eslint-plugin-react": "^7.12.4"
+    "react-select": "^2.4.3",
+    "react-spinners": "^0.5.4",
+    "react-stripe-elements": "^2.0.3",
+    "zippo": "^1.0.1"
   }
 }
