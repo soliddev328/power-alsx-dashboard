@@ -71,8 +71,8 @@ class Step5 extends React.Component {
         <SingleStep title="And what is your name and address please?">
           <Formik
             initialValues={{
-              firstName: "",
-              lastName: "",
+              firstName: localStorage.getItem("fname"),
+              lastName: localStorage.getItem("lname"),
               address: ""
             }}
             onSubmit={values => {
