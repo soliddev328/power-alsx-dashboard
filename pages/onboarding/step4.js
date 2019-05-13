@@ -74,6 +74,7 @@ class Step4 extends React.Component {
   }
 
   render() {
+    const email = localStorage.getItem("email");
     return (
       <main>
         <Header />
@@ -81,7 +82,7 @@ class Step4 extends React.Component {
           <Formik
             initialValues={{
               // password: "",
-              emailAddress: ""
+              emailAddress: email
             }}
             onSubmit={values => {
               localStorage.setItem("email", values.emailAddress);
