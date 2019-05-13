@@ -55,6 +55,22 @@ class Step1 extends React.Component {
         localStorage.setItem("UtmSource", this.props.query.utm_source);
       if (this.props.query.utm_medium)
         localStorage.setItem("UtmMedium", this.props.query.utm_medium);
+
+      localStorage.removeItem("postalCode");
+      localStorage.removeItem("utility");
+      localStorage.removeItem("email");
+      localStorage.removeItem("fname");
+      localStorage.removeItem("lname");
+      if (this.props.query.zipcode)
+        localStorage.setItem("postalCode", this.props.query.zipcode);
+      if (this.props.query.utility)
+        localStorage.setItem("utility", this.props.query.utility);
+      if (this.props.query.email)
+        localStorage.setItem("email", this.props.query.email);
+      if (this.props.query.fname)
+        localStorage.setItem("fname", this.props.query.fname);
+      if (this.props.query.lname)
+        localStorage.setItem("lname", this.props.query.lname);
     }
   }
 
@@ -76,7 +92,7 @@ class Step1 extends React.Component {
         >
           <Formik
             initialValues={{
-              postalCode: ""
+              postalCode: this.props.query.zipcode
             }}
             onSubmit={values => {
               localStorage.setItem(
