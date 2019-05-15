@@ -34,7 +34,7 @@ class CustomForm extends React.Component {
         <div className="content">
           <BulletItem content="10% contracted discount" bulletIcon="dollar" />
           <BulletItem
-            content="$10-$20 estimated monthly savings"
+            content="Save a month of electricity per year"
             bulletIcon="gift"
           />
           <BulletItem
