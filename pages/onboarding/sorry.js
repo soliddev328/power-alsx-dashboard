@@ -1,31 +1,64 @@
-import React from 'react'
-import Router from 'next/router'
-import { Formik, Form } from 'formik'
-import axios from 'axios'
-import Input from '../../components/Input'
-import Header from '../../components/Header'
-import SingleStep from '../../components/SingleStep'
-import Button from '../../components/Button'
-import CONSTANTS from '../../globals'
+import React from "react";
+import Router from "next/router";
+import { Formik, Form } from "formik";
+import axios from "axios";
+import Input from "../../components/Input";
+import Header from "../../components/Header";
+import SingleStep from "../../components/SingleStep";
+import Button from "../../components/Button";
+import CONSTANTS from "../../globals";
 
 const { API } =
-  CONSTANTS.NODE_ENV !== 'production' ? CONSTANTS.dev : CONSTANTS.prod
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 class Sorry extends React.Component {
   componentDidMount() {
-    global.analytics.page('Out of area')
+    global.analytics.page("Out of area");
 
-    let storedName = ''
-    let storedAddress = ''
+    let storedName = "";
+    let storedAddress = "";
+    let storedPartner = "";
+    let storedReferrer = "";
+    let storedSalesRep = "";
+    let storedUtmCampaign = "";
+    let storedUtmMedium = "";
+    let storedUtmSource = "";
 
-    if (window.localStorage.getItem('username')) {
-      storedName = JSON.parse(window.localStorage.getItem('username'))
+    if (localStorage.getItem("username")) {
+      storedName = JSON.parse(localStorage.getItem("username"));
     }
-    if (window.localStorage.getItem('address')) {
-      storedAddress = JSON.parse(window.localStorage.getItem('address'))
+    if (localStorage.getItem("address")) {
+      storedAddress = JSON.parse(localStorage.getItem("address"));
+    }
+    if (localStorage.getItem("Partner")) {
+      storedPartner = localStorage.getItem("Partner");
+    }
+    if (localStorage.getItem("Referrer")) {
+      storedReferrer = localStorage.getItem("Referrer");
+    }
+    if (localStorage.getItem("SalesRep")) {
+      storedSalesRep = localStorage.getItem("SalesRep");
+    }
+    if (localStorage.getItem("UtmCampaign")) {
+      storedUtmCampaign = localStorage.getItem("UtmCampaign");
+    }
+    if (localStorage.getItem("UtmMedium")) {
+      storedUtmMedium = localStorage.getItem("UtmMedium");
+    }
+    if (localStorage.getItem("UtmSource")) {
+      storedUtmSource = localStorage.getItem("UtmSource");
     }
 
-    this.setState({ name: storedName, address: storedAddress })
+    this.setState({
+      name: storedName,
+      address: storedAddress,
+      referrer: storedReferrer,
+      partner: storedPartner,
+      salesRep: storedSalesRep,
+      utmCampaign: storedUtmCampaign,
+      utmMedium: storedUtmMedium,
+      utmSource: storedUtmSource
+    });
   }
 
   render() {
@@ -38,19 +71,28 @@ class Sorry extends React.Component {
         >
           <Formik
             initialValues={{
-              email: ''
+              email: ""
             }}
             onSubmit={values => {
               axios
                 .post(`${API}/v1/subscribers`, {
-                  Email: values.email.toLowerCase()
+                  LastName: values.email,
+                  postalCode: this.state.address.postalCode,
+                  Phone: "9999999999",
+                  Email: values.email,
+                  Referrer: this.state.referrer,
+                  Partner: this.state.partner,
+                  SalesRep: this.state.salesRep,
+                  utmCampaign: this.state.utmCampaign,
+                  utmMedium: this.state.utmMedium,
+                  utmSource: this.state.utmSource
                 })
                 .then(() => {
                   Router.push({
-                    pathname: '/'
-                  })
+                    pathname: "/"
+                  });
                 })
-                .catch(() => {})
+                .catch(() => {});
             }}
             render={props => (
               <React.Fragment>
@@ -73,8 +115,8 @@ class Sorry extends React.Component {
           }
         `}</style>
       </main>
-    )
+    );
   }
 }
 
-export default Sorry
+export default Sorry;
