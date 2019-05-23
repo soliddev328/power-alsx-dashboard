@@ -12,22 +12,22 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@babel/polyfill": "^7.4.3",
+    "@babel/polyfill": "^7.4.4",
     "@segment/snippet": "^4.4.0",
     "axios": "^0.18.0",
-    "formik": "^1.5.2",
+    "formik": "^1.5.4",
     "js-cookie": "^2.2.0",
     "next": "^8.1.0",
-    "query-string": "^6.4.2",
+    "query-string": "^6.5.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-geosuggest": "^2.12.0",
     "react-highlight-words": "^0.16.0",
-    "react-number-format": "^4.0.7",
+    "react-number-format": "^4.0.8",
     "react-plaid": "^0.9.0",
     "react-select": "^2.4.3",
     "react-spinners": "^0.5.4",
-    "react-stripe-elements": "^2.0.3",
+    "react-stripe-elements": "^3.0.0",
     "zippo": "^1.0.1"
   }
 }
