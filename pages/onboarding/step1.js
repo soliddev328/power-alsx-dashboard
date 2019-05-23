@@ -42,6 +42,9 @@ class Step1 extends React.Component {
     if (this.props && this.props.query.rep) {
       window.localStorage.setItem("SalesRep", this.props.query.rep);
     }
+    if (this.props && this.props.query.affiliate) {
+      localStorage.setItem("Affiliate", this.props.query.affiliate);
+    }
 
     let utmCampaignCookie = Cookie.get("_ce_campaign");
     let utmSourceCookie = Cookie.get("_ce_source");
