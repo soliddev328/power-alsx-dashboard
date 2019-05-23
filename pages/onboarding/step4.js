@@ -150,13 +150,14 @@ class Step4 extends React.Component {
   }
 
   render() {
+    const email = localStorage.getItem("email");
     return (
       <main>
         <Header />
         <SingleStep title="Ok, now for the fun stuff. Let's create your account!">
           <Formik
             initialValues={{
-              emailAddress: "",
+              emailAddress: email,
               password: "",
               passwordConfirmation: ""
             }}
