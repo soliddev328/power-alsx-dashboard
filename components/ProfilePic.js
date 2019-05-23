@@ -21,7 +21,7 @@ export default class ProfilePic extends React.Component {
           img {
             object-fit: cover;
             object-position: 0% 10%;
-            max-width: 120%;
+            max-width: 110%;
           }
 
           @media all and (-ms-high-contrast: none) {

@@ -13,7 +13,7 @@ export default class Header extends React.Component {
           <div className="bubble">
             <ProfilePic
               image={{
-                src: "/static/images/people/scott.jpg",
+                src: "/static/images/people/martin.jpg",
                 altText: "A smiling girl"
               }}
             />
