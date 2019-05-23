@@ -41,25 +41,38 @@ class CheckoutForm extends Component {
 
   submit(ev) {
     ev.preventDefault();
-    if (this.props.stripe) {
-      this.props.stripe.createToken({ type: "card" }).then(payload => {
-        if (payload.token) {
-          axios
-            .put(`${API}/v1/subscribers`, {
-              leadId: this.state.leadId,
-              email: this.state.email,
-              stripeToken: payload.token.id
-            })
-            .then(() => {
-              global.analytics.track("Sign-Up Completed", {});
-              localStorage.setItem("usercreated", true);
-              Router.push({
-                pathname: "/dashboard"
-              });
-            });
+    window.firebase
+      .auth()
+      .currentUser.getIdToken(true)
+      .then(idToken => {
+        if (this.props.stripe) {
+          this.props.stripe.createToken({ type: "card" }).then(payload => {
+            if (payload.token) {
+              axios
+                .put(
+                  `${API}/v1/subscribers`,
+                  {
+                    leadId: this.state.leadId,
+                    email: this.state.email,
+                    stripeToken: payload.token.id
+                  },
+                  {
+                    headers: {
+                      Authorization: idToken
+                    }
+                  }
+                )
+                .then(() => {
+                  global.analytics.track("Sign-Up Completed", {});
+                  localStorage.setItem("usercreated", true);
+                  Router.push({
+                    pathname: "/dashboard"
+                  });
+                });
+            }
+          });
         }
       });
-    }
   }
 
   render() {
