@@ -82,6 +82,15 @@ export default class CustomSelect extends React.Component {
           newOptions.push(utilityInfo);
         });
 
+        // Filter on utilities. Some partners pass that info to us
+        const storedUtility = localStorage.getItem("utility");
+        if (storedUtility) {
+          const results = newOptions.filter(
+            item => item.label == storedUtility
+          );
+          if (results.length > 0) newOptions = results;
+        }
+
         this.setState({
           options: newOptions,
           singleOption: utilities.length === 1
