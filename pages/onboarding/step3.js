@@ -32,11 +32,11 @@ class CustomForm extends React.Component {
     return (
       <Form>
         <div className="content">
+          <BulletItem content="10% contracted discount" bulletIcon="dollar" />
           <BulletItem
-            content="$10-$20 estimated monthly savings"
-            bulletIcon="dollar"
+            content="Save 1 month of electric costs every year"
+            bulletIcon="gift"
           />
-          <BulletItem content="$10-$20 monthly savings" bulletIcon="gift" />
           <BulletItem
             content="90% reduction in carbon emissions"
             bulletIcon="co2"
