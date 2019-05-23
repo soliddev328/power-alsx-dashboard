@@ -1,27 +1,27 @@
-import React from 'react'
-import Router from 'next/router'
-import Header from '../../components/Header'
-import { FadeLoader } from 'react-spinners'
-import SingleStep from '../../components/SingleStep'
+import React from "react";
+import Router from "next/router";
+import Header from "../../components/Header";
+import { FadeLoader } from "react-spinners";
+import SingleStep from "../../components/SingleStep";
 
 class Searching extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
 
-    this.state = {}
+    this.state = {};
   }
 
   componentDidMount() {
-    global.analytics.page('Searching')
+    global.analytics.page("Searching");
   }
 
   renderLoader() {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       setTimeout(() => {
         Router.push({
-          pathname: '/onboarding/step3'
-        })
-      }, 3000)
+          pathname: "/onboarding/step3"
+        });
+      }, 2000);
     }
 
     return (
@@ -32,7 +32,7 @@ class Searching extends React.Component {
             height={15}
             width={4}
             radius={1}
-            color={'#FF69A0'}
+            color={"#FF69A0"}
             loading
           />
           <p>Searching for clean energy projects in your area...</p>
@@ -55,7 +55,7 @@ class Searching extends React.Component {
           }
         `}</style>
       </SingleStep>
-    )
+    );
   }
 
   render() {
@@ -72,8 +72,8 @@ class Searching extends React.Component {
           }
         `}</style>
       </main>
-    )
+    );
   }
 }
 
-export default Searching
+export default Searching;
