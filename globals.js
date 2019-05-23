@@ -24,11 +24,11 @@ module.exports = {
     PLAID_KEY: "6a39ce056577235f452bcf275b5191",
     FB_APP_ID: "1861844694112540",
     FIREBASE: {
-      APIKEY: "",
-      PROJECTID: "",
-      DATABASE: "",
-      BUCKET: "",
-      SENDERID: ""
+      APIKEY: "AIzaSyATeEWLPU0S8ia_GDFoYFqwUOYsQPFK4IY",
+      PROJECTID: "ce-customer-portal-auth",
+      DATABASE: "https://ce-customer-portal-auth.firebaseio.com",
+      BUCKET: "ce-customer-portal-auth.appspot.com",
+      SENDERID: "273326053550"
     }
   }
 };
