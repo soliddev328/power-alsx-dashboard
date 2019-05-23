@@ -26,6 +26,7 @@ class Step4 extends React.Component {
     let storedPartner = "";
     let storedReferrer = "";
     let storedSalesRep = "";
+    let storedAffiliate = "";
     let storedUtmCampaign = "";
     let storedUtmMedium = "";
     let storedUtmSource = "";
@@ -50,6 +51,9 @@ class Step4 extends React.Component {
     if (localStorage.getItem("SalesRep")) {
       storedSalesRep = localStorage.getItem("SalesRep");
     }
+    if (localStorage.getItem("Affiliate")) {
+      storedAffiliate = localStorage.getItem("Affiliate");
+    }
     if (localStorage.getItem("UtmCampaign")) {
       storedUtmCampaign = localStorage.getItem("UtmCampaign");
     }
@@ -66,6 +70,7 @@ class Step4 extends React.Component {
       referrer: storedReferrer,
       partner: storedPartner,
       salesRep: storedSalesRep,
+      affiliate: storedAffiliate,
       utmCampaign: storedUtmCampaign,
       utmMedium: storedUtmMedium,
       utmSource: storedUtmSource,
@@ -93,6 +98,7 @@ class Step4 extends React.Component {
                   Referrer: this.state.referrer,
                   Partner: this.state.partner,
                   SalesRep: this.state.salesRep,
+                  Affiliate: this.state.affiliate,
                   postalCode: this.state.postalCode,
                   agreementChecked: !!this.state.agreedTermsAndConditions,
                   utility: this.state.utility,
