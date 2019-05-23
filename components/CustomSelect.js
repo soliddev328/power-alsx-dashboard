@@ -13,7 +13,8 @@ export default class CustomSelect extends React.Component {
     this.inputField = React.createRef();
 
     this.state = {
-      options: null
+      options: null,
+      singleOption: false
     };
 
     this.scrollOnFocus = this.scrollOnFocus.bind(this);
@@ -81,8 +82,13 @@ export default class CustomSelect extends React.Component {
           newOptions.push(utilityInfo);
         });
 
-        this.setState({ options: newOptions });
+        this.setState({
+          options: newOptions,
+          singleOption: utilities.length === 1
+        });
       });
+
+      return newOptions.length;
     }
   }
 
@@ -110,16 +116,7 @@ export default class CustomSelect extends React.Component {
               isSearchable={false}
               components={{
                 SingleValue: CustomOption,
-                Option: props => (
-                  <Option {...props}>
-                    <img
-                      className="select__option-icon"
-                      src={props.data.image.src}
-                      alt={props.data.image.altText}
-                    />
-                    {props.data.label}
-                  </Option>
-                )
+                Option: CustomOption
               }}
               getOptionValue={getOptionValue}
               className="select__wrapper"
@@ -129,7 +126,11 @@ export default class CustomSelect extends React.Component {
               options={this.state.options}
               onChange={this.handleChange}
               onBlur={this.handleBlur}
-              value={this.props.value}
+              value={
+                this.state.options && this.state.options.length === 1
+                  ? this.state.options[0]
+                  : this.props.value
+              }
               placeholder="Select your utility"
             />
           </div>
