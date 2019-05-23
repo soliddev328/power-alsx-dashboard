@@ -27,8 +27,8 @@ class Step10 extends React.Component {
         <SingleStep
           title={
             this.props.displayMessage
-              ? "Going forward you will pay Common Energy a lower amount for your electricity, instead of your utility:"
-              : "Going forward you will pay Common Energy a lower amount for your electricity, instead of your utility:"
+              ? "Going forward, instead of paying your utility you will pay Common Energy a lower amount for your electricity:"
+              : "Going forward, instead of paying your utility you will pay Common Energy a lower amount for your electricity:"
           }
         >
           <Formik
