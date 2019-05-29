@@ -82,15 +82,6 @@ export default class CustomSelect extends React.Component {
           if (item == "ConEd" || item == "ORU") utilityInfo.paperOnly = true;
           newOptions.push(utilityInfo);
         });
-        // Filter on utilities. Some partners pass that info to us
-        const storedUtility = localStorage.getItem("utility");
-        if (storedUtility) {
-          const results = newOptions.filter(
-            item => item.label == storedUtility
-          );
-          if (results.length > 0) newOptions = results;
-          console.log(results);
-        }
 
         // Filter on utilities. Some partners pass that info to us
         const storedUtility = localStorage.getItem("utility");
