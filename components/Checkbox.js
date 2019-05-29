@@ -52,6 +52,10 @@ export default class RadioCard extends React.Component {
           input[type="checkbox"]:checked:after {
             background-color: #2479ff;
           }
+
+          input[type="checkbox"] + p {
+            margin-top: 0;
+          }
         `}</style>
       </label>
     );

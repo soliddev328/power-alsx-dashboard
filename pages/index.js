@@ -12,7 +12,10 @@ import CONSTANTS from "../globals";
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
-class Index extends React.Component {
+const { API } =
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
+
+class Step1 extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -197,4 +200,4 @@ class Index extends React.Component {
   }
 }
 
-export default Index;
+export default Step1;
