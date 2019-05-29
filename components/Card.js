@@ -1,10 +1,6 @@
-import React from 'react';
+import React from "react";
 
 export default class Card extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {}
 
   render() {
@@ -28,7 +24,7 @@ export default class Card extends React.Component {
             flex-direction: column;
             align-items: center;
             position: relative;
-            background-color: var(--color-bg-primary);
+            background-color: #fff;
             border-radius: 3px;
             margin: 0 auto;
             padding: 1rem 2rem;

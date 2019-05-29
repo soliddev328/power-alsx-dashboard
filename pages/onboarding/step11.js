@@ -95,7 +95,7 @@ class Step11 extends React.Component {
           }
 
           em .highlight {
-            color: var(--color-primary);
+            color: #2479ff;
             font-weight: 700;
           }
 
@@ -147,22 +147,33 @@ class Step11 extends React.Component {
         errorMessage: "Bank Account Number should have at least 4 digits"
       });
     } else {
-      axios
-        .put(`${API}/v1/subscribers`, {
-          leadId: this.state.leadId,
-          bank: values.bankName,
-          bankRoutingNumber: values.bankRoutingNumber,
-          bankAccountNumber: values.bankAccountNumber
-        })
-        .then(response => {
-          global.analytics.track("Sign-Up Completed", {});
-          localStorage.setItem("usercreated", true);
-          Router.push({
-            pathname: "/dashboard"
-          });
-        })
-        .catch(error => {
-          console.log(error);
+      window.firebase
+        .auth()
+        .currentUser.getIdToken(true)
+        .then(idToken => {
+          axios
+            .put(
+              `${API}/v1/subscribers`,
+              {
+                leadId: this.state.leadId,
+                bank: values.bankName,
+                bankRoutingNumber: values.bankRoutingNumber,
+                bankAccountNumber: values.bankAccountNumber
+              },
+              {
+                headers: {
+                  Authorization: idToken
+                }
+              }
+            )
+            .then(() => {
+              global.analytics.track("Sign-Up Completed", {});
+              localStorage.setItem("usercreated", true);
+              Router.push({
+                pathname: "/dashboard"
+              });
+            })
+            .catch(() => {});
         });
     }
   }
@@ -252,6 +263,7 @@ class Step11 extends React.Component {
         {paymentMethod && this.renderForm()}
         <style jsx>{`
           main {
+            display: block;
             height: 88vh;
             max-width: 700px;
             margin: 0 auto;

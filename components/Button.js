@@ -1,22 +1,18 @@
-import React from 'react';
-import ArrowIcon from './Icons/ArrowIcon';
-import FacebookIcon from './Icons/FacebookIcon';
+import React from "react";
+import ArrowIcon from "./Icons/ArrowIcon";
+import FacebookIcon from "./Icons/FacebookIcon";
 
 export default class Button extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   shareIcon() {
-    if (this.props.share == 'facebook') return <FacebookIcon />;
+    if (this.props.share === "facebook") return <FacebookIcon />;
   }
 
   render() {
     return (
       <button
-        type={this.props.type ? this.props.type : 'submit'}
+        type={this.props.type ? this.props.type : "submit"}
         onClick={this.props.onClick}
-        className={this.props.share ? 'share' : ''}
+        className={this.props.share ? "share" : ""}
         disabled={this.props.disabled}
       >
         {this.props.share && this.shareIcon()}
@@ -45,17 +41,13 @@ export default class Button extends React.Component {
             align-items: center;
             max-width: 350px;
             font-size: 0.875rem;
-            font-family: var(--font-primary);
+            font-family: "Poppins", -apple-system, BlinkMacSystemFont,
+              "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+              "Helvetica Neue", sans-serif;
             font-weight: 800;
-            color: ${this.props.primary
-              ? 'var(--color-bg-primary)'
-              : 'var(--color-primary)'};
-            background-color: ${this.props.primary
-              ? 'var(--color-primary)'
-              : 'var(--color-bg-primary)'};
-            border: ${this.props.primary
-              ? 'none'
-              : '1px solid var(--color-primary)'};
+            color: ${this.props.primary ? "#fff" : "#2479ff"};
+            background-color: ${this.props.primary ? "#2479ff" : "#fff"};
+            border: ${this.props.primary ? "none" : "1px solid #2479ff"};
             padding: 1.15em 0;
             border-radius: 1px;
             margin: 1em auto;

@@ -12,10 +12,6 @@ const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 class Sorry extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     global.analytics.page("Out of area");
 
@@ -91,20 +87,18 @@ class Sorry extends React.Component {
                   utmMedium: this.state.utmMedium,
                   utmSource: this.state.utmSource
                 })
-                .then(function(response) {
+                .then(() => {
                   Router.push({
                     pathname: "/"
                   });
                 })
-                .catch(function(error) {
-                  console.log(error);
-                });
+                .catch(() => {});
             }}
             render={props => (
               <React.Fragment>
                 <Form>
                   <Input label="email" fieldname="email" />
-                  <Button primary disabled={!props.values.email != ""}>
+                  <Button primary disabled={!!props.values.email === false}>
                     Next
                   </Button>
                 </Form>
@@ -114,6 +108,7 @@ class Sorry extends React.Component {
         </SingleStep>
         <style jsx>{`
           main {
+            display: block;
             height: 88vh;
             max-width: 700px;
             margin: 0 auto;

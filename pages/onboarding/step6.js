@@ -66,30 +66,45 @@ class Step6 extends React.Component {
             }}
             onSubmit={values => {
               localStorage.setItem("phoneNumer", values.phoneNumber);
-              axios
-                .put(`${API}/v1/subscribers`, {
-                  leadId: this.state.leadId,
-                  phone: values.phoneNumber
-                })
-                .then(response => {
-                  if (this.state.storedUtilityPaperOnly) {
-                    localStorage.setItem(
-                      "billingMethod",
-                      JSON.stringify({
-                        billingMethod: "paper"
-                      })
-                    );
-                    Router.push({
-                      pathname: "/onboarding/step8"
-                    });
-                  } else {
-                    Router.push({
-                      pathname: "/onboarding/step7"
-                    });
-                  }
-                })
-                .catch(error => {
-                  console.log(error);
+              window.firebase
+                .auth()
+                .currentUser.getIdToken(true)
+                .then(idToken => {
+                  axios
+                    .put(
+                      `${API}/v1/subscribers`,
+                      {
+                        leadId: this.state.leadId,
+                        phone: values.phoneNumber
+                      },
+                      {
+                        headers: {
+                          Authorization: idToken
+                        }
+                      }
+                    )
+                    .then(() => {
+                      if (this.state.storedUtilityPaperOnly) {
+                        localStorage.setItem(
+                          "billingMethod",
+                          JSON.stringify({
+                            billingMethod: "paper"
+                          })
+                        );
+                        Router.push({
+                          pathname: "/onboarding/step8"
+                        });
+                      } else {
+                        localStorage.setItem(
+                          "billingMethod",
+                          JSON.stringify(values)
+                        );
+                        Router.push({
+                          pathname: "/onboarding/step7"
+                        });
+                      }
+                    })
+                    .catch(() => {});
                 });
             }}
             render={props => (
@@ -118,6 +133,7 @@ class Step6 extends React.Component {
         </SingleStep>
         <style jsx>{`
           main {
+            display: block;
             height: 88vh;
             max-width: 700px;
             margin: 0 auto;

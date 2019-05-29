@@ -12,8 +12,12 @@ class Step2 extends React.Component {
 
     this.state = {
       address: "",
-      postalCode: ""
+      postalCode: "",
+      currentUtility: "",
+      error: ""
     };
+
+    this.select = React.createRef();
   }
 
   componentDidMount() {
@@ -43,34 +47,44 @@ class Step2 extends React.Component {
               currentUtility: ""
             }}
             onSubmit={values => {
-              localStorage.setItem(
-                "utility",
-                JSON.stringify(values.currentUtility)
-              );
+              if (values.currentUtility !== "") {
+                localStorage.setItem(
+                  "utility",
+                  JSON.stringify(values.currentUtility)
+                );
 
-              Router.push({
-                pathname: "/onboarding/searching"
-              });
+                Router.push({
+                  pathname: "/onboarding/searching"
+                });
+              } else if (this.select.current.state.singleOption) {
+                localStorage.setItem(
+                  "utility",
+                  JSON.stringify(this.select.current.state.options[0])
+                );
+
+                Router.push({
+                  pathname: "/onboarding/searching"
+                });
+              } else {
+                this.setState({ error: "Please select your provider" });
+              }
             }}
             render={props => {
               return (
                 <React.Fragment>
                   <Form>
                     <CustomSelect
+                      ref={this.select}
                       zipCode={this.state.postalCode}
-                      value={props.values.currentUtility}
+                      value={props.currentUtility}
                       onChange={props.setFieldValue}
                       onBlur={props.setFieldTouched}
-                      error={props.errors.topics}
-                      touched={props.touched.topics}
+                      error={props.errors}
+                      touched={props.touched}
                       fieldname="currentUtility"
                     />
-                    <Button
-                      primary
-                      disabled={!props.values.currentUtility != ""}
-                    >
-                      Check For Savings
-                    </Button>
+                    <p className="error">{this.state.error}</p>
+                    <Button primary>Check For Savings</Button>
                   </Form>
                 </React.Fragment>
               );
@@ -79,9 +93,16 @@ class Step2 extends React.Component {
         </SingleStep>
         <style jsx>{`
           main {
+            display: block;
             height: 88vh;
             max-width: 700px;
             margin: 0 auto;
+          }
+          .error {
+            height: 52px;
+            margin: 0;
+            padding: 1em 0;
+            text-align: center;
           }
         `}</style>
       </main>

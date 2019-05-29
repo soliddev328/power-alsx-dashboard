@@ -99,22 +99,33 @@ class Step5 extends React.Component {
               localStorage.setItem("username", JSON.stringify(name));
 
               if (address.postalCode === this.state.postalCode) {
-                axios
-                  .put(`${API}/v1/subscribers`, {
-                    leadId: this.state.leadId,
-                    firstName: values.firstName,
-                    lastName: values.lastName,
-                    street: address.street,
-                    state: address.state,
-                    city: address.city
-                  })
-                  .then(response => {
-                    Router.push({
-                      pathname: "/onboarding/step6"
-                    });
-                  })
-                  .catch(error => {
-                    console.log(error);
+                window.firebase
+                  .auth()
+                  .currentUser.getIdToken(true)
+                  .then(idToken => {
+                    axios
+                      .put(
+                        `${API}/v1/subscribers`,
+                        {
+                          leadId: this.state.leadId,
+                          firstName: values.firstName,
+                          lastName: values.lastName,
+                          street: address.street,
+                          state: address.state,
+                          city: address.city
+                        },
+                        {
+                          headers: {
+                            Authorization: idToken
+                          }
+                        }
+                      )
+                      .then(() => {
+                        Router.push({
+                          pathname: "/onboarding/step6"
+                        });
+                      })
+                      .catch(() => {});
                   });
               } else {
                 this.setState({
@@ -153,8 +164,8 @@ class Step5 extends React.Component {
             )}
           />
           <Stepper>
-            <li className="steplist__step steplist__step-done">1</li>
-            <li className="steplist__step steplist__step-doing">2</li>
+            <li className="steplist__step steplist__step-doing">1</li>
+            <li className="steplist__step">2</li>
             <li className="steplist__step">3</li>
             <li className="steplist__step">4</li>
             <li className="steplist__step">5</li>
@@ -163,6 +174,7 @@ class Step5 extends React.Component {
         </SingleStep>
         <style jsx>{`
           main {
+            display: block;
             height: 88vh;
             max-width: 700px;
             margin: 0 auto;
