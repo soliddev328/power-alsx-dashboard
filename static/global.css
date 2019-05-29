@@ -233,10 +233,6 @@ hr {
   margin: 0 auto;
 }
 
-/* .two-columns--responsive {
-  grid-template-columns: 1fr;
-} */
-
 @media (min-width: 800px) {
   .two-columns--responsive {
     grid-template-columns: repeat(2, 1fr);
