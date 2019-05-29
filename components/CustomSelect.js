@@ -13,7 +13,8 @@ export default class CustomSelect extends React.Component {
     this.inputField = React.createRef();
 
     this.state = {
-      options: null
+      options: null,
+      singleOption: false
     };
 
     this.scrollOnFocus = this.scrollOnFocus.bind(this);
@@ -81,6 +82,7 @@ export default class CustomSelect extends React.Component {
           if (item == "ConEd" || item == "ORU") utilityInfo.paperOnly = true;
           newOptions.push(utilityInfo);
         });
+
         // Filter on utilities. Some partners pass that info to us
         const storedUtility = localStorage.getItem("utility");
         if (storedUtility) {
@@ -88,11 +90,15 @@ export default class CustomSelect extends React.Component {
             item => item.label == storedUtility
           );
           if (results.length > 0) newOptions = results;
-          console.log(results);
         }
 
-        this.setState({ options: newOptions });
+        this.setState({
+          options: newOptions,
+          singleOption: utilities.length === 1
+        });
       });
+
+      return newOptions.length;
     }
   }
 
@@ -120,16 +126,7 @@ export default class CustomSelect extends React.Component {
               isSearchable={false}
               components={{
                 SingleValue: CustomOption,
-                Option: props => (
-                  <Option {...props}>
-                    <img
-                      className="select__option-icon"
-                      src={props.data.image.src}
-                      alt={props.data.image.altText}
-                    />
-                    {props.data.label}
-                  </Option>
-                )
+                Option: CustomOption
               }}
               getOptionValue={getOptionValue}
               className="select__wrapper"
@@ -139,7 +136,11 @@ export default class CustomSelect extends React.Component {
               options={this.state.options}
               onChange={this.handleChange}
               onBlur={this.handleBlur}
-              value={this.props.value}
+              value={
+                this.state.options && this.state.options.length === 1
+                  ? this.state.options[0]
+                  : this.props.value
+              }
               placeholder="Select your utility"
             />
           </div>
@@ -147,10 +148,12 @@ export default class CustomSelect extends React.Component {
         <style jsx global>{`
           .select__label {
             pointer-events: none;
-            font-family: var(--font-primary);
+            font-family: "Poppins", -apple-system, BlinkMacSystemFont,
+              "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+              "Helvetica Neue", sans-serif;
             font-size: 0.75rem;
             font-weight: 600;
-            color: var(--color-primary);
+            color: #2479ff;
             letter-spacing: 0.7px;
             left: 1.5em;
             text-transform: capitalize;
@@ -161,6 +164,8 @@ export default class CustomSelect extends React.Component {
             position: relative;
             height: 3.75rem;
             width: 100%;
+            max-width: 350px;
+            margin: 0 auto;
             margin-top: 0.5rem;
           }
 
@@ -185,7 +190,7 @@ export default class CustomSelect extends React.Component {
           }
 
           .select__dropdown-indicator {
-            color: var(--color-primary);
+            color: #2479ff;
           }
 
           .select__value-container .select__option {

@@ -1,12 +1,12 @@
 import React from "react";
 import Router from "next/router";
 import { Formik, Form } from "formik";
-import Header from "../components/Header";
-import SingleStep from "../components/SingleStep";
-import Button from "../components/Button";
-import ZipCodeInput from "../components/ZipcodeInput";
 import axios from "axios";
-import Cookie from "js-cookie";
+import SingleStep from "../components/SingleStep";
+import Header from "../components/Header";
+import Separator from "../components/Separator";
+import Input from "../components/Input";
+import Button from "../components/Button";
 import CONSTANTS from "../globals";
 
 const { API } =
@@ -15,70 +15,90 @@ const { API } =
 class Step1 extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {};
+    this.state = {
+      error: {
+        code: false,
+        message: ""
+      }
+    };
   }
 
   componentDidMount() {
-    global.analytics.page("Step 1");
-    global.analytics.track("Sign-Up Initiated", {});
-    let customerReferralCookie = Cookie.get("customer_referral");
-    let partnerReferralCookie = Cookie.get("partner_referral");
-    let salesRepCookie = Cookie.get("ce_rep_referral");
-
-    if (partnerReferralCookie)
-      localStorage.setItem("Partner", partnerReferralCookie);
-    if (this.props && this.props.query.partner) {
-      localStorage.setItem("Partner", this.props.query.partner);
-    }
-    if (customerReferralCookie)
-      localStorage.setItem("Referrer", customerReferralCookie);
-    if (this.props && this.props.query.advocate) {
-      localStorage.setItem("Referrer", this.props.query.advocate);
-    }
-    if (salesRepCookie) localStorage.setItem("SalesRep", salesRepCookie);
-    if (this.props && this.props.query.rep) {
-      localStorage.setItem("SalesRep", this.props.query.rep);
-    }
-    if (this.props && this.props.query.affiliate) {
-      localStorage.setItem("Affiliate", this.props.query.affiliate);
-    }
-
-    let utmCampaignCookie = Cookie.get("_ce_campaign");
-    let utmSourceCookie = Cookie.get("_ce_source");
-    let utmMediumCookie = Cookie.get("_ce_medium");
-    if (utmCampaignCookie)
-      localStorage.setItem("UtmCampaign", utmCampaignCookie);
-    if (utmSourceCookie) localStorage.setItem("UtmSource", utmSourceCookie);
-    if (utmMediumCookie) localStorage.setItem("UtmMedium", utmMediumCookie);
-    if (this.props) {
-      if (this.props.query.utm_campaign)
-        localStorage.setItem("UtmCampaign", this.props.query.utm_campaign);
-      if (this.props.query.utm_source)
-        localStorage.setItem("UtmSource", this.props.query.utm_source);
-      if (this.props.query.utm_medium)
-        localStorage.setItem("UtmMedium", this.props.query.utm_medium);
-
-      localStorage.removeItem("postalCode");
-      localStorage.removeItem("utility");
-      localStorage.removeItem("email");
-      localStorage.removeItem("fname");
-      localStorage.removeItem("lname");
-      if (this.props.query.zipcode)
-        localStorage.setItem("postalCode", this.props.query.zipcode);
-      if (this.props.query.utility)
-        localStorage.setItem("utility", this.props.query.utility);
-      if (this.props.query.email)
-        localStorage.setItem("email", this.props.query.email);
-      if (this.props.query.fname)
-        localStorage.setItem("fname", this.props.query.fname);
-      if (this.props.query.lname)
-        localStorage.setItem("lname", this.props.query.lname);
-    }
+    // window.firebase.auth().onAuthStateChanged(user => {
+    //   if (user) {
+    //     Router.push({
+    //       pathname: '/dashboard'
+    //     })
+    //   }
+    // })
   }
 
-  capitalize(word) {
-    return word && word[0].toUpperCase() + word.slice(1);
+  autenticate(values) {
+    window.firebase
+      .auth()
+      .signInWithEmailAndPassword(values.emailAddress, values.password)
+      .catch(error => {
+        this.setState({ error: { code: error.code, message: error.message } });
+      })
+      .then(firebaseData => {
+        if (!this.state.error.code) {
+          window.firebase
+            .auth()
+            .currentUser.getIdToken(true)
+            .then(idToken => {
+              axios
+                .get(`${API}/v1/subscribers/${firebaseData.user.uid}`, {
+                  headers: {
+                    Authorization: idToken
+                  }
+                })
+                .then(response => {
+                  const user = response.data.data;
+                  window.localStorage.setItem("leadId", user.leadId);
+
+                  if (user.signupCompleted) {
+                    Router.push({
+                      pathname: "/dashboard"
+                    });
+                  } else if (!user.phone) {
+                    Router.push({
+                      pathname: "/onboarding/step6",
+                      query: {
+                        onboardingNotFinished: true
+                      }
+                    });
+                  } else if (!user.milestones.utilityInfoCompleted) {
+                    if (user.milestones.utilityPaperOnly) {
+                      localStorage.setItem(
+                        "billingMethod",
+                        JSON.stringify({
+                          billingMethod: "paper"
+                        })
+                      );
+                      Router.push({
+                        pathname: "/onboarding/step8"
+                      });
+                    } else {
+                      Router.push({
+                        pathname: "/onboarding/step7",
+                        query: {
+                          onboardingNotFinished: true
+                        }
+                      });
+                    }
+                  } else if (!user.milestones.bankInfoCompleted) {
+                    Router.push({
+                      pathname: "/onboarding/step9",
+                      query: {
+                        onboardingNotFinished: true
+                      }
+                    });
+                  }
+                })
+                .catch(() => {});
+            });
+        }
+      });
   }
 
   static getInitialProps({ query }) {
@@ -88,62 +108,88 @@ class Step1 extends React.Component {
   render() {
     return (
       <main>
-        <Header />
-        <SingleStep
-          title="Hi, I'm Martin!  Let's see if we have a project
-          in your area.  What is your zip code?"
-        >
+        <Header first />
+        <SingleStep prefix="Enter your email address to sign in or create an account">
           <Formik
             initialValues={{
-              postalCode: this.props.query.zipcode
+              emailAddress: "",
+              password: ""
             }}
             onSubmit={values => {
-              localStorage.setItem(
-                "postalCode",
-                JSON.stringify(values.postalCode)
-              );
-              axios(`${API}/v1/zipcodes/${values.postalCode}`).then(
-                response => {
-                  if (
-                    response.data.data.geostatus != "Live" &&
-                    response.data.data.geostatus != "Near-Term"
-                  ) {
-                    console.log("not found!");
-                    Router.push({
-                      pathname: "/onboarding/sorry"
-                    });
-                  } else {
-                    console.log("found!");
-                    Router.push({
-                      pathname: "/onboarding/step2"
-                    });
-                  }
-                }
-              );
+              this.autenticate(values);
             }}
             render={props => (
               <React.Fragment>
                 <Form>
-                  <ZipCodeInput
-                    value={props.values.postalCode}
-                    onChangeEvent={props.setFieldValue}
-                    onBlurEvent={props.setFieldTouched}
-                    label="ZipCode"
-                    fieldname="postalCode"
+                  <Input
+                    label="Email"
+                    fieldname="emailAddress"
+                    type="email"
+                    required
+                    autoFocus
                   />
-                  <Button primary disabled={!props.values.postalCode != ""}>
-                    Next
+                  <Input
+                    label="Password"
+                    fieldname="password"
+                    type="password"
+                    required
+                  />
+                  <p className="error">{this.state.error.message}</p>
+                  <Button
+                    primary
+                    disabled={
+                      !!props.values.emailAddress !== true ||
+                      !!props.values.password !== true
+                    }
+                    onClick={() => {
+                      this.setState({
+                        error: {
+                          code: false,
+                          message: ""
+                        }
+                      });
+                    }}
+                  >
+                    Sign in
                   </Button>
                 </Form>
               </React.Fragment>
             )}
           />
+          <div className="link">
+            <a href="/forgot-password" className="cta">
+              Forgot password?
+            </a>
+          </div>
+          <Separator text="I don't have an account" />
+          <Button
+            primary
+            onClick={() => {
+              Router.push({
+                pathname: "/onboarding/step1"
+              });
+            }}
+          >
+            Sign Up
+          </Button>
         </SingleStep>
         <style jsx>{`
           main {
+            display: block;
             height: 88vh;
             max-width: 700px;
             margin: 0 auto;
+          }
+          .error {
+            height: 52px;
+            margin: 0;
+            padding: 1em 0;
+            text-align: center;
+          }
+          .link {
+            display: flex;
+            justify-content: center;
+            margin: 25px 0;
           }
         `}</style>
       </main>

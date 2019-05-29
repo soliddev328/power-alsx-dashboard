@@ -1,39 +1,42 @@
-import React from 'react';
-import Geosuggest from 'react-geosuggest';
+import React from "react";
+import Geosuggest from "react-geosuggest";
 
 export default class GeoSuggest extends React.Component {
   constructor(props) {
     super(props);
     this.inputField = React.createRef();
     this.scrollOnFocus = this.scrollOnFocus.bind(this);
+    this.handleSuggestSelect = this.handleSuggestSelect.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange = value => {
+  handleChange(value) {
     if (value.description) {
       this.props.onChange(this.props.fieldname, value);
     }
-  };
+  }
 
-  handleBlur = () => {
-    const nextField = document.getElementById('apt');
+  handleBlur() {
+    const nextField = document.getElementById("apt");
 
     if (nextField) {
       nextField.focus();
     }
 
     this.props.onBlur(this.props.fieldname, true);
-  };
+  }
 
-  handleSuggestSelect = e => {
+  handleSuggestSelect(e) {
     if (e) {
-      const nextField = document.getElementById('apt');
+      const nextField = document.getElementById("apt");
       this.handleChange(e);
 
       if (nextField) {
         nextField.focus();
       }
     }
-  };
+  }
 
   scrollOnFocus() {
     if (this.inputField) {
@@ -61,15 +64,21 @@ export default class GeoSuggest extends React.Component {
           }
 
           .geosuggest__input-wrapper {
+            max-width: 350px;
+            margin: 0 auto;
             margin-bottom: 0.5em;
           }
 
           .geosuggest__suggests-wrapper {
             position: absolute;
+            left: 50%;
             border-radius: 3px;
+            max-width: 350px;
+            margin: 0 auto;
             width: 100%;
             z-index: 100;
-            background-color: var(--color-bg-primary);
+            background-color: #fff;
+            transform: translateX(-50%);
           }
 
           .geosuggest__suggests {
@@ -93,8 +102,8 @@ export default class GeoSuggest extends React.Component {
 
           .geosuggest__item--active,
           .geosuggest__item:hover {
-            color: var(--color-bg-primary);
-            background-color: var(--color-primary);
+            color: #fff;
+            background-color: #2479ff;
           }
         `}</style>
       </div>

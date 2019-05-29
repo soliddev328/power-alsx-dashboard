@@ -8,25 +8,38 @@ import Button from "../../components/Button";
 import Stepper from "../../components/Stepper";
 
 class Step10 extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     global.analytics.page("Step 10");
+  }
+
+  static async getInitialProps({ query }) {
+    const props = {
+      displayMessage: query.onboardingNotFinished
+    };
+
+    return props;
   }
 
   render() {
     return (
       <main>
         <Header />
-        <SingleStep title="Going forward, instead of paying your utility you will pay Common Energy a lower amount for your electricity:">
+        <SingleStep
+          title={
+            this.props.displayMessage
+              ? "Going forward, instead of paying your utility you will pay Common Energy a lower amount for your electricity:"
+              : "Going forward, instead of paying your utility you will pay Common Energy a lower amount for your electricity:"
+          }
+        >
           <Formik
             initialValues={{
               paymentMethod: ""
             }}
             onSubmit={values => {
-              localStorage.setItem("paymentMethod", JSON.stringify(values));
+              window.localStorage.setItem(
+                "paymentMethod",
+                JSON.stringify(values)
+              );
               Router.push({
                 pathname: "/onboarding/step11"
               });
@@ -58,13 +71,17 @@ class Step10 extends React.Component {
                     content="A 2.9% processing fee is applied to cover transaction costs."
                     highlight="2.9%"
                   />
-                  <Button primary disabled={!props.values.paymentMethod != ""}>
+                  <Button
+                    primary
+                    disabled={!!props.values.paymentMethod !== true}
+                  >
                     Next
                   </Button>
                   <p className="small">
                     <svg
                       width="14"
                       height="18"
+                      viewBox="0 0 14 18"
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
@@ -90,6 +107,7 @@ class Step10 extends React.Component {
         </SingleStep>
         <style jsx>{`
           main {
+            display: block;
             height: 88vh;
             max-width: 700px;
             margin: 0 auto;

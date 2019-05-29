@@ -16,11 +16,13 @@ class Searching extends React.Component {
   }
 
   renderLoader() {
-    setTimeout(() => {
-      Router.push({
-        pathname: "/onboarding/step3"
-      });
-    }, 2000);
+    if (typeof window !== "undefined") {
+      setTimeout(() => {
+        Router.push({
+          pathname: "/onboarding/step3"
+        });
+      }, 2000);
+    }
 
     return (
       <SingleStep>
@@ -31,7 +33,7 @@ class Searching extends React.Component {
             width={4}
             radius={1}
             color={"#FF69A0"}
-            loading={true}
+            loading
           />
           <p>Searching for clean energy projects in your area...</p>
         </div>
@@ -63,6 +65,7 @@ class Searching extends React.Component {
         {this.renderLoader()}
         <style jsx>{`
           main {
+            display: block;
             height: 88vh;
             max-width: 700px;
             margin: 0 auto;

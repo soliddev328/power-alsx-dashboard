@@ -3,10 +3,10 @@ import axios from "axios";
 import Router from "next/router";
 import {
   injectStripe,
+  CardElement,
   CardNumberElement,
   CardExpiryElement,
-  CardCVCElement,
-  PostalCodeElement
+  CardCVCElement
 } from "react-stripe-elements";
 import Button from "../components/Button";
 import CONSTANTS from "../globals";
@@ -41,27 +41,38 @@ class CheckoutForm extends Component {
 
   submit(ev) {
     ev.preventDefault();
-    if (this.props.stripe) {
-      this.props.stripe.createToken({ type: "card" }).then(payload => {
-        if (payload.token) {
-          axios
-            .put(`${API}/v1/subscribers`, {
-              leadId: this.state.leadId,
-              email: this.state.email,
-              stripeToken: payload.token.id
-            })
-            .then(() => {
-              global.analytics.track("Sign-Up Completed", {});
-              localStorage.setItem("usercreated", true);
-              Router.push({
-                pathname: "/dashboard"
-              });
-            });
+    window.firebase
+      .auth()
+      .currentUser.getIdToken(true)
+      .then(idToken => {
+        if (this.props.stripe) {
+          this.props.stripe.createToken({ type: "card" }).then(payload => {
+            if (payload.token) {
+              axios
+                .put(
+                  `${API}/v1/subscribers`,
+                  {
+                    leadId: this.state.leadId,
+                    email: this.state.email,
+                    stripeToken: payload.token.id
+                  },
+                  {
+                    headers: {
+                      Authorization: idToken
+                    }
+                  }
+                )
+                .then(() => {
+                  global.analytics.track("Sign-Up Completed", {});
+                  localStorage.setItem("usercreated", true);
+                  Router.push({
+                    pathname: "/dashboard"
+                  });
+                });
+            }
+          });
         }
       });
-    } else {
-      console.log("Form submitted before Stripe.js loaded.");
-    }
   }
 
   render() {
@@ -73,7 +84,7 @@ class CheckoutForm extends Component {
             style={{
               base: {
                 margin: "5px",
-                color: "var(--color-primary)",
+                color: "#2479ff",
                 fontSize: "16px",
                 fontFamily: '"Poppins", sans-serif',
                 fontSmoothing: "antialiased",
@@ -96,11 +107,11 @@ class CheckoutForm extends Component {
               }
             }}
           />
-          <div className="three-columns">
+          <div className="columns">
             <CardExpiryElement
               style={{
                 base: {
-                  color: "var(--color-primary)",
+                  color: "#2479ff",
                   fontSize: "16px",
                   fontFamily: '"Poppins", sans-serif',
                   fontSmoothing: "antialiased",
@@ -127,35 +138,7 @@ class CheckoutForm extends Component {
             <CardCVCElement
               style={{
                 base: {
-                  color: "var(--color-primary)",
-                  fontSize: "16px",
-                  fontFamily: '"Poppins", sans-serif',
-                  fontSmoothing: "antialiased",
-                  "::placeholder": {
-                    fontSize: "12px",
-                    color: "#2479ff"
-                  }
-                },
-                invalid: {
-                  color: "#e5424d",
-                  ":focus": {
-                    color: "#303238"
-                  }
-                }
-              }}
-              onChange={event => {
-                if (event.error) {
-                  this.setState({ errorMessage: event.error.message });
-                } else {
-                  this.setState({ errorMessage: "" });
-                }
-              }}
-            />
-            <PostalCodeElement
-              placeholder="Zip Code"
-              style={{
-                base: {
-                  color: "var(--color-primary)",
+                  color: "#2479ff",
                   fontSize: "16px",
                   fontFamily: '"Poppins", sans-serif',
                   fontSmoothing: "antialiased",
@@ -192,9 +175,9 @@ class CheckoutForm extends Component {
             margin: 2rem 0;
             margin-bottom: 10px;
           }
-          .three-columns {
+          .columns {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr;
           }
           .error {
             text-align: center;
@@ -209,7 +192,7 @@ class CheckoutForm extends Component {
             padding: 0.8em 1em;
             border-radius: 3px;
             border: 1px solid transparent;
-            caret-color: var(--color-secondary);
+            caret-color: #41ef8b;
             transition: box-shadow 200ms ease-in;
           }
 

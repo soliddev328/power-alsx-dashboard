@@ -1,12 +1,10 @@
-import App, { Container } from 'next/app';
-import Head from 'next/head';
-import Router from 'next/router';
-import React from 'react';
-import withGA from 'next-ga';
-import settings from '../settings.json';
+import App, { Container } from "next/app";
+import Head from "next/head";
+import React from "react";
+import settings from "../settings.json";
 
 class MyApp extends App {
-  static async getInitialProps({ Component, router, ctx }) {
+  static async getInitialProps({ Component, ctx }) {
     let pageProps = {};
 
     if (Component.getInitialProps) {
@@ -29,4 +27,4 @@ class MyApp extends App {
   }
 }
 
-export default withGA('', Router)(MyApp);
+export default MyApp;

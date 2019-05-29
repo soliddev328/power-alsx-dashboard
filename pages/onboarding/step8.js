@@ -42,24 +42,26 @@ class Step8 extends React.Component {
     let storedAddress = JSON.parse(localStorage.getItem("address"));
     let storedUtility = JSON.parse(localStorage.getItem("utility"));
 
-    const rawParams = {
-      utility: encodeURIComponent(storedUtility.label),
-      state: storedAddress.state
-    };
+    if (storedUtility && storedAddress) {
+      const rawParams = {
+        utility: encodeURIComponent(storedUtility.label),
+        state: storedAddress.state
+      };
 
-    const generatedParams = Object.entries(rawParams)
-      .map(([key, val]) => `${key}=${val}`)
-      .join("&");
+      const generatedParams = Object.entries(rawParams)
+        .map(([key, val]) => `${key}=${val}`)
+        .join("&");
 
-    axios(`${API}/v1/utilities/?${generatedParams}`).then(response => {
-      if (response.data.data) {
-        this.setState({
-          forgotPwdLink: response.data.data[0].forgotPwdLink,
-          forgotEmailLink: response.data.data[0].forgotEmailLink,
-          createLoginLink: response.data.data[0].createLoginLink
-        });
-      }
-    });
+      axios(`${API}/v1/utilities/?${generatedParams}`).then(response => {
+        if (response.data.data) {
+          this.setState({
+            forgotPwdLink: response.data.data[0].forgotPwdLink,
+            forgotEmailLink: response.data.data[0].forgotEmailLink,
+            createLoginLink: response.data.data[0].createLoginLink
+          });
+        }
+      });
+    }
   }
 
   componentDidMount() {
@@ -107,43 +109,53 @@ class Step8 extends React.Component {
           }}
           onSubmit={values => {
             this.setState({ isLoading: true });
-
-            axios
-              .put(`${API}/v1/subscribers/utilities/link`, {
-                leadId: this.state.leadId,
-                utility: this.state.utility,
-                utilityUsername: values.utilityUser,
-                utilityPwd: values.utilityPassword
-              })
-              .then(response => {
-                localStorage.setItem(
-                  "linkedUtility",
-                  JSON.stringify(response.data)
-                );
-                if (response.data.data && response.data.data[0]) {
-                  if (response.data.data[0].hasLoggedIn) {
-                    localStorage.setItem("partialConnection", false);
-                    Router.push({
-                      pathname: "/onboarding/step9"
-                    });
-                  } else {
-                    this.setState({ isLoading: false });
-                    Router.push({
-                      pathname: "/onboarding/step8",
-                      query: {
-                        error: true
+            window.firebase
+              .auth()
+              .currentUser.getIdToken(true)
+              .then(idToken => {
+                axios
+                  .put(
+                    `${API}/v1/subscribers/utilities/link`,
+                    {
+                      leadId: this.state.leadId,
+                      utility: this.state.utility,
+                      utilityUsername: values.utilityUser,
+                      utilityPwd: values.utilityPassword
+                    },
+                    {
+                      headers: {
+                        Authorization: idToken
                       }
-                    });
-                  }
-                } else {
-                  localStorage.setItem("partialConnection", true);
-                  Router.push({
-                    pathname: "/onboarding/step9"
-                  });
-                }
-              })
-              .catch(function(error) {
-                console.log(error);
+                    }
+                  )
+                  .then(response => {
+                    localStorage.setItem(
+                      "linkedUtility",
+                      JSON.stringify(response.data)
+                    );
+                    if (response.data.data && response.data.data[0]) {
+                      if (response.data.data[0].hasLoggedIn) {
+                        localStorage.setItem("partialConnection", false);
+                        Router.push({
+                          pathname: "/onboarding/step10"
+                        });
+                      } else {
+                        this.setState({ isLoading: false });
+                        Router.push({
+                          pathname: "/onboarding/step9",
+                          query: {
+                            error: true
+                          }
+                        });
+                      }
+                    } else {
+                      localStorage.setItem("partialConnection", true);
+                      Router.push({
+                        pathname: "/onboarding/step10"
+                      });
+                    }
+                  })
+                  .catch(() => {});
               });
           }}
           render={props => (
@@ -187,19 +199,30 @@ class Step8 extends React.Component {
           utilityAccountNumber: ""
         }}
         onSubmit={values => {
-          axios
-            .put(`${API}/v1/subscribers`, {
-              leadId: this.state.leadId,
-              utilityAccountNumber: values.utilityAccountNumber
-            })
-            .then(() => {
-              localStorage.setItem("partialConnection", true);
-              Router.push({
-                pathname: "/onboarding/step9"
-              });
-            })
-            .catch(function(error) {
-              console.log(error);
+          window.firebase
+            .auth()
+            .currentUser.getIdToken(true)
+            .then(idToken => {
+              axios
+                .put(
+                  `${API}/v1/subscribers`,
+                  {
+                    leadId: this.state.leadId,
+                    utilityAccountNumber: values.utilityAccountNumber
+                  },
+                  {
+                    headers: {
+                      Authorization: idToken
+                    }
+                  }
+                )
+                .then(() => {
+                  localStorage.setItem("partialConnection", true);
+                  Router.push({
+                    pathname: "/onboarding/step10"
+                  });
+                })
+                .catch(() => {});
             });
         }}
         render={props => (
@@ -274,6 +297,7 @@ class Step8 extends React.Component {
 
     if (this.state.currentUtility && this.state.currentUtility.paperOnly)
       text = "We can use your account number to get you connected and saving.";
+
     return this.state.isLoading ? "" : text;
   }
 
@@ -326,6 +350,7 @@ class Step8 extends React.Component {
         </SingleStep>
         <style jsx>{`
           main {
+            display: block;
             height: 88vh;
             max-width: 700px;
             margin: 0 auto;

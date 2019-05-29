@@ -1,12 +1,8 @@
-import React from 'react';
-import { Field } from 'formik';
-import Highlight from './Highlight';
+import React from "react";
+import { Field } from "formik";
+import Highlight from "./Highlight";
 
 export default class RadioCard extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <label>
@@ -60,17 +56,17 @@ export default class RadioCard extends React.Component {
 
           .radiocard__input:checked + .radiocard__container > * > *,
           .radiocard__input:checked + .radiocard__container > * {
-            color: var(--color-bg-secondary) !important;
+            color: #f8f8f9 !important;
           }
 
           .radiocard__input:checked + .radiocard__container {
-            color: var(--color-bg-secondary) !important;
-            background-color: var(--color-primary);
+            color: #f8f8f9 !important;
+            background-color: #2479ff;
           }
 
           .radiocard__input:checked + .radiocard__container h3 .control {
-            border: 0.4rem solid var(--color-bg-secondary);
-            background-color: var(--color-secondary);
+            border: 0.4rem solid #f8f8f9;
+            background-color: #41ef8b;
           }
         `}</style>
         <style jsx>{`
@@ -101,29 +97,35 @@ export default class RadioCard extends React.Component {
             background: linear-gradient(90deg, #41ef8b, #8be4ff);
             transition: opacity 200ms cubic-bezier(0.39, 0.575, 0.565, 1);
             z-index: 1;
+            max-width: 350px;
+            margin: 0 auto;
           }
 
           .control {
             display: inline-flex;
             justify-content: center;
             align-items: center;
-            background-color: var(--color-bg-secondary);
+            background-color: #f8f8f9;
             width: 1.5rem;
             height: 1.5rem;
-            font-family: var(--font-primary);
+            font-family: "Poppins", -apple-system, BlinkMacSystemFont,
+              "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+              "Helvetica Neue", sans-serif;
             font-size: 1rem;
-            color: var(--color-secondary);
-            border: 1px solid var(--color-primary);
+            color: #41ef8b;
+            border: 1px solid #2479ff;
             border-radius: 50%;
             margin-right: 1em;
           }
 
           .radiocard__container {
             position: relative;
-            background-color: var(--color-bg-primary);
-            border: 1px solid var(--color-primary);
+            background-color: #fff;
+            border: 1px solid #2479ff;
             border-radius: 5px;
             padding: 5px;
+            max-width: 350px;
+            margin: 0 auto;
             transition: opacity 200ms cubic-bezier(0.39, 0.575, 0.565, 1),
               color 200ms cubic-bezier(0.39, 0.575, 0.565, 1),
               background-color 200ms cubic-bezier(0.39, 0.575, 0.565, 1);

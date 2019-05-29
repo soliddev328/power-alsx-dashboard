@@ -16,9 +16,9 @@ class Step9 extends React.Component {
 
     let storedPartialConnection = false;
 
-    if (localStorage.getItem("partialConnection")) {
+    if (window.localStorage.getItem("partialConnection")) {
       storedPartialConnection = JSON.parse(
-        localStorage.getItem("partialConnection")
+        window.localStorage.getItem("partialConnection")
       );
     }
 
@@ -77,6 +77,7 @@ class Step9 extends React.Component {
         </SingleStep>
         <style jsx>{`
           main {
+            display: block;
             height: 88vh;
             max-width: 700px;
             margin: 0 auto;
