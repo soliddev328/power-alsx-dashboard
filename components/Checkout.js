@@ -3,10 +3,10 @@ import axios from "axios";
 import Router from "next/router";
 import {
   injectStripe,
+  CardElement,
   CardNumberElement,
   CardExpiryElement,
-  CardCVCElement,
-  PostalCodeElement
+  CardCVCElement
 } from "react-stripe-elements";
 import Button from "../components/Button";
 import CONSTANTS from "../globals";
@@ -107,7 +107,7 @@ class CheckoutForm extends Component {
               }
             }}
           />
-          <div className="three-columns">
+          <div className="columns">
             <CardExpiryElement
               style={{
                 base: {
@@ -162,34 +162,6 @@ class CheckoutForm extends Component {
                 }
               }}
             />
-            <PostalCodeElement
-              placeholder="Zip Code"
-              style={{
-                base: {
-                  color: "#2479ff",
-                  fontSize: "16px",
-                  fontFamily: '"Poppins", sans-serif',
-                  fontSmoothing: "antialiased",
-                  "::placeholder": {
-                    fontSize: "12px",
-                    color: "#2479ff"
-                  }
-                },
-                invalid: {
-                  color: "#e5424d",
-                  ":focus": {
-                    color: "#303238"
-                  }
-                }
-              }}
-              onChange={event => {
-                if (event.error) {
-                  this.setState({ errorMessage: event.error.message });
-                } else {
-                  this.setState({ errorMessage: "" });
-                }
-              }}
-            />
           </div>
         </div>
         {this.state && this.state.errorMessage && (
@@ -203,9 +175,9 @@ class CheckoutForm extends Component {
             margin: 2rem 0;
             margin-bottom: 10px;
           }
-          .three-columns {
+          .columns {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr;
           }
           .error {
             text-align: center;
