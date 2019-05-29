@@ -14,7 +14,9 @@ export default class Stepper extends React.Component {
             display: flex;
             justify-content: center;
             font-size: 14px;
-            font-family: var(--font-primary);
+            font-family: "Poppins", -apple-system, BlinkMacSystemFont,
+              "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+              "Helvetica Neue", sans-serif;
             list-style: none;
             padding: 0;
             margin: 0;
@@ -39,24 +41,24 @@ export default class Stepper extends React.Component {
             height: 2.4em;
             line-height: 2.2em;
             margin: 0.65em 1em;
-            background-color: var(--color-bg-primary);
-            color: var(--color-primary);
+            background-color: #fff;
+            color: #2479ff;
             font-weight: 700;
             font-feature-settings: "tnum";
-            border: 2px solid var(--color-primary);
+            border: 2px solid #2479ff;
             border-radius: 50%;
             overflow: hidden;
             transition: all 300ms ease-in-out;
           }
 
           :global(.steplist__step-doing) {
-            border-color: var(--color-secondary);
+            border-color: #41ef8b;
           }
 
           :global(.steplist__step-done) {
             color: #fff;
-            background-color: var(--color-secondary);
-            border-color: var(--color-secondary);
+            background-color: #41ef8b;
+            border-color: #41ef8b;
           }
         `}</style>
       </div>

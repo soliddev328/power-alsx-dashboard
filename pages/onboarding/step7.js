@@ -1,16 +1,11 @@
 import React from "react";
 import Router from "next/router";
 import { Formik, Form } from "formik";
-import axios from "axios";
 import Header from "../../components/Header";
 import RadioCard from "../../components/RadioCard";
 import SingleStep from "../../components/SingleStep";
 import Button from "../../components/Button";
 import Stepper from "../../components/Stepper";
-import CONSTANTS from "../../globals";
-
-const { API } =
-  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 class Step7 extends React.Component {
   constructor(props) {
@@ -69,6 +64,7 @@ class Step7 extends React.Component {
         </SingleStep>
         <style jsx>{`
           main {
+            display: block;
             height: 88vh;
             max-width: 700px;
             margin: 0 auto;

@@ -81,7 +81,7 @@ class CustomForm extends React.Component {
             max-width: 70%;
             margin: 2rem auto;
             border-radius: 4px;
-            border: 1px solid var(--color-primary);
+            border: 1px solid #2479ff;
             padding: 10px;
             background-color: #fff;
           }
@@ -130,6 +130,7 @@ class Step3 extends React.Component {
         </SingleStep>
         <style jsx>{`
           main {
+            display: block;
             height: 88vh;
             max-width: 700px;
             margin: 0 auto;
@@ -142,8 +143,8 @@ class Step3 extends React.Component {
             font-size: 0.8rem;
             margin-top: 0;
           }
-          .checkbox__label {
-            margin: 0.5em;
+          :global(.checkbox__label) {
+            margin-top: 0;
           }
         `}</style>
       </main>

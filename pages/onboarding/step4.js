@@ -15,6 +15,13 @@ const { API } =
 class Step4 extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      error: {
+        code: false,
+        message: ""
+      }
+    };
   }
 
   componentDidMount() {
@@ -78,6 +85,76 @@ class Step4 extends React.Component {
     });
   }
 
+  autenticate(values) {
+    if (values.password === values.passwordConfirmation) {
+      window.firebase
+        .auth()
+        .createUserWithEmailAndPassword(values.emailAddress, values.password)
+        .catch(error => {
+          this.setState({
+            error: { code: error.code, message: error.message }
+          });
+        })
+        .then(userCredential => {
+          if (userCredential) {
+            window.localStorage.setItem(
+              "firebaseUserId",
+              userCredential.user.uid
+            );
+            window.firebase
+              .auth()
+              .currentUser.getIdToken(true)
+              .then(idToken => {
+                axios
+                  .post(
+                    `${API}/v1/subscribers`,
+                    {
+                      Email: values.emailAddress,
+                      Password: values.password,
+                      Referrer: this.state.referrer,
+                      Partner: this.state.partner,
+                      SalesRep: this.state.salesRep,
+                      Affiliate: this.state.affiliate,
+                      postalCode: this.state.postalCode,
+                      agreementChecked: !!this.state.agreedTermsAndConditions,
+                      utility: this.state.utility,
+                      utmCampaign: this.state.utmCampaign,
+                      utmMedium: this.state.utmMedium,
+                      utmSource: this.state.utmSource,
+                      firebaseUserId: userCredential.user.uid
+                    },
+                    {
+                      headers: {
+                        Authorization: idToken
+                      }
+                    }
+                  )
+                  .then(response => {
+                    window.localStorage.setItem(
+                      "leadId",
+                      response.data.data.leadId
+                    );
+
+                    // Call Segement events
+                    global.analytics.identify(response.data.data.leadId, {
+                      email: values.emailAddress
+                    });
+                    global.analytics.track("Lead Created", {});
+
+                    Router.push({
+                      pathname: "/onboarding/step5"
+                    });
+                  });
+              });
+          }
+        });
+    } else {
+      this.setState({
+        error: { code: "6", message: "Passwords do not match" }
+      });
+    }
+  }
+
   render() {
     const email = localStorage.getItem("email");
     return (
@@ -86,42 +163,13 @@ class Step4 extends React.Component {
         <SingleStep title="Ok, now for the fun stuff. Let's create your account!">
           <Formik
             initialValues={{
-              // password: "",
-              emailAddress: email
+              emailAddress: email,
+              password: "",
+              passwordConfirmation: ""
             }}
             onSubmit={values => {
-              localStorage.setItem("email", values.emailAddress);
-              console.log(this.state.utility);
-              axios
-                .post(`${API}/v1/subscribers`, {
-                  Email: values.emailAddress,
-                  Referrer: this.state.referrer,
-                  Partner: this.state.partner,
-                  SalesRep: this.state.salesRep,
-                  Affiliate: this.state.affiliate,
-                  postalCode: this.state.postalCode,
-                  agreementChecked: !!this.state.agreedTermsAndConditions,
-                  utility: this.state.utility,
-                  utmCampaign: this.state.utmCampaign,
-                  utmMedium: this.state.utmMedium,
-                  utmSource: this.state.utmSource
-                })
-                .then(response => {
-                  localStorage.setItem("leadId", response.data.data.leadId);
-
-                  // Call Segement events
-                  global.analytics.identify(response.data.data.leadId, {
-                    email: values.emailAddress
-                  });
-                  global.analytics.track("Lead Created", {});
-
-                  Router.push({
-                    pathname: "/onboarding/step5"
-                  });
-                })
-                .catch(error => {
-                  console.log(error);
-                });
+              window.localStorage.setItem("email", values.emailAddress);
+              this.autenticate(values);
             }}
             render={props => (
               <Form>
@@ -131,12 +179,34 @@ class Step4 extends React.Component {
                   fieldname="emailAddress"
                   required
                 />
-                {/* <Input
+                <Input
                   type="password"
                   label="Password"
                   fieldname="password"
-                  required /> */}
-                <Button primary disabled={!props.values.emailAddress != ""}>
+                  required
+                />
+                <Input
+                  type="password"
+                  label="Confirm Password"
+                  fieldname="passwordConfirmation"
+                  required
+                />
+                <p className="error">{this.state.error.message}</p>
+                <Button
+                  primary
+                  disabled={
+                    !!props.values.emailAddress !== true ||
+                    !!props.values.password !== true
+                  }
+                  onClick={() => {
+                    this.setState({
+                      error: {
+                        code: false,
+                        message: ""
+                      }
+                    });
+                  }}
+                >
                   Next
                 </Button>
               </Form>
@@ -153,9 +223,16 @@ class Step4 extends React.Component {
         </SingleStep>
         <style jsx>{`
           main {
+            display: block;
             height: 88vh;
             max-width: 700px;
             margin: 0 auto;
+          }
+          .error {
+            height: 52px;
+            margin: 0;
+            padding: 1em 0;
+            text-align: center;
           }
         `}</style>
       </main>
