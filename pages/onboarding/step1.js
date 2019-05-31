@@ -22,6 +22,17 @@ class Step1 extends React.Component {
   componentDidMount() {
     global.analytics.page("Step 1");
     global.analytics.track("Sign-Up Initiated", {});
+
+    localStorage.removeItem("Partner");
+    localStorage.removeItem("Referrer");
+    localStorage.removeItem("SalesRep");
+    localStorage.removeItem("Affiliate");
+    localStorage.removeItem("postalCode");
+    localStorage.removeItem("utility");
+    localStorage.removeItem("email");
+    localStorage.removeItem("fname");
+    localStorage.removeItem("lname");
+
     let customerReferralCookie = Cookie.get("customer_referral");
     let partnerReferralCookie = Cookie.get("partner_referral");
     let salesRepCookie = Cookie.get("ce_rep_referral");
@@ -61,11 +72,6 @@ class Step1 extends React.Component {
       if (this.props.query.utm_medium)
         localStorage.setItem("UtmMedium", this.props.query.utm_medium);
 
-      localStorage.removeItem("postalCode");
-      localStorage.removeItem("utility");
-      localStorage.removeItem("email");
-      localStorage.removeItem("fname");
-      localStorage.removeItem("lname");
       if (this.props.query.zipcode)
         localStorage.setItem("postalCode", this.props.query.zipcode);
       if (this.props.query.utility)
