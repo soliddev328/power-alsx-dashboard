@@ -61,7 +61,6 @@ class Step2 extends React.Component {
                   "utility",
                   JSON.stringify(this.select.current.state.options[0])
                 );
-
                 Router.push({
                   pathname: "/onboarding/searching"
                 });
