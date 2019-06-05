@@ -2,24 +2,12 @@
   "name": "commonenergy",
   "version": 2,
   "builds": [{ "src": "next.config.js", "use": "@now/next" }],
-  "alias": ["my.commonenergy.us"],
+  "env": {
+    "NODE_ENV": "development"
+  },
   "routes": [
     { "src": "/sitemap.xml", "dest": "/static/sitemap.xml" },
     { "src": "/robots.txt", "dest": "/static/robots.txt" },
-    { "src": "/favicon.ico", "dest": "/static/favicon.ico" },
-    { "src": "/dashboard", "dest": "/pages/dashboard" },
-    { "src": "/onboarding/searching", "dest": "/pages/onboarding/searching" },
-    { "src": "/onboarding/sorry", "dest": "/pages/onboarding/sorry" },
-    { "src": "/onboarding/step2", "dest": "/pages/onboarding/step2" },
-    { "src": "/onboarding/step3", "dest": "/pages/onboarding/step3" },
-    { "src": "/onboarding/step4", "dest": "/pages/onboarding/step4" },
-    { "src": "/onboarding/step5", "dest": "/pages/onboarding/step5" },
-    { "src": "/onboarding/step5.1", "dest": "/pages/onboarding/step5.1" },
-    { "src": "/onboarding/step6", "dest": "/pages/onboarding/step6" },
-    { "src": "/onboarding/step7", "dest": "/pages/onboarding/step7" },
-    { "src": "/onboarding/step8", "dest": "/pages/onboarding/step8" },
-    { "src": "/onboarding/step9", "dest": "/pages/onboarding/step9" },
-    { "src": "/onboarding/step10", "dest": "/pages/onboarding/step10" },
-    { "src": "/onboarding/step11", "dest": "/pages/onboarding/step11" }
+    { "src": "/favicon.ico", "dest": "/static/favicon.ico" }
   ]
 }
