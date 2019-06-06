@@ -10,42 +10,32 @@ export default class Progressbar extends React.Component {
       <div className="progress__wrapper">
         <progress max="100" value={this.props.completion} />
         <p className="completion">
-          <span>Percentage of Completion </span>
-          <span className="highlight">{this.props.completion}%</span>
+          <span className="highlight">{this.props.completion}% Full</span>
         </p>
         <style jsx>{`
+          .progress__wrapper {
+            background-color: #2479ff;
+            position: relative;
+            padding: 16px 7%;
+            margin-left: -7%;
+            margin-right: -7%;
+          }
           progress {
             display: block;
-            margin: 1em 0;
             width: 100%;
-            border: none;
+            border: 1px solid #fff;
             background: rgba(54, 87, 180, 0.1);
-            border-radius: 8px;
-            position: relative;
-          }
-
-          progress:after {
-            content: "";
-            width: 14px;
-            height: 14px;
-            display: block;
-            background-color: #2479ff;
-            border-radius: 50%;
-            position: absolute;
-            top: 50%;
-            transform: translate(-50%, -55%);
-            left: ${this.props.completion}%;
-            transition: left 0.8s ease-in-out;
-            animation: translate 0.8s ease-in-out forwards;
+            border-radius: 12px;
+            margin: 0;
           }
 
           progress::-moz-progress-bar {
-            border-radius: 8px;
+            border-radius: 12px;
           }
 
           @media screen and (-webkit-min-device-pixel-ratio: 0) {
             progress {
-              height: 5px;
+              height: 23px;
             }
           }
 
@@ -56,33 +46,27 @@ export default class Progressbar extends React.Component {
 
           progress::-webkit-progress-value {
             border-radius: 8px;
-            background: #2479ff;
-            transition: all 0.8s ease-in-out;
-            width: 0;
-            animation: expandWidth 0.8s ease-in-out forwards;
+            background: #fff;
           }
 
           .completion {
+            position: relative;
             display: flex;
+            justify-content: flex-end;
             color: #000;
             font-weight: 600;
-            justify-content: space-between;
+            margin: 0;
           }
 
           .highlight {
-            color: #2479ff;
+            color: #fff;
             font-size: 1.2em;
+            margin: 0 1em;
           }
 
           @keyframes expandWidth {
             from {
               width: 0;
-            }
-          }
-
-          @keyframes translate {
-            from {
-              left: 0;
             }
           }
         `}</style>

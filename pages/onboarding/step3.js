@@ -35,28 +35,35 @@ const formikEnhancer = withFormik({
 
 class CustomForm extends React.Component {
   render() {
-    console.log(this.props.project.imageUrl);
+    const imageUrl = this.props.project && this.props.project.imageUrl;
+
+    const completion =
+      this.props.project && this.props.project.completion
+        ? this.props.project.completion
+        : false;
+
     return (
       <Form>
         <div className="content">
           <figure>
-            <img
-              src={
-                this.props.project.imageUrl !== ""
-                  ? "/static/images/illustrations/t&c.png"
-                  : this.props.project.imageUrl
-              }
-              alt=""
-            />
+            <img src={imageUrl} alt="" />
           </figure>
-          {this.props.project ? (
+          {completion ? (
             <>
-              <Progressbar completion={this.props.project.completion} />
-              <BulletItem content="Location" bulletIcon="location" />
-              <BulletItem content="Key terms" bulletIcon="discount" />
+              <Progressbar completion={completion} />
+              <div className="items">
+                <BulletItem
+                  content="10% Contracted Discount"
+                  bulletIcon="discount"
+                />
+                <BulletItem
+                  content="No Long-Term Commitment"
+                  bulletIcon="cross"
+                />
+              </div>
             </>
           ) : (
-            <>
+            <div className="items">
               <BulletItem
                 content="10% contracted discount"
                 bulletIcon="dollar"
@@ -69,7 +76,7 @@ class CustomForm extends React.Component {
                 content="90% reduction in carbon emissions"
                 bulletIcon="co2"
               />
-            </>
+            </div>
           )}
         </div>
         <Checkbox fieldname="acceptedTermsAndConditions">
@@ -103,23 +110,33 @@ class CustomForm extends React.Component {
         <style jsx>{`
           .content {
             margin-bottom: 2rem;
+            height: 370px;
           }
+
           .disclaimer {
             text-align: center;
           }
+
           figure {
             max-width: 100vw;
-            margin: 1.5rem -7%;
-            border-radius: 4px;
+            height: 190px;
+            margin: 1.5rem -7% 0 -7%;
             background-color: transparent;
+            overflow: hidden;
+            display: flex;
           }
+
           img {
             max-width: 100%;
-            min-height: 300px;
-            opacity: 0;
             object-fit: cover;
-            object-position: center;
-            animation: fadeIn 1s ease-in-out forwards;
+            object-position: top;
+            opacity: 0;
+            animation: fadeIn 200ms ease-in-out forwards;
+            animation-delay: 0.5s;
+          }
+
+          .items {
+            margin-top: 20px;
           }
 
           @keyframes fadeIn {
@@ -142,7 +159,7 @@ class Step3 extends React.Component {
     this.state = {
       utility: {
         project: {
-          imageUrl: "",
+          imageUrl: "/static/images/illustrations/t&c.png",
           name: "",
           completion: ""
         },
@@ -183,6 +200,20 @@ class Step3 extends React.Component {
       .map(([key, val]) => `${key}=${val}`)
       .join("&");
 
+    this.setState({
+      utility: {
+        agreement: {
+          terms: utility.terms,
+          conditions: utility.conditions
+        },
+        project: {
+          imageUrl: "/static/images/illustrations/t&c.png",
+          name: "",
+          completion: ""
+        }
+      }
+    });
+
     axios(`${API}/v1/utilities?${generatedParams}`).then(response => {
       if (response.data.data) {
         const data = response.data.data[0];
@@ -193,7 +224,10 @@ class Step3 extends React.Component {
               conditions: data.agreement.conditionsLink
             },
             project: {
-              imageUrl: data.projects[0].imageUrl,
+              imageUrl:
+                data.projects[0].imageUrl !== null
+                  ? data.projects[0].imageUrl
+                  : "/static/images/illustrations/t&c.png",
               name: data.projects[0].displayName,
               completion: data.projects[0].completion
             }
@@ -210,7 +244,11 @@ class Step3 extends React.Component {
         <SingleStep
           prefix="Great news!"
           title="We've got a project in your area."
-          suffix={this.state.utility.project.name}
+          suffix={
+            this.state.utility.project && this.state.utility.project.name
+              ? this.state.utility.project.name
+              : ""
+          }
         >
           <EnhancedCustomForm
             agreement={this.state.utility.agreement}
