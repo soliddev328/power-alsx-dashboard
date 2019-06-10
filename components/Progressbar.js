@@ -7,26 +7,47 @@ export default class Progressbar extends React.Component {
 
   render() {
     return (
-      <div className="progress__wrapper">
-        <progress max="100" value={this.props.completion} />
+      <div className="wrapper">
+        <div className="progress-wrapper">
+          <progress max="100" value={this.props.completion} />
+        </div>
         <p className="completion">
           <span className="highlight">{this.props.completion}% Full</span>
         </p>
         <style jsx>{`
-          .progress__wrapper {
+          .wrapper {
             background-color: #2479ff;
             position: relative;
             padding: 16px 7%;
             margin-left: -7%;
             margin-right: -7%;
+            opacity: 0;
+            animation: fadeIn 400ms ease-in-out forwards;
+            animation-delay: 0.5s;
           }
-          progress {
-            display: block;
+
+          @keyframes fadeIn {
+            to {
+              opacity: 1;
+            }
+          }
+
+          .progress-wrapper {
             width: 100%;
             border: 1px solid #fff;
-            background: rgba(54, 87, 180, 0.1);
             border-radius: 12px;
+            background: rgba(54, 87, 180, 0.1);
+          }
+          progress {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border: none;
+            display: block;
+            width: 100%;
             margin: 0;
+            transition: 0.3s all linear;
+            animation: expandWidth 3s ease-in-out forwards;
           }
 
           progress::-moz-progress-bar {
@@ -41,7 +62,7 @@ export default class Progressbar extends React.Component {
 
           progress::-webkit-progress-bar {
             border-radius: 8px;
-            background: rgba(54, 87, 180, 0.1);
+            background: rgba(54, 87, 180, 0);
           }
 
           progress::-webkit-progress-value {

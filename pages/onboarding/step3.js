@@ -131,12 +131,15 @@ class CustomForm extends React.Component {
             object-fit: cover;
             object-position: top;
             opacity: 0;
-            animation: fadeIn 200ms ease-in-out forwards;
-            animation-delay: 0.5s;
+            animation: fadeIn 400ms ease-in-out forwards;
+            animation-delay: 0.6s;
           }
 
           .items {
             margin-top: 20px;
+            opacity: 0;
+            animation: fadeIn 400ms ease-in-out forwards;
+            animation-delay: 0.6s;
           }
 
           @keyframes fadeIn {
@@ -208,8 +211,8 @@ class Step3 extends React.Component {
         },
         project: {
           imageUrl: "/static/images/illustrations/t&c.png",
-          name: "",
-          completion: ""
+          name: false,
+          completion: false
         }
       }
     });
