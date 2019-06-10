@@ -26,18 +26,13 @@ export default class Progressbar extends React.Component {
             animation-delay: 0.5s;
           }
 
-          @keyframes fadeIn {
-            to {
-              opacity: 1;
-            }
-          }
-
           .progress-wrapper {
             width: 100%;
             border: 1px solid #fff;
             border-radius: 12px;
             background: rgba(54, 87, 180, 0.1);
           }
+
           progress {
             -webkit-appearance: none;
             -moz-appearance: none;
@@ -52,12 +47,6 @@ export default class Progressbar extends React.Component {
 
           progress::-moz-progress-bar {
             border-radius: 12px;
-          }
-
-          @media screen and (-webkit-min-device-pixel-ratio: 0) {
-            progress {
-              height: 23px;
-            }
           }
 
           progress::-webkit-progress-bar {
@@ -88,6 +77,18 @@ export default class Progressbar extends React.Component {
           @keyframes expandWidth {
             from {
               width: 0;
+            }
+          }
+
+          @keyframes fadeIn {
+            to {
+              opacity: 1;
+            }
+          }
+
+          @media screen and (-webkit-min-device-pixel-ratio: 0) {
+            progress {
+              height: 23px;
             }
           }
         `}</style>
