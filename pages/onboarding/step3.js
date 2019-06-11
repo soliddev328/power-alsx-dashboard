@@ -1,11 +1,17 @@
 import React from "react";
 import Router from "next/router";
 import { Form, withFormik } from "formik";
+import axios from "axios";
 import Header from "../../components/Header";
 import Checkbox from "../../components/Checkbox";
 import BulletItem from "../../components/BulletItem";
+import Progressbar from "../../components/Progressbar";
 import SingleStep from "../../components/SingleStep";
 import Button from "../../components/Button";
+import CONSTANTS from "../../globals";
+
+const { API } =
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 const formikEnhancer = withFormik({
   mapPropsToValues: props => {
@@ -29,21 +35,49 @@ const formikEnhancer = withFormik({
 
 class CustomForm extends React.Component {
   render() {
+    const imageUrl = this.props.project && this.props.project.imageUrl;
+
+    const completion =
+      this.props.project && this.props.project.completion
+        ? this.props.project.completion
+        : false;
+
     return (
       <Form>
         <div className="content">
-          <BulletItem content="10% contracted discount" bulletIcon="dollar" />
-          <BulletItem
-            content="Save 1 month of electric costs every year"
-            bulletIcon="gift"
-          />
-          <BulletItem
-            content="90% reduction in carbon emissions"
-            bulletIcon="co2"
-          />
           <figure>
-            <img src="/static/images/illustrations/t&c.png" alt="" />
+            <img src={imageUrl} alt="" />
           </figure>
+          {completion ? (
+            <>
+              <Progressbar completion={completion} />
+              <div className="items">
+                <BulletItem
+                  content="10% Contracted Discount"
+                  bulletIcon="discount"
+                />
+                <BulletItem
+                  content="No Long-Term Commitment"
+                  bulletIcon="cross"
+                />
+              </div>
+            </>
+          ) : (
+            <div className="items">
+              <BulletItem
+                content="10% contracted discount"
+                bulletIcon="dollar"
+              />
+              <BulletItem
+                content="Save 1 month of electric costs every year"
+                bulletIcon="gift"
+              />
+              <BulletItem
+                content="90% reduction in carbon emissions"
+                bulletIcon="co2"
+              />
+            </div>
+          )}
         </div>
         <Checkbox fieldname="acceptedTermsAndConditions">
           <p className="checkbox__label">
@@ -74,19 +108,44 @@ class CustomForm extends React.Component {
           Let's do this!
         </Button>
         <style jsx>{`
+          .content {
+            margin-bottom: 2rem;
+            height: 370px;
+          }
+
           .disclaimer {
             text-align: center;
           }
+
           figure {
-            max-width: 70%;
-            margin: 2rem auto;
-            border-radius: 4px;
-            border: 1px solid #2479ff;
-            padding: 10px;
-            background-color: #fff;
+            max-width: 100vw;
+            height: 190px;
+            margin: 1.5rem -7% 0 -7%;
+            background-color: transparent;
+            overflow: hidden;
+            display: flex;
           }
+
           img {
             max-width: 100%;
+            object-fit: cover;
+            object-position: top;
+            opacity: 0;
+            animation: fadeIn 400ms ease-in-out forwards;
+            animation-delay: 0.4s;
+          }
+
+          .items {
+            margin-top: 20px;
+            opacity: 0;
+            animation: fadeIn 400ms ease-in-out forwards;
+            animation-delay: 0.6s;
+          }
+
+          @keyframes fadeIn {
+            to {
+              opacity: 1;
+            }
           }
         `}</style>
       </Form>
@@ -101,31 +160,102 @@ class Step3 extends React.Component {
     super(props);
 
     this.state = {
-      currentUtility: ""
+      utility: {
+        project: {
+          imageUrl: "/static/images/illustrations/t&c.png",
+          name: "",
+          completion: ""
+        },
+        agreement: {
+          terms: "",
+          conditions: ""
+        }
+      }
     };
+
+    this.getData = this.getData.bind(this);
   }
 
   componentDidMount() {
     global.analytics.page("Step 3");
+
+    this.getData();
+  }
+
+  getData() {
     let utility = "";
+    let state = "";
 
     if (localStorage.getItem("utility")) {
       utility = JSON.parse(localStorage.getItem("utility"));
     }
 
-    this.setState({ currentUtility: utility });
+    if (localStorage.getItem("state")) {
+      state = JSON.parse(localStorage.getItem("state"));
+    }
+
+    const rawParams = {
+      state: state,
+      utility: encodeURIComponent(utility.label)
+    };
+
+    const generatedParams = Object.entries(rawParams)
+      .map(([key, val]) => `${key}=${val}`)
+      .join("&");
+
+    this.setState({
+      utility: {
+        agreement: {
+          terms: utility.terms,
+          conditions: utility.conditions
+        },
+        project: {
+          imageUrl: "/static/images/illustrations/t&c.png",
+          name: false,
+          completion: false
+        }
+      }
+    });
+
+    axios(`${API}/v1/utilities?${generatedParams}`).then(response => {
+      if (response.data.data) {
+        const data = response.data.data[0];
+        this.setState({
+          utility: {
+            agreement: {
+              terms: data.agreement.termsLink,
+              conditions: data.agreement.conditionsLink
+            },
+            project: {
+              imageUrl:
+                data.projects[0].imageUrl !== null
+                  ? data.projects[0].imageUrl
+                  : "/static/images/illustrations/t&c.png",
+              name: data.projects[0].displayName,
+              completion: data.projects[0].completion
+            }
+          }
+        });
+      }
+    });
   }
 
   render() {
     return (
       <main>
         <Header />
-        <SingleStep title="Great news! We've got a project in your area. Here's what we can offer:">
+        <SingleStep
+          prefix="Great news!"
+          title="We've got a project in your area."
+          suffix={
+            this.state.utility.project && this.state.utility.project.name
+              ? this.state.utility.project.name
+              : ""
+          }
+        >
           <EnhancedCustomForm
-            agreement={{
-              terms: this.state.currentUtility.terms,
-              conditions: this.state.currentUtility.conditions
-            }}
+            agreement={this.state.utility.agreement}
+            project={this.state.utility.project}
           />
         </SingleStep>
         <style jsx>{`
