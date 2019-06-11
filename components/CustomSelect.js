@@ -55,13 +55,8 @@ export default class CustomSelect extends React.Component {
         let conditions = "";
 
         if (response.data.data.agreement) {
-          terms =
-            response.data.data.agreement.termsLink ||
-            response.data.data.agreement.link;
-
-          conditions =
-            response.data.data.agreement.conditionsLink ||
-            response.data.data.agreement.link;
+          terms = response.data.data.agreement.termsLink;
+          conditions = response.data.data.agreement.conditionsLink;
         }
 
         utilities.map((item, i) => {

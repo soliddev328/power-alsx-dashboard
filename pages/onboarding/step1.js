@@ -109,6 +109,12 @@ class Step1 extends React.Component {
               );
               axios(`${API}/v1/zipcodes/${values.postalCode}`).then(
                 response => {
+                  if (response.data.data.state) {
+                    localStorage.setItem(
+                      "state",
+                      JSON.stringify(response.data.data.state)
+                    );
+                  }
                   if (
                     response.data.data.geostatus != "Live" &&
                     response.data.data.geostatus != "Near-Term"
