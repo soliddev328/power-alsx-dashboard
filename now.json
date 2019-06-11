@@ -2,9 +2,7 @@
   "name": "commonenergy",
   "version": 2,
   "builds": [{ "src": "next.config.js", "use": "@now/next" }],
-  "env": {
-    "NODE_ENV": "development"
-  },
+  "alias": ["my.commonenergy.us"],
   "routes": [
     { "src": "/sitemap.xml", "dest": "/static/sitemap.xml" },
     { "src": "/robots.txt", "dest": "/static/robots.txt" },
