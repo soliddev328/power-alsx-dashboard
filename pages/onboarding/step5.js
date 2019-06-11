@@ -31,9 +31,6 @@ class Step5 extends React.Component {
     if (localStorage.getItem("postalCode")) {
       storedPostalCode = JSON.parse(localStorage.getItem("postalCode"));
     }
-    if (localStorage.getItem("postalCode")) {
-      storedPostalCode = JSON.parse(localStorage.getItem("postalCode"));
-    }
     if (localStorage.getItem("leadId")) {
       storedLeadId = localStorage.getItem("leadId");
     }
