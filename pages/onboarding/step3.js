@@ -48,36 +48,18 @@ class CustomForm extends React.Component {
           <figure>
             <img src={imageUrl} alt="" />
           </figure>
-          {completion ? (
-            <>
-              <Progressbar completion={completion} />
-              <div className="items">
-                <BulletItem
-                  content="10% Contracted Discount"
-                  bulletIcon="discount"
-                />
-                <BulletItem
-                  content="No Long-Term Commitment"
-                  bulletIcon="cross"
-                />
-              </div>
-            </>
-          ) : (
-            <div className="items">
-              <BulletItem
-                content="10% contracted discount"
-                bulletIcon="dollar"
-              />
-              <BulletItem
-                content="Save 1 month of electric costs every year"
-                bulletIcon="gift"
-              />
-              <BulletItem
-                content="90% reduction in carbon emissions"
-                bulletIcon="co2"
-              />
-            </div>
-          )}
+          {completion && <Progressbar completion={completion} />}
+          <div className="items">
+            <BulletItem content="10% contracted discount" bulletIcon="dollar" />
+            <BulletItem
+              content="Save 1 month of electric costs every year"
+              bulletIcon="gift"
+            />
+            <BulletItem
+              content="90% reduction in carbon emissions"
+              bulletIcon="co2"
+            />
+          </div>
         </div>
         <Checkbox fieldname="acceptedTermsAndConditions">
           <p className="checkbox__label">
@@ -110,7 +92,7 @@ class CustomForm extends React.Component {
         <style jsx>{`
           .content {
             margin-bottom: 2rem;
-            height: 370px;
+            min-height: 400px;
           }
 
           .disclaimer {
