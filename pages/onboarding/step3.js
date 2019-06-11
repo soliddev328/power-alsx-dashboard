@@ -132,7 +132,7 @@ class CustomForm extends React.Component {
             object-position: top;
             opacity: 0;
             animation: fadeIn 400ms ease-in-out forwards;
-            animation-delay: 0.6s;
+            animation-delay: 0.4s;
           }
 
           .items {
