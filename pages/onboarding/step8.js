@@ -137,12 +137,12 @@ class Step8 extends React.Component {
                       if (response.data.data[0].hasLoggedIn) {
                         localStorage.setItem("partialConnection", false);
                         Router.push({
-                          pathname: "/onboarding/step10"
+                          pathname: "/onboarding/step9"
                         });
                       } else {
                         this.setState({ isLoading: false });
                         Router.push({
-                          pathname: "/onboarding/step9",
+                          pathname: "/onboarding/step8",
                           query: {
                             error: true
                           }
@@ -151,7 +151,7 @@ class Step8 extends React.Component {
                     } else {
                       localStorage.setItem("partialConnection", true);
                       Router.push({
-                        pathname: "/onboarding/step10"
+                        pathname: "/onboarding/step9"
                       });
                     }
                   })
