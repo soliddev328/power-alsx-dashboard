@@ -52,10 +52,6 @@ class CustomForm extends React.Component {
           <div className="items">
             <BulletItem content="10% contracted discount" bulletIcon="dollar" />
             <BulletItem
-              content="Save 1 month of electric costs every year"
-              bulletIcon="gift"
-            />
-            <BulletItem
               content="90% reduction in carbon emissions"
               bulletIcon="co2"
             />
@@ -92,7 +88,7 @@ class CustomForm extends React.Component {
         <style jsx>{`
           .content {
             margin-bottom: 2rem;
-            min-height: 400px;
+            min-height: 370px;
           }
 
           .disclaimer {
