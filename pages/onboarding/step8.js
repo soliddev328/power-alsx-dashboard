@@ -1,17 +1,17 @@
-import React from "react";
-import Router from "next/router";
-import { Formik, Form } from "formik";
-import axios from "axios";
-import { FadeLoader } from "react-spinners";
-import Header from "../../components/Header";
-import Input from "../../components/Input";
-import SingleStep from "../../components/SingleStep";
-import Button from "../../components/Button";
-import Stepper from "../../components/Stepper";
-import CONSTANTS from "../../globals";
+import React from 'react';
+import Router from 'next/router';
+import { Formik, Form } from 'formik';
+import axios from 'axios';
+import { FadeLoader } from 'react-spinners';
+import Header from '../../components/Header';
+import Input from '../../components/Input';
+import SingleStep from '../../components/SingleStep';
+import Button from '../../components/Button';
+import Stepper from '../../components/Stepper';
+import CONSTANTS from '../../globals';
 
 const { API } =
-  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
+  CONSTANTS.NODE_ENV !== 'production' ? CONSTANTS.dev : CONSTANTS.prod;
 
 class Step8 extends React.Component {
   constructor(props) {
@@ -19,10 +19,10 @@ class Step8 extends React.Component {
 
     this.state = {
       isLoading: false,
-      currentUtility: "",
-      forgotPwdLink: "",
-      forgotEmailLink: "",
-      createLoginLink: ""
+      currentUtility: '',
+      forgotPwdLink: '',
+      forgotEmailLink: '',
+      createLoginLink: ''
     };
   }
 
@@ -39,8 +39,8 @@ class Step8 extends React.Component {
   }
 
   getLinks() {
-    let storedAddress = JSON.parse(localStorage.getItem("address"));
-    let storedUtility = JSON.parse(localStorage.getItem("utility"));
+    let storedAddress = JSON.parse(localStorage.getItem('address'));
+    let storedUtility = JSON.parse(localStorage.getItem('utility'));
 
     if (storedUtility && storedAddress) {
       const rawParams = {
@@ -50,7 +50,7 @@ class Step8 extends React.Component {
 
       const generatedParams = Object.entries(rawParams)
         .map(([key, val]) => `${key}=${val}`)
-        .join("&");
+        .join('&');
 
       axios(`${API}/v1/utilities/?${generatedParams}`).then(response => {
         if (response.data.data) {
@@ -65,22 +65,22 @@ class Step8 extends React.Component {
   }
 
   componentDidMount() {
-    global.analytics.page("Step 8");
+    global.analytics.page('Step 8');
 
-    let storedLeadId = "";
-    let storedUtility = "";
-    let storedBillingMethod = "";
+    let storedLeadId = '';
+    let storedUtility = '';
+    let storedBillingMethod = '';
 
-    if (localStorage.getItem("leadId")) {
-      storedLeadId = localStorage.getItem("leadId");
+    if (localStorage.getItem('leadId')) {
+      storedLeadId = localStorage.getItem('leadId');
     }
 
-    if (localStorage.getItem("utility")) {
-      storedUtility = JSON.parse(localStorage.getItem("utility"));
+    if (localStorage.getItem('utility')) {
+      storedUtility = JSON.parse(localStorage.getItem('utility'));
     }
 
-    if (localStorage.getItem("billingMethod")) {
-      storedBillingMethod = JSON.parse(localStorage.getItem("billingMethod"));
+    if (localStorage.getItem('billingMethod')) {
+      storedBillingMethod = JSON.parse(localStorage.getItem('billingMethod'));
     }
 
     this.setState(
@@ -104,8 +104,8 @@ class Step8 extends React.Component {
         )}
         <Formik
           initialValues={{
-            utilityUser: "",
-            utilityPassword: ""
+            utilityUser: '',
+            utilityPassword: ''
           }}
           onSubmit={values => {
             this.setState({ isLoading: true });
@@ -130,28 +130,28 @@ class Step8 extends React.Component {
                   )
                   .then(response => {
                     localStorage.setItem(
-                      "linkedUtility",
+                      'linkedUtility',
                       JSON.stringify(response.data)
                     );
                     if (response.data.data && response.data.data[0]) {
                       if (response.data.data[0].hasLoggedIn) {
-                        localStorage.setItem("partialConnection", false);
+                        localStorage.setItem('partialConnection', false);
                         Router.push({
-                          pathname: "/onboarding/step9"
+                          pathname: '/onboarding/step9'
                         });
                       } else {
                         this.setState({ isLoading: false });
                         Router.push({
-                          pathname: "/onboarding/step8",
+                          pathname: '/onboarding/step8',
                           query: {
                             error: true
                           }
                         });
                       }
                     } else {
-                      localStorage.setItem("partialConnection", true);
+                      localStorage.setItem('partialConnection', true);
                       Router.push({
-                        pathname: "/onboarding/step9"
+                        pathname: '/onboarding/step9'
                       });
                     }
                   })
@@ -172,8 +172,8 @@ class Step8 extends React.Component {
                 <Button
                   primary
                   disabled={
-                    !props.values.utilityUser != "" ||
-                    !props.values.utilityPassword != ""
+                    !props.values.utilityUser != '' ||
+                    !props.values.utilityPassword != ''
                   }
                 >
                   Next
@@ -196,7 +196,7 @@ class Step8 extends React.Component {
     return (
       <Formik
         initialValues={{
-          utilityAccountNumber: ""
+          utilityAccountNumber: ''
         }}
         onSubmit={values => {
           window.firebase
@@ -217,9 +217,9 @@ class Step8 extends React.Component {
                   }
                 )
                 .then(() => {
-                  localStorage.setItem("partialConnection", true);
+                  localStorage.setItem('partialConnection', true);
                   Router.push({
-                    pathname: "/onboarding/step10"
+                    pathname: '/onboarding/step10'
                   });
                 })
                 .catch(() => {});
@@ -231,7 +231,7 @@ class Step8 extends React.Component {
               <Input label="Account Number" fieldname="utilityAccountNumber" />
               <Button
                 primary
-                disabled={!props.values.utilityAccountNumber != ""}
+                disabled={!props.values.utilityAccountNumber != ''}
               >
                 Next
               </Button>
@@ -245,7 +245,7 @@ class Step8 extends React.Component {
   renderForms() {
     const canLinkAccount =
       this.state.billingMethod &&
-      this.state.billingMethod.billingMethod.indexOf("paper") !== 0;
+      this.state.billingMethod.billingMethod.indexOf('paper') !== 0;
 
     return canLinkAccount
       ? this.renderUtilityLogin()
@@ -261,7 +261,7 @@ class Step8 extends React.Component {
             height={15}
             width={4}
             radius={1}
-            color={"#FF69A0"}
+            color={'#FF69A0'}
             loading={true}
           />
           <p>Connecting your account</p>
@@ -290,21 +290,37 @@ class Step8 extends React.Component {
   renderText() {
     const canLinkAccount =
       this.state.billingMethod &&
-      this.state.billingMethod.billingMethod.indexOf("paper") !== 0;
+      this.state.billingMethod.billingMethod.indexOf('paper') !== 0;
     let text = canLinkAccount
       ? "Ok great. Let's connect your account and get you saving!"
-      : "No problem! We can use your account number to get you connected and saving.";
+      : 'No problem! We can use your account number to get you connected and saving.';
 
     if (this.state.currentUtility && this.state.currentUtility.paperOnly)
-      text = "We can use your account number to get you connected and saving.";
+      text = 'We can use your account number to get you connected and saving.';
 
-    return this.state.isLoading ? "" : text;
+    return this.state.isLoading ? '' : text;
   }
 
   render() {
     const canLinkAccount =
       this.state.billingMethod &&
-      this.state.billingMethod.billingMethod.indexOf("paper") !== 0;
+      this.state.billingMethod.billingMethod.indexOf('paper') !== 0;
+
+    console.log(this.state.currentUtility.image);
+    const imageName = this.state.currentUtility.image
+      ? this.state.currentUtility.image.src
+      : `/static/images/utilities/${this.state.currentUtility.replace(
+          /\s/g,
+          ''
+        )}.png`;
+
+    const utilityInfo = {
+      image: {
+        src: imageName ? imageName : '/static/images/utilities/placeholder.png',
+        altText: 'Utility logo'
+      }
+    };
+
     return (
       <main>
         <Header />
@@ -312,8 +328,8 @@ class Step8 extends React.Component {
           {this.state && this.state.currentUtility && !this.state.isLoading && (
             <figure>
               <img
-                src={this.state.currentUtility.image.src}
-                alt={this.state.currentUtility.image.altText}
+                src={utilityInfo.image.src}
+                alt={utilityInfo.image.altText}
               />
             </figure>
           )}
