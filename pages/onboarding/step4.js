@@ -1,16 +1,16 @@
-import React from 'react';
-import Router from 'next/router';
-import { Formik, Form } from 'formik';
-import axios from 'axios';
-import Header from '../../components/Header';
-import Input from '../../components/Input';
-import SingleStep from '../../components/SingleStep';
-import Button from '../../components/Button';
-import Stepper from '../../components/Stepper';
-import CONSTANTS from '../../globals';
+import React from "react";
+import Router from "next/router";
+import { Formik, Form } from "formik";
+import axios from "axios";
+import Header from "../../components/Header";
+import Input from "../../components/Input";
+import SingleStep from "../../components/SingleStep";
+import Button from "../../components/Button";
+import Stepper from "../../components/Stepper";
+import CONSTANTS from "../../globals";
 
 const { API } =
-  CONSTANTS.NODE_ENV !== 'production' ? CONSTANTS.dev : CONSTANTS.prod;
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 class Step4 extends React.Component {
   constructor(props) {
@@ -19,56 +19,56 @@ class Step4 extends React.Component {
     this.state = {
       error: {
         code: false,
-        message: ''
+        message: ""
       }
     };
   }
 
   componentDidMount() {
-    global.analytics.page('Step 4');
+    global.analytics.page("Step 4");
 
-    let storedPostalCode = '';
-    let storedUtility = '';
+    let storedPostalCode = "";
+    let storedUtility = "";
     let storedAgreementChecked = false;
-    let storedPartner = '';
-    let storedReferrer = '';
-    let storedSalesRep = '';
-    let storedAffiliate = '';
-    let storedUtmCampaign = '';
-    let storedUtmMedium = '';
-    let storedUtmSource = '';
+    let storedPartner = "";
+    let storedReferrer = "";
+    let storedSalesRep = "";
+    let storedAffiliate = "";
+    let storedUtmCampaign = "";
+    let storedUtmMedium = "";
+    let storedUtmSource = "";
 
-    if (localStorage.getItem('utility')) {
-      storedUtility = JSON.parse(localStorage.getItem('utility'));
+    if (localStorage.getItem("utility")) {
+      storedUtility = JSON.parse(localStorage.getItem("utility"));
     }
-    if (localStorage.getItem('acceptedTermsAndConditions')) {
+    if (localStorage.getItem("acceptedTermsAndConditions")) {
       storedAgreementChecked = JSON.parse(
-        localStorage.getItem('acceptedTermsAndConditions')
+        localStorage.getItem("acceptedTermsAndConditions")
       );
     }
-    if (localStorage.getItem('postalCode')) {
-      storedPostalCode = JSON.parse(localStorage.getItem('postalCode'));
+    if (localStorage.getItem("postalCode")) {
+      storedPostalCode = JSON.parse(localStorage.getItem("postalCode"));
     }
-    if (localStorage.getItem('Partner')) {
-      storedPartner = localStorage.getItem('Partner');
+    if (localStorage.getItem("Partner")) {
+      storedPartner = localStorage.getItem("Partner");
     }
-    if (localStorage.getItem('Referrer')) {
-      storedReferrer = localStorage.getItem('Referrer');
+    if (localStorage.getItem("Referrer")) {
+      storedReferrer = localStorage.getItem("Referrer");
     }
-    if (localStorage.getItem('SalesRep')) {
-      storedSalesRep = localStorage.getItem('SalesRep');
+    if (localStorage.getItem("SalesRep")) {
+      storedSalesRep = localStorage.getItem("SalesRep");
     }
-    if (localStorage.getItem('Affiliate')) {
-      storedAffiliate = localStorage.getItem('Affiliate');
+    if (localStorage.getItem("Affiliate")) {
+      storedAffiliate = localStorage.getItem("Affiliate");
     }
-    if (localStorage.getItem('UtmCampaign')) {
-      storedUtmCampaign = localStorage.getItem('UtmCampaign');
+    if (localStorage.getItem("UtmCampaign")) {
+      storedUtmCampaign = localStorage.getItem("UtmCampaign");
     }
-    if (localStorage.getItem('UtmMedium')) {
-      storedUtmMedium = localStorage.getItem('UtmMedium');
+    if (localStorage.getItem("UtmMedium")) {
+      storedUtmMedium = localStorage.getItem("UtmMedium");
     }
-    if (localStorage.getItem('UtmSource')) {
-      storedUtmSource = localStorage.getItem('UtmSource');
+    if (localStorage.getItem("UtmSource")) {
+      storedUtmSource = localStorage.getItem("UtmSource");
     }
 
     this.setState({
@@ -91,11 +91,11 @@ class Step4 extends React.Component {
         .auth()
         .createUserWithEmailAndPassword(values.emailAddress, values.password)
         .catch(error => {
-          if (error.code === 'auth/email-already-in-use') {
+          if (error.code === "auth/email-already-in-use") {
             this.setState({
               error: {
                 code: error.code,
-                message: 'Already have a login and password?',
+                message: "Already have a login and password?",
                 link: <a href="/">Go here</a>
               }
             });
@@ -108,7 +108,7 @@ class Step4 extends React.Component {
         .then(userCredential => {
           if (userCredential) {
             window.localStorage.setItem(
-              'firebaseUserId',
+              "firebaseUserId",
               userCredential.user.uid
             );
             window.firebase
@@ -141,7 +141,7 @@ class Step4 extends React.Component {
                   )
                   .then(response => {
                     window.localStorage.setItem(
-                      'leadId',
+                      "leadId",
                       response.data.data.leadId
                     );
 
@@ -149,10 +149,10 @@ class Step4 extends React.Component {
                     global.analytics.identify(response.data.data.leadId, {
                       email: values.emailAddress
                     });
-                    global.analytics.track('Lead Created', {});
+                    global.analytics.track("Lead Created", {});
 
                     Router.push({
-                      pathname: '/onboarding/step5'
+                      pathname: "/onboarding/step5"
                     });
                   });
               });
@@ -160,13 +160,13 @@ class Step4 extends React.Component {
         });
     } else {
       this.setState({
-        error: { code: '6', message: 'Passwords do not match' }
+        error: { code: "6", message: "Passwords do not match" }
       });
     }
   }
 
   render() {
-    const email = localStorage.getItem('email');
+    const email = localStorage.getItem("email");
     return (
       <main>
         <Header />
@@ -174,11 +174,11 @@ class Step4 extends React.Component {
           <Formik
             initialValues={{
               emailAddress: email,
-              password: '',
-              passwordConfirmation: ''
+              password: "",
+              passwordConfirmation: ""
             }}
             onSubmit={values => {
-              window.localStorage.setItem('email', values.emailAddress);
+              window.localStorage.setItem("email", values.emailAddress);
               this.autenticate(values);
             }}
             render={props => (
@@ -202,7 +202,7 @@ class Step4 extends React.Component {
                   required
                 />
                 <p className="error">
-                  {this.state.error.message}{' '}
+                  {this.state.error.message}{" "}
                   {this.state.error.link && this.state.error.link}
                 </p>
                 <Button
@@ -215,7 +215,7 @@ class Step4 extends React.Component {
                     this.setState({
                       error: {
                         code: false,
-                        message: ''
+                        message: ""
                       }
                     });
                   }}
