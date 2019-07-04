@@ -68,6 +68,21 @@ class Step1 extends React.Component {
                       }
                     });
                   } else if (!user.milestones.utilityInfoCompleted) {
+                    const utility = user.milestones.utility;
+                    const imageName = utility.replace(/\s/g, "");
+                    const utilityInfo = {
+                      image: {
+                        src: imageName
+                          ? `/static/images/utilities/${imageName}.png`
+                          : "/static/images/utilities/placeholder.png",
+                        altText: "Utility logo"
+                      },
+                      label: utility
+                    };
+                    localStorage.setItem(
+                      "utility",
+                      JSON.stringify(utilityInfo)
+                    );
                     if (user.milestones.utilityPaperOnly) {
                       localStorage.setItem(
                         "billingMethod",
