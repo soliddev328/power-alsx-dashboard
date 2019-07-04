@@ -1,16 +1,16 @@
-import React from 'react';
-import Router from 'next/router';
-import { Formik, Form } from 'formik';
-import axios from 'axios';
-import SingleStep from '../components/SingleStep';
-import Header from '../components/Header';
-import Separator from '../components/Separator';
-import Input from '../components/Input';
-import Button from '../components/Button';
-import CONSTANTS from '../globals';
+import React from "react";
+import Router from "next/router";
+import { Formik, Form } from "formik";
+import axios from "axios";
+import SingleStep from "../components/SingleStep";
+import Header from "../components/Header";
+import Separator from "../components/Separator";
+import Input from "../components/Input";
+import Button from "../components/Button";
+import CONSTANTS from "../globals";
 
 const { API } =
-  CONSTANTS.NODE_ENV !== 'production' ? CONSTANTS.dev : CONSTANTS.prod;
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 class Step1 extends React.Component {
   constructor(props) {
@@ -18,7 +18,7 @@ class Step1 extends React.Component {
     this.state = {
       error: {
         code: false,
-        message: ''
+        message: ""
       }
     };
   }
@@ -54,37 +54,48 @@ class Step1 extends React.Component {
                 })
                 .then(response => {
                   const user = response.data.data;
-                  window.localStorage.setItem('leadId', user.leadId);
+                  window.localStorage.setItem("leadId", user.leadId);
 
                   if (user.signupCompleted) {
                     Router.push({
-                      pathname: '/dashboard'
+                      pathname: "/dashboard"
                     });
                   } else if (!user.phone) {
                     Router.push({
-                      pathname: '/onboarding/step6',
+                      pathname: "/onboarding/step6",
                       query: {
                         onboardingNotFinished: true
                       }
                     });
                   } else if (!user.milestones.utilityInfoCompleted) {
+                    const utility = user.milestones.utility;
+                    const imageName = utility.replace(/\s/g, "");
+                    const utilityInfo = {
+                      image: {
+                        src: imageName
+                          ? `/static/images/utilities/${imageName}.png`
+                          : "/static/images/utilities/placeholder.png",
+                        altText: "Utility logo"
+                      },
+                      label: utility
+                    };
                     localStorage.setItem(
-                      'utility',
-                      JSON.stringify(user.milestones.utility)
+                      "utility",
+                      JSON.stringify(utilityInfo)
                     );
                     if (user.milestones.utilityPaperOnly) {
                       localStorage.setItem(
-                        'billingMethod',
+                        "billingMethod",
                         JSON.stringify({
-                          billingMethod: 'paper'
+                          billingMethod: "paper"
                         })
                       );
                       Router.push({
-                        pathname: '/onboarding/step8'
+                        pathname: "/onboarding/step8"
                       });
                     } else {
                       Router.push({
-                        pathname: '/onboarding/step7',
+                        pathname: "/onboarding/step7",
                         query: {
                           onboardingNotFinished: true
                         }
@@ -92,7 +103,7 @@ class Step1 extends React.Component {
                     }
                   } else if (!user.milestones.bankInfoCompleted) {
                     Router.push({
-                      pathname: '/onboarding/step9',
+                      pathname: "/onboarding/step9",
                       query: {
                         onboardingNotFinished: true
                       }
@@ -116,8 +127,8 @@ class Step1 extends React.Component {
         <SingleStep prefix="Enter your email address to sign in or create an account">
           <Formik
             initialValues={{
-              emailAddress: '',
-              password: ''
+              emailAddress: "",
+              password: ""
             }}
             onSubmit={values => {
               this.autenticate(values);
@@ -149,7 +160,7 @@ class Step1 extends React.Component {
                       this.setState({
                         error: {
                           code: false,
-                          message: ''
+                          message: ""
                         }
                       });
                     }}
@@ -170,7 +181,7 @@ class Step1 extends React.Component {
             primary
             onClick={() => {
               Router.push({
-                pathname: '/onboarding/step1'
+                pathname: "/onboarding/step1"
               });
             }}
           >
