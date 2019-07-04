@@ -91,9 +91,19 @@ class Step4 extends React.Component {
         .auth()
         .createUserWithEmailAndPassword(values.emailAddress, values.password)
         .catch(error => {
-          this.setState({
-            error: { code: error.code, message: error.message }
-          });
+          if (error.code === "auth/email-already-in-use") {
+            this.setState({
+              error: {
+                code: error.code,
+                message: "Already have a login and password?",
+                link: <a href="/">Go here</a>
+              }
+            });
+          } else {
+            this.setState({
+              error: { code: error.code, message: error.message }
+            });
+          }
         })
         .then(userCredential => {
           if (userCredential) {
@@ -191,7 +201,10 @@ class Step4 extends React.Component {
                   fieldname="passwordConfirmation"
                   required
                 />
-                <p className="error">{this.state.error.message}</p>
+                <p className="error">
+                  {this.state.error.message}{" "}
+                  {this.state.error.link && this.state.error.link}
+                </p>
                 <Button
                   primary
                   disabled={
