@@ -146,6 +146,7 @@ class Step4 extends React.Component {
                     );
 
                     // Call Segement events
+                    global.analytics.alias(response.data.data.leadId);
                     global.analytics.identify(response.data.data.leadId, {
                       email: values.emailAddress
                     });
