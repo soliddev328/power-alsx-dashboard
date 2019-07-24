@@ -118,6 +118,10 @@ class Step5 extends React.Component {
                         }
                       )
                       .then(() => {
+                        global.analytics.identify(this.state.leadId, {
+                          firstName: values.firstName,
+                          lastName: values.lastName
+                        });
                         Router.push({
                           pathname: "/onboarding/step6"
                         });
