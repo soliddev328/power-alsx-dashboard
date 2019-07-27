@@ -1,240 +1,244 @@
-import React from "react";
-import Router from "next/router";
-import { Form, withFormik } from "formik";
-import axios from "axios";
-import Header from "../../components/Header";
-import Checkbox from "../../components/Checkbox";
-import BulletItem from "../../components/BulletItem";
-import Progressbar from "../../components/Progressbar";
-import SingleStep from "../../components/SingleStep";
-import Button from "../../components/Button";
-import CONSTANTS from "../../globals";
+import React from "react"
+import Router from "next/router"
+import { Formik, Form } from "formik"
+import axios from "axios"
+import Header from "../../components/Header"
+import Input from "../../components/Input"
+import SingleStep from "../../components/SingleStep"
+import Button from "../../components/Button"
+import Stepper from "../../components/Stepper"
+import CONSTANTS from "../../globals"
 
 const { API } =
-  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
-
-const formikEnhancer = withFormik({
-  mapPropsToValues: props => {
-    return {
-      terms: props.agreement.terms,
-      conditions: props.agreement.conditions
-    };
-  },
-  mapValuesToPayload: x => x,
-  handleSubmit: payload => {
-    localStorage.setItem(
-      "acceptedTermsAndConditions",
-      JSON.stringify(payload.acceptedTermsAndConditions)
-    );
-    Router.push({
-      pathname: "/onboarding/step4"
-    });
-  },
-  displayName: "CustomForm"
-});
-
-class CustomForm extends React.Component {
-  render() {
-    const imageUrl = this.props.project && this.props.project.imageUrl;
-
-    const completion =
-      this.props.project && this.props.project.completion
-        ? this.props.project.completion
-        : false;
-
-    return (
-      <Form>
-        <div className="content">
-          <figure>
-            <img src={imageUrl} alt="" />
-          </figure>
-          {completion && <Progressbar completion={completion} />}
-          <div className="items">
-            <BulletItem content="10% contracted discount" bulletIcon="dollar" />
-            <BulletItem
-              content="90% reduction in carbon emissions"
-              bulletIcon="co2"
-            />
-          </div>
-        </div>
-        <Checkbox fieldname="acceptedTermsAndConditions">
-          <p className="checkbox__label">
-            I authorize Common Energy to act as my Agent and to enroll me in a
-            clean energy savings program, according to these{" "}
-            <a
-              href={this.props.agreement.terms}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              terms
-            </a>{" "}
-            and{" "}
-            <a
-              href={this.props.agreement.conditions}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              conditions
-            </a>
-            .
-          </p>
-        </Checkbox>
-        <Button
-          primary
-          disabled={!this.props.values.acceptedTermsAndConditions}
-        >
-          Let's do this!
-        </Button>
-        <style jsx>{`
-          .content {
-            margin-bottom: 2rem;
-            min-height: 370px;
-          }
-
-          .disclaimer {
-            text-align: center;
-          }
-
-          figure {
-            max-width: 100vw;
-            height: 190px;
-            margin: 1.5rem -7% 0 -7%;
-            background-color: transparent;
-            overflow: hidden;
-            display: flex;
-          }
-
-          img {
-            max-width: 100%;
-            object-fit: cover;
-            object-position: top;
-            opacity: 0;
-            animation: fadeIn 400ms ease-in-out forwards;
-            animation-delay: 0.4s;
-          }
-
-          .items {
-            margin-top: 20px;
-            opacity: 0;
-            animation: fadeIn 400ms ease-in-out forwards;
-            animation-delay: 0.6s;
-          }
-
-          @keyframes fadeIn {
-            to {
-              opacity: 1;
-            }
-          }
-        `}</style>
-      </Form>
-    );
-  }
-}
-
-const EnhancedCustomForm = formikEnhancer(CustomForm);
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod
 
 class Step3 extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
-      utility: {
-        project: {
-          imageUrl: "/static/images/illustrations/t&c.png",
-          name: "",
-          completion: ""
-        },
-        agreement: {
-          terms: "",
-          conditions: ""
-        }
+      error: {
+        code: false,
+        message: ""
       }
-    };
-
-    this.getData = this.getData.bind(this);
+    }
   }
 
   componentDidMount() {
-    global.analytics.page("Step 3");
+    global.analytics.page("Step 3")
 
-    this.getData();
-  }
-
-  getData() {
-    let utility = "";
-    let state = "";
+    let storedPostalCode = ""
+    let storedUtility = ""
+    let storedAgreementChecked = false
+    let storedPartner = ""
+    let storedReferrer = ""
+    let storedSalesRep = ""
+    let storedAffiliate = ""
+    let storedUtmCampaign = ""
+    let storedUtmMedium = ""
+    let storedUtmSource = ""
+    let storedEmail = ""
 
     if (localStorage.getItem("utility")) {
-      utility = JSON.parse(localStorage.getItem("utility"));
+      storedUtility = JSON.parse(localStorage.getItem("utility"))
     }
-
-    if (localStorage.getItem("state")) {
-      state = JSON.parse(localStorage.getItem("state"));
+    if (localStorage.getItem("acceptedTermsAndConditions")) {
+      storedAgreementChecked = JSON.parse(
+        localStorage.getItem("acceptedTermsAndConditions")
+      )
     }
-
-    const rawParams = {
-      state: state,
-      utility: encodeURIComponent(utility.label)
-    };
-
-    const generatedParams = Object.entries(rawParams)
-      .map(([key, val]) => `${key}=${val}`)
-      .join("&");
+    if (localStorage.getItem("postalCode")) {
+      storedPostalCode = JSON.parse(localStorage.getItem("postalCode"))
+    }
+    if (localStorage.getItem("Partner")) {
+      storedPartner = localStorage.getItem("Partner")
+    }
+    if (localStorage.getItem("Referrer")) {
+      storedReferrer = localStorage.getItem("Referrer")
+    }
+    if (localStorage.getItem("SalesRep")) {
+      storedSalesRep = localStorage.getItem("SalesRep")
+    }
+    if (localStorage.getItem("Affiliate")) {
+      storedAffiliate = localStorage.getItem("Affiliate")
+    }
+    if (localStorage.getItem("UtmCampaign")) {
+      storedUtmCampaign = localStorage.getItem("UtmCampaign")
+    }
+    if (localStorage.getItem("UtmMedium")) {
+      storedUtmMedium = localStorage.getItem("UtmMedium")
+    }
+    if (localStorage.getItem("UtmSource")) {
+      storedUtmSource = localStorage.getItem("UtmSource")
+    }
+    if (localStorage.getItem("email")) {
+      storedEmail = localStorage.getItem("email")
+    }
 
     this.setState({
-      utility: {
-        agreement: {
-          terms: utility.terms,
-          conditions: utility.conditions
-        },
-        project: {
-          imageUrl: "/static/images/illustrations/t&c.png",
-          name: false,
-          completion: false
-        }
-      }
-    });
+      utility: storedUtility.label,
+      postalCode: storedPostalCode,
+      referrer: storedReferrer,
+      partner: storedPartner,
+      salesRep: storedSalesRep,
+      affiliate: storedAffiliate,
+      utmCampaign: storedUtmCampaign,
+      utmMedium: storedUtmMedium,
+      utmSource: storedUtmSource,
+      agreedTermsAndConditions: storedAgreementChecked,
+      email: storedEmail
+    })
+  }
 
-    axios(`${API}/v1/utilities?${generatedParams}`).then(response => {
-      if (response.data.data) {
-        const data = response.data.data[0];
-        this.setState({
-          utility: {
-            agreement: {
-              terms: data.agreement.termsLink,
-              conditions: data.agreement.conditionsLink
-            },
-            project: {
-              imageUrl:
-                data.projects[0].imageUrl !== null
-                  ? data.projects[0].imageUrl
-                  : "/static/images/illustrations/t&c.png",
-              name: data.projects[0].displayName,
-              completion: data.projects[0].completion
-            }
+  autenticate(values) {
+    if (values.password === values.passwordConfirmation) {
+      window.firebase
+        .auth()
+        .createUserWithEmailAndPassword(values.emailAddress, values.password)
+        .catch(error => {
+          if (error.code === "auth/email-already-in-use") {
+            this.setState({
+              error: {
+                code: error.code,
+                message: "Already have a login and password?",
+                link: <a href="/">Go here</a>
+              }
+            })
+          } else {
+            this.setState({
+              error: { code: error.code, message: error.message }
+            })
           }
-        });
-      }
-    });
+        })
+        .then(userCredential => {
+          if (userCredential) {
+            window.localStorage.setItem(
+              "firebaseUserId",
+              userCredential.user.uid
+            )
+            window.firebase
+              .auth()
+              .currentUser.getIdToken(true)
+              .then(idToken => {
+                axios
+                  .post(
+                    `${API}/v1/subscribers`,
+                    {
+                      Email: values.emailAddress,
+                      Password: values.password,
+                      Referrer: this.state.referrer,
+                      Partner: this.state.partner,
+                      SalesRep: this.state.salesRep,
+                      Affiliate: this.state.affiliate,
+                      postalCode: this.state.postalCode,
+                      agreementChecked: !!this.state.agreedTermsAndConditions,
+                      utility: this.state.utility,
+                      utmCampaign: this.state.utmCampaign,
+                      utmMedium: this.state.utmMedium,
+                      utmSource: this.state.utmSource,
+                      firebaseUserId: userCredential.user.uid
+                    },
+                    {
+                      headers: {
+                        Authorization: idToken
+                      }
+                    }
+                  )
+                  .then(response => {
+                    window.localStorage.setItem(
+                      "leadId",
+                      response.data.data.leadId
+                    )
+
+                    // Call Segement events
+                    global.analytics.alias(response.data.data.leadId)
+                    global.analytics.identify(response.data.data.leadId, {
+                      email: values.emailAddress
+                    })
+                    global.analytics.track("Lead Created", {})
+
+                    Router.push({
+                      pathname: "/onboarding/step4"
+                    })
+                  })
+              })
+          }
+        })
+    } else {
+      this.setState({
+        error: { code: "6", message: "Passwords do not match" }
+      })
+    }
   }
 
   render() {
+    const { email, error } = this.state
+
     return (
       <main>
         <Header />
-        <SingleStep
-          prefix="Great news!"
-          title="We've got a project in your area."
-          suffix={
-            this.state.utility.project && this.state.utility.project.name
-              ? this.state.utility.project.name
-              : ""
-          }
-        >
-          <EnhancedCustomForm
-            agreement={this.state.utility.agreement}
-            project={this.state.utility.project}
+        <SingleStep title="Ok, now for the fun stuff. Let's create your account!">
+          <Formik
+            initialValues={{
+              emailAddress: email,
+              password: "",
+              passwordConfirmation: ""
+            }}
+            onSubmit={values => {
+              window.localStorage.setItem("email", values.emailAddress)
+              this.autenticate(values)
+            }}
+            render={props => (
+              <Form>
+                <Input
+                  type="email"
+                  label="Email"
+                  fieldname="emailAddress"
+                  required
+                />
+                <Input
+                  type="password"
+                  label="Password"
+                  fieldname="password"
+                  required
+                />
+                <Input
+                  type="password"
+                  label="Confirm Password"
+                  fieldname="passwordConfirmation"
+                  required
+                />
+                <p className="error">
+                  {error.message} {error.link && error.link}
+                </p>
+                <Button
+                  primary
+                  disabled={
+                    !!props.values.emailAddress !== true ||
+                    !!props.values.password !== true
+                  }
+                  onClick={() => {
+                    this.setState({
+                      error: {
+                        code: false,
+                        message: ""
+                      }
+                    })
+                  }}
+                >
+                  Next
+                </Button>
+              </Form>
+            )}
           />
+          <Stepper>
+            <li className="steplist__step steplist__step-doing">1</li>
+            <li className="steplist__step">2</li>
+            <li className="steplist__step">3</li>
+            <li className="steplist__step">4</li>
+            <li className="steplist__step">5</li>
+            <li className="steplist__step">6</li>
+          </Stepper>
         </SingleStep>
         <style jsx>{`
           main {
@@ -243,21 +247,16 @@ class Step3 extends React.Component {
             max-width: 700px;
             margin: 0 auto;
           }
-          .content {
-            margin: 0 auto;
-          }
-          .disclaimer {
+          .error {
+            height: 52px;
+            margin: 0;
+            padding: 1em 0;
             text-align: center;
-            font-size: 0.8rem;
-            margin-top: 0;
-          }
-          :global(.checkbox__label) {
-            margin-top: 0;
           }
         `}</style>
       </main>
-    );
+    )
   }
 }
 
-export default Step3;
+export default Step3
