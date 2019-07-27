@@ -1,28 +1,35 @@
-import React from "react";
-import { Field } from "formik";
+import React from "react"
+import { Field } from "formik"
 
 export default class Input extends React.Component {
   constructor(props) {
-    super(props);
-    this.inputField = React.createRef();
-    this.scrollOnFocus = this.scrollOnFocus.bind(this);
+    super(props)
+    this.inputField = React.createRef()
+    this.scrollOnFocus = this.scrollOnFocus.bind(this)
+    this.applyValidation = this.applyValidation.bind(this)
   }
 
   applyValidation(x) {
-    const msg = "Please enter a valid email address";
-    x.target.setCustomValidity(msg);
+    let msg
+
+    if (this.props.type === "email") {
+      msg = "Please enter a valid email address"
+    } else if (this.props.type === "password") {
+      msg = "Please complete password fields"
+    }
+    x.target.setCustomValidity(msg)
   }
 
   customSetCustomValidity(e) {
-    e.target.setCustomValidity("");
+    e.target.setCustomValidity("")
   }
 
   scrollOnFocus() {
     if (this.inputField) {
-      const offset = this.inputField.current.getBoundingClientRect().top;
+      const offset = this.inputField.current.getBoundingClientRect().top
       setTimeout(() => {
-        window.scrollTo(0, offset);
-      }, 200);
+        window.scrollTo(0, offset)
+      }, 200)
     }
   }
 
@@ -96,6 +103,6 @@ export default class Input extends React.Component {
           }
         `}</style>
       </div>
-    );
+    )
   }
 }
