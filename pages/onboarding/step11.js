@@ -1,266 +1,201 @@
-import React from "react";
-import { Formik, Form } from "formik";
-import axios from "axios";
-import { Elements, StripeProvider } from "react-stripe-elements";
-import Header from "../../components/Header";
-import Input from "../../components/Input";
-import Button from "../../components/Button";
-import SingleStep from "../../components/SingleStep";
-import Plaid from "../../components/Plaid";
-import Checkout from "../../components/Checkout";
-import Stepper from "../../components/Stepper";
-import CONSTANTS from "../../globals";
-import Router from "next/router";
+import React from "react"
+import Router from "next/router"
+import { Form, withFormik } from "formik"
+import axios from "axios"
+import Header from "../../components/Header"
+import Checkbox from "../../components/Checkbox"
+import BulletItem from "../../components/BulletItem"
+import Progressbar from "../../components/Progressbar"
+import SingleStep from "../../components/SingleStep"
+import Button from "../../components/Button"
+import CONSTANTS from "../../globals"
 
-const { STRIPE_KEY, API } =
-  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
+const { API } =
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod
 
-class Step11 extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      name: "",
-      email: "",
-      errorMessage: "",
-      paymentMethod: "",
-      stripe: null
-    };
-  }
-
-  componentDidMount() {
-    global.analytics.page("Step 11");
-
-    let storedPaymentMethod = "";
-    let storedLeadId = "";
-
-    if (localStorage.getItem("paymentMethod")) {
-      storedPaymentMethod = JSON.parse(localStorage.getItem("paymentMethod"));
+const formikEnhancer = withFormik({
+  mapPropsToValues: props => {
+    return {
+      terms: props.agreement.terms,
+      conditions: props.agreement.conditions
     }
+  },
+  mapValuesToPayload: x => x,
+  handleSubmit: payload => {
+    localStorage.setItem(
+      "acceptedTermsAndConditions",
+      JSON.stringify(payload.acceptedTermsAndConditions)
+    )
+    Router.push({
+      pathname: "/onboarding/step12"
+    })
+  },
+  displayName: "CustomForm"
+})
 
-    if (localStorage.getItem("leadId")) {
-      storedLeadId = localStorage.getItem("leadId");
-    }
-
-    this.setState({
-      paymentMethod: storedPaymentMethod.paymentMethod,
-      leadId: storedLeadId,
-      stripe: window.Stripe(STRIPE_KEY)
-    });
-  }
-
-  renderBankLink() {
+class CustomForm extends React.Component {
+  render() {
     return (
-      <SingleStep>
-        <Plaid />
-        <style jsx>{`
-          .container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            grid-column-gap: 15px;
-            grid-row-gap: 20px;
-            justify-items: center;
-          }
-        `}</style>
-      </SingleStep>
-    );
-  }
-
-  renderCreditCard() {
-    return (
-      <SingleStep title="Please enter your credit card information">
-        <div className="container">
-          <img className="cards" src="/static/images/banks/cards.png" alt="" />
-          <StripeProvider stripe={this.state.stripe}>
-            <Elements>
-              <Checkout stripe={this.state.stripe} name={this.props.name} />
-            </Elements>
-          </StripeProvider>
+      <Form>
+        <div className="content">
+          <div className="items">
+            <BulletItem content="10% contracted discount" bulletIcon="dollar" />
+            <BulletItem
+              content="90% reduction in carbon emissions"
+              bulletIcon="co2"
+            />
+          </div>
         </div>
+        <Checkbox fieldname="acceptedTermsAndConditions">
+          <p className="checkbox__label">
+            I authorize Common Energy to act as my Agent and to enroll me in a
+            clean energy savings program, according to these{" "}
+            <a
+              href={this.props.agreement.terms}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              terms
+            </a>{" "}
+            and{" "}
+            <a
+              href={this.props.agreement.conditions}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              conditions
+            </a>
+            .
+          </p>
+        </Checkbox>
+        <Button
+          primary
+          disabled={!this.props.values.acceptedTermsAndConditions}
+        >
+          Let's do this!
+        </Button>
         <style jsx>{`
-          p {
-            text-align: center;
-            vertical-align: middle;
-          }
-
-          p.small {
+          .content {
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            margin-bottom: 2rem;
+            min-height: 250px;
           }
 
-          p svg {
-            margin-right: 10px;
-          }
-
-          em .highlight {
-            color: #2479ff;
-            font-weight: 700;
-          }
-
-          .cards {
-            display: block;
-            max-width: 35%;
-            margin: 0 auto;
-            margin-bottom: 1em;
-          }
-
-          .container h5 {
-            display: inline-block;
-            font-size: 1rem;
-            font-weight: 700;
-            position: relative;
-            color: #ff69a0;
-          }
-
-          .container h5 svg {
-            position: absolute;
-            right: 0;
-            bottom: 0;
-            transform: translate(50%, 30%);
-          }
-        `}</style>
-        <Stepper>
-          <li className="steplist__step steplist__step-done">1</li>
-          <li className="steplist__step steplist__step-done">2</li>
-          <li className="steplist__step steplist__step-done">3</li>
-          <li className="steplist__step steplist__step-done">4</li>
-          <li className="steplist__step steplist__step-done">5</li>
-          <li className="steplist__step steplist__step-doing">6</li>
-        </Stepper>
-      </SingleStep>
-    );
-  }
-
-  updateInfo(values) {
-    if (values.bankAccountNumber !== values.bankAccountNumberConfirmation) {
-      this.setState({
-        errorMessage: "Bank account number and confirmation don't match"
-      });
-    } else if (values.bankRoutingNumber.length !== 9) {
-      this.setState({
-        errorMessage: "Bank Routing Number should have 9 digits"
-      });
-    } else if (values.bankAccountNumber.length < 4) {
-      this.setState({
-        errorMessage: "Bank Account Number should have at least 4 digits"
-      });
-    } else {
-      window.firebase
-        .auth()
-        .currentUser.getIdToken(true)
-        .then(idToken => {
-          axios
-            .put(
-              `${API}/v1/subscribers`,
-              {
-                leadId: this.state.leadId,
-                bank: values.bankName,
-                bankRoutingNumber: values.bankRoutingNumber,
-                bankAccountNumber: values.bankAccountNumber
-              },
-              {
-                headers: {
-                  Authorization: idToken
-                }
-              }
-            )
-            .then(() => {
-              global.analytics.track("Sign-Up Completed", {});
-              localStorage.setItem("usercreated", true);
-              Router.push({
-                pathname: "/dashboard"
-              });
-            })
-            .catch(() => {});
-        });
-    }
-  }
-
-  renderManualDataInsert() {
-    return (
-      <SingleStep title="Please provide the following information.">
-        <Formik
-          initialValues={{
-            bankName: "",
-            bankRoutingNumber: "",
-            bankAccountNumber: "",
-            bankAccountNumberConfirmation: ""
-          }}
-          onSubmit={values => {
-            this.updateInfo(values);
-          }}
-          render={props => (
-            <Form>
-              <Input type="text" label="Bank Name" fieldname="bankName" />
-              <Input
-                type="text"
-                label="Bank Routing Number (9 digits)"
-                fieldname="bankRoutingNumber"
-                maxLength="9"
-              />
-              <Input
-                type="text"
-                label="Bank Account Number (4 digits min)"
-                fieldname="bankAccountNumber"
-              />
-              <Input
-                type="text"
-                label="Bank Account Number Confirmation"
-                fieldname="bankAccountNumberConfirmation"
-              />
-              <p className="error">{this.state.errorMessage}</p>
-              <Button
-                primary
-                disabled={
-                  !props.values.bankName != "" ||
-                  !props.values.bankRoutingNumber != "" ||
-                  !props.values.bankAccountNumber != "" ||
-                  !props.values.bankAccountNumberConfirmation != ""
-                }
-              >
-                Next
-              </Button>
-            </Form>
-          )}
-        />
-        <style jsx>{`
-          .error {
-            height: 23px;
-            color: red;
+          .disclaimer {
             text-align: center;
           }
+
+          .items {
+            margin-top: 20px;
+            opacity: 0;
+            animation: fadeIn 400ms ease-in-out forwards;
+          }
+
+          @keyframes fadeIn {
+            to {
+              opacity: 1;
+            }
+          }
         `}</style>
-        <Stepper>
-          <li className="steplist__step steplist__step-done">1</li>
-          <li className="steplist__step steplist__step-done">2</li>
-          <li className="steplist__step steplist__step-done">3</li>
-          <li className="steplist__step steplist__step-done">4</li>
-          <li className="steplist__step steplist__step-done">5</li>
-          <li className="steplist__step steplist__step-doing">6</li>
-        </Stepper>
-      </SingleStep>
-    );
+      </Form>
+    )
+  }
+}
+
+const EnhancedCustomForm = formikEnhancer(CustomForm)
+
+class Step11 extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      utility: {
+        project: {
+          imageUrl: "/static/images/illustrations/t&c.png",
+          name: "",
+          completion: ""
+        },
+        agreement: {
+          terms: "",
+          conditions: ""
+        }
+      }
+    }
+
+    this.getData = this.getData.bind(this)
   }
 
-  renderForm() {
-    const { paymentMethod } = this.state;
-    if (paymentMethod === "automatic") {
-      return this.renderBankLink();
-    } else if (paymentMethod === "creditCard") {
-      return this.renderCreditCard();
-    } else {
-      return this.renderManualDataInsert();
+  componentDidMount() {
+    global.analytics.page("Step 11")
+
+    this.getData()
+  }
+
+  getData() {
+    let utility = ""
+    let state = ""
+
+    if (localStorage.getItem("utility")) {
+      utility = JSON.parse(localStorage.getItem("utility"))
     }
+
+    if (localStorage.getItem("state")) {
+      state = JSON.parse(localStorage.getItem("state"))
+    }
+
+    const rawParams = {
+      state: state,
+      utility: encodeURIComponent(utility.label)
+    }
+
+    const generatedParams = Object.entries(rawParams)
+      .map(([key, val]) => `${key}=${val}`)
+      .join("&")
+
+    this.setState({
+      utility: {
+        agreement: {
+          terms: utility.terms,
+          conditions: utility.conditions
+        },
+        project: {
+          imageUrl: "/static/images/illustrations/t&c.png",
+          name: false,
+          completion: false
+        }
+      }
+    })
+
+    axios(`${API}/v1/utilities?${generatedParams}`).then(response => {
+      if (response.data.data) {
+        const data = response.data.data[0]
+        this.setState({
+          utility: {
+            agreement: {
+              terms: data.agreement.termsLink,
+              conditions: data.agreement.conditionsLink
+            }
+          }
+        })
+      }
+    })
   }
 
   render() {
-    const { paymentMethod } = this.state;
     return (
       <main>
         <Header />
-        {paymentMethod && this.renderForm()}
+        <SingleStep
+          prefix="Great news!"
+          title="We've got a project in your area."
+        >
+          <EnhancedCustomForm
+            agreement={this.state.utility.agreement}
+            project={this.state.utility.project}
+          />
+        </SingleStep>
         <style jsx>{`
           main {
             display: block;
@@ -268,10 +203,21 @@ class Step11 extends React.Component {
             max-width: 700px;
             margin: 0 auto;
           }
+          .content {
+            margin: 0 auto;
+          }
+          .disclaimer {
+            text-align: center;
+            font-size: 0.8rem;
+            margin-top: 0;
+          }
+          :global(.checkbox__label) {
+            margin-top: 0;
+          }
         `}</style>
       </main>
-    );
+    )
   }
 }
 
-export default Step11;
+export default Step11

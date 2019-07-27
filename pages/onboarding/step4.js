@@ -1,225 +1,176 @@
-import React from "react";
-import Router from "next/router";
-import { Formik, Form } from "formik";
-import axios from "axios";
-import Header from "../../components/Header";
-import Input from "../../components/Input";
-import SingleStep from "../../components/SingleStep";
-import Button from "../../components/Button";
-import Stepper from "../../components/Stepper";
-import CONSTANTS from "../../globals";
+import React from "react"
+import Router from "next/router"
+import { Formik, Form } from "formik"
+import axios from "axios"
+import GeoSuggest from "../../components/GeoSuggest"
+import Header from "../../components/Header"
+import Input from "../../components/Input"
+import SingleStep from "../../components/SingleStep"
+import Button from "../../components/Button"
+import Stepper from "../../components/Stepper"
+import CONSTANTS from "../../globals"
 
 const { API } =
-  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod
 
 class Step4 extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
-      error: {
-        code: false,
-        message: ""
-      }
-    };
+      postalCode: "",
+      errorMessage: ""
+    }
   }
 
   componentDidMount() {
-    global.analytics.page("Step 4");
+    global.analytics.page("Step 4")
+    let storedPostalCode = ""
+    let storedLeadId = ""
+    let storedFname = ""
+    let storedLname = ""
 
-    let storedPostalCode = "";
-    let storedUtility = "";
-    let storedAgreementChecked = false;
-    let storedPartner = "";
-    let storedReferrer = "";
-    let storedSalesRep = "";
-    let storedAffiliate = "";
-    let storedUtmCampaign = "";
-    let storedUtmMedium = "";
-    let storedUtmSource = "";
-
-    if (localStorage.getItem("utility")) {
-      storedUtility = JSON.parse(localStorage.getItem("utility"));
-    }
-    if (localStorage.getItem("acceptedTermsAndConditions")) {
-      storedAgreementChecked = JSON.parse(
-        localStorage.getItem("acceptedTermsAndConditions")
-      );
-    }
     if (localStorage.getItem("postalCode")) {
-      storedPostalCode = JSON.parse(localStorage.getItem("postalCode"));
+      storedPostalCode = JSON.parse(localStorage.getItem("postalCode"))
     }
-    if (localStorage.getItem("Partner")) {
-      storedPartner = localStorage.getItem("Partner");
+    if (localStorage.getItem("leadId")) {
+      storedLeadId = localStorage.getItem("leadId")
     }
-    if (localStorage.getItem("Referrer")) {
-      storedReferrer = localStorage.getItem("Referrer");
+    if (localStorage.getItem("fname")) {
+      storedFname = localStorage.getItem("fname")
     }
-    if (localStorage.getItem("SalesRep")) {
-      storedSalesRep = localStorage.getItem("SalesRep");
-    }
-    if (localStorage.getItem("Affiliate")) {
-      storedAffiliate = localStorage.getItem("Affiliate");
-    }
-    if (localStorage.getItem("UtmCampaign")) {
-      storedUtmCampaign = localStorage.getItem("UtmCampaign");
-    }
-    if (localStorage.getItem("UtmMedium")) {
-      storedUtmMedium = localStorage.getItem("UtmMedium");
-    }
-    if (localStorage.getItem("UtmSource")) {
-      storedUtmSource = localStorage.getItem("UtmSource");
+    if (localStorage.getItem("lname")) {
+      storedLname = localStorage.getItem("lname")
     }
 
     this.setState({
-      utility: storedUtility.label,
       postalCode: storedPostalCode,
-      referrer: storedReferrer,
-      partner: storedPartner,
-      salesRep: storedSalesRep,
-      affiliate: storedAffiliate,
-      utmCampaign: storedUtmCampaign,
-      utmMedium: storedUtmMedium,
-      utmSource: storedUtmSource,
-      agreedTermsAndConditions: storedAgreementChecked
-    });
+      leadId: storedLeadId,
+      firstName: storedFname,
+      lastName: storedLname
+    })
   }
 
-  autenticate(values) {
-    if (values.password === values.passwordConfirmation) {
-      window.firebase
-        .auth()
-        .createUserWithEmailAndPassword(values.emailAddress, values.password)
-        .catch(error => {
-          if (error.code === "auth/email-already-in-use") {
-            this.setState({
-              error: {
-                code: error.code,
-                message: "Already have a login and password?",
-                link: <a href="/">Go here</a>
-              }
-            });
-          } else {
-            this.setState({
-              error: { code: error.code, message: error.message }
-            });
-          }
-        })
-        .then(userCredential => {
-          if (userCredential) {
-            window.localStorage.setItem(
-              "firebaseUserId",
-              userCredential.user.uid
-            );
-            window.firebase
-              .auth()
-              .currentUser.getIdToken(true)
-              .then(idToken => {
-                axios
-                  .post(
-                    `${API}/v1/subscribers`,
-                    {
-                      Email: values.emailAddress,
-                      Password: values.password,
-                      Referrer: this.state.referrer,
-                      Partner: this.state.partner,
-                      SalesRep: this.state.salesRep,
-                      Affiliate: this.state.affiliate,
-                      postalCode: this.state.postalCode,
-                      agreementChecked: !!this.state.agreedTermsAndConditions,
-                      utility: this.state.utility,
-                      utmCampaign: this.state.utmCampaign,
-                      utmMedium: this.state.utmMedium,
-                      utmSource: this.state.utmSource,
-                      firebaseUserId: userCredential.user.uid
-                    },
-                    {
-                      headers: {
-                        Authorization: idToken
-                      }
-                    }
-                  )
-                  .then(response => {
-                    window.localStorage.setItem(
-                      "leadId",
-                      response.data.data.leadId
-                    );
+  getPostalCode(values) {
+    const components = values.address
+      ? values.address.gmaps.address_components
+      : null
 
-                    // Call Segement events
-                    global.analytics.alias(response.data.data.leadId);
-                    global.analytics.identify(response.data.data.leadId, {
-                      email: values.emailAddress
-                    });
-                    global.analytics.track("Lead Created", {});
+    const postalCode = components
+      ? components.find(x => x.types[0] == "postal_code")
+      : null
 
-                    Router.push({
-                      pathname: "/onboarding/step5"
-                    });
-                  });
-              });
-          }
-        });
-    } else {
-      this.setState({
-        error: { code: "6", message: "Passwords do not match" }
-      });
-    }
+    return postalCode ? postalCode.long_name : ""
+  }
+
+  getStateAddress(values) {
+    const components = values.address
+      ? values.address.gmaps.address_components
+      : null
+    const state = components
+      ? components.find(x => x.types[0] == "administrative_area_level_1")
+      : null
+
+    return state ? state.short_name : ""
   }
 
   render() {
-    const email = localStorage.getItem("email");
     return (
       <main>
         <Header />
-        <SingleStep title="Ok, now for the fun stuff. Let's create your account!">
+        <SingleStep title="And what is your name and address please?">
           <Formik
             initialValues={{
-              emailAddress: email,
-              password: "",
-              passwordConfirmation: ""
+              firstName: this.state.firstName,
+              lastName: this.state.lastName,
+              address: ""
             }}
             onSubmit={values => {
-              window.localStorage.setItem("email", values.emailAddress);
-              this.autenticate(values);
+              const arrayAddress = values.address.description.split(",")
+              const street = arrayAddress[0] ? arrayAddress[0] : ""
+              const city = arrayAddress[1]
+                ? arrayAddress[1].replace(/\s/g, "")
+                : ""
+
+              const address = {
+                street: street,
+                city: city,
+                state: this.getStateAddress(values),
+                postalCode: this.getPostalCode(values),
+                apt: values.apt ? values.apt : ""
+              }
+
+              const name = {
+                firstName: values.firstName,
+                lastName: values.lastName
+              }
+
+              localStorage.setItem("address", JSON.stringify(address))
+              localStorage.setItem("username", JSON.stringify(name))
+
+              if (address.postalCode === this.state.postalCode) {
+                window.firebase
+                  .auth()
+                  .currentUser.getIdToken(true)
+                  .then(idToken => {
+                    axios
+                      .put(
+                        `${API}/v1/subscribers`,
+                        {
+                          leadId: this.state.leadId,
+                          firstName: values.firstName,
+                          lastName: values.lastName,
+                          street: address.street,
+                          state: address.state,
+                          city: address.city
+                        },
+                        {
+                          headers: {
+                            Authorization: idToken
+                          }
+                        }
+                      )
+                      .then(() => {
+                        global.analytics.identify(this.state.leadId, {
+                          firstName: values.firstName,
+                          lastName: values.lastName
+                        })
+                        Router.push({
+                          pathname: "/onboarding/step5"
+                        })
+                      })
+                      .catch(() => {})
+                  })
+              } else {
+                this.setState({
+                  errorMessage:
+                    "Address has different zip code than the one initially provided."
+                })
+              }
             }}
             render={props => (
               <Form>
-                <Input
-                  type="email"
-                  label="Email"
-                  fieldname="emailAddress"
-                  required
+                <div className="two-columns two-columns--responsive">
+                  <Input label="First Name" fieldname="firstName" autoFocus />
+                  <Input label="Last Name" fieldname="lastName" />
+                </div>
+                <GeoSuggest
+                  label="Address"
+                  fieldname="address"
+                  value={props.values.address}
+                  onChange={props.setFieldValue}
+                  onBlur={props.setFieldTouched}
+                  error={props.errors.topics}
+                  touched={props.touched.topics}
                 />
-                <Input
-                  type="password"
-                  label="Password"
-                  fieldname="password"
-                  required
-                />
-                <Input
-                  type="password"
-                  label="Confirm Password"
-                  fieldname="passwordConfirmation"
-                  required
-                />
-                <p className="error">
-                  {this.state.error.message}{" "}
-                  {this.state.error.link && this.state.error.link}
-                </p>
+                <p className="error">{this.state.errorMessage}</p>
                 <Button
                   primary
                   disabled={
-                    !!props.values.emailAddress !== true ||
-                    !!props.values.password !== true
+                    !props.values.firstName != "" ||
+                    !props.values.lastName != "" ||
+                    !props.values.address != ""
                   }
-                  onClick={() => {
-                    this.setState({
-                      error: {
-                        code: false,
-                        message: ""
-                      }
-                    });
-                  }}
                 >
                   Next
                 </Button>
@@ -243,15 +194,14 @@ class Step4 extends React.Component {
             margin: 0 auto;
           }
           .error {
-            height: 52px;
-            margin: 0;
-            padding: 1em 0;
+            height: 45px;
+            color: red;
             text-align: center;
           }
         `}</style>
       </main>
-    );
+    )
   }
 }
 
-export default Step4;
+export default Step4
