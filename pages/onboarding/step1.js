@@ -54,25 +54,14 @@ class Step1 extends React.Component {
     let storedPostalCode = ""
 
     if (partnerReferralCookie) {
-      window.localStorage.setItem("Partner", partnerReferralCookie)
+      localStorage.setItem("Partner", partnerReferralCookie)
     }
-    if (this.props && this.props.query.partner) {
-      window.localStorage.setItem("Partner", this.props.query.partner)
+    if (salesRepCookie) {
+      localStorage.setItem("SalesRep", salesRepCookie)
     }
     if (customerReferralCookie) {
-      window.localStorage.setItem("Referrer", customerReferralCookie)
+      localStorage.setItem("Referrer", customerReferralCookie)
     }
-    if (this.props && this.props.query.advocate) {
-      window.localStorage.setItem("Referrer", this.props.query.advocate)
-    }
-    if (salesRepCookie) window.localStorage.setItem("SalesRep", salesRepCookie)
-    if (this.props && this.props.query.rep) {
-      window.localStorage.setItem("SalesRep", this.props.query.rep)
-    }
-    if (this.props && this.props.query.affiliate) {
-      localStorage.setItem("Affiliate", this.props.query.affiliate)
-    }
-
     if (utmCampaignCookie) {
       localStorage.setItem("UtmCampaign", utmCampaignCookie)
     }
@@ -84,6 +73,18 @@ class Step1 extends React.Component {
     }
 
     if (this.props) {
+      if (this.props.query.partner) {
+        localStorage.setItem("Partner", this.props.query.partner)
+      }
+      if (this.props.query.advocate) {
+        localStorage.setItem("Referrer", this.props.query.advocate)
+      }
+      if (this.props.query.rep) {
+        localStorage.setItem("SalesRep", this.props.query.rep)
+      }
+      if (this.props.query.affiliate) {
+        localStorage.setItem("Affiliate", this.props.query.affiliate)
+      }
       if (this.props.query.utm_campaign) {
         localStorage.setItem("UtmCampaign", this.props.query.utm_campaign)
       }
@@ -93,33 +94,7 @@ class Step1 extends React.Component {
       if (this.props.query.utm_medium) {
         localStorage.setItem("UtmMedium", this.props.query.utm_medium)
       }
-
-      if (this.props.query.zipcode) {
-        localStorage.setItem("postalCode", this.props.query.zipcode)
-      }
-      if (this.props.query.utility) {
-        localStorage.setItem("utility", this.props.query.utility)
-      }
-      if (this.props.query.email) {
-        localStorage.setItem("email", this.props.query.email)
-      }
-      if (this.props.query.fname) {
-        localStorage.setItem("fname", this.props.query.fname)
-      }
-      if (this.props.query.lname) {
-        localStorage.setItem("lname", this.props.query.lname)
-      }
     }
-
-    if (localStorage.getItem("address")) {
-      storedAddress = JSON.parse(localStorage.getItem("address"))
-    }
-
-    if (localStorage.getItem("postalCode")) {
-      storedPostalCode = JSON.parse(localStorage.getItem("postalCode"))
-    }
-
-    this.setState({ address: storedAddress, postalCode: storedPostalCode })
   }
 
   capitalize(word) {
@@ -128,7 +103,6 @@ class Step1 extends React.Component {
 
   autenticate(values) {
     localStorage.setItem("email", values.emailAddress)
-
     localStorage.setItem("postalCode", JSON.stringify(values.postalCode))
 
     if (values.password === values.passwordConfirmation) {
