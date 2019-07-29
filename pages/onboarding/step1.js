@@ -41,8 +41,7 @@ class Step1 extends React.Component {
     localStorage.removeItem("postalCode")
     localStorage.removeItem("utility")
     localStorage.removeItem("email")
-    localStorage.removeItem("fname")
-    localStorage.removeItem("lname")
+    localStorage.removeItem("username")
 
     let customerReferralCookie = Cookie.get("customer_referral")
     let partnerReferralCookie = Cookie.get("partner_referral")
@@ -70,12 +69,6 @@ class Step1 extends React.Component {
     }
     if (utmMediumCookie) {
       localStorage.setItem("UtmMedium", utmMediumCookie)
-    }
-    if (localStorage.getItem("fname")) {
-      storedFname = localStorage.getItem("fname")
-    }
-    if (localStorage.getItem("lname")) {
-      storedLname = localStorage.getItem("lname")
     }
 
     if (this.props) {
@@ -156,7 +149,7 @@ class Step1 extends React.Component {
                     Affiliate: this.state.affiliate,
                     postalCode: this.state.postalCode,
                     agreementChecked: !!this.state.agreedTermsAndConditions,
-                    utility: this.state.utility,
+                    utility: values.currentUtility,
                     utmCampaign: this.state.utmCampaign,
                     utmMedium: this.state.utmMedium,
                     utmSource: this.state.utmSource,
