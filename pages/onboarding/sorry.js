@@ -16,6 +16,7 @@ class Sorry extends React.Component {
     global.analytics.page("Out of area");
 
     let storedName = "";
+    let storedPostalCode = "";
     let storedAddress = "";
     let storedPartner = "";
     let storedReferrer = "";
@@ -26,6 +27,9 @@ class Sorry extends React.Component {
 
     if (localStorage.getItem("username")) {
       storedName = JSON.parse(localStorage.getItem("username"));
+    }
+    if (localStorage.getItem("postalCode")) {
+      storedPostalCode = JSON.parse(localStorage.getItem("postalCode"));
     }
     if (localStorage.getItem("address")) {
       storedAddress = JSON.parse(localStorage.getItem("address"));
@@ -51,6 +55,7 @@ class Sorry extends React.Component {
 
     this.setState({
       name: storedName,
+      postalCode: storedPostalCode,
       address: storedAddress,
       referrer: storedReferrer,
       partner: storedPartner,
@@ -77,7 +82,7 @@ class Sorry extends React.Component {
               axios
                 .post(`${API}/v1/subscribers`, {
                   LastName: values.email,
-                  postalCode: this.state.address.postalCode,
+                  postalCode: this.state.postalCode,
                   Phone: "9999999999",
                   Email: values.email,
                   Referrer: this.state.referrer,
