@@ -152,17 +152,17 @@ class Step1 extends React.Component {
                   .post(
                     `${API}/v1/subscribers`,
                     {
-                      Email: values.emailAddress,
-                      Password: values.password,
+                      email: values.emailAddress,
+                      password: values.password,
                       firstName: name.firstName,
                       lastName: name.lastName,
                       utility: utility.label,
                       postalCode: values.postalCode,
                       firebaseUserId: userCredential.user.uid,
-                      Referrer: this.state.referrer,
-                      Partner: this.state.partner,
-                      SalesRep: this.state.salesRep,
-                      Affiliate: this.state.affiliate,
+                      referrer: this.state.referrer,
+                      partner: this.state.partner,
+                      salesRep: this.state.salesRep,
+                      affiliate: this.state.affiliate,
                       utmCampaign: this.state.utmCampaign,
                       utmMedium: this.state.utmMedium,
                       utmSource: this.state.utmSource
