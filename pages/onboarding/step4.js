@@ -7,13 +7,13 @@ import SingleStep from "../../components/SingleStep"
 import Button from "../../components/Button"
 import Stepper from "../../components/Stepper"
 
-class Step6 extends React.Component {
+class Step4 extends React.Component {
   constructor(props) {
     super(props)
   }
 
   componentDidMount() {
-    global.analytics.page("Step 6")
+    global.analytics.page("Step 4")
   }
 
   render() {
@@ -28,7 +28,7 @@ class Step6 extends React.Component {
             onSubmit={values => {
               localStorage.setItem("billingMethod", JSON.stringify(values))
               Router.push({
-                pathname: "/onboarding/step7"
+                pathname: "/onboarding/step5"
               })
             }}
             render={props => (
@@ -75,4 +75,4 @@ class Step6 extends React.Component {
   }
 }
 
-export default Step6
+export default Step4
