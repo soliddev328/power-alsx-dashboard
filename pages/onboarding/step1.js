@@ -71,6 +71,12 @@ class Step1 extends React.Component {
     if (utmMediumCookie) {
       localStorage.setItem("UtmMedium", utmMediumCookie)
     }
+    if (localStorage.getItem("fname")) {
+      storedFname = localStorage.getItem("fname")
+    }
+    if (localStorage.getItem("lname")) {
+      storedLname = localStorage.getItem("lname")
+    }
 
     if (this.props) {
       if (this.props.query.partner) {
@@ -102,105 +108,106 @@ class Step1 extends React.Component {
   }
 
   autenticate(values) {
+    const name = {
+      firstName: values.firstName,
+      lastName: values.lastName
+    }
+
     localStorage.setItem("email", values.emailAddress)
     localStorage.setItem("postalCode", JSON.stringify(values.postalCode))
+    localStorage.setItem("username", JSON.stringify(name))
 
-    if (values.password === values.passwordConfirmation) {
-      window.firebase
-        .auth()
-        .createUserWithEmailAndPassword(values.emailAddress, values.password)
-        .catch(error => {
-          if (error.code === "auth/email-already-in-use") {
-            this.setState({
-              error: {
-                code: error.code,
-                message: "Already have a login and password?",
-                link: <a href="/">Go here</a>
-              }
-            })
-          } else {
-            this.setState({
-              error: { code: error.code, message: error.message }
-            })
-          }
-        })
-        .then(userCredential => {
-          if (userCredential) {
-            window.localStorage.setItem(
-              "firebaseUserId",
-              userCredential.user.uid
-            )
-            window.firebase
-              .auth()
-              .currentUser.getIdToken(true)
-              .then(idToken => {
-                axios
-                  .post(
-                    `${API}/v1/subscribers`,
-                    {
-                      Email: values.emailAddress,
-                      Password: values.password,
-                      Referrer: this.state.referrer,
-                      Partner: this.state.partner,
-                      SalesRep: this.state.salesRep,
-                      Affiliate: this.state.affiliate,
-                      postalCode: this.state.postalCode,
-                      agreementChecked: !!this.state.agreedTermsAndConditions,
-                      utility: this.state.utility,
-                      utmCampaign: this.state.utmCampaign,
-                      utmMedium: this.state.utmMedium,
-                      utmSource: this.state.utmSource,
-                      firebaseUserId: userCredential.user.uid
-                    },
-                    {
-                      headers: {
-                        Authorization: idToken
-                      }
-                    }
-                  )
-                  .then(response => {
-                    window.localStorage.setItem(
-                      "leadId",
-                      response.data.data.leadId
-                    )
-
-                    if (values.currentUtility !== "") {
-                      localStorage.setItem(
-                        "utility",
-                        JSON.stringify(values.currentUtility)
-                      )
-                      Router.push({
-                        pathname: "/onboarding/step2"
-                      })
-                    } else if (this.select.current.state.singleOption) {
-                      localStorage.setItem(
-                        "utility",
-                        JSON.stringify(this.select.current.state.options[0])
-                      )
-                      Router.push({
-                        pathname: "/onboarding/step2"
-                      })
-                    } else {
-                      Router.push({
-                        pathname: "/onboarding/sorry"
-                      })
-                    }
-
-                    // Call Segement events
-                    global.analytics.alias(response.data.data.leadId)
-                    global.analytics.identify(response.data.data.leadId, {
-                      email: values.emailAddress
-                    })
-                    global.analytics.track("Lead Created", {})
-                  })
-              })
-          }
-        })
-    } else {
-      this.setState({
-        error: { code: "6", message: "Passwords do not match" }
+    window.firebase
+      .auth()
+      .createUserWithEmailAndPassword(values.emailAddress, values.password)
+      .catch(error => {
+        if (error.code === "auth/email-already-in-use") {
+          this.setState({
+            error: {
+              code: error.code,
+              message: "Already have a login and password?",
+              link: <a href="/">Go here</a>
+            }
+          })
+        } else {
+          this.setState({
+            error: { code: error.code, message: error.message }
+          })
+        }
       })
-    }
+      .then(userCredential => {
+        if (userCredential) {
+          window.localStorage.setItem("firebaseUserId", userCredential.user.uid)
+          window.firebase
+            .auth()
+            .currentUser.getIdToken(true)
+            .then(idToken => {
+              axios
+                .post(
+                  `${API}/v1/subscribers`,
+                  {
+                    Email: values.emailAddress,
+                    Password: values.password,
+                    firstName: values.firstName,
+                    lastName: values.lastName,
+                    Referrer: this.state.referrer,
+                    Partner: this.state.partner,
+                    SalesRep: this.state.salesRep,
+                    Affiliate: this.state.affiliate,
+                    postalCode: this.state.postalCode,
+                    agreementChecked: !!this.state.agreedTermsAndConditions,
+                    utility: this.state.utility,
+                    utmCampaign: this.state.utmCampaign,
+                    utmMedium: this.state.utmMedium,
+                    utmSource: this.state.utmSource,
+                    firebaseUserId: userCredential.user.uid
+                  },
+                  {
+                    headers: {
+                      Authorization: idToken
+                    }
+                  }
+                )
+                .then(response => {
+                  window.localStorage.setItem(
+                    "leadId",
+                    response.data.data.leadId
+                  )
+
+                  if (values.currentUtility !== "") {
+                    localStorage.setItem(
+                      "utility",
+                      JSON.stringify(values.currentUtility)
+                    )
+                    Router.push({
+                      pathname: "/onboarding/step2"
+                    })
+                  } else if (this.select.current.state.singleOption) {
+                    localStorage.setItem(
+                      "utility",
+                      JSON.stringify(this.select.current.state.options[0])
+                    )
+                    Router.push({
+                      pathname: "/onboarding/step2"
+                    })
+                  } else {
+                    Router.push({
+                      pathname: "/onboarding/sorry"
+                    })
+                  }
+
+                  // Call Segement events
+                  global.analytics.alias(response.data.data.leadId)
+                  global.analytics.identify(response.data.data.leadId, {
+                    firstName: values.firstName,
+                    lastName: values.lastName,
+                    email: values.emailAddress
+                  })
+                  global.analytics.track("Lead Created", {})
+                })
+            })
+        }
+      })
   }
 
   static getInitialProps({ query }) {
@@ -208,7 +215,7 @@ class Step1 extends React.Component {
   }
 
   render() {
-    const { email, error } = this.state
+    const { email, error, firstName, lastName } = this.state
     const { query } = this.props
 
     return (
@@ -220,8 +227,9 @@ class Step1 extends React.Component {
               postalCode: query.zipcode,
               currentUtility: "",
               emailAddress: email,
-              password: "",
-              passwordConfirmation: ""
+              firstName: firstName,
+              lastName: lastName,
+              password: ""
             }}
             onSubmit={values => {
               this.autenticate(values)
@@ -229,6 +237,10 @@ class Step1 extends React.Component {
             render={props => (
               <React.Fragment>
                 <Form>
+                  <div className="two-columns two-columns--responsive">
+                    <Input label="First Name" fieldname="firstName" autoFocus />
+                    <Input label="Last Name" fieldname="lastName" />
+                  </div>
                   <ZipCodeInput
                     value={props.values.postalCode}
                     onChangeEvent={props.setFieldValue}
@@ -258,16 +270,12 @@ class Step1 extends React.Component {
                     fieldname="password"
                     required
                   />
-                  <Input
-                    type="password"
-                    label="Confirm Password"
-                    fieldname="passwordConfirmation"
-                    required
-                  />
                   <p className="error">{error.message} </p>
                   <Button
                     primary
                     disabled={
+                      !!props.values.firstName !== true ||
+                      !!props.values.lastName !== true ||
                       !!props.values.postalCode !== true ||
                       !!props.values.emailAddress !== true ||
                       !!props.values.password !== true

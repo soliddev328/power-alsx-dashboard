@@ -122,31 +122,29 @@ export default class CustomSelect extends React.Component {
 
     return (
       <div ref={this.inputField} onClick={this.scrollOnFocus}>
-        <div style={{ margin: "1rem 0" }}>
-          <label className="select__label" htmlFor={this.props.fieldname}>
-            {this.props.label}
-          </label>
-          <Select
-            isDisabled={!options || this.props.disabled}
-            isSearchable={false}
-            components={{
-              SingleValue: CustomOption,
-              Option: CustomOption
-            }}
-            getOptionValue={getOptionValue}
-            className="select__wrapper"
-            classNamePrefix="select"
-            id={this.props.fieldname}
-            name={this.props.fieldname}
-            options={options && options.length > 0 ? options : false}
-            onChange={this.handleChange}
-            onBlur={this.handleBlur}
-            value={
-              options && options.length === 1 ? options[0] : this.props.value
-            }
-            placeholder="Select your utility"
-          />
-        </div>
+        <label className="select__label" htmlFor={this.props.fieldname}>
+          {this.props.label}
+        </label>
+        <Select
+          isDisabled={!options || this.props.disabled}
+          isSearchable={false}
+          components={{
+            SingleValue: CustomOption,
+            Option: CustomOption
+          }}
+          getOptionValue={getOptionValue}
+          className="select__wrapper"
+          classNamePrefix="select"
+          id={this.props.fieldname}
+          name={this.props.fieldname}
+          options={options && options.length > 0 ? options : false}
+          onChange={this.handleChange}
+          onBlur={this.handleBlur}
+          value={
+            options && options.length === 1 ? options[0] : this.props.value
+          }
+          placeholder="Select your utility"
+        />
         <style jsx global>{`
           .select__label {
             pointer-events: none;
@@ -167,8 +165,7 @@ export default class CustomSelect extends React.Component {
             height: 3.75rem;
             width: 100%;
             max-width: 350px;
-            margin: 0 auto;
-            margin-top: 0.5rem;
+            margin: 0.5rem auto;
           }
 
           .select__control {
@@ -197,6 +194,10 @@ export default class CustomSelect extends React.Component {
 
           .select__value-container .select__option {
             position: absolute;
+          }
+
+          .select__menu {
+            z-index: 100;
           }
 
           .select__option {

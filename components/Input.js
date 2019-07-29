@@ -54,39 +54,7 @@ export default class Input extends React.Component {
         <label htmlFor={this.props.fieldname}>{this.props.label}</label>
         <style jsx global>{`
           input {
-            appearance: none;
-            border: 1px solid transparent;
-            border-radius: 3px;
-            background-image: none;
             background-color: ${this.props.secondary ? "#F6F9FF" : "#fff"};
-            box-shadow: none;
-            font-family: "Poppins", -apple-system, BlinkMacSystemFont,
-              "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
-              "Helvetica Neue", sans-serif;
-            font-size: 1.125rem;
-            font-weight: 700;
-            padding: 0.8em 1em;
-            width: 100%;
-            z-index: 10;
-            caret-color: #41ef8b;
-            transition: border-color 200ms ease-in;
-          }
-
-          input + label {
-            position: absolute;
-            font-family: "Poppins", -apple-system, BlinkMacSystemFont,
-              "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
-              "Helvetica Neue", sans-serif;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #2479ff;
-            letter-spacing: 0.7px;
-            left: 1.5em;
-            top: 50%;
-            text-transform: capitalize;
-            transform: translateY(-50%);
-            transition: opacity 400ms cubic-bezier(0.075, 0.82, 0.165, 1);
-            pointer-events: none;
           }
 
           .input__wrapper {
