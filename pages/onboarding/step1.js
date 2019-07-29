@@ -270,7 +270,9 @@ class Step1 extends React.Component {
                     fieldname="password"
                     required
                   />
-                  <p className="error">{error.message} </p>
+                  <p className="error">
+                    {error.message} {error.link && error.link}
+                  </p>
                   <Button
                     primary
                     disabled={
