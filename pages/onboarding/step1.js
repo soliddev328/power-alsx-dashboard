@@ -101,7 +101,7 @@ class Step1 extends React.Component {
   }
 
   autenticate(values) {
-  let utility = ''
+    let utility = ""
     const name = {
       firstName: values.firstName,
       lastName: values.lastName
@@ -117,84 +117,85 @@ class Step1 extends React.Component {
     localStorage.setItem("postalCode", JSON.stringify(values.postalCode))
     localStorage.setItem("username", JSON.stringify(name))
 
-    if(utility !== '') {
-      localStorage.setItem(
-        "utility",
-        JSON.stringify(utility)
+    if (utility !== "") {
+      localStorage.setItem("utility", JSON.stringify(utility))
 
       window.firebase
-      .auth()
-      .createUserWithEmailAndPassword(values.emailAddress, values.password)
-      .catch(error => {
-        if (error.code === "auth/email-already-in-use") {
-          this.setState({
-            error: {
-              code: error.code,
-              message: "Already have a login and password?",
-              link: <a href="/">Go here</a>
-            }
-          })
-        } else {
-          this.setState({
-            error: { code: error.code, message: error.message }
-          })
-        }
-      })
-      .then(userCredential => {
-        if (userCredential) {
-          window.localStorage.setItem("firebaseUserId", userCredential.user.uid)
-          window.firebase
-            .auth()
-            .currentUser.getIdToken(true)
-            .then(idToken => {
-              axios
-                .post(
-                  `${API}/v1/subscribers`,
-                  {
-                    Email: values.emailAddress,
-                    Password: values.password,
-                    firstName: name.firstName,
-                    lastName: name.lastName,
-                    Referrer: this.state.referrer,
-                    Partner: this.state.partner,
-                    SalesRep: this.state.salesRep,
-                    Affiliate: this.state.affiliate,
-                    postalCode: this.state.postalCode,
-                    agreementChecked: !!this.state.agreedTermsAndConditions,
-                    utility: values.currentUtility,
-                    utmCampaign: this.state.utmCampaign,
-                    utmMedium: this.state.utmMedium,
-                    utmSource: this.state.utmSource,
-                    firebaseUserId: userCredential.user.uid
-                  },
-                  {
-                    headers: {
-                      Authorization: idToken
-                    }
-                  }
-                )
-                .then(response => {
-                  window.localStorage.setItem(
-                    "leadId",
-                    response.data.data.leadId
-                  )
-
-                  // Call Segement events
-                  global.analytics.alias(response.data.data.leadId)
-                  global.analytics.identify(response.data.data.leadId, {
-                    firstName: values.firstName,
-                    lastName: values.lastName,
-                    email: values.emailAddress
-                  })
-                  global.analytics.track("Lead Created", {})
-
-                  Router.push({
-                    pathname: "/onboarding/step2"
-                  })
-                })
+        .auth()
+        .createUserWithEmailAndPassword(values.emailAddress, values.password)
+        .catch(error => {
+          if (error.code === "auth/email-already-in-use") {
+            this.setState({
+              error: {
+                code: error.code,
+                message: "Already have a login and password?",
+                link: <a href="/">Go here</a>
+              }
             })
-        }
-      })
+          } else {
+            this.setState({
+              error: { code: error.code, message: error.message }
+            })
+          }
+        })
+        .then(userCredential => {
+          if (userCredential) {
+            window.localStorage.setItem(
+              "firebaseUserId",
+              userCredential.user.uid
+            )
+            window.firebase
+              .auth()
+              .currentUser.getIdToken(true)
+              .then(idToken => {
+                axios
+                  .post(
+                    `${API}/v1/subscribers`,
+                    {
+                      Email: values.emailAddress,
+                      Password: values.password,
+                      firstName: name.firstName,
+                      lastName: name.lastName,
+                      Referrer: this.state.referrer,
+                      Partner: this.state.partner,
+                      SalesRep: this.state.salesRep,
+                      Affiliate: this.state.affiliate,
+                      postalCode: this.state.postalCode,
+                      agreementChecked: !!this.state.agreedTermsAndConditions,
+                      utility: values.currentUtility,
+                      utmCampaign: this.state.utmCampaign,
+                      utmMedium: this.state.utmMedium,
+                      utmSource: this.state.utmSource,
+                      firebaseUserId: userCredential.user.uid
+                    },
+                    {
+                      headers: {
+                        Authorization: idToken
+                      }
+                    }
+                  )
+                  .then(response => {
+                    window.localStorage.setItem(
+                      "leadId",
+                      response.data.data.leadId
+                    )
+
+                    // Call Segement events
+                    global.analytics.alias(response.data.data.leadId)
+                    global.analytics.identify(response.data.data.leadId, {
+                      firstName: values.firstName,
+                      lastName: values.lastName,
+                      email: values.emailAddress
+                    })
+                    global.analytics.track("Lead Created", {})
+
+                    Router.push({
+                      pathname: "/onboarding/step2"
+                    })
+                  })
+              })
+          }
+        })
     } else {
       Router.push({
         pathname: "/onboarding/sorry"
@@ -215,7 +216,7 @@ class Step1 extends React.Component {
         <Header />
         <SingleStep title="Hi, I'm Martin! Let's see if we have a project in your area. What is your zip code?">
           <Formik
-              initialValues={{
+            initialValues={{
               postalCode: query.zipcode,
               currentUtility: "",
               emailAddress: email,
@@ -224,7 +225,7 @@ class Step1 extends React.Component {
               password: ""
             }}
             onSubmit={values => {
-            this.autenticate(values)
+              this.autenticate(values)
             }}
             render={props => (
               <React.Fragment>
