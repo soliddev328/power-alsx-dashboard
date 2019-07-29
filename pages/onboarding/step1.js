@@ -119,7 +119,7 @@ class Step1 extends React.Component {
 
     if (utility !== "") {
       localStorage.setItem("utility", JSON.stringify(utility))
-
+      console.log(utility)
       window.firebase
         .auth()
         .createUserWithEmailAndPassword(values.emailAddress, values.password)
@@ -156,17 +156,16 @@ class Step1 extends React.Component {
                       Password: values.password,
                       firstName: name.firstName,
                       lastName: name.lastName,
+                      utility: utility.label,
+                      firebaseUserId: userCredential.user.uid,
                       Referrer: this.state.referrer,
                       Partner: this.state.partner,
                       SalesRep: this.state.salesRep,
                       Affiliate: this.state.affiliate,
                       postalCode: this.state.postalCode,
-                      agreementChecked: !!this.state.agreedTermsAndConditions,
-                      utility: values.currentUtility,
                       utmCampaign: this.state.utmCampaign,
                       utmMedium: this.state.utmMedium,
-                      utmSource: this.state.utmSource,
-                      firebaseUserId: userCredential.user.uid
+                      utmSource: this.state.utmSource
                     },
                     {
                       headers: {
