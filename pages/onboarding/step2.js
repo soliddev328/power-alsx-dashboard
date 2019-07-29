@@ -69,7 +69,7 @@ class Step2 extends React.Component {
     return (
       <main>
         <Header />
-        <SingleStep title="And what is address please?">
+        <SingleStep title="And what is your address please?">
           <Formik
             initialValues={{
               address: ""
