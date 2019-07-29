@@ -26,9 +26,29 @@ const formikEnhancer = withFormik({
       "acceptedTermsAndConditions",
       JSON.stringify(payload.acceptedTermsAndConditions)
     )
-    Router.push({
-      pathname: "/onboarding/step10"
-    })
+    window.firebase
+      .auth()
+      .currentUser.getIdToken(true)
+      .then(idToken => {
+        axios
+          .put(
+            `${API}/v1/subscribers`,
+            {
+              agreementChecked: !!payload.acceptedTermsAndConditions
+            },
+            {
+              headers: {
+                Authorization: idToken
+              }
+            }
+          )
+          .then(() => {
+            Router.push({
+              pathname: "/onboarding/step10"
+            })
+          })
+          .catch(() => {})
+      })
   },
   displayName: "CustomForm"
 })
@@ -159,11 +179,6 @@ class Step9 extends React.Component {
         agreement: {
           terms: utility.terms,
           conditions: utility.conditions
-        },
-        project: {
-          imageUrl: "/static/images/illustrations/t&c.png",
-          name: false,
-          completion: false
         }
       }
     })
@@ -191,10 +206,7 @@ class Step9 extends React.Component {
           prefix="Great news!"
           title="We've got a project in your area."
         >
-          <EnhancedCustomForm
-            agreement={this.state.utility.agreement}
-            project={this.state.utility.project}
-          />
+          <EnhancedCustomForm agreement={this.state.utility.agreement} />
         </SingleStep>
         <style jsx>{`
           main {
