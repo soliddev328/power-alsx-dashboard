@@ -101,16 +101,28 @@ class Step1 extends React.Component {
   }
 
   autenticate(values) {
+  let utility = ''
     const name = {
       firstName: values.firstName,
       lastName: values.lastName
+    }
+
+    utility = values.currentUtility
+
+    if (this.select.current.state.singleOption) {
+      utility = this.select.current.state.options[0]
     }
 
     localStorage.setItem("email", values.emailAddress)
     localStorage.setItem("postalCode", JSON.stringify(values.postalCode))
     localStorage.setItem("username", JSON.stringify(name))
 
-    window.firebase
+    if(utility !== '') {
+      localStorage.setItem(
+        "utility",
+        JSON.stringify(utility)
+
+      window.firebase
       .auth()
       .createUserWithEmailAndPassword(values.emailAddress, values.password)
       .catch(error => {
@@ -141,8 +153,8 @@ class Step1 extends React.Component {
                   {
                     Email: values.emailAddress,
                     Password: values.password,
-                    firstName: values.firstName,
-                    lastName: values.lastName,
+                    firstName: name.firstName,
+                    lastName: name.lastName,
                     Referrer: this.state.referrer,
                     Partner: this.state.partner,
                     SalesRep: this.state.salesRep,
@@ -167,28 +179,6 @@ class Step1 extends React.Component {
                     response.data.data.leadId
                   )
 
-                  if (values.currentUtility !== "") {
-                    localStorage.setItem(
-                      "utility",
-                      JSON.stringify(values.currentUtility)
-                    )
-                    Router.push({
-                      pathname: "/onboarding/step2"
-                    })
-                  } else if (this.select.current.state.singleOption) {
-                    localStorage.setItem(
-                      "utility",
-                      JSON.stringify(this.select.current.state.options[0])
-                    )
-                    Router.push({
-                      pathname: "/onboarding/step2"
-                    })
-                  } else {
-                    Router.push({
-                      pathname: "/onboarding/sorry"
-                    })
-                  }
-
                   // Call Segement events
                   global.analytics.alias(response.data.data.leadId)
                   global.analytics.identify(response.data.data.leadId, {
@@ -197,10 +187,19 @@ class Step1 extends React.Component {
                     email: values.emailAddress
                   })
                   global.analytics.track("Lead Created", {})
+
+                  Router.push({
+                    pathname: "/onboarding/step2"
+                  })
                 })
             })
         }
       })
+    } else {
+      Router.push({
+        pathname: "/onboarding/sorry"
+      })
+    }
   }
 
   static getInitialProps({ query }) {
@@ -216,7 +215,7 @@ class Step1 extends React.Component {
         <Header />
         <SingleStep title="Hi, I'm Martin! Let's see if we have a project in your area. What is your zip code?">
           <Formik
-            initialValues={{
+              initialValues={{
               postalCode: query.zipcode,
               currentUtility: "",
               emailAddress: email,
@@ -225,7 +224,7 @@ class Step1 extends React.Component {
               password: ""
             }}
             onSubmit={values => {
-              this.autenticate(values)
+            this.autenticate(values)
             }}
             render={props => (
               <React.Fragment>
