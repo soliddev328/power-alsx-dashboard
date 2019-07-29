@@ -164,6 +164,28 @@ class Step1 extends React.Component {
                       response.data.data.leadId
                     )
 
+                    if (values.currentUtility !== "") {
+                      localStorage.setItem(
+                        "utility",
+                        JSON.stringify(values.currentUtility)
+                      )
+                      Router.push({
+                        pathname: "/onboarding/step2"
+                      })
+                    } else if (this.select.current.state.singleOption) {
+                      localStorage.setItem(
+                        "utility",
+                        JSON.stringify(this.select.current.state.options[0])
+                      )
+                      Router.push({
+                        pathname: "/onboarding/step2"
+                      })
+                    } else {
+                      Router.push({
+                        pathname: "/onboarding/sorry"
+                      })
+                    }
+
                     // Call Segement events
                     global.analytics.alias(response.data.data.leadId)
                     global.analytics.identify(response.data.data.leadId, {
@@ -177,25 +199,6 @@ class Step1 extends React.Component {
     } else {
       this.setState({
         error: { code: "6", message: "Passwords do not match" }
-      })
-    }
-
-    if (values.currentUtility !== "") {
-      localStorage.setItem("utility", JSON.stringify(values.currentUtility))
-      Router.push({
-        pathname: "/onboarding/step2"
-      })
-    } else if (this.select.current.state.singleOption) {
-      localStorage.setItem(
-        "utility",
-        JSON.stringify(this.select.current.state.options[0])
-      )
-      Router.push({
-        pathname: "/onboarding/step2"
-      })
-    } else {
-      Router.push({
-        pathname: "/onboarding/sorry"
       })
     }
   }
