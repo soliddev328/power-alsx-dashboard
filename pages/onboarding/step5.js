@@ -83,6 +83,8 @@ class Step5 extends React.Component {
       storedBillingMethod = JSON.parse(localStorage.getItem("billingMethod"))
     }
 
+    console.log(storedLeadId)
+
     this.setState(
       {
         leadId: storedLeadId,
@@ -222,7 +224,9 @@ class Step5 extends React.Component {
                     pathname: "/onboarding/step6"
                   })
                 })
-                .catch(() => {})
+                .catch(error => {
+                  console.log(error)
+                })
             })
         }}
         render={props => (
