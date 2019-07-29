@@ -157,12 +157,12 @@ class Step1 extends React.Component {
                       firstName: name.firstName,
                       lastName: name.lastName,
                       utility: utility.label,
+                      postalCode: values.postalCode,
                       firebaseUserId: userCredential.user.uid,
                       Referrer: this.state.referrer,
                       Partner: this.state.partner,
                       SalesRep: this.state.salesRep,
                       Affiliate: this.state.affiliate,
-                      postalCode: this.state.postalCode,
                       utmCampaign: this.state.utmCampaign,
                       utmMedium: this.state.utmMedium,
                       utmSource: this.state.utmSource
