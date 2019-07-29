@@ -12,7 +12,7 @@ import CONSTANTS from "../../globals"
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod
 
-class Step4 extends React.Component {
+class Step3 extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -21,7 +21,7 @@ class Step4 extends React.Component {
   }
 
   componentDidMount() {
-    global.analytics.page("Step 4")
+    global.analytics.page("Step 3")
 
     let storedLeadId = ""
     let storedName = ""
@@ -144,4 +144,4 @@ class Step4 extends React.Component {
   }
 }
 
-export default Step4
+export default Step3

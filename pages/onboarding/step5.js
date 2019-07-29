@@ -219,7 +219,7 @@ class Step5 extends React.Component {
                 .then(() => {
                   localStorage.setItem("partialConnection", true)
                   Router.push({
-                    pathname: "/onboarding/step9"
+                    pathname: "/onboarding/step6"
                   })
                 })
                 .catch(() => {})
