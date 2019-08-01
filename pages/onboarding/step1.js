@@ -102,6 +102,9 @@ class Step1 extends React.Component {
 
   autenticate(values) {
     let utility = ""
+    const options = this.select.current.state.options
+    const singleOption = this.select.current.state.singleOption
+
     const name = {
       firstName: values.firstName,
       lastName: values.lastName
@@ -109,17 +112,18 @@ class Step1 extends React.Component {
 
     utility = values.currentUtility
 
-    if (this.select.current.state.singleOption) {
-      utility = this.select.current.state.options[0]
+    if (singleOption) {
+      utility = options[0]
     }
 
     localStorage.setItem("email", values.emailAddress)
     localStorage.setItem("postalCode", JSON.stringify(values.postalCode))
     localStorage.setItem("username", JSON.stringify(name))
 
-    if (utility !== "") {
+    console.log(options)
+
+    if (options !== null && utility !== "") {
       localStorage.setItem("utility", JSON.stringify(utility))
-      console.log(utility)
       window.firebase
         .auth()
         .createUserWithEmailAndPassword(values.emailAddress, values.password)
@@ -152,8 +156,8 @@ class Step1 extends React.Component {
                   .post(
                     `${API}/v1/subscribers`,
                     {
-                      Email: values.emailAddress,
-                      Password: values.password,
+                      email: values.emailAddress,
+                      password: values.password,
                       firstName: name.firstName,
                       lastName: name.lastName,
                       utility: utility.label,
@@ -195,9 +199,15 @@ class Step1 extends React.Component {
               })
           }
         })
-    } else {
+    } else if (options === null) {
       Router.push({
         pathname: "/onboarding/sorry"
+      })
+    } else {
+      this.setState({
+        error: {
+          message: "Please select your utility"
+        }
       })
     }
   }
@@ -213,7 +223,7 @@ class Step1 extends React.Component {
     return (
       <main>
         <Header />
-        <SingleStep title="Hi, I'm Martin! Let's see if we have a project in your area. What is your zip code?">
+        <SingleStep title="Hi, I'm Martin! Let's see if we have a project in your area. Please complete the following information">
           <Formik
             initialValues={{
               postalCode: query.zipcode,
