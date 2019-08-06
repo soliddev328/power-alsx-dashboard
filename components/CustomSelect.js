@@ -52,17 +52,17 @@ export default class CustomSelect extends React.Component {
       let newOptions = []
 
       axios(`${API}/v1/zipcodes/${code}`).then(response => {
-        const utilities = response.data.data.utilities.split(",")
+        const data = response.data.data
+        const utilities = data.utilities.split(",")
         let terms = ""
         let conditions = ""
 
-        if (
-          response.data.data.utilities &&
-          response.data.data.utilities.length
-        ) {
-          if (response.data.data.agreement) {
-            terms = response.data.data.agreement.termsLink
-            conditions = response.data.data.agreement.conditionsLink
+        localStorage.setItem("state", data.state)
+
+        if (data.utilities && data.utilities.length) {
+          if (data.agreement) {
+            terms = data.agreement.termsLink
+            conditions = data.agreement.conditionsLink
           }
 
           utilities.map((item, i) => {
