@@ -120,8 +120,6 @@ class Step1 extends React.Component {
     localStorage.setItem("postalCode", JSON.stringify(values.postalCode))
     localStorage.setItem("username", JSON.stringify(name))
 
-    console.log(options)
-
     if (options !== null && utility !== "") {
       localStorage.setItem("utility", JSON.stringify(utility))
       window.firebase
