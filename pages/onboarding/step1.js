@@ -49,8 +49,6 @@ class Step1 extends React.Component {
     let utmCampaignCookie = Cookie.get("_ce_campaign")
     let utmSourceCookie = Cookie.get("_ce_source")
     let utmMediumCookie = Cookie.get("_ce_medium")
-    let storedAddress = ""
-    let storedPostalCode = ""
 
     if (partnerReferralCookie) {
       localStorage.setItem("Partner", partnerReferralCookie)
