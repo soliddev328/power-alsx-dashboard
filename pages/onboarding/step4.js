@@ -15,23 +15,16 @@ const { API } =
 class Step4 extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
-      name: ""
-    }
   }
 
   componentDidMount() {
     global.analytics.page("Step 4")
 
     let storedLeadId = ""
-    let storedName = ""
     let storedUtilityPaperOnly = false
 
     if (localStorage.getItem("leadId")) {
       storedLeadId = localStorage.getItem("leadId")
-    }
-    if (localStorage.getItem("username")) {
-      storedName = JSON.parse(localStorage.getItem("username"))
     }
 
     if (localStorage.getItem("utility")) {
@@ -42,24 +35,15 @@ class Step4 extends React.Component {
 
     this.setState({
       leadId: storedLeadId,
-      name: storedName,
       storedUtilityPaperOnly
     })
-  }
-
-  capitalize(word) {
-    return word && word[0].toUpperCase() + word.slice(1)
   }
 
   render() {
     return (
       <main>
         <Header />
-        <SingleStep
-          title={`Welcome ${this.capitalize(
-            this.state.name.firstName
-          )}! What phone number would you like to use with the account?`}
-        >
+        <SingleStep title="And what phone number would you like to use with the account?">
           <Formik
             initialValues={{
               phoneNumber: ""
