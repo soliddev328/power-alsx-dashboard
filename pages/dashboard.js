@@ -1,40 +1,40 @@
-import React from "react";
-import Router from "next/router";
-import Header from "../components/Header";
-import Button from "../components/Button";
-import AppHeader from "../components/AppHeader";
+import React from "react"
+import Router from "next/router"
+import Header from "../components/Header"
+import Button from "../components/Button"
+import AppHeader from "../components/AppHeader"
 
 class Dashboard extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       isAbleToSeeDashboard: ""
-    };
+    }
   }
 
   componentDidMount() {
     window.firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        global.analytics.page("Dashboard");
+        global.analytics.page("Dashboard")
 
-        let usercreated = "";
-        let storedName = "";
+        let usercreated = ""
+        let storedName = ""
 
         if (window.localStorage.getItem("usercreated")) {
-          usercreated = window.localStorage.getItem("usercreated");
+          usercreated = window.localStorage.getItem("usercreated")
         }
         if (window.localStorage.getItem("username")) {
-          storedName = JSON.parse(window.localStorage.getItem("username"));
+          storedName = JSON.parse(window.localStorage.getItem("username"))
         }
 
-        this.setState({ isAbleToSeeDashboard: usercreated, name: storedName });
+        this.setState({ isAbleToSeeDashboard: usercreated, name: storedName })
       } else {
         Router.push({
           pathname: "/"
-        });
+        })
       }
-    });
+    })
   }
 
   renderDashboard() {
@@ -44,9 +44,7 @@ class Dashboard extends React.Component {
 
         <section>
           <div className="pane">
-            <h2>
-              Welcome to Common Energy<span className="accent">!</span>
-            </h2>
+            <h2>Welcome to Common Energy !</h2>
             <p>
               We're delighted to have you as a customer and to provide you with
               100% clean, lower cost Electricity.
@@ -149,7 +147,7 @@ class Dashboard extends React.Component {
           }
         `}</style>
       </main>
-    );
+    )
   }
 
   renderError() {
@@ -163,7 +161,7 @@ class Dashboard extends React.Component {
           onClick={() => {
             Router.push({
               pathname: "/"
-            });
+            })
           }}
         >
           Sign up
@@ -178,7 +176,7 @@ class Dashboard extends React.Component {
           }
         `}</style>
       </main>
-    );
+    )
   }
 
   render() {
@@ -187,9 +185,9 @@ class Dashboard extends React.Component {
       : () => {
           Router.push({
             pathname: "/"
-          });
-        };
+          })
+        }
   }
 }
 
-export default Dashboard;
+export default Dashboard
