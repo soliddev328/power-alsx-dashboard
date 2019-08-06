@@ -17,6 +17,7 @@ class Step3 extends React.Component {
     super(props)
 
     this.state = {
+      name: "user",
       postalCode: "",
       errorMessage: ""
     }
@@ -26,8 +27,7 @@ class Step3 extends React.Component {
     global.analytics.page("Step 3")
     let storedPostalCode = ""
     let storedLeadId = ""
-    let storedFname = ""
-    let storedLname = ""
+    let storedName = ""
 
     if (localStorage.getItem("postalCode")) {
       storedPostalCode = JSON.parse(localStorage.getItem("postalCode"))
@@ -35,10 +35,14 @@ class Step3 extends React.Component {
     if (localStorage.getItem("leadId")) {
       storedLeadId = localStorage.getItem("leadId")
     }
+    if (localStorage.getItem("username")) {
+      storedName = JSON.parse(localStorage.getItem("username"))
+    }
 
     this.setState({
       postalCode: storedPostalCode,
-      leadId: storedLeadId
+      leadId: storedLeadId,
+      name: storedName.firstName
     })
   }
 
@@ -65,11 +69,20 @@ class Step3 extends React.Component {
     return state ? state.short_name : ""
   }
 
+  capitalize(word) {
+    return word && word[0].toUpperCase() + word.slice(1)
+  }
+
   render() {
+    const { name, leadId, postalCode, errorMessage } = this.state
     return (
       <main>
         <Header />
-        <SingleStep title="And what is your address please?">
+        <SingleStep
+          title={`Welcome ${this.capitalize(
+            name
+          )} What is your address please?`}
+        >
           <Formik
             initialValues={{
               address: ""
@@ -91,7 +104,7 @@ class Step3 extends React.Component {
 
               localStorage.setItem("address", JSON.stringify(address))
 
-              if (address.postalCode === this.state.postalCode) {
+              if (address.postalCode === postalCode) {
                 window.firebase
                   .auth()
                   .currentUser.getIdToken(true)
@@ -100,7 +113,7 @@ class Step3 extends React.Component {
                       .put(
                         `${API}/v1/subscribers`,
                         {
-                          leadId: this.state.leadId,
+                          leadId: leadId,
                           street: address.street,
                           state: address.state,
                           city: address.city
@@ -136,7 +149,7 @@ class Step3 extends React.Component {
                   error={props.errors.topics}
                   touched={props.touched.topics}
                 />
-                <p className="error">{this.state.errorMessage}</p>
+                <p className="error">{errorMessage}</p>
                 <Button primary disabled={!props.values.address != ""}>
                   Next
                 </Button>
