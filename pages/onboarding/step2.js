@@ -40,11 +40,19 @@ class CustomForm extends React.Component {
           </figure>
           {completion && <Progressbar completion={completion} />}
           <div className="items">
-            <BulletItem content="10% contracted discount" bulletIcon="dollar" />
             <BulletItem
-              content="90% reduction in carbon emissions"
+              content="Prevent emissions and pollution in your community"
               bulletIcon="co2"
             />
+            <BulletItem
+              content="Save $10-15 per month on your energy bill"
+              bulletIcon="dollar"
+            />
+            <BulletItem
+              content="Making a positive impact on the environment — the equivalent of planting up to 22 trees each month!"
+              bulletIcon="plant"
+            />
+            <BulletItem content="No cancellation fees" bulletIcon="cross" />
           </div>
         </div>
         <Button primary>Let's do this!</Button>
@@ -128,7 +136,7 @@ class Step2 extends React.Component {
     }
 
     if (localStorage.getItem("state")) {
-      state = JSON.parse(localStorage.getItem("state"))
+      state = localStorage.getItem("state")
     }
 
     const rawParams = {
@@ -140,33 +148,26 @@ class Step2 extends React.Component {
       .map(([key, val]) => `${key}=${val}`)
       .join("&")
 
-    this.setState({
-      utility: {
-        project: {
-          imageUrl: "/static/images/illustrations/t&c.png",
-          name: false,
-          completion: false
-        }
-      }
-    })
+    axios(`${API}/v1/utilities?${generatedParams}`)
+      .then(response => {
+        if (response.data.data) {
+          const data = response.data.data[0]
 
-    axios(`${API}/v1/utilities?${generatedParams}`).then(response => {
-      if (response.data.data) {
-        const data = response.data.data[0]
-        this.setState({
-          utility: {
-            project: {
-              imageUrl:
-                data.projects[0].imageUrl !== null
-                  ? data.projects[0].imageUrl
-                  : "/static/images/illustrations/t&c.png",
-              name: data.projects[0].displayName,
-              completion: data.projects[0].completion
+          this.setState({
+            utility: {
+              project: {
+                imageUrl:
+                  data.projects[0].imageUrl !== null
+                    ? data.projects[0].imageUrl
+                    : "/static/images/illustrations/t&c.png",
+                name: data.projects[0].displayName || false,
+                completion: data.projects[0].completion || false
+              }
             }
-          }
-        })
-      }
-    })
+          })
+        }
+      })
+      .catch(error => console.log(error))
   }
 
   render() {
