@@ -106,9 +106,10 @@ class Step6 extends React.Component {
   }
 
   renderUtilityLogin() {
+    const { query } = this.props
     return (
       <React.Fragment>
-        {this.props.query && this.props.query.error && (
+        {query && query.error && (
           <p className="error">
             There was a problem connecting, could you please verify your login.
           </p>
@@ -141,20 +142,20 @@ class Step6 extends React.Component {
                     }
                   )
                   .then(response => {
-                    localStorage.setItem(
-                      "linkedUtility",
-                      JSON.stringify(response.data)
-                    )
-                    if (response.data.data && response.data.data[0]) {
-                      if (response.data.data[0].hasLoggedIn) {
+                    const data = response.data.data
+
+                    localStorage.setItem("linkedUtility", JSON.stringify(data))
+
+                    if (data && data[0]) {
+                      if (data[0].hasLoggedIn) {
                         localStorage.setItem("partialConnection", false)
                         Router.push({
-                          pathname: "/onboarding/step8"
+                          pathname: "/onboarding/step7"
                         })
                       } else {
                         this.setState({ isLoading: false })
                         Router.push({
-                          pathname: "/onboarding/step7",
+                          pathname: "/onboarding/step6",
                           query: {
                             error: true
                           }
@@ -163,11 +164,13 @@ class Step6 extends React.Component {
                     } else {
                       localStorage.setItem("partialConnection", true)
                       Router.push({
-                        pathname: "/onboarding/step8"
+                        pathname: "/onboarding/step7"
                       })
                     }
                   })
-                  .catch(() => {})
+                  .catch(err => {
+                    console.log(err)
+                  })
               })
           }}
           render={props => (
