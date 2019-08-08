@@ -87,6 +87,7 @@ class Step1 extends React.Component {
                           billingMethod: "paper"
                         })
                       )
+
                       Router.push({
                         pathname: "/onboarding/step8"
                       })
