@@ -234,7 +234,6 @@ class Step6 extends React.Component {
           acceptedTermsAndConditions: false
         }}
         onSubmit={values => {
-          console.log(values)
           window.firebase
             .auth()
             .currentUser.getIdToken(true)
