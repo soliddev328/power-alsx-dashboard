@@ -230,9 +230,11 @@ class Step6 extends React.Component {
     return (
       <Formik
         initialValues={{
-          utilityAccountNumber: ""
+          utilityAccountNumber: "",
+          acceptedTermsAndConditions: false
         }}
         onSubmit={values => {
+          console.log(values)
           window.firebase
             .auth()
             .currentUser.getIdToken(true)
@@ -242,6 +244,7 @@ class Step6 extends React.Component {
                   `${API}/v1/subscribers`,
                   {
                     leadId: this.state.leadId,
+                    agreementChecked: !!values.acceptedTermsAndConditions,
                     utilityAccountNumber: values.utilityAccountNumber
                   },
                   {
@@ -253,7 +256,7 @@ class Step6 extends React.Component {
                 .then(() => {
                   localStorage.setItem("partialConnection", true)
                   Router.push({
-                    pathname: "/onboarding/step8"
+                    pathname: "/onboarding/step7"
                   })
                 })
                 .catch(error => {
