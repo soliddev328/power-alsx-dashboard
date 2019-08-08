@@ -81,7 +81,7 @@ class Step3 extends React.Component {
         <SingleStep
           title={`Welcome ${this.capitalize(
             name
-          )} What is your address please?`}
+          )}! What is your address please?`}
         >
           <Formik
             initialValues={{

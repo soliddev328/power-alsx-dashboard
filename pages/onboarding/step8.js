@@ -9,7 +9,7 @@ import Stepper from "../../components/Stepper"
 
 class Step8 extends React.Component {
   componentDidMount() {
-    global.analytics.page("Step 7")
+    global.analytics.page("Step 8")
   }
 
   static async getInitialProps({ query }) {
