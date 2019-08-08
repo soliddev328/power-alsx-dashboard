@@ -62,7 +62,7 @@ class Step1 extends React.Component {
                     })
                   } else if (!user.phone) {
                     Router.push({
-                      pathname: "/onboarding/step6",
+                      pathname: "/onboarding/step2",
                       query: {
                         onboardingNotFinished: true
                       }
