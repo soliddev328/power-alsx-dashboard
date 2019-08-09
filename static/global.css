@@ -1,33 +1,33 @@
 @font-face {
-  font-family: 'Galano';
-  src: local('GalanoGrotesque'),
-    url('/static/fonts/GalanoGrotesque-Bold.woff2') format('woff2'),
-    url('/static/fonts/GalanoGrotesque-Bold.woff') format('woff');
+  font-family: "Galano";
+  src: local("GalanoGrotesque"),
+    url("/static/fonts/GalanoGrotesque-Bold.woff2") format("woff2"),
+    url("/static/fonts/GalanoGrotesque-Bold.woff") format("woff");
   font-weight: 700;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Poppins';
-  src: local('Poppins'),
-    url('/static/fonts/Poppins-Regular.woff2') format('woff2'),
-    url('/static/fonts/Poppins-Regular.woff') format('woff');
+  font-family: "Poppins";
+  src: local("Poppins"),
+    url("/static/fonts/Poppins-Regular.woff2") format("woff2"),
+    url("/static/fonts/Poppins-Regular.woff") format("woff");
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Poppins';
-  src: url('/static/fonts/Poppins-SemiBold.woff2') format('woff2'),
-    url('/static/fonts/Poppins-SemiBold.woff') format('woff');
+  font-family: "Poppins";
+  src: url("/static/fonts/Poppins-SemiBold.woff2") format("woff2"),
+    url("/static/fonts/Poppins-SemiBold.woff") format("woff");
   font-weight: 700;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Poppins';
-  src: url('/static/fonts/Poppins-Bold.woff2') format('woff2'),
-    url('/static/fonts/Poppins-Bold.woff') format('woff');
+  font-family: "Poppins";
+  src: url("/static/fonts/Poppins-Bold.woff2") format("woff2"),
+    url("/static/fonts/Poppins-Bold.woff") format("woff");
   font-weight: 800;
   font-style: normal;
 }
@@ -46,10 +46,10 @@
   --color-font: #161621;
   --color-bg-primary: #fff;
   --color-bg-secondary: #f8f8f9;
-  --font-primary: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  --font-secondary: 'Galano', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --font-primary: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  --font-secondary: "Galano", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 html,
@@ -60,8 +60,8 @@ body {
   scroll-behavior: smooth;
   margin: 0;
   background-color: #f8f8f9;
-  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;;
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 main > *:not(header) {
@@ -72,8 +72,8 @@ h1,
 h2,
 h4,
 p {
-  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;;
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 h1 {
@@ -89,8 +89,8 @@ h2 {
 }
 
 h3 {
-  font-family: 'Galano', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;;
+  font-family: "Galano", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   font-size: calc(22px + (25 - 22) * (100vw - 400px) / (1440 - 400));
   line-height: 1.5em;
 }
@@ -106,8 +106,8 @@ h4 {
 
 .paragraph,
 p {
-  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;;
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   font-size: 14px;
   font-weight: 400;
   letter-spacing: 0.5px;
@@ -125,8 +125,8 @@ p {
   background-color: rgb(36, 121, 255);
 }
 
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
@@ -150,6 +150,53 @@ input[value]:not([value=""]) + label {
   opacity: 0;
 }
 
+input:not([type="checkbox"]) {
+  appearance: none;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background-image: none;
+  background-color: #fff;
+  box-shadow: none;
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-size: 1.125rem;
+  font-weight: 700;
+  padding: 0.8em 1em;
+  width: 100%;
+  z-index: 10;
+  caret-color: #41ef8b;
+  transition: border-color 200ms ease-in;
+}
+
+input + label {
+  position: absolute;
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #2479ff;
+  letter-spacing: 0.7px;
+  left: 1.5em;
+  top: 50%;
+  text-transform: capitalize;
+  transform: translateY(-50%);
+  transition: opacity 400ms cubic-bezier(0.075, 0.82, 0.165, 1);
+  pointer-events: none;
+}
+
+.input__wrapper {
+  position: relative;
+  height: 3.75rem;
+  width: 100%;
+  max-width: 350px;
+  margin: 0 auto;
+  margin-bottom: 0.5rem;
+}
+
+.input__wrapper:last-of-type {
+  margin-bottom: 0.5rem;
+}
+
 img {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -164,8 +211,8 @@ img {
   outline: none;
 }
 
-input:not([type='checkbox']):active,
-input:not([type='checkbox']):focus {
+input:not([type="checkbox"]):active,
+input:not([type="checkbox"]):focus {
   outline: none;
   border-color: #41ef8b;
 }
@@ -201,8 +248,8 @@ a.link {
   align-items: center;
   justify-content: center;
   font-size: 0.875rem;
-  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;;
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   font-weight: 800;
   color: --color-font;
   border-radius: 1px;
@@ -231,6 +278,72 @@ hr {
   align-items: center;
   max-width: 350px;
   margin: 0 auto;
+}
+
+.select__label {
+  pointer-events: none;
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #2479ff;
+  letter-spacing: 0.7px;
+  left: 1.5em;
+  text-transform: capitalize;
+  z-index: 11;
+}
+
+.select__wrapper {
+  position: relative;
+  height: 3.75rem;
+  width: 100%;
+  max-width: 350px;
+  margin: 0.5rem auto;
+}
+
+.select__control {
+  height: 100%;
+  border: none;
+  border-radius: 3px;
+}
+
+.select__placeholder {
+  color: #000;
+  font-weight: 700;
+}
+
+.select__value-container {
+  padding: 0 1em;
+  position: relative;
+}
+
+.select__indicator-separator {
+  display: none;
+}
+
+.select__dropdown-indicator {
+  color: #2479ff;
+}
+
+.select__value-container .select__option {
+  position: absolute;
+}
+
+.select__menu {
+  z-index: 100;
+}
+
+.select__option {
+  display: flex !important;
+  align-items: center;
+  font-weight: 700;
+}
+
+.select__option-icon {
+  display: inline-block;
+  width: 30px;
+  margin-right: 1em;
+  background-color: #fff;
 }
 
 @media (min-width: 800px) {
