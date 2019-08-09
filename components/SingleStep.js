@@ -1,5 +1,5 @@
-import React from "react";
-import Highlight from "./Highlight";
+import React from "react"
+import Highlight from "./Highlight"
 
 export default class SingleStep extends React.Component {
   renderPrefix() {
@@ -11,7 +11,7 @@ export default class SingleStep extends React.Component {
       />
     ) : (
       <p className="prefix">{this.props.prefix}</p>
-    );
+    )
   }
 
   renderTitle() {
@@ -23,11 +23,11 @@ export default class SingleStep extends React.Component {
       />
     ) : (
       <p className="title">{this.props.title}</p>
-    );
+    )
   }
 
   renderSuffix() {
-    return <p className="suffix">{this.props.suffix}</p>;
+    return <p className="suffix">{this.props.suffix}</p>
   }
 
   render() {
@@ -110,6 +110,6 @@ export default class SingleStep extends React.Component {
           }
         `}</style>
       </div>
-    );
+    )
   }
 }

@@ -1,138 +1,244 @@
-import React from "react";
-import Router from "next/router";
-import { Formik, Form } from "formik";
-import Cookie from "js-cookie";
-import Header from "../../components/Header";
-import ZipCodeInput from "../../components/ZipcodeInput";
-import SingleStep from "../../components/SingleStep";
-import Button from "../../components/Button";
-import axios from "axios";
-import CONSTANTS from "../../globals";
+import React from "react"
+import Router from "next/router"
+import { Formik, Form } from "formik"
+import Cookie from "js-cookie"
+import Header from "../../components/Header"
+import Input from "../../components/Input"
+import ZipCodeInput from "../../components/ZipcodeInput"
+import SingleStep from "../../components/SingleStep"
+import CustomSelect from "../../components/CustomSelect"
+import Button from "../../components/Button"
+import axios from "axios"
+import CONSTANTS from "../../globals"
 
 const { API } =
-  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod
 
 class Step1 extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
-    this.state = {};
+    this.state = {
+      address: "",
+      postalCode: "",
+      currentUtility: "",
+      error: {
+        code: false,
+        message: ""
+      }
+    }
+    this.select = React.createRef()
   }
 
   componentDidMount() {
-    global.analytics.page("Step 1");
-    global.analytics.track("Sign-Up Initiated", {});
+    global.analytics.page("Step 1")
+    global.analytics.track("Sign-Up Initiated", {})
 
-    localStorage.removeItem("Partner");
-    localStorage.removeItem("Referrer");
-    localStorage.removeItem("SalesRep");
-    localStorage.removeItem("Affiliate");
-    localStorage.removeItem("postalCode");
-    localStorage.removeItem("utility");
-    localStorage.removeItem("email");
-    localStorage.removeItem("fname");
-    localStorage.removeItem("lname");
+    localStorage.removeItem("Partner")
+    localStorage.removeItem("Referrer")
+    localStorage.removeItem("SalesRep")
+    localStorage.removeItem("Affiliate")
+    localStorage.removeItem("postalCode")
+    localStorage.removeItem("utility")
+    localStorage.removeItem("email")
+    localStorage.removeItem("username")
 
-    let customerReferralCookie = Cookie.get("customer_referral");
-    let partnerReferralCookie = Cookie.get("partner_referral");
-    let salesRepCookie = Cookie.get("ce_rep_referral");
+    let customerReferralCookie = Cookie.get("customer_referral")
+    let partnerReferralCookie = Cookie.get("partner_referral")
+    let salesRepCookie = Cookie.get("ce_rep_referral")
+    let utmCampaignCookie = Cookie.get("_ce_campaign")
+    let utmSourceCookie = Cookie.get("_ce_source")
+    let utmMediumCookie = Cookie.get("_ce_medium")
 
     if (partnerReferralCookie) {
-      window.localStorage.setItem("Partner", partnerReferralCookie);
+      localStorage.setItem("Partner", partnerReferralCookie)
     }
-    if (this.props && this.props.query.partner) {
-      window.localStorage.setItem("Partner", this.props.query.partner);
+    if (salesRepCookie) {
+      localStorage.setItem("SalesRep", salesRepCookie)
     }
     if (customerReferralCookie) {
-      window.localStorage.setItem("Referrer", customerReferralCookie);
+      localStorage.setItem("Referrer", customerReferralCookie)
     }
-    if (this.props && this.props.query.advocate) {
-      window.localStorage.setItem("Referrer", this.props.query.advocate);
+    if (utmCampaignCookie) {
+      localStorage.setItem("UtmCampaign", utmCampaignCookie)
     }
-    if (salesRepCookie) window.localStorage.setItem("SalesRep", salesRepCookie);
-    if (this.props && this.props.query.rep) {
-      window.localStorage.setItem("SalesRep", this.props.query.rep);
+    if (utmSourceCookie) {
+      localStorage.setItem("UtmSource", utmSourceCookie)
     }
-    if (this.props && this.props.query.affiliate) {
-      localStorage.setItem("Affiliate", this.props.query.affiliate);
+    if (utmMediumCookie) {
+      localStorage.setItem("UtmMedium", utmMediumCookie)
     }
 
-    let utmCampaignCookie = Cookie.get("_ce_campaign");
-    let utmSourceCookie = Cookie.get("_ce_source");
-    let utmMediumCookie = Cookie.get("_ce_medium");
-    if (utmCampaignCookie)
-      localStorage.setItem("UtmCampaign", utmCampaignCookie);
-    if (utmSourceCookie) localStorage.setItem("UtmSource", utmSourceCookie);
-    if (utmMediumCookie) localStorage.setItem("UtmMedium", utmMediumCookie);
     if (this.props) {
-      if (this.props.query.utm_campaign)
-        localStorage.setItem("UtmCampaign", this.props.query.utm_campaign);
-      if (this.props.query.utm_source)
-        localStorage.setItem("UtmSource", this.props.query.utm_source);
-      if (this.props.query.utm_medium)
-        localStorage.setItem("UtmMedium", this.props.query.utm_medium);
-
-      if (this.props.query.zipcode)
-        localStorage.setItem("postalCode", this.props.query.zipcode);
-      if (this.props.query.utility)
-        localStorage.setItem("utility", this.props.query.utility);
-      if (this.props.query.email)
-        localStorage.setItem("email", this.props.query.email);
-      if (this.props.query.fname)
-        localStorage.setItem("fname", this.props.query.fname);
-      if (this.props.query.lname)
-        localStorage.setItem("lname", this.props.query.lname);
+      if (this.props.query.partner) {
+        localStorage.setItem("Partner", this.props.query.partner)
+      }
+      if (this.props.query.advocate) {
+        localStorage.setItem("Referrer", this.props.query.advocate)
+      }
+      if (this.props.query.rep) {
+        localStorage.setItem("SalesRep", this.props.query.rep)
+      }
+      if (this.props.query.affiliate) {
+        localStorage.setItem("Affiliate", this.props.query.affiliate)
+      }
+      if (this.props.query.utm_campaign) {
+        localStorage.setItem("UtmCampaign", this.props.query.utm_campaign)
+      }
+      if (this.props.query.utm_source) {
+        localStorage.setItem("UtmSource", this.props.query.utm_source)
+      }
+      if (this.props.query.utm_medium) {
+        localStorage.setItem("UtmMedium", this.props.query.utm_medium)
+      }
     }
   }
 
   capitalize(word) {
-    return word && word[0].toUpperCase() + word.slice(1);
+    return word && word[0].toUpperCase() + word.slice(1)
+  }
+
+  autenticate(values) {
+    let utility = ""
+    const options = this.select.current.state.options
+    const singleOption = this.select.current.state.singleOption
+
+    const name = {
+      firstName: values.firstName,
+      lastName: values.lastName
+    }
+
+    utility = values.currentUtility
+
+    if (singleOption) {
+      utility = options[0]
+    }
+
+    localStorage.setItem("email", values.emailAddress)
+    localStorage.setItem("postalCode", JSON.stringify(values.postalCode))
+    localStorage.setItem("username", JSON.stringify(name))
+
+    if (options !== null && utility !== "") {
+      localStorage.setItem("utility", JSON.stringify(utility))
+      window.firebase
+        .auth()
+        .createUserWithEmailAndPassword(values.emailAddress, values.password)
+        .catch(error => {
+          if (error.code === "auth/email-already-in-use") {
+            this.setState({
+              error: {
+                code: error.code,
+                message: "Already have a login and password?",
+                link: <a href="/">Go here</a>
+              }
+            })
+          } else {
+            this.setState({
+              error: { code: error.code, message: error.message }
+            })
+          }
+        })
+        .then(userCredential => {
+          if (userCredential) {
+            window.localStorage.setItem(
+              "firebaseUserId",
+              userCredential.user.uid
+            )
+            window.firebase
+              .auth()
+              .currentUser.getIdToken(true)
+              .then(idToken => {
+                axios
+                  .post(
+                    `${API}/v1/subscribers`,
+                    {
+                      email: values.emailAddress,
+                      password: values.password,
+                      firstName: name.firstName,
+                      lastName: name.lastName,
+                      utility: utility.label,
+                      postalCode: values.postalCode,
+                      firebaseUserId: userCredential.user.uid,
+                      referrer: this.state.referrer,
+                      partner: this.state.partner,
+                      salesRep: this.state.salesRep,
+                      affiliate: this.state.affiliate,
+                      utmCampaign: this.state.utmCampaign,
+                      utmMedium: this.state.utmMedium,
+                      utmSource: this.state.utmSource
+                    },
+                    {
+                      headers: {
+                        Authorization: idToken
+                      }
+                    }
+                  )
+                  .then(response => {
+                    window.localStorage.setItem(
+                      "leadId",
+                      response.data.data.leadId
+                    )
+
+                    // Call Segement events
+                    global.analytics.alias(response.data.data.leadId)
+                    global.analytics.identify(response.data.data.leadId, {
+                      firstName: values.firstName,
+                      lastName: values.lastName,
+                      email: values.emailAddress
+                    })
+                    global.analytics.track("Lead Created", {})
+
+                    Router.push({
+                      pathname: "/onboarding/step2"
+                    })
+                  })
+              })
+          }
+        })
+    } else if (options === null) {
+      Router.push({
+        pathname: "/onboarding/sorry"
+      })
+    } else {
+      this.setState({
+        error: {
+          message: "Please select your utility"
+        }
+      })
+    }
   }
 
   static getInitialProps({ query }) {
-    return { query };
+    return { query }
   }
 
   render() {
+    const { email, error, firstName, lastName } = this.state
+    const { query } = this.props
+
     return (
       <main>
         <Header />
-        <SingleStep title="Hi, I'm Martin! Let's see if we have a project in your area. What is your zip code?">
+        <SingleStep title="Hi, I'm Martin! Let's see if we have a project in your area. Please complete the following information">
           <Formik
             initialValues={{
-              postalCode: this.props.query.zipcode
+              postalCode: query.zipcode,
+              currentUtility: "",
+              emailAddress: email,
+              firstName: firstName,
+              lastName: lastName,
+              password: ""
             }}
             onSubmit={values => {
-              localStorage.setItem(
-                "postalCode",
-                JSON.stringify(values.postalCode)
-              );
-              axios(`${API}/v1/zipcodes/${values.postalCode}`).then(
-                response => {
-                  if (response.data.data.state) {
-                    localStorage.setItem(
-                      "state",
-                      JSON.stringify(response.data.data.state)
-                    );
-                  }
-                  if (
-                    response.data.data.geostatus != "Live" &&
-                    response.data.data.geostatus != "Near-Term"
-                  ) {
-                    Router.push({
-                      pathname: "/onboarding/sorry"
-                    });
-                  } else {
-                    Router.push({
-                      pathname: "/onboarding/step2"
-                    });
-                  }
-                }
-              );
+              this.autenticate(values)
             }}
             render={props => (
               <React.Fragment>
                 <Form>
+                  <div className="two-columns two-columns--responsive">
+                    <Input label="First Name" fieldname="firstName" autoFocus />
+                    <Input label="Last Name" fieldname="lastName" />
+                  </div>
                   <ZipCodeInput
                     value={props.values.postalCode}
                     onChangeEvent={props.setFieldValue}
@@ -140,7 +246,41 @@ class Step1 extends React.Component {
                     label="ZipCode"
                     fieldname="postalCode"
                   />
-                  <Button primary disabled={!props.values.postalCode != ""}>
+                  <CustomSelect
+                    ref={this.select}
+                    zipCode={props.values.postalCode}
+                    value={props.currentUtility}
+                    disabled={!props.values.postalCode}
+                    onChange={props.setFieldValue}
+                    onBlur={props.setFieldTouched}
+                    touched={props.touched}
+                    fieldname="currentUtility"
+                  />
+                  <Input
+                    type="email"
+                    label="Email"
+                    fieldname="emailAddress"
+                    required
+                  />
+                  <Input
+                    type="password"
+                    label="Password"
+                    fieldname="password"
+                    required
+                  />
+                  <p className="error">
+                    {error.message} {error.link && error.link}
+                  </p>
+                  <Button
+                    primary
+                    disabled={
+                      !!props.values.firstName !== true ||
+                      !!props.values.lastName !== true ||
+                      !!props.values.postalCode !== true ||
+                      !!props.values.emailAddress !== true ||
+                      !!props.values.password !== true
+                    }
+                  >
                     Next
                   </Button>
                 </Form>
@@ -155,10 +295,16 @@ class Step1 extends React.Component {
             max-width: 700px;
             margin: 0 auto;
           }
+          .error {
+            height: 52px;
+            margin: 0;
+            padding: 1em 0;
+            text-align: center;
+          }
         `}</style>
       </main>
-    );
+    )
   }
 }
 
-export default Step1;
+export default Step1

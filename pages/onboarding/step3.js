@@ -1,240 +1,169 @@
-import React from "react";
-import Router from "next/router";
-import { Form, withFormik } from "formik";
-import axios from "axios";
-import Header from "../../components/Header";
-import Checkbox from "../../components/Checkbox";
-import BulletItem from "../../components/BulletItem";
-import Progressbar from "../../components/Progressbar";
-import SingleStep from "../../components/SingleStep";
-import Button from "../../components/Button";
-import CONSTANTS from "../../globals";
+import React from "react"
+import Router from "next/router"
+import { Formik, Form } from "formik"
+import axios from "axios"
+import GeoSuggest from "../../components/GeoSuggest"
+import Header from "../../components/Header"
+import SingleStep from "../../components/SingleStep"
+import Button from "../../components/Button"
+import Stepper from "../../components/Stepper"
+import CONSTANTS from "../../globals"
 
 const { API } =
-  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
-
-const formikEnhancer = withFormik({
-  mapPropsToValues: props => {
-    return {
-      terms: props.agreement.terms,
-      conditions: props.agreement.conditions
-    };
-  },
-  mapValuesToPayload: x => x,
-  handleSubmit: payload => {
-    localStorage.setItem(
-      "acceptedTermsAndConditions",
-      JSON.stringify(payload.acceptedTermsAndConditions)
-    );
-    Router.push({
-      pathname: "/onboarding/step4"
-    });
-  },
-  displayName: "CustomForm"
-});
-
-class CustomForm extends React.Component {
-  render() {
-    const imageUrl = this.props.project && this.props.project.imageUrl;
-
-    const completion =
-      this.props.project && this.props.project.completion
-        ? this.props.project.completion
-        : false;
-
-    return (
-      <Form>
-        <div className="content">
-          <figure>
-            <img src={imageUrl} alt="" />
-          </figure>
-          {completion && <Progressbar completion={completion} />}
-          <div className="items">
-            <BulletItem content="10% contracted discount" bulletIcon="dollar" />
-            <BulletItem
-              content="90% reduction in carbon emissions"
-              bulletIcon="co2"
-            />
-          </div>
-        </div>
-        <Checkbox fieldname="acceptedTermsAndConditions">
-          <p className="checkbox__label">
-            I authorize Common Energy to act as my Agent and to enroll me in a
-            clean energy savings program, according to these{" "}
-            <a
-              href={this.props.agreement.terms}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              terms
-            </a>{" "}
-            and{" "}
-            <a
-              href={this.props.agreement.conditions}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              conditions
-            </a>
-            .
-          </p>
-        </Checkbox>
-        <Button
-          primary
-          disabled={!this.props.values.acceptedTermsAndConditions}
-        >
-          Let's do this!
-        </Button>
-        <style jsx>{`
-          .content {
-            margin-bottom: 2rem;
-            min-height: 370px;
-          }
-
-          .disclaimer {
-            text-align: center;
-          }
-
-          figure {
-            max-width: 100vw;
-            height: 190px;
-            margin: 1.5rem -7% 0 -7%;
-            background-color: transparent;
-            overflow: hidden;
-            display: flex;
-          }
-
-          img {
-            max-width: 100%;
-            object-fit: cover;
-            object-position: top;
-            opacity: 0;
-            animation: fadeIn 400ms ease-in-out forwards;
-            animation-delay: 0.4s;
-          }
-
-          .items {
-            margin-top: 20px;
-            opacity: 0;
-            animation: fadeIn 400ms ease-in-out forwards;
-            animation-delay: 0.6s;
-          }
-
-          @keyframes fadeIn {
-            to {
-              opacity: 1;
-            }
-          }
-        `}</style>
-      </Form>
-    );
-  }
-}
-
-const EnhancedCustomForm = formikEnhancer(CustomForm);
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod
 
 class Step3 extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
-      utility: {
-        project: {
-          imageUrl: "/static/images/illustrations/t&c.png",
-          name: "",
-          completion: ""
-        },
-        agreement: {
-          terms: "",
-          conditions: ""
-        }
-      }
-    };
-
-    this.getData = this.getData.bind(this);
+      name: "user",
+      postalCode: "",
+      errorMessage: ""
+    }
   }
 
   componentDidMount() {
-    global.analytics.page("Step 3");
+    global.analytics.page("Step 3")
+    let storedPostalCode = ""
+    let storedLeadId = ""
+    let storedName = ""
 
-    this.getData();
-  }
-
-  getData() {
-    let utility = "";
-    let state = "";
-
-    if (localStorage.getItem("utility")) {
-      utility = JSON.parse(localStorage.getItem("utility"));
+    if (localStorage.getItem("postalCode")) {
+      storedPostalCode = JSON.parse(localStorage.getItem("postalCode"))
     }
-
-    if (localStorage.getItem("state")) {
-      state = JSON.parse(localStorage.getItem("state"));
+    if (localStorage.getItem("leadId")) {
+      storedLeadId = localStorage.getItem("leadId")
     }
-
-    const rawParams = {
-      state: state,
-      utility: encodeURIComponent(utility.label)
-    };
-
-    const generatedParams = Object.entries(rawParams)
-      .map(([key, val]) => `${key}=${val}`)
-      .join("&");
+    if (localStorage.getItem("username")) {
+      storedName = JSON.parse(localStorage.getItem("username"))
+    }
 
     this.setState({
-      utility: {
-        agreement: {
-          terms: utility.terms,
-          conditions: utility.conditions
-        },
-        project: {
-          imageUrl: "/static/images/illustrations/t&c.png",
-          name: false,
-          completion: false
-        }
-      }
-    });
+      postalCode: storedPostalCode,
+      leadId: storedLeadId,
+      name: storedName.firstName
+    })
+  }
 
-    axios(`${API}/v1/utilities?${generatedParams}`).then(response => {
-      if (response.data.data) {
-        const data = response.data.data[0];
-        this.setState({
-          utility: {
-            agreement: {
-              terms: data.agreement.termsLink,
-              conditions: data.agreement.conditionsLink
-            },
-            project: {
-              imageUrl:
-                data.projects[0].imageUrl !== null
-                  ? data.projects[0].imageUrl
-                  : "/static/images/illustrations/t&c.png",
-              name: data.projects[0].displayName,
-              completion: data.projects[0].completion
-            }
-          }
-        });
-      }
-    });
+  getPostalCode(values) {
+    const components = values.address
+      ? values.address.gmaps.address_components
+      : null
+
+    const postalCode = components
+      ? components.find(x => x.types[0] == "postal_code")
+      : null
+
+    return postalCode ? postalCode.long_name : ""
+  }
+
+  getStateAddress(values) {
+    const components = values.address
+      ? values.address.gmaps.address_components
+      : null
+    const state = components
+      ? components.find(x => x.types[0] == "administrative_area_level_1")
+      : null
+
+    return state ? state.short_name : ""
+  }
+
+  capitalize(word) {
+    return word && word[0].toUpperCase() + word.slice(1)
   }
 
   render() {
+    const { name, leadId, postalCode, errorMessage } = this.state
     return (
       <main>
         <Header />
         <SingleStep
-          prefix="Great news!"
-          title="We've got a project in your area."
-          suffix={
-            this.state.utility.project && this.state.utility.project.name
-              ? this.state.utility.project.name
-              : ""
-          }
+          title={`Welcome ${this.capitalize(
+            name
+          )}! What is your address please?`}
         >
-          <EnhancedCustomForm
-            agreement={this.state.utility.agreement}
-            project={this.state.utility.project}
+          <Formik
+            initialValues={{
+              address: ""
+            }}
+            onSubmit={values => {
+              const arrayAddress = values.address.description.split(",")
+              const street = arrayAddress[0] ? arrayAddress[0] : ""
+              const city = arrayAddress[1]
+                ? arrayAddress[1].replace(/\s/g, "")
+                : ""
+
+              const address = {
+                street: street,
+                city: city,
+                state: this.getStateAddress(values),
+                postalCode: this.getPostalCode(values),
+                apt: values.apt ? values.apt : ""
+              }
+
+              localStorage.setItem("address", JSON.stringify(address))
+
+              if (address.postalCode === postalCode) {
+                window.firebase
+                  .auth()
+                  .currentUser.getIdToken(true)
+                  .then(idToken => {
+                    axios
+                      .put(
+                        `${API}/v1/subscribers`,
+                        {
+                          leadId: leadId,
+                          street: address.street,
+                          state: address.state,
+                          city: address.city
+                        },
+                        {
+                          headers: {
+                            Authorization: idToken
+                          }
+                        }
+                      )
+                      .then(() => {
+                        Router.push({
+                          pathname: "/onboarding/step4"
+                        })
+                      })
+                      .catch(() => {})
+                  })
+              } else {
+                this.setState({
+                  errorMessage:
+                    "Address has different zip code than the one initially provided."
+                })
+              }
+            }}
+            render={props => (
+              <Form>
+                <GeoSuggest
+                  label="Address"
+                  fieldname="address"
+                  value={props.values.address}
+                  onChange={props.setFieldValue}
+                  onBlur={props.setFieldTouched}
+                  error={props.errors.topics}
+                  touched={props.touched.topics}
+                />
+                <p className="error">{errorMessage}</p>
+                <Button primary disabled={!props.values.address != ""}>
+                  Next
+                </Button>
+              </Form>
+            )}
           />
+          <Stepper>
+            <li className="steplist__step steplist__step-doing">1</li>
+            <li className="steplist__step">2</li>
+            <li className="steplist__step">3</li>
+            <li className="steplist__step">4</li>
+            <li className="steplist__step">5</li>
+            <li className="steplist__step">6</li>
+          </Stepper>
         </SingleStep>
         <style jsx>{`
           main {
@@ -243,21 +172,15 @@ class Step3 extends React.Component {
             max-width: 700px;
             margin: 0 auto;
           }
-          .content {
-            margin: 0 auto;
-          }
-          .disclaimer {
+          .error {
+            height: 45px;
+            color: red;
             text-align: center;
-            font-size: 0.8rem;
-            margin-top: 0;
-          }
-          :global(.checkbox__label) {
-            margin-top: 0;
           }
         `}</style>
       </main>
-    );
+    )
   }
 }
 
-export default Step3;
+export default Step3
