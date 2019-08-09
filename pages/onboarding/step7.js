@@ -1,66 +1,79 @@
-import React from "react";
-import Router from "next/router";
-import { Formik, Form } from "formik";
-import Header from "../../components/Header";
-import RadioCard from "../../components/RadioCard";
-import SingleStep from "../../components/SingleStep";
-import Button from "../../components/Button";
-import Stepper from "../../components/Stepper";
+import React from "react"
+import Router from "next/router"
+import Header from "../../components/Header"
+import SingleStep from "../../components/SingleStep"
+import Button from "../../components/Button"
 
 class Step7 extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
+
+    this.state = {}
   }
 
   componentDidMount() {
-    global.analytics.page("Step 7");
+    global.analytics.page("Step 7")
+
+    let storedPartialConnection = false
+
+    if (window.localStorage.getItem("partialConnection")) {
+      storedPartialConnection = JSON.parse(
+        window.localStorage.getItem("partialConnection")
+      )
+    }
+
+    this.setState({
+      partialConnection: storedPartialConnection
+    })
+  }
+
+  renderContent() {
+    if (this.state.partialConnection) {
+      return (
+        <p className="message">
+          We are connecting your account and will contact you if we need more
+          information
+          <style jsx>{`
+            .message {
+              text-align: center;
+            }
+          `}</style>
+        </p>
+      )
+    } else {
+      return (
+        <React.Fragment>
+          <svg width="55" height="55" xmlns="http://www.w3.org/2000/svg">
+            <g fill="none" fillRule="evenodd">
+              <circle cx="27.5" cy="27.5" r="27.5" fill="#41EF8B" />
+              <path
+                d="M32.9977909 21.3976621c1.6389735-1.6389735 4.2050581.8556542 2.494699 2.494699l-10.262155 10.333588c-.712883.6414974-1.7817447.6414974-2.494699 0l-5.1310774-5.2025105c-1.6389731-1.6389736.8556542-4.1336251 2.4946989-2.494699l3.9195632 3.9195632 8.9789703-9.0506407z"
+                fill="#FFF"
+              />
+            </g>
+          </svg>
+          <p>Congratulations, you're connected!</p>
+        </React.Fragment>
+      )
+    }
   }
 
   render() {
     return (
       <main>
         <Header />
-        <SingleStep title="Do you have an on-line account with your electric utility?">
-          <Formik
-            initialValues={{
-              billingMethod: ""
-            }}
-            onSubmit={values => {
-              localStorage.setItem("billingMethod", JSON.stringify(values));
+        <SingleStep>
+          <div className="loading">{this.renderContent()}</div>
+          <Button
+            primary
+            onClick={() => {
               Router.push({
                 pathname: "/onboarding/step8"
-              });
+              })
             }}
-            render={props => (
-              <React.Fragment>
-                <Form>
-                  <RadioCard
-                    number="1"
-                    name="billingMethod"
-                    value="electronic"
-                    heading="Yes"
-                  />
-                  <RadioCard
-                    number="2"
-                    name="billingMethod"
-                    value="paper"
-                    heading="No"
-                  />
-                  <Button primary disabled={!props.values.billingMethod != ""}>
-                    Next
-                  </Button>
-                </Form>
-              </React.Fragment>
-            )}
-          />
-          <Stepper>
-            <li className="steplist__step steplist__step-done">1</li>
-            <li className="steplist__step steplist__step-done">2</li>
-            <li className="steplist__step steplist__step-done">3</li>
-            <li className="steplist__step steplist__step-doing">4</li>
-            <li className="steplist__step">5</li>
-            <li className="steplist__step">6</li>
-          </Stepper>
+          >
+            Next
+          </Button>
         </SingleStep>
         <style jsx>{`
           main {
@@ -69,10 +82,19 @@ class Step7 extends React.Component {
             max-width: 700px;
             margin: 0 auto;
           }
+          .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+          }
+          h3 {
+            text-align: center;
+          }
         `}</style>
       </main>
-    );
+    )
   }
 }
 
-export default Step7;
+export default Step7
