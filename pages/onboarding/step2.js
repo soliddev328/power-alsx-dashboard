@@ -1,94 +1,189 @@
-import React from "react";
-import Router from "next/router";
-import { Formik, Form } from "formik";
-import Header from "../../components/Header";
-import SingleStep from "../../components/SingleStep";
-import Button from "../../components/Button";
-import CustomSelect from "../../components/CustomSelect";
+import React from "react"
+import Router from "next/router"
+import { Form, withFormik } from "formik"
+import axios from "axios"
+import Header from "../../components/Header"
+import Checkbox from "../../components/Checkbox"
+import BulletItem from "../../components/BulletItem"
+import Progressbar from "../../components/Progressbar"
+import SingleStep from "../../components/SingleStep"
+import Button from "../../components/Button"
+import CONSTANTS from "../../globals"
+
+const { API } =
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod
+
+const formikEnhancer = withFormik({
+  mapValuesToPayload: x => x,
+  handleSubmit: payload => {
+    Router.push({
+      pathname: "/onboarding/step3"
+    })
+  },
+  displayName: "CustomForm"
+})
+
+class CustomForm extends React.Component {
+  render() {
+    const imageUrl = this.props.project && this.props.project.imageUrl
+
+    const completion =
+      this.props.project && this.props.project.completion
+        ? this.props.project.completion
+        : false
+
+    return (
+      <Form>
+        <div className="content">
+          <figure>
+            <img src={imageUrl} alt="" />
+          </figure>
+          {completion && <Progressbar completion={completion} />}
+          <div className="items">
+            <BulletItem
+              content="Prevent emissions and pollution in your community"
+              bulletIcon="co2"
+            />
+            <BulletItem
+              content="Save $10-15 per month on your energy bill"
+              bulletIcon="dollar"
+            />
+            <BulletItem
+              content="Making a positive impact on the environment — the equivalent of planting up to 22 trees each month!"
+              bulletIcon="plant"
+            />
+            <BulletItem content="No cancellation fees" bulletIcon="cross" />
+          </div>
+        </div>
+        <Button primary>Let's do this!</Button>
+        <style jsx>{`
+          .content {
+            margin-bottom: 2rem;
+            min-height: 370px;
+          }
+
+          .disclaimer {
+            text-align: center;
+          }
+
+          figure {
+            max-width: 100vw;
+            height: 190px;
+            margin: 1.5rem -7% 0 -7%;
+            background-color: transparent;
+            overflow: hidden;
+            display: flex;
+          }
+
+          img {
+            max-width: 100%;
+            object-fit: cover;
+            object-position: top;
+            opacity: 0;
+            animation: fadeIn 400ms ease-in-out forwards;
+            animation-delay: 0.4s;
+          }
+
+          .items {
+            margin-top: 20px;
+            opacity: 0;
+            animation: fadeIn 400ms ease-in-out forwards;
+            animation-delay: 0.6s;
+          }
+
+          @keyframes fadeIn {
+            to {
+              opacity: 1;
+            }
+          }
+        `}</style>
+      </Form>
+    )
+  }
+}
+
+const EnhancedCustomForm = formikEnhancer(CustomForm)
 
 class Step2 extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
-      address: "",
-      postalCode: "",
-      currentUtility: "",
-      error: ""
-    };
+      utility: {
+        project: {
+          imageUrl: "/static/images/illustrations/t&c.png",
+          name: "",
+          completion: ""
+        }
+      }
+    }
 
-    this.select = React.createRef();
+    this.getData = this.getData.bind(this)
   }
 
   componentDidMount() {
-    global.analytics.page("Step 2");
+    global.analytics.page("Step 2")
 
-    let storedAddress = "";
-    let storedPostalCode = "";
+    this.getData()
+  }
 
-    if (localStorage.getItem("address")) {
-      storedAddress = JSON.parse(localStorage.getItem("address"));
+  getData() {
+    let utility = ""
+    let state = ""
+
+    if (localStorage.getItem("utility")) {
+      utility = JSON.parse(localStorage.getItem("utility"))
     }
 
-    if (localStorage.getItem("postalCode")) {
-      storedPostalCode = JSON.parse(localStorage.getItem("postalCode"));
+    if (localStorage.getItem("state")) {
+      state = localStorage.getItem("state")
     }
 
-    this.setState({ address: storedAddress, postalCode: storedPostalCode });
+    const rawParams = {
+      state: state,
+      utility: encodeURIComponent(utility.label)
+    }
+
+    const generatedParams = Object.entries(rawParams)
+      .map(([key, val]) => `${key}=${val}`)
+      .join("&")
+
+    axios(`${API}/v1/utilities?${generatedParams}`)
+      .then(response => {
+        if (response.data.data) {
+          const data = response.data.data[0]
+
+          this.setState({
+            utility: {
+              project: {
+                imageUrl:
+                  data.projects[0].imageUrl !== null
+                    ? data.projects[0].imageUrl
+                    : "/static/images/illustrations/t&c.png",
+                name: data.projects[0].displayName || false,
+                completion: data.projects[0].completion || false
+              }
+            }
+          })
+        }
+      })
+      .catch(error => console.log(error))
   }
 
   render() {
     return (
       <main>
         <Header />
-        <SingleStep title="And who provides your electric service today?">
-          <Formik
-            initialValues={{
-              currentUtility: ""
-            }}
-            onSubmit={values => {
-              if (values.currentUtility !== "") {
-                localStorage.setItem(
-                  "utility",
-                  JSON.stringify(values.currentUtility)
-                );
-
-                Router.push({
-                  pathname: "/onboarding/searching"
-                });
-              } else if (this.select.current.state.singleOption) {
-                localStorage.setItem(
-                  "utility",
-                  JSON.stringify(this.select.current.state.options[0])
-                );
-                Router.push({
-                  pathname: "/onboarding/searching"
-                });
-              } else {
-                this.setState({ error: "Please select your provider" });
-              }
-            }}
-            render={props => {
-              return (
-                <React.Fragment>
-                  <Form>
-                    <CustomSelect
-                      ref={this.select}
-                      zipCode={this.state.postalCode}
-                      value={props.currentUtility}
-                      onChange={props.setFieldValue}
-                      onBlur={props.setFieldTouched}
-                      error={props.errors}
-                      touched={props.touched}
-                      fieldname="currentUtility"
-                    />
-                    <p className="error">{this.state.error}</p>
-                    <Button primary>Check For Savings</Button>
-                  </Form>
-                </React.Fragment>
-              );
-            }}
-          />
+        <SingleStep
+          prefix="Great news!"
+          title="We've got a project in your area."
+          suffix={
+            this.state.utility.project && this.state.utility.project.name
+              ? this.state.utility.project.name
+              : ""
+          }
+        >
+          <EnhancedCustomForm project={this.state.utility.project} />
         </SingleStep>
         <style jsx>{`
           main {
@@ -97,16 +192,21 @@ class Step2 extends React.Component {
             max-width: 700px;
             margin: 0 auto;
           }
-          .error {
-            height: 52px;
-            margin: 0;
-            padding: 1em 0;
+          .content {
+            margin: 0 auto;
+          }
+          .disclaimer {
             text-align: center;
+            font-size: 0.8rem;
+            margin-top: 0;
+          }
+          :global(.checkbox__label) {
+            margin-top: 0;
           }
         `}</style>
       </main>
-    );
+    )
   }
 }
 
-export default Step2;
+export default Step2

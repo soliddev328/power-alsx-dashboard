@@ -1,235 +1,115 @@
-import React from "react";
-import Router from "next/router";
-import { Formik, Form } from "formik";
-import axios from "axios";
-import Header from "../../components/Header";
-import Input from "../../components/Input";
-import SingleStep from "../../components/SingleStep";
-import Button from "../../components/Button";
-import Stepper from "../../components/Stepper";
-import CONSTANTS from "../../globals";
+import React from "react"
+import Router from "next/router"
+import { Formik, Form } from "formik"
+import axios from "axios"
+import Phoneinput from "../../components/Phoneinput"
+import Header from "../../components/Header"
+import SingleStep from "../../components/SingleStep"
+import Button from "../../components/Button"
+import Stepper from "../../components/Stepper"
+import CONSTANTS from "../../globals"
 
 const { API } =
-  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod
 
 class Step4 extends React.Component {
   constructor(props) {
-    super(props);
-
-    this.state = {
-      error: {
-        code: false,
-        message: ""
-      }
-    };
+    super(props)
   }
 
   componentDidMount() {
-    global.analytics.page("Step 4");
+    global.analytics.page("Step 4")
 
-    let storedPostalCode = "";
-    let storedUtility = "";
-    let storedAgreementChecked = false;
-    let storedPartner = "";
-    let storedReferrer = "";
-    let storedSalesRep = "";
-    let storedAffiliate = "";
-    let storedUtmCampaign = "";
-    let storedUtmMedium = "";
-    let storedUtmSource = "";
+    let storedLeadId = ""
+    let storedUtilityPaperOnly = false
+
+    if (localStorage.getItem("leadId")) {
+      storedLeadId = localStorage.getItem("leadId")
+    }
 
     if (localStorage.getItem("utility")) {
-      storedUtility = JSON.parse(localStorage.getItem("utility"));
-    }
-    if (localStorage.getItem("acceptedTermsAndConditions")) {
-      storedAgreementChecked = JSON.parse(
-        localStorage.getItem("acceptedTermsAndConditions")
-      );
-    }
-    if (localStorage.getItem("postalCode")) {
-      storedPostalCode = JSON.parse(localStorage.getItem("postalCode"));
-    }
-    if (localStorage.getItem("Partner")) {
-      storedPartner = localStorage.getItem("Partner");
-    }
-    if (localStorage.getItem("Referrer")) {
-      storedReferrer = localStorage.getItem("Referrer");
-    }
-    if (localStorage.getItem("SalesRep")) {
-      storedSalesRep = localStorage.getItem("SalesRep");
-    }
-    if (localStorage.getItem("Affiliate")) {
-      storedAffiliate = localStorage.getItem("Affiliate");
-    }
-    if (localStorage.getItem("UtmCampaign")) {
-      storedUtmCampaign = localStorage.getItem("UtmCampaign");
-    }
-    if (localStorage.getItem("UtmMedium")) {
-      storedUtmMedium = localStorage.getItem("UtmMedium");
-    }
-    if (localStorage.getItem("UtmSource")) {
-      storedUtmSource = localStorage.getItem("UtmSource");
+      let storedUtility = JSON.parse(localStorage.getItem("utility"))
+      if (storedUtility && storedUtility.paperOnly)
+        storedUtilityPaperOnly = true
     }
 
     this.setState({
-      utility: storedUtility.label,
-      postalCode: storedPostalCode,
-      referrer: storedReferrer,
-      partner: storedPartner,
-      salesRep: storedSalesRep,
-      affiliate: storedAffiliate,
-      utmCampaign: storedUtmCampaign,
-      utmMedium: storedUtmMedium,
-      utmSource: storedUtmSource,
-      agreedTermsAndConditions: storedAgreementChecked
-    });
-  }
-
-  autenticate(values) {
-    if (values.password === values.passwordConfirmation) {
-      window.firebase
-        .auth()
-        .createUserWithEmailAndPassword(values.emailAddress, values.password)
-        .catch(error => {
-          if (error.code === "auth/email-already-in-use") {
-            this.setState({
-              error: {
-                code: error.code,
-                message: "Already have a login and password?",
-                link: <a href="/">Go here</a>
-              }
-            });
-          } else {
-            this.setState({
-              error: { code: error.code, message: error.message }
-            });
-          }
-        })
-        .then(userCredential => {
-          if (userCredential) {
-            window.localStorage.setItem(
-              "firebaseUserId",
-              userCredential.user.uid
-            );
-            window.firebase
-              .auth()
-              .currentUser.getIdToken(true)
-              .then(idToken => {
-                axios
-                  .post(
-                    `${API}/v1/subscribers`,
-                    {
-                      Email: values.emailAddress,
-                      Password: values.password,
-                      Referrer: this.state.referrer,
-                      Partner: this.state.partner,
-                      SalesRep: this.state.salesRep,
-                      Affiliate: this.state.affiliate,
-                      postalCode: this.state.postalCode,
-                      agreementChecked: !!this.state.agreedTermsAndConditions,
-                      utility: this.state.utility,
-                      utmCampaign: this.state.utmCampaign,
-                      utmMedium: this.state.utmMedium,
-                      utmSource: this.state.utmSource,
-                      firebaseUserId: userCredential.user.uid
-                    },
-                    {
-                      headers: {
-                        Authorization: idToken
-                      }
-                    }
-                  )
-                  .then(response => {
-                    window.localStorage.setItem(
-                      "leadId",
-                      response.data.data.leadId
-                    );
-
-                    // Call Segement events
-                    global.analytics.alias(response.data.data.leadId);
-                    global.analytics.identify(response.data.data.leadId, {
-                      email: values.emailAddress
-                    });
-                    global.analytics.track("Lead Created", {});
-
-                    Router.push({
-                      pathname: "/onboarding/step5"
-                    });
-                  });
-              });
-          }
-        });
-    } else {
-      this.setState({
-        error: { code: "6", message: "Passwords do not match" }
-      });
-    }
+      leadId: storedLeadId,
+      storedUtilityPaperOnly
+    })
   }
 
   render() {
-    const email = localStorage.getItem("email");
     return (
       <main>
         <Header />
-        <SingleStep title="Ok, now for the fun stuff. Let's create your account!">
+        <SingleStep title="And what phone number would you like to use with the account?">
           <Formik
             initialValues={{
-              emailAddress: email,
-              password: "",
-              passwordConfirmation: ""
+              phoneNumber: ""
             }}
             onSubmit={values => {
-              window.localStorage.setItem("email", values.emailAddress);
-              this.autenticate(values);
+              localStorage.setItem("phoneNumer", values.phoneNumber)
+              window.firebase
+                .auth()
+                .currentUser.getIdToken(true)
+                .then(idToken => {
+                  axios
+                    .put(
+                      `${API}/v1/subscribers`,
+                      {
+                        leadId: this.state.leadId,
+                        phone: values.phoneNumber
+                      },
+                      {
+                        headers: {
+                          Authorization: idToken
+                        }
+                      }
+                    )
+                    .then(() => {
+                      if (this.state.storedUtilityPaperOnly) {
+                        localStorage.setItem(
+                          "billingMethod",
+                          JSON.stringify({
+                            billingMethod: "paper"
+                          })
+                        )
+                        Router.push({
+                          pathname: "/onboarding/step5"
+                        })
+                      } else {
+                        localStorage.setItem(
+                          "billingMethod",
+                          JSON.stringify(values)
+                        )
+                        Router.push({
+                          pathname: "/onboarding/step5"
+                        })
+                      }
+                    })
+                    .catch(() => {})
+                })
             }}
             render={props => (
               <Form>
-                <Input
-                  type="email"
-                  label="Email"
-                  fieldname="emailAddress"
-                  required
+                <Phoneinput
+                  value={props.values.phoneNumber}
+                  onChangeEvent={props.setFieldValue}
+                  onBlurEvent={props.setFieldTouched}
+                  label="Phone"
+                  fieldname="phoneNumber"
                 />
-                <Input
-                  type="password"
-                  label="Password"
-                  fieldname="password"
-                  required
-                />
-                <Input
-                  type="password"
-                  label="Confirm Password"
-                  fieldname="passwordConfirmation"
-                  required
-                />
-                <p className="error">
-                  {this.state.error.message}{" "}
-                  {this.state.error.link && this.state.error.link}
-                </p>
-                <Button
-                  primary
-                  disabled={
-                    !!props.values.emailAddress !== true ||
-                    !!props.values.password !== true
-                  }
-                  onClick={() => {
-                    this.setState({
-                      error: {
-                        code: false,
-                        message: ""
-                      }
-                    });
-                  }}
-                >
+                <Button primary disabled={!props.values.phoneNumber != ""}>
                   Next
                 </Button>
               </Form>
             )}
           />
           <Stepper>
-            <li className="steplist__step steplist__step-doing">1</li>
-            <li className="steplist__step">2</li>
-            <li className="steplist__step">3</li>
+            <li className="steplist__step steplist__step-done">1</li>
+            <li className="steplist__step steplist__step-done">2</li>
+            <li className="steplist__step steplist__step-doing">3</li>
             <li className="steplist__step">4</li>
             <li className="steplist__step">5</li>
             <li className="steplist__step">6</li>
@@ -242,16 +122,10 @@ class Step4 extends React.Component {
             max-width: 700px;
             margin: 0 auto;
           }
-          .error {
-            height: 52px;
-            margin: 0;
-            padding: 1em 0;
-            text-align: center;
-          }
         `}</style>
       </main>
-    );
+    )
   }
 }
 
-export default Step4;
+export default Step4
