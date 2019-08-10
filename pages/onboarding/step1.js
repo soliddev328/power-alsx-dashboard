@@ -43,58 +43,76 @@ class Step1 extends React.Component {
     localStorage.removeItem("email");
     localStorage.removeItem("username");
 
-    let customerReferralCookie = Cookie.get("customer_referral");
-    let partnerReferralCookie = Cookie.get("partner_referral");
-    let salesRepCookie = Cookie.get("ce_rep_referral");
-    let utmCampaignCookie = Cookie.get("_ce_campaign");
-    let utmSourceCookie = Cookie.get("_ce_source");
-    let utmMediumCookie = Cookie.get("_ce_medium");
+    let storedCustomerReferral = Cookie.get("customer_referral");
+    let storedPartnerReferral = Cookie.get("partner_referral");
+    let storedSalesRep = Cookie.get("ce_rep_referral");
+    let storedUtmCampaign = Cookie.get("_ce_campaign");
+    let storedUtmSource = Cookie.get("_ce_source");
+    let storedUtmMedium = Cookie.get("_ce_medium");
+    let storedAffiliate = "";
 
-    if (partnerReferralCookie) {
-      localStorage.setItem("Partner", partnerReferralCookie);
+    if (storedPartnerReferral) {
+      localStorage.setItem("Partner", storedPartnerReferral);
     }
-    if (salesRepCookie) {
-      localStorage.setItem("SalesRep", salesRepCookie);
+    if (storedSalesRep) {
+      localStorage.setItem("SalesRep", storedSalesRep);
     }
-    if (customerReferralCookie) {
-      localStorage.setItem("Referrer", customerReferralCookie);
+    if (storedCustomerReferral) {
+      localStorage.setItem("Referrer", storedCustomerReferral);
     }
-    if (utmCampaignCookie) {
-      localStorage.setItem("UtmCampaign", utmCampaignCookie);
+    if (storedUtmCampaign) {
+      localStorage.setItem("UtmCampaign", storedUtmCampaign);
     }
-    if (utmSourceCookie) {
-      localStorage.setItem("UtmSource", utmSourceCookie);
+    if (storedUtmSource) {
+      localStorage.setItem("UtmSource", storedUtmSource);
     }
-    if (utmMediumCookie) {
-      localStorage.setItem("UtmMedium", utmMediumCookie);
+    if (storedUtmMedium) {
+      localStorage.setItem("UtmMedium", storedUtmMedium);
     }
 
     if (this.props) {
       if (this.props.query.partner) {
-        localStorage.setItem("Partner", this.props.query.partner);
+        storedPartnerReferral = this.props.query.partner;
+        localStorage.setItem("Partner", storedPartnerReferral);
       }
       if (this.props.query.advocate) {
-        localStorage.setItem("Referrer", this.props.query.advocate);
+        storedCustomerReferral = this.props.query.advocate;
+        localStorage.setItem("Referrer", storedCustomerReferral);
       }
       if (this.props.query.rep) {
-        localStorage.setItem("SalesRep", this.props.query.rep);
+        storedSalesRep = this.props.query.rep;
+        localStorage.setItem("SalesRep", storedSalesRep);
       }
       if (this.props.query.affiliate) {
-        localStorage.setItem("Affiliate", this.props.query.affiliate);
+        storedAffiliate = this.props.query.affiliate;
+        localStorage.setItem("Affiliate", storedAffiliate);
       }
       if (this.props.query.utm_campaign) {
-        localStorage.setItem("UtmCampaign", this.props.query.utm_campaign);
+        storedUtmCampaign = this.props.query.utm_campaign;
+        localStorage.setItem("UtmCampaign", storedUtmCampaign);
       }
       if (this.props.query.utm_source) {
-        localStorage.setItem("UtmSource", this.props.query.utm_source);
+        storedUtmSource = this.props.query.utm_source;
+        localStorage.setItem("UtmSource", storedUtmSource);
       }
       if (this.props.query.utm_medium) {
-        localStorage.setItem("UtmMedium", this.props.query.utm_medium);
+        storedUtmMedium = this.props.query.utm_medium;
+        localStorage.setItem("UtmMedium", storedUtmMedium);
       }
       // some partners pass that information to us
       if (this.props.query.utility)
         localStorage.setItem("utility", this.props.query.utility);
     }
+
+    this.setState({
+      referrer: storedCustomerReferral,
+      partner: storedPartnerReferral,
+      salesRep: storedSalesRep,
+      affiliate: storedAffiliate,
+      utmCampaign: storedUtmCampaign,
+      utmMedium: storedUtmMedium,
+      utmSource: storedUtmSource
+    });
   }
 
   capitalize(word) {
