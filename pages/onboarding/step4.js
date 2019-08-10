@@ -1,42 +1,42 @@
-import React from "react"
-import Router from "next/router"
-import { Formik, Form } from "formik"
-import axios from "axios"
-import Phoneinput from "../../components/Phoneinput"
-import Header from "../../components/Header"
-import SingleStep from "../../components/SingleStep"
-import Button from "../../components/Button"
-import Stepper from "../../components/Stepper"
-import CONSTANTS from "../../globals"
+import React from "react";
+import Router from "next/router";
+import { Formik, Form } from "formik";
+import axios from "axios";
+import Phoneinput from "../../components/Phoneinput";
+import Header from "../../components/Header";
+import SingleStep from "../../components/SingleStep";
+import Button from "../../components/Button";
+import Stepper from "../../components/Stepper";
+import CONSTANTS from "../../globals";
 
 const { API } =
-  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 class Step4 extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
   }
 
   componentDidMount() {
-    global.analytics.page("Step 4")
+    global.analytics.page("Step 4");
 
-    let storedLeadId = ""
-    let storedUtilityPaperOnly = false
+    let storedLeadId = "";
+    let storedUtilityPaperOnly = false;
 
     if (localStorage.getItem("leadId")) {
-      storedLeadId = localStorage.getItem("leadId")
+      storedLeadId = localStorage.getItem("leadId");
     }
 
     if (localStorage.getItem("utility")) {
-      let storedUtility = JSON.parse(localStorage.getItem("utility"))
+      let storedUtility = JSON.parse(localStorage.getItem("utility"));
       if (storedUtility && storedUtility.paperOnly)
-        storedUtilityPaperOnly = true
+        storedUtilityPaperOnly = true;
     }
 
     this.setState({
       leadId: storedLeadId,
       storedUtilityPaperOnly
-    })
+    });
   }
 
   render() {
@@ -49,7 +49,7 @@ class Step4 extends React.Component {
               phoneNumber: ""
             }}
             onSubmit={values => {
-              localStorage.setItem("phoneNumer", values.phoneNumber)
+              localStorage.setItem("phoneNumer", values.phoneNumber);
               window.firebase
                 .auth()
                 .currentUser.getIdToken(true)
@@ -74,22 +74,22 @@ class Step4 extends React.Component {
                           JSON.stringify({
                             billingMethod: "paper"
                           })
-                        )
+                        );
                         Router.push({
-                          pathname: "/onboarding/step5"
-                        })
+                          pathname: "/onboarding/step6"
+                        });
                       } else {
                         localStorage.setItem(
                           "billingMethod",
                           JSON.stringify(values)
-                        )
+                        );
                         Router.push({
                           pathname: "/onboarding/step5"
-                        })
+                        });
                       }
                     })
-                    .catch(() => {})
-                })
+                    .catch(() => {});
+                });
             }}
             render={props => (
               <Form>
@@ -124,8 +124,8 @@ class Step4 extends React.Component {
           }
         `}</style>
       </main>
-    )
+    );
   }
 }
 
-export default Step4
+export default Step4;
