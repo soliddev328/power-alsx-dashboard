@@ -257,7 +257,7 @@ class Step1 extends React.Component {
               <React.Fragment>
                 <Form>
                   <div className="two-columns two-columns--responsive">
-                    <Input label="First Name" fieldname="firstName" autoFocus />
+                    <Input label="First Name" fieldname="firstName" />
                     <Input label="Last Name" fieldname="lastName" />
                   </div>
                   <ZipCodeInput
