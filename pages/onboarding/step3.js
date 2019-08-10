@@ -1,80 +1,80 @@
-import React from "react"
-import Router from "next/router"
-import { Formik, Form } from "formik"
-import axios from "axios"
-import GeoSuggest from "../../components/GeoSuggest"
-import Header from "../../components/Header"
-import SingleStep from "../../components/SingleStep"
-import Button from "../../components/Button"
-import Stepper from "../../components/Stepper"
-import CONSTANTS from "../../globals"
+import React from "react";
+import Router from "next/router";
+import { Formik, Form } from "formik";
+import axios from "axios";
+import GeoSuggest from "../../components/GeoSuggest";
+import Header from "../../components/Header";
+import SingleStep from "../../components/SingleStep";
+import Button from "../../components/Button";
+import Stepper from "../../components/Stepper";
+import CONSTANTS from "../../globals";
 
 const { API } =
-  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 class Step3 extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       name: "user",
       postalCode: "",
       errorMessage: ""
-    }
+    };
   }
 
   componentDidMount() {
-    global.analytics.page("Step 3")
-    let storedPostalCode = ""
-    let storedLeadId = ""
-    let storedName = ""
+    global.analytics.page("Step 3");
+    let storedPostalCode = "";
+    let storedLeadId = "";
+    let storedName = "";
 
     if (localStorage.getItem("postalCode")) {
-      storedPostalCode = JSON.parse(localStorage.getItem("postalCode"))
+      storedPostalCode = JSON.parse(localStorage.getItem("postalCode"));
     }
     if (localStorage.getItem("leadId")) {
-      storedLeadId = localStorage.getItem("leadId")
+      storedLeadId = localStorage.getItem("leadId");
     }
     if (localStorage.getItem("username")) {
-      storedName = JSON.parse(localStorage.getItem("username"))
+      storedName = JSON.parse(localStorage.getItem("username"));
     }
 
     this.setState({
       postalCode: storedPostalCode,
       leadId: storedLeadId,
       name: storedName.firstName
-    })
+    });
   }
 
   getPostalCode(values) {
     const components = values.address
       ? values.address.gmaps.address_components
-      : null
+      : null;
 
     const postalCode = components
       ? components.find(x => x.types[0] == "postal_code")
-      : null
+      : null;
 
-    return postalCode ? postalCode.long_name : ""
+    return postalCode ? postalCode.long_name : "";
   }
 
   getStateAddress(values) {
     const components = values.address
       ? values.address.gmaps.address_components
-      : null
+      : null;
     const state = components
       ? components.find(x => x.types[0] == "administrative_area_level_1")
-      : null
+      : null;
 
-    return state ? state.short_name : ""
+    return state ? state.short_name : "";
   }
 
   capitalize(word) {
-    return word && word[0].toUpperCase() + word.slice(1)
+    return word && word[0].toUpperCase() + word.slice(1);
   }
 
   render() {
-    const { name, leadId, postalCode, errorMessage } = this.state
+    const { name, leadId, postalCode, errorMessage } = this.state;
     return (
       <main>
         <Header />
@@ -88,11 +88,11 @@ class Step3 extends React.Component {
               address: ""
             }}
             onSubmit={values => {
-              const arrayAddress = values.address.description.split(",")
-              const street = arrayAddress[0] ? arrayAddress[0] : ""
+              const arrayAddress = values.address.description.split(",");
+              const street = arrayAddress[0] ? arrayAddress[0] : "";
               const city = arrayAddress[1]
                 ? arrayAddress[1].replace(/\s/g, "")
-                : ""
+                : "";
 
               const address = {
                 street: street,
@@ -100,43 +100,43 @@ class Step3 extends React.Component {
                 state: this.getStateAddress(values),
                 postalCode: this.getPostalCode(values),
                 apt: values.apt ? values.apt : ""
-              }
+              };
 
-              localStorage.setItem("address", JSON.stringify(address))
+              localStorage.setItem("address", JSON.stringify(address));
 
-              if (address.postalCode === postalCode) {
-                window.firebase
-                  .auth()
-                  .currentUser.getIdToken(true)
-                  .then(idToken => {
-                    axios
-                      .put(
-                        `${API}/v1/subscribers`,
-                        {
-                          leadId: leadId,
-                          street: address.street,
-                          state: address.state,
-                          city: address.city
-                        },
-                        {
-                          headers: {
-                            Authorization: idToken
-                          }
+              //if (address.postalCode === postalCode) {
+              window.firebase
+                .auth()
+                .currentUser.getIdToken(true)
+                .then(idToken => {
+                  axios
+                    .put(
+                      `${API}/v1/subscribers`,
+                      {
+                        leadId: leadId,
+                        street: address.street,
+                        state: address.state,
+                        city: address.city
+                      },
+                      {
+                        headers: {
+                          Authorization: idToken
                         }
-                      )
-                      .then(() => {
-                        Router.push({
-                          pathname: "/onboarding/step4"
-                        })
-                      })
-                      .catch(() => {})
-                  })
-              } else {
-                this.setState({
-                  errorMessage:
-                    "Address has different zip code than the one initially provided."
-                })
-              }
+                      }
+                    )
+                    .then(() => {
+                      Router.push({
+                        pathname: "/onboarding/step4"
+                      });
+                    })
+                    .catch(() => {});
+                });
+              // } else {
+              //   this.setState({
+              //     errorMessage:
+              //       "Address has different zip code than the one initially provided."
+              //   })
+              // }
             }}
             render={props => (
               <Form>
@@ -179,8 +179,8 @@ class Step3 extends React.Component {
           }
         `}</style>
       </main>
-    )
+    );
   }
 }
 
-export default Step3
+export default Step3;
