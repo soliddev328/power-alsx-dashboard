@@ -256,10 +256,6 @@ class Step1 extends React.Component {
             render={props => (
               <React.Fragment>
                 <Form>
-                  <div className="two-columns two-columns--responsive">
-                    <Input label="First Name" fieldname="firstName" />
-                    <Input label="Last Name" fieldname="lastName" />
-                  </div>
                   <ZipCodeInput
                     value={props.values.postalCode}
                     onChangeEvent={props.setFieldValue}
@@ -277,6 +273,10 @@ class Step1 extends React.Component {
                     touched={props.touched}
                     fieldname="currentUtility"
                   />
+                  <div className="two-columns two-columns--responsive">
+                    <Input label="First Name" fieldname="firstName" />
+                    <Input label="Last Name" fieldname="lastName" />
+                  </div>
                   <Input
                     type="email"
                     label="Email"
