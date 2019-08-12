@@ -50,6 +50,7 @@ class Step1 extends React.Component {
     let storedUtmSource = Cookie.get("_ce_source");
     let storedUtmMedium = Cookie.get("_ce_medium");
     let storedAffiliate = "";
+    let storedReferrerPage = "";
 
     if (storedPartnerReferral) {
       localStorage.setItem("Partner", storedPartnerReferral);
@@ -103,6 +104,7 @@ class Step1 extends React.Component {
       if (this.props.query.utility)
         localStorage.setItem("utility", this.props.query.utility);
     }
+    if (document.referrer) storedReferrerPage = document.referrer;
 
     this.setState({
       referrer: storedCustomerReferral,
@@ -111,7 +113,8 @@ class Step1 extends React.Component {
       affiliate: storedAffiliate,
       utmCampaign: storedUtmCampaign,
       utmMedium: storedUtmMedium,
-      utmSource: storedUtmSource
+      utmSource: storedUtmSource,
+      referrerPage: storedReferrerPage
     });
   }
 
@@ -186,7 +189,8 @@ class Step1 extends React.Component {
                       affiliate: this.state.affiliate,
                       utmCampaign: this.state.utmCampaign,
                       utmMedium: this.state.utmMedium,
-                      utmSource: this.state.utmSource
+                      utmSource: this.state.utmSource,
+                      referrerPage: this.state.referrerPage
                     },
                     {
                       headers: {
