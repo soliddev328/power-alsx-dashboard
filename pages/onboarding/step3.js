@@ -3,6 +3,7 @@ import Router from "next/router";
 import { Formik, Form } from "formik";
 import axios from "axios";
 import GeoSuggest from "../../components/GeoSuggest";
+import Input from "../../components/Input";
 import Header from "../../components/Header";
 import SingleStep from "../../components/SingleStep";
 import Button from "../../components/Button";
@@ -85,7 +86,8 @@ class Step3 extends React.Component {
         >
           <Formik
             initialValues={{
-              address: ""
+              address: "",
+              apt: ""
             }}
             onSubmit={values => {
               const arrayAddress = values.address.description.split(",");
@@ -116,7 +118,8 @@ class Step3 extends React.Component {
                         leadId: leadId,
                         street: address.street,
                         state: address.state,
-                        city: address.city
+                        city: address.city,
+                        apt: address.apt
                       },
                       {
                         headers: {
@@ -149,6 +152,7 @@ class Step3 extends React.Component {
                   error={props.errors.topics}
                   touched={props.touched.topics}
                 />
+                <Input label="Apartment No." fieldname="apt" />
                 <p className="error">{errorMessage}</p>
                 <Button primary disabled={!props.values.address != ""}>
                   Next
