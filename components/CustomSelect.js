@@ -197,7 +197,7 @@ export default class CustomSelect extends React.Component {
           }
 
           .select__menu {
-            z-index: 1000;
+            z-index: 1000 !important;
           }
 
           .select__option {
