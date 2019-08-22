@@ -8,11 +8,6 @@ const { FB_APP_ID, SEGMENT_KEY, FULLSTORY_KEY, FIREBASE } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 export default class MyDocument extends Document {
-  static async getInitialProps(ctx) {
-    const initialProps = await Document.getInitialProps(ctx);
-    return { ...initialProps };
-  }
-
   renderSegmentSnippet() {
     const opts = {
       apiKey: SEGMENT_KEY,
@@ -159,7 +154,7 @@ export default class MyDocument extends Document {
           <script
             src={`https://maps.googleapis.com/maps/api/js?key=${
               settings.meta.gmapsApiKey
-            }&libraries=places`}
+              }&libraries=places`}
           />
           <script
             dangerouslySetInnerHTML={{

@@ -1,19 +1,17 @@
-import React from "react";
 import { Field } from "formik";
 
-export default class RadioCard extends React.Component {
-  render() {
-    return (
-      <label>
-        <Field
-          type="checkbox"
-          component="input"
-          name={this.props.fieldname}
-          id={this.props.fieldname}
-          validate={this.props.required}
-        />
-        {this.props.label ? <p>{this.props.label}</p> : this.props.children}
-        <style jsx>{`
+export default function RadioCard({ fieldname, required, label, children }) {
+  return (
+    <label>
+      <Field
+        type="checkbox"
+        component="input"
+        name={fieldname}
+        id={fieldname}
+        validate={required}
+      />
+      {label ? <p>{label}</p> : children}
+      <style jsx>{`
           label {
             display: flex;
             align-items: start;
@@ -27,7 +25,7 @@ export default class RadioCard extends React.Component {
             margin: 0.5rem 0;
           }
         `}</style>
-        <style jsx global>{`
+      <style jsx global>{`
           input[type="checkbox"] {
             appearance: none;
             border: none;
@@ -57,7 +55,6 @@ export default class RadioCard extends React.Component {
             margin-top: 0;
           }
         `}</style>
-      </label>
-    );
-  }
+    </label>
+  );
 }

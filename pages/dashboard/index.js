@@ -52,7 +52,61 @@ class Dashboard extends React.Component {
           <Panel>
             <Text>test</Text>
           </Panel>
+          <Panel >
+            <Text>test</Text>
+          </Panel>
           <Panel>
+            <Text>test</Text>
+          </Panel>
+          <Panel>
+            <Text>test</Text>
+          </Panel>
+        </Section>
+        <Section>
+          <Panel>
+            <Text>test</Text>
+          </Panel>
+        </Section>
+        <Section>
+          <Panel>
+            <Text>test</Text>
+          </Panel>
+        </Section>
+        <Section columns="5">
+          <Panel>
+            <Text>test</Text>
+          </Panel>
+          <Panel>
+            <Text>test</Text>
+          </Panel>
+          <Panel >
+            <Text>test</Text>
+          </Panel>
+          <Panel>
+            <Text>test</Text>
+          </Panel>
+          <Panel>
+            <Text>test</Text>
+          </Panel>
+        </Section>
+        <Section>
+          <Panel>
+            <Text>test</Text>
+          </Panel>
+        </Section>
+        <Section>
+          <Panel>
+            <Text>test</Text>
+          </Panel>
+        </Section>
+        <Section columns="5">
+          <Panel>
+            <Text>test</Text>
+          </Panel>
+          <Panel>
+            <Text>test</Text>
+          </Panel>
+          <Panel >
             <Text>test</Text>
           </Panel>
           <Panel>
@@ -109,10 +163,10 @@ class Dashboard extends React.Component {
     return this.state.isAbleToSeeDashboard
       ? this.renderDashboard()
       : () => {
-          Router.push({
-            pathname: "/"
-          })
-        }
+        Router.push({
+          pathname: "/"
+        })
+      }
   }
 }
 

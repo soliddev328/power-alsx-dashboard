@@ -1,4 +1,3 @@
-import React from "react"
 import GiftIcon from "./Icons/GiftIcon"
 import LocationIcon from "./Icons/LocationIcon"
 import DollarIcon from "./Icons/DollarIcon"
@@ -10,37 +9,35 @@ import CalendarIcon from "./Icons/CalendarIcon"
 import PlantIcon from "./Icons/PlantIcon"
 import Co2Icon from "./Icons/Co2Icon"
 
-export default class BulletItem extends React.Component {
-  BulletIcon() {
-    if (this.props.bulletIcon === "cross") {
-      return <CrossIcon />
-    } else if (this.props.bulletIcon === "discount") {
-      return <DiscountIcon />
-    } else if (this.props.bulletIcon === "calendar") {
-      return <CalendarIcon />
-    } else if (this.props.bulletIcon === "co2") {
-      return <Co2Icon />
-    } else if (this.props.bulletIcon === "signup") {
-      return <SignupIcon />
-    } else if (this.props.bulletIcon === "gift") {
-      return <GiftIcon />
-    } else if (this.props.bulletIcon === "money") {
-      return <MoneyIcon />
-    } else if (this.props.bulletIcon === "dollar") {
-      return <DollarIcon />
-    } else if (this.props.bulletIcon === "location") {
-      return <LocationIcon />
-    } else if (this.props.bulletIcon === "plant") {
-      return <PlantIcon />
-    }
+const BulletIcon = (bulletIcon) => {
+  if (bulletIcon === "cross") {
+    return <CrossIcon />
+  } else if (bulletIcon === "discount") {
+    return <DiscountIcon />
+  } else if (bulletIcon === "calendar") {
+    return <CalendarIcon />
+  } else if (bulletIcon === "co2") {
+    return <Co2Icon />
+  } else if (bulletIcon === "signup") {
+    return <SignupIcon />
+  } else if (bulletIcon === "gift") {
+    return <GiftIcon />
+  } else if (bulletIcon === "money") {
+    return <MoneyIcon />
+  } else if (bulletIcon === "dollar") {
+    return <DollarIcon />
+  } else if (bulletIcon === "location") {
+    return <LocationIcon />
+  } else if (bulletIcon === "plant") {
+    return <PlantIcon />
   }
-
-  render() {
-    return (
-      <div className="wrapper">
-        <div className="icon">{this.props.bulletIcon && this.BulletIcon()}</div>
-        <p>{this.props.content}</p>
-        <style jsx>{`
+}
+export default function BulletItem({ bulletIcon, content }) {
+  return (
+    <div className="wrapper">
+      <div className="icon">{bulletIcon && BulletIcon(bulletIcon)}</div>
+      <p>{content}</p>
+      <style jsx>{`
           .wrapper {
             display: grid;
             grid-template-columns: 1fr 5fr;
@@ -57,7 +54,7 @@ export default class BulletItem extends React.Component {
 
           p {
             display: inline;
-            color: --color-font;
+            color: #161621;
             font-size: 0.8rem;
             font-weight: 800;
             margin: 0;
@@ -65,7 +62,6 @@ export default class BulletItem extends React.Component {
             opacity: 1;
           }
         `}</style>
-      </div>
-    )
-  }
+    </div>
+  )
 }
