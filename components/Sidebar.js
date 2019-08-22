@@ -16,12 +16,15 @@ export default function Header() {
             background-color: #fff;
             border-right: 2px solid #41ef8b;
             padding: 48px 0;
+            position: relative;
           }
           nav {
             display: flex;
             flex-direction: column;
             padding: 0 2rem;
             margin: 0 auto;
+            position: sticky;
+            top: 48px;
           }
         `}</style>
     </div>
