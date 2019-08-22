@@ -67,13 +67,15 @@ class Step9 extends React.Component {
   }
 
   renderCreditCard() {
+    const { name } = this.props
+    const { stripe } = this.state
     return (
       <SingleStep title="Please enter your credit card information">
         <div className="container">
           <img className="cards" src="/static/images/banks/cards.png" alt="" />
-          <StripeProvider stripe={this.state.stripe}>
+          <StripeProvider stripe={stripe}>
             <Elements>
-              <Checkout stripe={this.state.stripe} name={this.props.name} />
+              <Checkout stripe={stripe} name={name} />
             </Elements>
           </StripeProvider>
         </div>
@@ -151,11 +153,12 @@ class Step9 extends React.Component {
         .auth()
         .currentUser.getIdToken(true)
         .then(idToken => {
+          const { leadId } = this.state
           axios
             .put(
               `${API}/v1/subscribers`,
               {
-                leadId: this.state.leadId,
+                leadId: leadId,
                 bank: values.bankName,
                 bankRoutingNumber: values.bankRoutingNumber,
                 bankAccountNumber: values.bankAccountNumber
@@ -173,12 +176,13 @@ class Step9 extends React.Component {
                 pathname: "/dashboard"
               })
             })
-            .catch(() => {})
+            .catch(() => { })
         })
     }
   }
 
   renderManualDataInsert() {
+    const { errorMessage } = this.state
     return (
       <SingleStep title="Please provide the following information.">
         <Formik
@@ -210,7 +214,7 @@ class Step9 extends React.Component {
                 label="Bank Account Number Confirmation"
                 fieldname="bankAccountNumberConfirmation"
               />
-              <p className="error">{this.state.errorMessage}</p>
+              <p className="error">{errorMessage}</p>
 
               <Button
                 primary

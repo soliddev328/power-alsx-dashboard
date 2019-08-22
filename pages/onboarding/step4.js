@@ -40,6 +40,7 @@ class Step4 extends React.Component {
   }
 
   render() {
+    const { leadId, storedUtilityPaperOnly } = this.state
     return (
       <main>
         <Header />
@@ -58,7 +59,7 @@ class Step4 extends React.Component {
                     .put(
                       `${API}/v1/subscribers`,
                       {
-                        leadId: this.state.leadId,
+                        leadId: leadId,
                         phone: values.phoneNumber
                       },
                       {
@@ -68,7 +69,7 @@ class Step4 extends React.Component {
                       }
                     )
                     .then(() => {
-                      if (this.state.storedUtilityPaperOnly) {
+                      if (storedUtilityPaperOnly) {
                         localStorage.setItem(
                           "billingMethod",
                           JSON.stringify({
@@ -88,7 +89,7 @@ class Step4 extends React.Component {
                         });
                       }
                     })
-                    .catch(() => {});
+                    .catch(() => { });
                 });
             }}
             render={props => (

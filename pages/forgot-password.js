@@ -29,6 +29,7 @@ export default class forgotPassword extends React.Component {
   }
 
   renderForm() {
+    const { error } = this.state
     return (
       <Formik
         initialValues={{
@@ -47,7 +48,7 @@ export default class forgotPassword extends React.Component {
                 required
                 autoFocus
               />
-              <p className="error">{this.state.error}</p>
+              <p className="error">{error}</p>
               <Button primary disabled={!!props.values.emailAddress !== true}>
                 Send reset password email
               </Button>

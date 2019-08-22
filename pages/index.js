@@ -34,6 +34,7 @@ class Step1 extends React.Component {
   }
 
   autenticate(values) {
+    const { error } = this.state
     window.firebase
       .auth()
       .signInWithEmailAndPassword(values.emailAddress, values.password)
@@ -41,7 +42,7 @@ class Step1 extends React.Component {
         this.setState({ error: { code: error.code, message: error.message } });
       })
       .then(firebaseData => {
-        if (!this.state.error.code) {
+        if (!error.code) {
           window.firebase
             .auth()
             .currentUser.getIdToken(true)
@@ -115,7 +116,7 @@ class Step1 extends React.Component {
                     });
                   }
                 })
-                .catch(() => {});
+                .catch(() => { });
             });
         }
       });
@@ -126,6 +127,7 @@ class Step1 extends React.Component {
   }
 
   render() {
+    const { error } = this.state
     return (
       <main>
         <Header first />
@@ -154,7 +156,7 @@ class Step1 extends React.Component {
                     type="password"
                     required
                   />
-                  <p className="error">{this.state.error.message}</p>
+                  <p className="error">{error.message}</p>
                   <Button
                     primary
                     disabled={

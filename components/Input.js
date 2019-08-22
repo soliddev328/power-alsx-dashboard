@@ -10,11 +10,12 @@ export default class Input extends React.Component {
   }
 
   applyValidation(x) {
+    const { type } = this.props
     let msg
 
-    if (this.props.type === "email") {
+    if (type === "email") {
       msg = "Please enter a valid email address"
-    } else if (this.props.type === "password") {
+    } else if (type === "password") {
       msg = "Please complete password fields"
     }
     x.target.setCustomValidity(msg)
