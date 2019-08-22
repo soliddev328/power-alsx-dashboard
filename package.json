@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "next start",
+    "dev-old": "next",
     "build": "next build && next export -o /public"
   },
   "engines": {
@@ -19,6 +20,7 @@
     "@segment/snippet": "^4.4.0",
     "axios": "^0.19.0",
     "babel-plugin-emotion": "^10.0.14",
+    "classnames": "^2.2.6",
     "formik": "^1.5.8",
     "js-cookie": "^2.2.0",
     "next": "^9.0.2",

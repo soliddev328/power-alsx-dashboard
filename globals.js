@@ -31,4 +31,4 @@ module.exports = {
       SENDERID: "273326053550"
     }
   }
-};
+}
