@@ -13,17 +13,17 @@ export default function Main({ children }) {
           display: grid;
           grid-template-areas: "sidebar content";
           grid-template-columns: 250px 1fr;
-          overflow: hidden;
         }
 
         .content {
           padding: 40px 70px;
-          max-width: 1050px;
+          max-width: 1200px;
           margin: 0;
           transform: translateX(10px);
           opacity: 0;
           animation: fadeInFromRight 400ms ease-in-out forwards;
           animation-delay: 200ms;
+          overflow-x: hidden;
         }
 
         @keyframes fadeInFromRight {
