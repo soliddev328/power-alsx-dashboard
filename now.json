@@ -1,11 +1,32 @@
 {
   "name": "commonenergy",
   "version": 2,
-  "builds": [{ "src": "next.config.js", "use": "@now/next" }],
-  "alias": ["my.commonenergy.us"],
+  "builds": [
+    {
+      "src": "next.config.js",
+      "use": "@now/next"
+    }
+  ],
+  "build": {
+    "env": {
+      "NODE_ENV": "production"
+    }
+  },
+  "alias": [
+    "my.commonenergy.us"
+  ],
   "routes": [
-    { "src": "/sitemap.xml", "dest": "/static/sitemap.xml" },
-    { "src": "/robots.txt", "dest": "/static/robots.txt" },
-    { "src": "/favicon.ico", "dest": "/static/favicon.ico" }
+    {
+      "src": "/sitemap.xml",
+      "dest": "/static/sitemap.xml"
+    },
+    {
+      "src": "/robots.txt",
+      "dest": "/static/robots.txt"
+    },
+    {
+      "src": "/favicon.ico",
+      "dest": "/static/favicon.ico"
+    }
   ]
 }
