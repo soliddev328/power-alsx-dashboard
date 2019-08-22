@@ -7,6 +7,8 @@ export default class Phoneinput extends React.PureComponent {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
+
+    this.state = {}
   }
 
   handleChange(e) {

@@ -15,6 +15,8 @@ const { API } =
 class Step4 extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {}
   }
 
   componentDidMount() {
