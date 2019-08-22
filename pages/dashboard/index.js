@@ -160,7 +160,8 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    return this.state.isAbleToSeeDashboard
+    const { isAbleToSeeDashboard } = this.state
+    return isAbleToSeeDashboard
       ? this.renderDashboard()
       : () => {
         Router.push({

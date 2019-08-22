@@ -107,6 +107,7 @@ class Step6 extends React.Component {
 
   renderUtilityLogin() {
     const { query } = this.props
+    const { leadId, utility, agreement } = this.state
     return (
       <React.Fragment>
         {query && query.error && (
@@ -129,8 +130,8 @@ class Step6 extends React.Component {
                   .put(
                     `${API}/v1/subscribers/utilities/link`,
                     {
-                      leadId: this.state.leadId,
-                      utility: this.state.utility,
+                      leadId: leadId,
+                      utility: utility,
                       agreementChecked: !!values.acceptedTermsAndConditions,
                       utilityUsername: values.utilityUser,
                       utilityPwd: values.utilityPassword
@@ -188,7 +189,7 @@ class Step6 extends React.Component {
                     I authorize Common Energy to act as my Agent and to enroll
                     me in a clean energy savings program, according to these{" "}
                     <a
-                      href={this.state.agreement.terms}
+                      href={agreement.terms}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -196,7 +197,7 @@ class Step6 extends React.Component {
                     </a>{" "}
                     and{" "}
                     <a
-                      href={this.state.agreement.conditions}
+                      href={agreement.conditions}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -230,6 +231,7 @@ class Step6 extends React.Component {
   }
 
   renderAskForUtilityAccount() {
+    const { leadId, utility, agreement } = this.state
     return (
       <Formik
         initialValues={{
@@ -245,7 +247,7 @@ class Step6 extends React.Component {
                 .put(
                   `${API}/v1/subscribers`,
                   {
-                    leadId: this.state.leadId,
+                    leadId: leadId,
                     agreementChecked: !!values.acceptedTermsAndConditions,
                     utilityAccountNumber: values.utilityAccountNumber
                   },
@@ -275,7 +277,7 @@ class Step6 extends React.Component {
                   I authorize Common Energy to act as my Agent and to enroll me
                   in a clean energy savings program, according to these{" "}
                   <a
-                    href={this.state.agreement.terms}
+                    href={agreement.terms}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -283,7 +285,7 @@ class Step6 extends React.Component {
                   </a>{" "}
                   and{" "}
                   <a
-                    href={this.state.agreement.conditions}
+                    href={agreement.conditions}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -309,9 +311,10 @@ class Step6 extends React.Component {
   }
 
   renderForms() {
+    const { billingMethod } = this.state
     const canLinkAccount =
-      this.state.billingMethod &&
-      this.state.billingMethod.billingMethod.indexOf("paper") !== 0
+      billingMethod &&
+      billingMethod.billingMethod.indexOf("paper") !== 0
 
     return canLinkAccount
       ? this.renderUtilityLogin()
@@ -354,56 +357,58 @@ class Step6 extends React.Component {
   }
 
   renderText() {
+    const { billingMethod, currentUtility, isLoading } = this.state
     const canLinkAccount =
-      this.state.billingMethod &&
-      this.state.billingMethod.billingMethod.indexOf("paper") !== 0
+      billingMethod &&
+      billingMethod.billingMethod.indexOf("paper") !== 0
     let text = canLinkAccount
       ? "Ok great. Let's connect your account and get you saving!"
       : "No problem! We can use your account number to get you connected and saving."
 
-    if (this.state.currentUtility && this.state.currentUtility.paperOnly)
+    if (currentUtility && currentUtility.paperOnly)
       text = "We can use your account number to get you connected and saving."
 
-    return this.state.isLoading ? "" : text
+    return isLoading ? "" : text
   }
 
   render() {
+    const { billingMethod, currentUtility, isLoading, createLoginLink, forgotEmailLink, forgotPwdLink } = this.state
     const canLinkAccount =
-      this.state.billingMethod &&
-      this.state.billingMethod.billingMethod.indexOf("paper") !== 0
+      billingMethod &&
+      billingMethod.billingMethod.indexOf("paper") !== 0
     return (
       <main>
         <Header />
         <SingleStep title={this.renderText()}>
-          {this.state && this.state.currentUtility && !this.state.isLoading && (
+          {currentUtility && !isLoading && (
             <figure>
               <img
-                src={this.state.currentUtility.image.src}
-                alt={this.state.currentUtility.image.altText}
+                src={currentUtility.image.src}
+                alt={currentUtility.image.altText}
               />
             </figure>
           )}
-          {this.state.isLoading ? this.renderLoader() : this.renderForms()}
-          {!this.state.isLoading && canLinkAccount && (
+          {isLoading ? this.renderLoader() : this.renderForms()}
+          {!isLoading && canLinkAccount && (
             <div className="links">
-              {this.state.createLoginLink && (
-                <a className="cta" href={this.state.createLoginLink}>
+              {createLoginLink && (
+                <a className="cta" href={createLoginLink}>
                   Create an account
                 </a>
               )}
-              {this.state.forgotEmailLink && (
-                <a className="cta" href={this.state.forgotEmailLink}>
+              {forgotEmailLink && (
+                <a className="cta" href={forgotEmailLink}>
                   Forgot username
                 </a>
               )}
-              {this.state.forgotPwdLink && (
-                <a className="cta" href={this.state.forgotPwdLink}>
+              {forgotPwdLink && (
+                <a className="cta" href={forgotPwdLink}>
                   Forgot password
                 </a>
               )}
             </div>
           )}
-          {!this.state.isLoading && (
+          {!isLoading && (
             <Stepper>
               <li className="steplist__step steplist__step-done">1</li>
               <li className="steplist__step steplist__step-done">2</li>

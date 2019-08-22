@@ -28,7 +28,9 @@ class Step7 extends React.Component {
   }
 
   renderContent() {
-    if (this.state.partialConnection) {
+    const { partialConnection } = this.state
+
+    if (partialConnection) {
       return (
         <p className="message">
           We are connecting your account and will contact you if we need more
