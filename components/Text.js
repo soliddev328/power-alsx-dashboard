@@ -67,7 +67,6 @@ const presets = {
   description: `
     text-transform: uppercase;
     font-size: 12px;
-    color: var(--accents-5);
   `,
   span: ``
 }
@@ -159,7 +158,7 @@ const Text = ({
 }) => {
   const Styler =
     components[
-      [h1, h2, h3, h4, h5, p, small, description, span].indexOf(true)
+    [h1, h2, h3, h4, h5, p, small, description, span].indexOf(true)
     ] || P
 
   return (
