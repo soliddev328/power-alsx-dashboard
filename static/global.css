@@ -64,10 +64,6 @@ body {
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
-main > *:not(header) {
-  animation: fadeIn 400ms forwards;
-}
-
 h1,
 h2,
 h4,
@@ -113,6 +109,22 @@ p {
   letter-spacing: 0.5px;
   line-height: 1.7em;
   color: #555e80;
+}
+
+h1:first-child,
+h2:first-child,
+h3:first-child,
+h4:first-child,
+p:first-child {
+  margin-top: 0;
+}
+
+h1:last-child,
+h2:last-child,
+h3:last-child,
+h4:last-child,
+p:last-child {
+  margin-bottom: 0;
 }
 
 *::-moz-selection {

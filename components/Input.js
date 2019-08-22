@@ -34,6 +34,7 @@ export default class Input extends React.Component {
   }
 
   render() {
+    const { fullWidth, type, fieldname, validator, secondary, label, autoFocus } = this.props
     return (
       <div
         ref={this.inputField}
@@ -41,27 +42,27 @@ export default class Input extends React.Component {
         className="input__wrapper"
       >
         <Field
-          type={this.props.type ? this.props.type : "text"}
+          type={type ? type : "text"}
           component="input"
-          name={this.props.fieldname}
-          id={this.props.fieldname}
-          validate={this.props.validator ? this.props.validator : false}
+          name={fieldname}
+          id={fieldname}
+          validate={validator ? validator : false}
           onInvalid={this.applyValidation}
           onInput={this.customSetCustomValidity}
-          autoFocus={this.props.autoFocus}
+          autoFocus={autoFocus}
           {...this.props}
         />
-        <label htmlFor={this.props.fieldname}>{this.props.label}</label>
+        <label htmlFor={fieldname}>{label}</label>
         <style jsx global>{`
           input {
-            background-color: ${this.props.secondary ? "#F6F9FF" : "#fff"};
+            background-color: ${secondary ? "#F6F9FF" : "#fff"};
           }
 
           .input__wrapper {
             position: relative;
             height: 3.75rem;
             width: 100%;
-            max-width: 350px;
+            max-width: ${fullWidth ? '100%' : '350px'};
             margin: 0 auto;
             margin-bottom: 0.5rem;
           }
