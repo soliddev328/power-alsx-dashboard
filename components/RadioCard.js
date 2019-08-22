@@ -1,38 +1,36 @@
-import React from "react";
 import { Field } from "formik";
 import Highlight from "./Highlight";
 
-export default class RadioCard extends React.Component {
-  render() {
-    return (
-      <label>
-        <Field
-          type="radio"
-          component="input"
-          name={this.props.name}
-          id={this.props.name}
-          validate={this.props.required}
-          className="radiocard__input"
-          value={this.props.value}
-        />
+export default function RadioCard({ name, required, value, heading, content, highlight }) {
+  return (
+    <label>
+      <Field
+        type="radio"
+        component="input"
+        name={name}
+        id={name}
+        validate={required}
+        className="radiocard__input"
+        value={value}
+      />
 
-        <div className="radiocard__container">
-          <h3>
-            <span className="control" />
-            {this.props.heading}
-          </h3>
-          {this.props.content && (
-            <Highlight
-              className="paragraph"
-              content={this.props.content}
-              highlight={this.props.highlight}
-            />
-          )}
-        </div>
+      <div className="radiocard__container">
+        <h3>
+          <span className="control" />
+          {heading}
+        </h3>
+        {content && (
+          <Highlight
+            className="paragraph"
+            content={content}
+            highlight={highlight}
+          />
+        )}
+      </div>
 
-        <span className="shadow" />
+      <span className="shadow" />
 
-        <style jsx global>{`
+      <style jsx global>{`
           .radiocard__input {
             display: none;
           }
@@ -69,7 +67,7 @@ export default class RadioCard extends React.Component {
             background-color: #41ef8b;
           }
         `}</style>
-        <style jsx>{`
+      <style jsx>{`
           label {
             display: block;
             position: relative;
@@ -132,7 +130,6 @@ export default class RadioCard extends React.Component {
             z-index: 10;
           }
         `}</style>
-      </label>
-    );
-  }
+    </label>
+  );
 }

@@ -1,50 +1,56 @@
 import React from "react"
 import Highlight from "./Highlight"
 
-export default class SingleStep extends React.Component {
+export default class SingleStep extends React.PureComponent {
   renderPrefix() {
-    return this.props.highlight ? (
+    const { highlight, prefix } = this.props
+
+    return highlight ? (
       <Highlight
         className="prefix"
-        content={this.props.prefix}
-        highlight={this.props.highlight}
+        content={prefix}
+        highlight={highlight}
       />
     ) : (
-      <p className="prefix">{this.props.prefix}</p>
-    )
+        <p className="prefix">{prefix}</p>
+      )
   }
 
   renderTitle() {
-    return this.props.highlight ? (
+    const { highlight, title } = this.props
+    return highlight ? (
       <Highlight
         className="title"
-        content={this.props.title}
-        highlight={this.props.highlight}
+        content={title}
+        highlight={highlight}
       />
     ) : (
-      <p className="title">{this.props.title}</p>
-    )
+        <p className="title">{title}</p>
+      )
   }
 
   renderSuffix() {
-    return <p className="suffix">{this.props.suffix}</p>
+    const { suffix } = this.props
+    return <p className="suffix">{suffix}</p>
   }
 
   render() {
+    const { toast, prefix, title, suffix, image, children } = this.props
+
     return (
       <div className="content">
         <div className="heading">
-          {this.props.toast && <p className="title">{this.props.toast}</p>}
-          {this.props.prefix && this.renderPrefix()}
-          {this.props.title && this.renderTitle()}
-          {this.props.suffix && this.renderSuffix()}
+          {toast && <p className="title">{toast}</p>}
+          {prefix && this.renderPrefix()}
+          {title && this.renderTitle()}
+          {suffix && this.renderSuffix()}
         </div>
-        {this.props.image && (
+        {image && (
           <figure>
-            <img src={this.props.image.src} alt={this.props.image.alt} />
+            <img src={image.src} alt={image.alt} />
           </figure>
         )}
-        {this.props.children}
+        {children}
         <style jsx>{`
           .content {
             max-width: 87%;

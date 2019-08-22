@@ -1,19 +1,14 @@
-import React from "react";
-
-export default class Card extends React.Component {
-  componentDidMount() {}
-
-  render() {
-    return (
-      <div className="wrapper">
-        <div className="container">
-          {this.props.children}
-          {this.props.title && <h1>{this.props.title}</h1>}
-          <hr />
-          {this.props.content && <p>{this.props.content}</p>}
-        </div>
-        <span className="shadow" />
-        <style jsx>{`
+export default function Card({ children, title, content }) {
+  return (
+    <div className="wrapper">
+      <div className="container">
+        {children}
+        {title && <h1>{title}</h1>}
+        <hr />
+        {content && <p>{content}</p>}
+      </div>
+      <span className="shadow" />
+      <style jsx>{`
           .wrapper {
             position: relative;
             margin-bottom: 2rem;
@@ -55,7 +50,6 @@ export default class Card extends React.Component {
             text-transform: capitalize;
           }
         `}</style>
-      </div>
-    );
-  }
+    </div>
+  );
 }

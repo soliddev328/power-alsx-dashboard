@@ -1,25 +1,21 @@
-import React from "react"
 import LogoIcon from "./Icons/LogoIcon"
 import ProfilePic from "./ProfilePic"
 
-export default class Header extends React.Component {
-  componentDidMount() {}
-
-  render() {
-    return (
-      <header>
-        {this.props.first ? <LogoIcon medium /> : <LogoIcon small />}
-        {!this.props.first && (
-          <div className="bubble">
-            <ProfilePic
-              image={{
-                src: "/static/images/people/martin.jpg",
-                altText: "A smiling girl"
-              }}
-            />
-          </div>
-        )}
-        <style jsx>{`
+export default function Header({ first }) {
+  return (
+    <header>
+      {first ? <LogoIcon medium /> : <LogoIcon small />}
+      {!first && (
+        <div className="bubble">
+          <ProfilePic
+            image={{
+              src: "/static/images/people/martin.jpg",
+              altText: "A smiling girl"
+            }}
+          />
+        </div>
+      )}
+      <style jsx>{`
           header {
             position: relative;
             width: 100%;
@@ -35,7 +31,6 @@ export default class Header extends React.Component {
             transform: translateY(50%);
           }
         `}</style>
-      </header>
-    )
-  }
+    </header>
+  )
 }

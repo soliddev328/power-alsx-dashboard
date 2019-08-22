@@ -1,13 +1,14 @@
 import React from "react";
 import NumberFormat from "react-number-format";
 
-export default class Phoneinput extends React.Component {
+export default class Phoneinput extends React.PureComponent {
   constructor(props) {
     super(props);
 
     this.handleChange = this.handleChange.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
   }
+
   handleChange(e) {
     this.props.onChangeEvent(this.props.fieldname, e.target.value);
   }

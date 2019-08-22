@@ -1,19 +1,17 @@
-import React from "react";
 import InfoIcon from "./Icons/InfoIcon";
 
-export default class CTA extends React.Component {
-  render() {
-    return (
-      <button
-        className={this.props.secondary ? "secondary" : ""}
-        onClick={this.props.onClick}
-        type={this.props.type ? this.props.type : "submit"}
-      >
-        <span>{this.props.children}</span>
-        {this.props.info && this.props.info.length && (
-          <InfoIcon content={this.props.info} />
-        )}
-        <style jsx>{`
+export default function CTA({ secondary, onClick, type, info, children }) {
+  return (
+    <button
+      className={secondary ? "secondary" : ""}
+      onClick={onClick}
+      type={type ? type : "submit"}
+    >
+      <span>{children}</span>
+      {info && info.length && (
+        <InfoIcon content={info} />
+      )}
+      <style jsx>{`
           /* Reset */
           button {
             border: none;
@@ -66,7 +64,6 @@ export default class CTA extends React.Component {
             font-weight: 600;
           }
         `}</style>
-      </button>
-    );
-  }
+    </button>
+  );
 }

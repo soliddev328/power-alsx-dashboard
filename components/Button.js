@@ -1,24 +1,22 @@
-import React from "react";
 import ArrowIcon from "./Icons/ArrowIcon";
 import FacebookIcon from "./Icons/FacebookIcon";
 
-export default class Button extends React.Component {
-  shareIcon() {
-    if (this.props.share === "facebook") return <FacebookIcon />;
-  }
+const shareIcon = (icon) => {
+  if (icon === "facebook") return <FacebookIcon />;
+}
 
-  render() {
-    return (
-      <button
-        type={this.props.type ? this.props.type : "submit"}
-        onClick={this.props.onClick}
-        className={this.props.share ? "share" : ""}
-        disabled={this.props.disabled}
-      >
-        {this.props.share && this.shareIcon()}
-        {this.props.children}
-        {this.props.arrow && <ArrowIcon />}
-        <style jsx>{`
+export default function Button({ type, onClick, share, disabled, children, arrow, primary }) {
+  return (
+    <button
+      type={type ? type : "submit"}
+      onClick={onClick}
+      className={share ? "share" : ""}
+      disabled={disabled}
+    >
+      {share && shareIcon(share)}
+      {children}
+      {arrow && <ArrowIcon />}
+      <style jsx>{`
           /* Reset */
           button {
             border: none;
@@ -45,9 +43,9 @@ export default class Button extends React.Component {
               "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
               "Helvetica Neue", sans-serif;
             font-weight: 800;
-            color: ${this.props.primary ? "#fff" : "#2479ff"};
-            background-color: ${this.props.primary ? "#2479ff" : "#fff"};
-            border: ${this.props.primary ? "none" : "1px solid #2479ff"};
+            color: ${primary ? "#fff" : "#2479ff"};
+            background-color: ${primary ? "#2479ff" : "#fff"};
+            border: ${primary ? "none" : "1px solid #2479ff"};
             padding: 1.15em 0;
             border-radius: 1px;
             margin: 1em auto;
@@ -69,7 +67,6 @@ export default class Button extends React.Component {
               0 10px 10px rgba(0, 0, 0, 0.22);
           }
         `}</style>
-      </button>
-    );
-  }
+    </button>
+  );
 }

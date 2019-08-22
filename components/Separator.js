@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function Separator({ text, noMargin, small }) {
   return (
     <div className="separator__wrapper">
