@@ -1,6 +1,6 @@
-import React from "react";
-import LogoIcon from "./Icons/LogoIcon";
-import ProfilePic from "./ProfilePic";
+import React from "react"
+import LogoIcon from "./Icons/LogoIcon"
+import ProfilePic from "./ProfilePic"
 
 export default class Header extends React.Component {
   componentDidMount() {}
@@ -8,7 +8,7 @@ export default class Header extends React.Component {
   render() {
     return (
       <header>
-        {this.props.first ? <LogoIcon /> : <LogoIcon small />}
+        {this.props.first ? <LogoIcon medium /> : <LogoIcon small />}
         {!this.props.first && (
           <div className="bubble">
             <ProfilePic
@@ -36,6 +36,6 @@ export default class Header extends React.Component {
           }
         `}</style>
       </header>
-    );
+    )
   }
 }
