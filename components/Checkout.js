@@ -40,20 +40,23 @@ class CheckoutForm extends Component {
   }
 
   submit(ev) {
+    const { stripe } = this.props
+    const { leadId, email } = this.state
+
     ev.preventDefault()
     window.firebase
       .auth()
       .currentUser.getIdToken(true)
       .then(idToken => {
-        if (this.props.stripe) {
-          this.props.stripe.createToken({ type: "card" }).then(payload => {
+        if (stripe) {
+          stripe.createToken({ type: "card" }).then(payload => {
             if (payload.token) {
               axios
                 .put(
                   `${API}/v1/subscribers`,
                   {
-                    leadId: this.state.leadId,
-                    email: this.state.email,
+                    leadId: leadId,
+                    email: email,
                     stripeToken: payload.token.id
                   },
                   {
@@ -76,6 +79,8 @@ class CheckoutForm extends Component {
   }
 
   render() {
+    const { errorMessage } = this.state
+
     return (
       <div className="checkout">
         <div className="card">
@@ -164,8 +169,8 @@ class CheckoutForm extends Component {
             />
           </div>
         </div>
-        {this.state && this.state.errorMessage && (
-          <p className="error">{this.state.errorMessage}</p>
+        {errorMessage && (
+          <p className="error">{errorMessage}</p>
         )}
         <Button primary onClick={this.submit}>
           Next

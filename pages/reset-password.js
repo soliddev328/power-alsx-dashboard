@@ -39,6 +39,8 @@ export default class forgotPassword extends React.Component {
   }
 
   renderForm() {
+    const { error } = this.state
+
     return (
       <Formik
         initialValues={{
@@ -63,7 +65,7 @@ export default class forgotPassword extends React.Component {
                 fieldname="passwordConfirmation"
                 required
               />
-              <p className="error">{this.state.error}</p>
+              <p className="error">{error}</p>
               <Button
                 primary
                 disabled={

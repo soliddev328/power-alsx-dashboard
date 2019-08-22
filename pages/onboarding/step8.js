@@ -21,12 +21,13 @@ class Step8 extends React.Component {
   }
 
   render() {
+    const { displayMessage } = this.props
     return (
       <main>
         <Header />
         <SingleStep
           title={
-            this.props.displayMessage
+            displayMessage
               ? "Going forward, instead of paying your utility you will pay Common Energy a lower amount for your electricity:"
               : "Going forward, instead of paying your utility you will pay Common Energy a lower amount for your electricity:"
           }
