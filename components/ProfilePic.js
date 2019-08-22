@@ -1,11 +1,9 @@
-import React from "react";
 
-export default class ProfilePic extends React.Component {
-  render() {
-    return (
-      <figure>
-        <img src={this.props.image.src} alt={this.props.image.altText} />
-        <style jsx>{`
+export default function ProfilePic({ image }) {
+  return (
+    <figure>
+      <img src={image.src} alt={image.altText} />
+      <style jsx>{`
           figure {
             display: flex;
             justify-content: center;
@@ -14,7 +12,7 @@ export default class ProfilePic extends React.Component {
             border-radius: 50%;
             width: 3.5rem;
             height: 3.5rem;
-            background-image: url(${this.props.image.src});
+            background-image: url(${image.src});
             background-size: cover;
             background-position: 0% 10%;
           }
@@ -31,7 +29,6 @@ export default class ProfilePic extends React.Component {
             } /* IE11 */
           }
         `}</style>
-      </figure>
-    );
-  }
+    </figure>
+  );
 }

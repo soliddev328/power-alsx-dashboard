@@ -18,7 +18,7 @@ export default function Main({ children }) {
 
         .content {
           padding: 40px 70px;
-          max-width: 100%;
+          max-width: 1050px;
           margin: 0;
           transform: translateX(10px);
           opacity: 0;

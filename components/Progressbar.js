@@ -1,20 +1,14 @@
-import React from "react";
 
-export default class Progressbar extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <div className="wrapper">
-        <div className="progress-wrapper">
-          <progress max="100" value={this.props.completion} />
-        </div>
-        <p className="completion">
-          <span className="highlight">{this.props.completion}% Full</span>
-        </p>
-        <style jsx>{`
+export default function Progressbar({ completion }) {
+  return (
+    <div className="wrapper">
+      <div className="progress-wrapper">
+        <progress max="100" value={completion} />
+      </div>
+      <p className="completion">
+        <span className="highlight">{completion}% Full</span>
+      </p>
+      <style jsx>{`
           .wrapper {
             background-color: #2479ff;
             position: relative;
@@ -92,7 +86,6 @@ export default class Progressbar extends React.Component {
             }
           }
         `}</style>
-      </div>
-    );
-  }
+    </div>
+  );
 }

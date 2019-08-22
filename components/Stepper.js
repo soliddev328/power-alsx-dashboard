@@ -1,15 +1,10 @@
 import React from "react";
 
-export default class Stepper extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <div className="steplist__wrapper">
-        <ul className="steplist">{this.props.children}</ul>
-        <style jsx>{`
+export default function Stepper({ children }) {
+  return (
+    <div className="steplist__wrapper">
+      <ul className="steplist">{children}</ul>
+      <style jsx>{`
           .steplist {
             display: flex;
             justify-content: center;
@@ -61,7 +56,6 @@ export default class Stepper extends React.Component {
             border-color: #41ef8b;
           }
         `}</style>
-      </div>
-    );
-  }
+    </div>
+  );
 }
