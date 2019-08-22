@@ -9,6 +9,8 @@ export default class GeoSuggest extends React.Component {
     this.handleSuggestSelect = this.handleSuggestSelect.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
     this.handleChange = this.handleChange.bind(this);
+
+    this.state = {}
   }
 
   handleChange(value) {

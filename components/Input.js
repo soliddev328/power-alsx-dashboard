@@ -7,6 +7,8 @@ export default class Input extends React.Component {
     this.inputField = React.createRef()
     this.scrollOnFocus = this.scrollOnFocus.bind(this)
     this.applyValidation = this.applyValidation.bind(this)
+
+    this.state = {}
   }
 
   applyValidation(x) {

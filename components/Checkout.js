@@ -18,6 +18,8 @@ class CheckoutForm extends Component {
   constructor(props) {
     super(props)
     this.submit = this.submit.bind(this)
+
+    this.state = {}
   }
 
   componentDidMount() {
