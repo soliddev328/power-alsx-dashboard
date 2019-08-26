@@ -330,7 +330,7 @@ hr {
 }
 
 .select__menu {
-  z-index: 100;
+  z-index: 1000 !important;
 }
 
 .select__option {
