@@ -51,7 +51,7 @@ class CustomForm extends React.Component {
             <BulletItem content="No cancellation fees" bulletIcon="cross" />
           </div>
         </div>
-        <Button primary>Let's do this!</Button>
+        <Button primary>Next</Button>
         <style jsx>{`
           .content {
             margin-bottom: 2rem;
