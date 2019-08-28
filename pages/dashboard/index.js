@@ -6,7 +6,6 @@ import Button from "../../components/Button"
 import Section from "../../components/Section"
 import Panel from "../../components/Panel"
 import Text from "../../components/Text"
-import Sidebar from "../../components/Sidebar"
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -44,7 +43,7 @@ class Dashboard extends React.Component {
   renderDashboard() {
     return (
       <Main>
-        <h2>Welcome John</h2>
+        <Text h2>Welcome John</Text>
         <Section columns="5">
           <Panel>
             <Text>test</Text>
@@ -52,34 +51,7 @@ class Dashboard extends React.Component {
           <Panel>
             <Text>test</Text>
           </Panel>
-          <Panel >
-            <Text>test</Text>
-          </Panel>
           <Panel>
-            <Text>test</Text>
-          </Panel>
-          <Panel>
-            <Text>test</Text>
-          </Panel>
-        </Section>
-        <Section>
-          <Panel>
-            <Text>test</Text>
-          </Panel>
-        </Section>
-        <Section>
-          <Panel>
-            <Text>test</Text>
-          </Panel>
-        </Section>
-        <Section columns="5">
-          <Panel>
-            <Text>test</Text>
-          </Panel>
-          <Panel>
-            <Text>test</Text>
-          </Panel>
-          <Panel >
             <Text>test</Text>
           </Panel>
           <Panel>
@@ -106,7 +78,34 @@ class Dashboard extends React.Component {
           <Panel>
             <Text>test</Text>
           </Panel>
-          <Panel >
+          <Panel>
+            <Text>test</Text>
+          </Panel>
+          <Panel>
+            <Text>test</Text>
+          </Panel>
+          <Panel>
+            <Text>test</Text>
+          </Panel>
+        </Section>
+        <Section>
+          <Panel>
+            <Text>test</Text>
+          </Panel>
+        </Section>
+        <Section>
+          <Panel>
+            <Text>test</Text>
+          </Panel>
+        </Section>
+        <Section columns="5">
+          <Panel>
+            <Text>test</Text>
+          </Panel>
+          <Panel>
+            <Text>test</Text>
+          </Panel>
+          <Panel>
             <Text>test</Text>
           </Panel>
           <Panel>
@@ -164,10 +163,10 @@ class Dashboard extends React.Component {
     return isAbleToSeeDashboard
       ? this.renderDashboard()
       : () => {
-        Router.push({
-          pathname: "/"
-        })
-      }
+          Router.push({
+            pathname: "/"
+          })
+        }
   }
 }
 

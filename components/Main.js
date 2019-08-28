@@ -24,6 +24,7 @@ export default function Main({ children }) {
           animation: fadeInFromRight 400ms ease-in-out forwards;
           animation-delay: 200ms;
           overflow-x: hidden;
+          user-select: text;
         }
 
         @keyframes fadeInFromRight {
