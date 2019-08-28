@@ -13,6 +13,7 @@ export default function Section({ children, disabled, columns = 1 }) {
           grid-column-gap: 20px;
           grid-row-gap: 40px;
           margin: 40px 0;
+          margin-bottom: 80px;
         }
 
         .section + .section {
