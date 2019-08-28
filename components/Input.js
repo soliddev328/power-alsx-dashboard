@@ -51,7 +51,12 @@ export default class Input extends React.Component {
           autoFocus={this.props.autoFocus}
           {...this.props}
         />
-        <label htmlFor={this.props.fieldname}>{this.props.label}</label>
+        <label
+          htmlFor={this.props.fieldname}
+          style={{ opacity: this.props.value ? "0" : "1" }}
+        >
+          {this.props.label}
+        </label>
         <style jsx global>{`
           input {
             background-color: ${this.props.secondary ? "#F6F9FF" : "#fff"};
