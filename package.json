@@ -4,9 +4,9 @@
   "repository": "https://github.com/CommonEnergy/comenergy-customer-portal",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=production next start",
+    "start": "NODE_ENV=development next start",
     "dev-old": "NODE_ENV=development next",
-    "build": "NODE_ENV=production next build && next export -o /public"
+    "build": "NODE_ENV=development next build && next export -o /public"
   },
   "engines": {
     "npm": ">=5.0",

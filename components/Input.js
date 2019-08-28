@@ -8,8 +8,11 @@ export default class Input extends React.PureComponent {
     this.inputField = React.createRef()
     this.scrollOnFocus = this.scrollOnFocus.bind(this)
     this.applyValidation = this.applyValidation.bind(this)
+    this.customSetCustomValidity = this.customSetCustomValidity.bind(this)
 
-    this.state = {}
+    this.state = {
+      displayLabel: true
+    }
   }
 
   applyValidation(x) {
@@ -26,6 +29,9 @@ export default class Input extends React.PureComponent {
 
   customSetCustomValidity(e) {
     e.target.setCustomValidity("")
+    e.target.value !== ""
+      ? this.setState({ displayLabel: false })
+      : this.setState({ displayLabel: true })
   }
 
   scrollOnFocus() {
@@ -48,6 +54,7 @@ export default class Input extends React.PureComponent {
       autoFocus,
       outerLabel
     } = this.props
+    const { displayLabel } = this.state
     return (
       <div
         ref={this.inputField}
@@ -62,10 +69,16 @@ export default class Input extends React.PureComponent {
           validate={validator ? validator : false}
           onInvalid={this.applyValidation}
           onInput={this.customSetCustomValidity}
-          autoFocus={autoFocus}
+          autoFocus={false}
+          ref={this.inputRef}
           {...this.props}
         />
-        <label htmlFor={fieldname}>{label}</label>
+        <label
+          htmlFor={fieldname}
+          style={{ opacity: displayLabel ? "1" : "0" }}
+        >
+          {label}
+        </label>
         <style jsx global>{`
           input {
             background-color: ${secondary ? "#F6F9FF" : "#fff"};
