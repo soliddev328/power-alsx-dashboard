@@ -158,14 +158,14 @@ select:-webkit-autofill:focus {
   transition: background-color 5000s ease-in-out 0s;
 }
 
-input[value]:not([value=""]) + label {
+.input__wrapper:not(.outer-label) input[value]:not([value=""]) + label {
   opacity: 0;
 }
 
 input:not([type="checkbox"]) {
   appearance: none;
   border: 1px solid transparent;
-  border-radius: 3px;
+  border-radius: 5px;
   background-image: none;
   background-color: #fff;
   box-shadow: none;
@@ -316,7 +316,7 @@ hr {
 .select__control {
   height: 100%;
   border: none;
-  border-radius: 3px;
+  border-radius: 5px;
 }
 
 .select__placeholder {

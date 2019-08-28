@@ -3,29 +3,48 @@ import Main from "../../components/Main"
 import Section from "../../components/Section"
 import Panel from "../../components/Panel"
 import Text from "../../components/Text"
-import Sidebar from "../../components/Sidebar"
-import Input from '../../components/Input'
+import Input from "../../components/Input"
 
 export default function Profile() {
   return (
     <Main>
-      <h2>Profile</h2>
+      <Text h2>Profile</Text>
       <Formik
         initialValues={{}}
-        onSubmit={values => { }}
+        onSubmit={values => {}}
         render={props => (
           <>
             <Section columns="2">
-              <Input fullWidth label="Name" fieldname="name" />
-              <Input fullWidth label="Last Name" fieldname="last-name" />
+              <Input outerLabel fullWidth label="Name" fieldname="name" />
+              <Input
+                outerLabel
+                fullWidth
+                label="Last Name"
+                fieldname="last-name"
+              />
             </Section>
             <Section columns="3">
-              <Input fullWidth label="Email" fieldname="email" />
-              <Input fullWidth label="Primary Address" fieldname="primary-address" />
-              <Input fullWidth label="Phone Number" fieldname="phone-number" />
+              <Input outerLabel fullWidth label="Email" fieldname="email" />
+              <Input
+                outerLabel
+                fullWidth
+                label="Primary Address"
+                fieldname="primary-address"
+              />
+              <Input
+                outerLabel
+                fullWidth
+                label="Phone Number"
+                fieldname="phone-number"
+              />
             </Section>
             <Section>
-              <Input fullWidth label="Form of Payment" fieldname="form-of-payment" />
+              <Input
+                outerLabel
+                fullWidth
+                label="Form of Payment"
+                fieldname="form-of-payment"
+              />
             </Section>
           </>
         )}

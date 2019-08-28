@@ -1,7 +1,8 @@
 import React from "react"
 import { Field } from "formik"
+import cn from "classnames"
 
-export default class Input extends React.Component {
+export default class Input extends React.PureComponent {
   constructor(props) {
     super(props)
     this.inputField = React.createRef()
@@ -37,12 +38,21 @@ export default class Input extends React.Component {
   }
 
   render() {
-    const { fullWidth, type, fieldname, validator, secondary, label, autoFocus } = this.props
+    const {
+      fullWidth,
+      type,
+      fieldname,
+      validator,
+      secondary,
+      label,
+      autoFocus,
+      outerLabel
+    } = this.props
     return (
       <div
         ref={this.inputField}
         onClick={this.scrollOnFocus}
-        className="input__wrapper"
+        className={cn("input__wrapper", { "outer-label": outerLabel })}
       >
         <Field
           type={type ? type : "text"}
@@ -65,13 +75,23 @@ export default class Input extends React.Component {
             position: relative;
             height: 3.75rem;
             width: 100%;
-            max-width: ${fullWidth ? '100%' : '350px'};
+            max-width: ${fullWidth ? "100%" : "350px"};
             margin: 0 auto;
             margin-bottom: 0.5rem;
           }
 
           .input__wrapper:last-of-type {
             margin-bottom: 0.5rem;
+          }
+
+          .input__wrapper.outer-label {
+            margin-bottom: 0;
+            margin-top: 2em;
+          }
+
+          .input__wrapper.outer-label label {
+            position: absolute;
+            top: -25%;
           }
         `}</style>
       </div>
