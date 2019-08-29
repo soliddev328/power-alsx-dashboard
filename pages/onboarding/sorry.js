@@ -1,56 +1,60 @@
-import React from "react";
-import Router from "next/router";
-import { Formik, Form } from "formik";
-import axios from "axios";
-import Input from "../../components/Input";
-import Header from "../../components/Header";
-import SingleStep from "../../components/SingleStep";
-import Button from "../../components/Button";
-import CONSTANTS from "../../globals";
+import React from "react"
+import Router from "next/router"
+import { Formik, Form } from "formik"
+import axios from "axios"
+import Input from "../../components/Input"
+import Header from "../../components/Header"
+import SingleStep from "../../components/SingleStep"
+import Button from "../../components/Button"
+import CONSTANTS from "../../globals"
 
 const { API } =
-  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod
 
 class Sorry extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {}
+  }
   componentDidMount() {
-    global.analytics.page("Out of area");
+    global.analytics.page("Out of area")
 
-    const storedName = "";
-    const storedPostalCode = "";
-    const storedAddress = "";
-    const storedPartner = "";
-    const storedReferrer = "";
-    const storedSalesRep = "";
-    const storedUtmCampaign = "";
-    const storedUtmMedium = "";
-    const storedUtmSource = "";
+    const storedName = ""
+    const storedPostalCode = ""
+    const storedAddress = ""
+    const storedPartner = ""
+    const storedReferrer = ""
+    const storedSalesRep = ""
+    const storedUtmCampaign = ""
+    const storedUtmMedium = ""
+    const storedUtmSource = ""
 
     if (localStorage.getItem("username")) {
-      storedName = JSON.parse(localStorage.getItem("username"));
+      storedName = JSON.parse(localStorage.getItem("username"))
     }
     if (localStorage.getItem("postalCode")) {
-      storedPostalCode = JSON.parse(localStorage.getItem("postalCode"));
+      storedPostalCode = JSON.parse(localStorage.getItem("postalCode"))
     }
     if (localStorage.getItem("address")) {
-      storedAddress = JSON.parse(localStorage.getItem("address"));
+      storedAddress = JSON.parse(localStorage.getItem("address"))
     }
     if (localStorage.getItem("Partner")) {
-      storedPartner = localStorage.getItem("Partner");
+      storedPartner = localStorage.getItem("Partner")
     }
     if (localStorage.getItem("Referrer")) {
-      storedReferrer = localStorage.getItem("Referrer");
+      storedReferrer = localStorage.getItem("Referrer")
     }
     if (localStorage.getItem("SalesRep")) {
-      storedSalesRep = localStorage.getItem("SalesRep");
+      storedSalesRep = localStorage.getItem("SalesRep")
     }
     if (localStorage.getItem("UtmCampaign")) {
-      storedUtmCampaign = localStorage.getItem("UtmCampaign");
+      storedUtmCampaign = localStorage.getItem("UtmCampaign")
     }
     if (localStorage.getItem("UtmMedium")) {
-      storedUtmMedium = localStorage.getItem("UtmMedium");
+      storedUtmMedium = localStorage.getItem("UtmMedium")
     }
     if (localStorage.getItem("UtmSource")) {
-      storedUtmSource = localStorage.getItem("UtmSource");
+      storedUtmSource = localStorage.getItem("UtmSource")
     }
 
     this.setState({
@@ -63,11 +67,19 @@ class Sorry extends React.Component {
       utmCampaign: storedUtmCampaign,
       utmMedium: storedUtmMedium,
       utmSource: storedUtmSource
-    });
+    })
   }
 
   render() {
-    const { postalCode, referrer, partner, salesRep, utmCampaign, utmMedium, utmSource } = this.state
+    const {
+      postalCode,
+      referrer,
+      partner,
+      salesRep,
+      utmCampaign,
+      utmMedium,
+      utmSource
+    } = this.state
     return (
       <main>
         <Header />
@@ -96,9 +108,9 @@ class Sorry extends React.Component {
                 .then(() => {
                   Router.push({
                     pathname: "/"
-                  });
+                  })
                 })
-                .catch(() => { });
+                .catch(() => {})
             }}
             render={props => (
               <React.Fragment>
@@ -121,8 +133,8 @@ class Sorry extends React.Component {
           }
         `}</style>
       </main>
-    );
+    )
   }
 }
 
-export default Sorry;
+export default Sorry
