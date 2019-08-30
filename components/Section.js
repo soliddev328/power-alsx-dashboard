@@ -1,6 +1,6 @@
 import cn from "classnames"
 
-export default function Section({ children, disabled, columns = 1 }) {
+export default function Section({ children, disabled, columns = 1, noMargin }) {
   const columnsInt = parseInt(columns, 10)
 
   return (
@@ -12,8 +12,8 @@ export default function Section({ children, disabled, columns = 1 }) {
           grid-template-columns: repeat(${columnsInt}, 1fr);
           grid-column-gap: 20px;
           grid-row-gap: 40px;
-          margin: 40px 0;
-          margin-bottom: 80px;
+          margin: ${noMargin ? "0" : "40px 0"};
+          margin-bottom: ${noMargin ? "0" : "80px"};
         }
 
         .section + .section {

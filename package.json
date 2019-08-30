@@ -22,6 +22,7 @@
     "babel-plugin-emotion": "^10.0.16",
     "classnames": "^2.2.6",
     "formik": "^1.5.8",
+    "google-map-react": "^1.1.4",
     "js-cookie": "^2.2.1",
     "next": "^9.0.4",
     "query-string": "^6.8.2",
@@ -34,6 +35,7 @@
     "react-select": "^3.0.4",
     "react-spinners": "^0.6.1",
     "react-stripe-elements": "^4.0.1",
+    "recharts": "^1.7.1",
     "zippo": "^1.0.1"
   }
 }
