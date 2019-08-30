@@ -38,7 +38,12 @@ export default class ZipCodeInput extends React.Component {
           name={this.props.fieldname}
           id={this.props.fieldname}
         />
-        <label htmlFor={this.props.fieldname}>{this.props.label}</label>
+        <label
+          style={{ opacity: this.props.value ? "0" : "1" }}
+          htmlFor={this.props.fieldname}
+        >
+          {this.props.label}
+        </label>
         <style jsx global>{`
           input {
             appearance: none;
@@ -75,11 +80,6 @@ export default class ZipCodeInput extends React.Component {
             transform: translateY(-50%);
             transition: opacity 400ms cubic-bezier(0.075, 0.82, 0.165, 1);
             z-index: 11;
-          }
-
-          input:focus + label,
-          input[value]:not([value=""]) + label {
-            opacity: 0;
           }
 
           .input__wrapper {
