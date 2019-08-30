@@ -1,6 +1,11 @@
 {
   "name": "commonenergy",
   "version": 2,
+  "build": {
+    "env": {
+      "NODE_ENV": "production"
+    }
+  },
   "builds": [{ "src": "next.config.js", "use": "@now/next" }],
   "alias": ["my.commonenergy.us"],
   "routes": [
