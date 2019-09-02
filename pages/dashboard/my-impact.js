@@ -5,16 +5,15 @@ import Separator from "../../components/Separator"
 import Panel from "../../components/Panel"
 import Text from "../../components/Text"
 import Icon from "../../components/Icon"
+import Table from "../../components/Table"
 
 export default function MyImpact() {
   return (
     <Main>
       <Text h2>My Impact</Text>
-      <Section>
-        <Panel>
-          <Text>test</Text>
-        </Panel>
-      </Section>
+      <Text h2 style={{ marginTop: "40px" }}>
+        Cumulative Impact and Savings
+      </Text>
       <Section columns="4">
         <Panel small specialShadow>
           <Text noMargin>Clean Energy (kWh)</Text>
@@ -112,6 +111,27 @@ export default function MyImpact() {
               $12,000
             </Text>
           </Container>
+        </Panel>
+      </Section>
+      <Text h2>Monthly Impact and Savings</Text>
+      <Section>
+        <Panel>
+          <Text h3>Utility Invoices</Text>
+          <Table
+            headers={[
+              "Month",
+              "Clean Energy Generated (kWh)",
+              "Pounds of CO2 Avoided",
+              "Savings with Common Energy",
+              "Invoice"
+            ]}
+            data={[
+              ["Jan-19", "200", "260 Lb", "$12", "$243", "https://google.com"],
+              ["Jan-20", "200", "260 Lb", "$12", "$243", "https://google.com"],
+              ["Jan-21", "200", "260 Lb", "$12", "$243", "https://google.com"],
+              ["Jan-22", "200", "260 Lb", "$12", "$243", "https://google.com"]
+            ]}
+          />
         </Panel>
       </Section>
     </Main>
