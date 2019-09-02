@@ -28,6 +28,7 @@ export default class Input extends React.PureComponent {
   }
 
   customSetCustomValidity(e) {
+
     e.target.setCustomValidity("")
     e.target.value !== ""
       ? this.setState({ displayLabel: false })

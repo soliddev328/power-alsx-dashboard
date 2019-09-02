@@ -31,20 +31,20 @@ class Dashboard extends React.Component {
       if (user) {
         global.analytics.page("Dashboard")
 
-        // user.getIdToken(true).then(idToken => {
-        //   console.log(idToken)
-        //   axios.post(`${API}/v1/subscribers`, {
-        //     headers: {
-        //       Authorization: idToken
-        //     }
-        //   })
-        //     .then(data => {
-        //       console.log(data)
-        //     })
-        //     .catch(error => {
-        //       console.error(error)
-        //     })
-        // })
+        user.getIdToken(true).then(idToken => {
+          axios
+            .get(`${API}/v1/subscribers/${user.uid}`, {
+              headers: {
+                Authorization: idToken
+              }
+            })
+            .then(data => {
+              console.log(data.data)
+            })
+            .catch(error => {
+              console.error(error)
+            })
+        })
       } else {
         Router.push({
           pathname: "/"
