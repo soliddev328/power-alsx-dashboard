@@ -1,30 +1,30 @@
-import React from "react"
-import zip from "zippo"
+import React from "react";
+import zip from "zippo";
 
 export default class ZipCodeInput extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       code: ""
-    }
+    };
   }
 
   format = event => {
-    let { value } = event.target
+    let { value } = event.target;
 
     this.setState({
       code: zip.parse(value)
-    })
-  }
+    });
+  };
 
   handleChange = e => {
-    this.props.onChangeEvent(this.props.fieldname, e.target.value)
-  }
+    this.props.onChangeEvent(this.props.fieldname, e.target.value);
+  };
 
   handleBlur = () => {
-    this.props.onBlurEvent(this.props.fieldname, true)
-  }
+    this.props.onBlurEvent(this.props.fieldname, true);
+  };
 
   render() {
     return (
@@ -37,6 +37,7 @@ export default class ZipCodeInput extends React.Component {
           value={this.props.value}
           name={this.props.fieldname}
           id={this.props.fieldname}
+          autoFocus
         />
         <label
           style={{ opacity: this.props.value ? "0" : "1" }}
@@ -96,6 +97,6 @@ export default class ZipCodeInput extends React.Component {
           }
         `}</style>
       </div>
-    )
+    );
   }
 }
