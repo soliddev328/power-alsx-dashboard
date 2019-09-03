@@ -96,12 +96,13 @@ export default class SingleStep extends React.Component {
           }
 
           p.prefix + p.title {
-            margin-top: 0;
+            margin-top: 0.5em;
+            font-size: 1.4rem;
           }
 
           p.suffix,
           span.suffix {
-            font-size: 1.3em;
+            font-size: 1em;
             margin-top: -0.5em;
           }
 
