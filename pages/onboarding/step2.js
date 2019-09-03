@@ -171,12 +171,19 @@ class Step2 extends React.Component {
       <main>
         <Header />
         <SingleStep
-          prefix="Great news, we’ve got a clean energy project in your area!"
-          title="By signing up you will start receiving energy credits that lower your electricity cost each month."
-          suffix={
+          prefix="Great news, we’ve got a clean energy project in your area."
+          title={
             this.state.utility.project && this.state.utility.project.name
               ? this.state.utility.project.name
               : ""
+          }
+          suffix={
+            <>
+              By signing up you will start receiving energy credits that lower
+              your electricity cost each month. <br />
+              All you need to do is to answer a few quick questions about your
+              utility account and address.
+            </>
           }
         >
           <EnhancedCustomForm project={this.state.utility.project} />
