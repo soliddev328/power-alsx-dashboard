@@ -388,17 +388,17 @@ class Step4 extends React.Component {
             <div className="links">
               {this.state.createLoginLink && (
                 <a className="cta" href={this.state.createLoginLink}>
-                  Create an account
+                  Create an online utility account
                 </a>
               )}
               {this.state.forgotEmailLink && (
                 <a className="cta" href={this.state.forgotEmailLink}>
-                  Forgot username
+                  Forgot your utility username
                 </a>
               )}
               {this.state.forgotPwdLink && (
                 <a className="cta" href={this.state.forgotPwdLink}>
-                  Forgot password
+                  Forgot your utility password
                 </a>
               )}
             </div>
