@@ -27,7 +27,6 @@ class Step3 extends React.Component {
             }}
             onSubmit={values => {
               localStorage.setItem("billingMethod", JSON.stringify(values))
-              console.log(values)
               Router.push({
                 pathname: "/onboarding/step4"
               })
