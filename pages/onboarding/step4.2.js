@@ -81,7 +81,7 @@ class Step42 extends React.Component {
       <main>
         <Header />
         <SingleStep
-          title={`Welcome ${this.capitalize(
+          title={`Thanks ${this.capitalize(
             name
           )}! What is your address and phone number please?`}
         >
