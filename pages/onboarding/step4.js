@@ -369,6 +369,7 @@ class Step4 extends React.Component {
 
   render() {
     const canLinkAccount =
+      !this.state.currentUtility.paperOnly &&
       this.state.billingMethod &&
       this.state.billingMethod.billingMethod.indexOf("paper") !== 0
     return (
