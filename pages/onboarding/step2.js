@@ -174,7 +174,7 @@ class Step2 extends React.Component {
       <main>
         <Header />
         <SingleStep
-          prefix="Great news, we’ve got a clean energy project in your area! By signing up you will start receiving energy credits that lower your electricity cost per month."
+          prefix="Great news, we’ve got a clean energy project in your area! By signing up you will start receiving energy credits that lower your electricity cost."
           title={
             this.state.utility.project && this.state.utility.project.name
               ? this.state.utility.project.name
