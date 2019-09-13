@@ -76,6 +76,7 @@ const getComponent = defaultElement => {
     type,
     noMargin,
     xlarge,
+    hasDecoration,
     xsmall,
     weight,
     code,
@@ -92,10 +93,31 @@ const getComponent = defaultElement => {
         {...props}
       >
         {children}
+        {hasDecoration && (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="55"
+            height="46"
+            viewBox="0 0 55 46"
+            className="decoration"
+          >
+            <g
+              fill="none"
+              fill-rule="evenodd"
+              stroke="#41EF8B"
+              stroke-linecap="square"
+              stroke-width="4"
+            >
+              <path d="M41.537 4.374L33.423 15.96M20.98 2.342L22.9 15.36M52.28 23.793l-12.887 2.65M37.521 35.968l9.432 6.604M2.795 11.652l9.432 6.605" />
+            </g>
+          </svg>
+        )}
         <style jsx>
           {`
             ${Component} {
+              ${hasDecoration ? "position: relative;" : ""};
               font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+              ${hasDecoration ? "display: inline-block" : ""};
               ${presets[defaultElement]}
               ${xlarge ? "line-height: 1.01em;" : ""};
               ${noMargin ? "margin: 0;" : ""}
@@ -104,6 +126,13 @@ const getComponent = defaultElement => {
               ${capitalize ? "text-transform: capitalize;" : ""};
               ${xlarge ? "font-size: 4.5rem;" : ""};
               ${xsmall ? "font-size: 0.875rem;" : ""};
+            }
+
+            .decoration {
+              position: absolute;
+              top: 0%;
+              right: 0;
+              transform: translate(50%, -40%);
             }
 
             @media (max-width: 800px) {

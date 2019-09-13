@@ -8,7 +8,9 @@ import Input from "../../components/Input"
 export default function Profile() {
   return (
     <Main>
-      <Text h2>Profile</Text>
+      <Text h2 hasDecoration>
+        Profile
+      </Text>
       <Formik
         initialValues={{}}
         onSubmit={values => {}}
