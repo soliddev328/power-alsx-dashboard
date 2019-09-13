@@ -10,7 +10,9 @@ import Table from "../../components/Table"
 export default function MyImpact() {
   return (
     <Main>
-      <Text h2>My Impact</Text>
+      <Text h2 hasDecoration>
+        My Impact
+      </Text>
       <Text h2 style={{ marginTop: "40px" }}>
         Cumulative Impact and Savings
       </Text>
