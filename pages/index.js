@@ -12,7 +12,7 @@ import CONSTANTS from "../globals"
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod
 
-class Step1 extends React.Component {
+class Index extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -59,6 +59,28 @@ class Step1 extends React.Component {
                     email: user.email
                   })
                   global.analytics.track("User Signed In", {})
+
+                  const utility = user.milestones.utility
+                  const imageName = utility.replace(/\s/g, "")
+
+                  const utilityInfo = {
+                    image: {
+                      src: imageName
+                        ? `/static/images/utilities/${imageName}.png`
+                        : "/static/images/utilities/placeholder.png",
+                      altText: "Utility logo"
+                    },
+                    label: utility
+                  }
+
+                  localStorage.setItem("utility", JSON.stringify(utilityInfo))
+
+                  if (user.milestones.utilityPaperOnly) {
+                    localStorage.setItem(
+                      "billingMethod",
+                      JSON.stringify({ billingMethod: "paper" })
+                    )
+                  }
 
                   if (user.signupCompleted) {
                     Router.push({
@@ -202,4 +224,4 @@ class Step1 extends React.Component {
   }
 }
 
-export default Step1
+export default Index
