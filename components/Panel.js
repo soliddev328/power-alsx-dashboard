@@ -8,6 +8,7 @@ export default function Panel({
   noBg,
   noShadow,
   specialShadow,
+  hasDecoration,
   small
 }) {
   return (
@@ -20,6 +21,25 @@ export default function Panel({
       })}
     >
       {children}
+      {hasDecoration && (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="55"
+          height="46"
+          viewBox="0 0 55 46"
+          className="decoration"
+        >
+          <g
+            fill="none"
+            fill-rule="evenodd"
+            stroke="#41EF8B"
+            stroke-linecap="square"
+            stroke-width="4"
+          >
+            <path d="M41.537 4.374L33.423 15.96M20.98 2.342L22.9 15.36M52.28 23.793l-12.887 2.65M37.521 35.968l9.432 6.604M2.795 11.652l9.432 6.605" />
+          </g>
+        </svg>
+      )}
       <style jsx>{`
         .panel {
           background-color: #fff;
@@ -66,6 +86,13 @@ export default function Panel({
           filter: opacity(0.4);
           user-select: none;
           pointer-events: none;
+        }
+
+        .decoration {
+          position: absolute;
+          top: 0%;
+          right: 0;
+          transform: translate(50%, -60%);
         }
       `}</style>
     </div>

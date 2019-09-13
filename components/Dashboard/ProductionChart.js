@@ -1,7 +1,7 @@
 import {
   ResponsiveContainer,
-  LineChart,
-  Line,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   Label,
@@ -47,20 +47,28 @@ export default function ProductionChart() {
     <div className="wrapper">
       <Container height="295px">
         <ResponsiveContainer width="100%">
-          <LineChart data={data} margin={{ bottom: 15 }}>
+          <AreaChart data={data} margin={{ bottom: 15 }}>
+            <defs>
+              <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="40%" stopColor="#2479ff" stopOpacity={0} />
+                <stop offset="100%" stopColor="#2479ff" stopOpacity={0.1} />
+              </linearGradient>
+            </defs>
             <XAxis dataKey="time">
               <Label value="Time" position="insideBottom" offset={-15} />
             </XAxis>
             <YAxis />
             <Tooltip />
-            <Line
+            <Area
               type="monotone"
               dataKey="kw"
-              stroke="#2479ff"
               strokeWidth="2px"
+              stroke="#2479ff"
+              fillOpacity={1}
+              fill="url(#colorUv)"
               dot={false}
             />
-          </LineChart>
+          </AreaChart>
         </ResponsiveContainer>
       </Container>
       <style jsx>{`

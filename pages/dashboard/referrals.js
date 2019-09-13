@@ -10,7 +10,9 @@ import SegmentedInput from "../../components/SegmentedInput"
 export default function Referrals() {
   return (
     <Main>
-      <Text h2>Your Referrals</Text>
+      <Text h2 hasDecoration>
+        Your Referrals
+      </Text>
       <Section columns="5">
         <Panel small specialShadow center>
           <Container column>

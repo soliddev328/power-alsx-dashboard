@@ -7,7 +7,9 @@ import Text from "../../components/Text"
 export default function MySource({ image = true }) {
   return (
     <Main>
-      <Text h2>My Source</Text>
+      <Text h2 hasDecoration>
+        My Source
+      </Text>
       <Section>
         {image ? (
           <Image hasBorder src="/static/images/illustrations/t&c.png" alt="" />
