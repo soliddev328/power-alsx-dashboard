@@ -1,18 +1,18 @@
 import React from "react"
 import LogoIcon from "./Icons/LogoIcon"
 import Menu from "../components/Menu"
-import Sidebar from "../components/Sidebar"
+import Menubar from "./Menubar"
 
 export default function Main({ children }) {
   return (
     <main>
-      <Sidebar />
+      <Menubar />
       <div className="content">{children}</div>
       <style jsx>{`
         main {
           display: grid;
-          grid-template-areas: "sidebar content";
           grid-template-columns: 250px 1fr;
+          overflow-x: hidden;
         }
 
         .content {
@@ -31,6 +31,16 @@ export default function Main({ children }) {
           to {
             transform: translateX(0);
             opacity: 1;
+          }
+        }
+
+        @media (max-width: 800px) {
+          main {
+            grid-template-columns: 1fr;
+          }
+          .content {
+            padding: 0 20px;
+            padding-top: 40px;
           }
         }
       `}</style>
