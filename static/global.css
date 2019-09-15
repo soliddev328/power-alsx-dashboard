@@ -339,9 +339,23 @@ hr {
   background-color: #fff;
 }
 
+.desktop-only {
+  display: none;
+}
+
+.mobile-only {
+  display: block;
+}
+
 @media (min-width: 800px) {
   .two-columns--responsive {
     grid-template-columns: repeat(2, 1fr);
+  }
+  .desktop-only {
+    display: block;
+  }
+  .mobile-only {
+    display: none;
   }
 }
 

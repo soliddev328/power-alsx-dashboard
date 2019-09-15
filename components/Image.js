@@ -3,7 +3,7 @@ import cn from "classnames"
 export default function Image({ src, alt, hasBorder, height, width }) {
   return (
     <figure className={cn({ "has-border": hasBorder })}>
-      <img src={src} alt={alt} loading="lazy" />
+      <img src={src} alt={alt} />
       <style jsx>{`
         figure {
           margin: 0;
@@ -19,6 +19,7 @@ export default function Image({ src, alt, hasBorder, height, width }) {
         }
 
         img {
+          display: flex;
           width: 100%;
           object-fit: cover;
         }
