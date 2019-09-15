@@ -60,7 +60,7 @@ class Dashboard extends React.Component {
           Welcome user
         </Text>
         <Section columns="5">
-          <span style={{ gridColumn: "1 / 4" }}>
+          <span style={{ gridColumn: "1 / 4" }} className="desktop-only">
             <Text
               bold
               noMargin
@@ -69,13 +69,22 @@ class Dashboard extends React.Component {
               Your Impact
             </Text>
           </span>
-          <span style={{ gridColumn: "4 / -1" }}>
+          <span style={{ gridColumn: "4 / -1" }} className="desktop-only">
             <Text
               bold
               noMargin
               style={{ textAlign: "center", color: "#a8a8ba" }}
             >
               Your Savings
+            </Text>
+          </span>
+          <span className="mobile-only">
+            <Text
+              bold
+              noMargin
+              style={{ textAlign: "center", color: "#a8a8ba" }}
+            >
+              Your Impact
             </Text>
           </span>
           <Panel small specialShadow center>
@@ -159,6 +168,15 @@ class Dashboard extends React.Component {
             <Separator margin="10px auto 25px auto" small />
             <Text noMargin>CO2 Emissions Prevented</Text>
           </Panel>
+          <span className="mobile-only">
+            <Text
+              bold
+              noMargin
+              style={{ textAlign: "center", color: "#a8a8ba" }}
+            >
+              Your Savings
+            </Text>
+          </span>
           <Panel small specialShadow center>
             <Container column>
               <Icon

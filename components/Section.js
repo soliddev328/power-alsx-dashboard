@@ -9,7 +9,10 @@ export default function Section({ children, disabled, columns = 1, noMargin }) {
       <style jsx>{`
         .section {
           display: grid;
-          grid-template-columns: repeat(${columnsInt}, 1fr);
+          grid-template-columns: repeat(
+            ${columnsInt},
+            minmax(calc(1000px / ${columnsInt + 20}), 1fr)
+          );
           grid-column-gap: 20px;
           grid-row-gap: 40px;
           margin: ${noMargin ? "0" : "40px 0"};

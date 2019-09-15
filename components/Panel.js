@@ -89,10 +89,17 @@ export default function Panel({
         }
 
         .decoration {
+          display: block;
           position: absolute;
           top: 0%;
           right: 0;
           transform: translate(50%, -60%);
+        }
+
+        @media (max-width: 800px) {
+          .decoration {
+            display: none;
+          }
         }
       `}</style>
     </div>
