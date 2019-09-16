@@ -8,6 +8,7 @@ export default function Blockquote({ cite }) {
             srcSet={cite.image.srcSet}
             alt={`${cite.name} profile image`}
           />
+
           <svg width="18" height="16" xmlns="http://www.w3.org/2000/svg">
             <text
               transform="translate(-134 -11)"
