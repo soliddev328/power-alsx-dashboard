@@ -44,30 +44,34 @@ class Step4 extends React.Component {
   }
 
   getLinks() {
-    let storedAddress = JSON.parse(localStorage.getItem("address"))
+    let storedPostalCode = JSON.parse(localStorage.getItem("postalCode"))
     let storedUtility = JSON.parse(localStorage.getItem("utility"))
 
-    if (storedUtility && storedAddress) {
-      const rawParams = {
-        utility: encodeURIComponent(storedUtility.label),
-        state: storedAddress.state
-      }
-
-      const generatedParams = Object.entries(rawParams)
-        .map(([key, val]) => `${key}=${val}`)
-        .join("&")
-
-      axios(`${API}/v1/utilities/?${generatedParams}`).then(response => {
+    if (storedPostalCode) {
+      axios(`${API}/v1/zipcodes/${storedPostalCode}`).then(response => {
         if (response.data.data) {
-          const data = response.data.data[0]
+          const rawParams = {
+            utility: encodeURIComponent(storedUtility.label),
+            state: response.data.data.state
+          }
 
-          this.setState({
-            forgotPwdLink: data.forgotPwdLink,
-            forgotEmailLink: data.forgotEmailLink,
-            createLoginLink: data.createLoginLink,
-            agreement: {
-              terms: data.agreement.termsLink,
-              conditions: data.agreement.conditionsLink
+          const generatedParams = Object.entries(rawParams)
+            .map(([key, val]) => `${key}=${val}`)
+            .join("&")
+
+          axios(`${API}/v1/utilities/?${generatedParams}`).then(response => {
+            if (response.data.data) {
+              const data = response.data.data[0]
+
+              this.setState({
+                forgotPwdLink: data.forgotPwdLink,
+                forgotEmailLink: data.forgotEmailLink,
+                createLoginLink: data.createLoginLink,
+                agreement: {
+                  terms: data.agreement.termsLink,
+                  conditions: data.agreement.conditionsLink
+                }
+              })
             }
           })
         }
@@ -81,6 +85,11 @@ class Step4 extends React.Component {
     let storedLeadId = ""
     let storedUtility = ""
     let storedBillingMethod = ""
+    let storedPostalCode = ""
+
+    if (localStorage.getItem("postalCode")) {
+      storedPostalCode = JSON.parse(localStorage.getItem("postalCode"))
+    }
 
     if (localStorage.getItem("leadId")) {
       storedLeadId = localStorage.getItem("leadId")
@@ -99,6 +108,7 @@ class Step4 extends React.Component {
         leadId: storedLeadId,
         utility: storedUtility.label,
         currentUtility: storedUtility,
+        postalCode: storedPostalCode,
         billingMethod: storedBillingMethod
       },
       this.getLinks()
