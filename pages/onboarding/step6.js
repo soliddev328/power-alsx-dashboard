@@ -1,418 +1,102 @@
 import React from "react"
 import Router from "next/router"
 import { Formik, Form } from "formik"
-import axios from "axios"
-import { FadeLoader } from "react-spinners"
 import Header from "../../components/Header"
-import Input from "../../components/Input"
-import Checkbox from "../../components/Checkbox"
+import RadioCard from "../../components/RadioCard"
 import SingleStep from "../../components/SingleStep"
 import Button from "../../components/Button"
 import Stepper from "../../components/Stepper"
-import CONSTANTS from "../../globals"
-
-const { API } =
-  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod
 
 class Step6 extends React.Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      isLoading: false,
-      currentUtility: "",
-      forgotPwdLink: "",
-      forgotEmailLink: "",
-      createLoginLink: "",
-      agreement: {
-        terms: "",
-        conditions: ""
-      }
-    }
-  }
-
-  static async getInitialProps({ req, query, params }) {
-    if (req) {
-      try {
-        return { query: req.query, params: req.params }
-      } catch (err) {
-        return { query: req.query, params: req.params }
-      }
-    }
-
-    return { query, params }
-  }
-
-  getLinks() {
-    let storedAddress = JSON.parse(localStorage.getItem("address"))
-    let storedUtility = JSON.parse(localStorage.getItem("utility"))
-
-    if (storedUtility && storedAddress) {
-      const rawParams = {
-        utility: encodeURIComponent(storedUtility.label),
-        state: storedAddress.state
-      }
-
-      const generatedParams = Object.entries(rawParams)
-        .map(([key, val]) => `${key}=${val}`)
-        .join("&")
-
-      axios(`${API}/v1/utilities/?${generatedParams}`).then(response => {
-        if (response.data.data) {
-          const data = response.data.data[0]
-
-          this.setState({
-            forgotPwdLink: data.forgotPwdLink,
-            forgotEmailLink: data.forgotEmailLink,
-            createLoginLink: data.createLoginLink,
-            agreement: {
-              terms: data.agreement.termsLink,
-              conditions: data.agreement.conditionsLink
-            }
-          })
-        }
-      })
-    }
-  }
-
   componentDidMount() {
     global.analytics.page("Step 6")
+  }
 
-    let storedLeadId = ""
-    let storedUtility = ""
-    let storedBillingMethod = ""
-
-    if (localStorage.getItem("leadId")) {
-      storedLeadId = localStorage.getItem("leadId")
+  static async getInitialProps({ query }) {
+    const props = {
+      displayMessage: query.onboardingNotFinished
     }
 
-    if (localStorage.getItem("utility")) {
-      storedUtility = JSON.parse(localStorage.getItem("utility"))
-    }
-
-    if (localStorage.getItem("billingMethod")) {
-      storedBillingMethod = JSON.parse(localStorage.getItem("billingMethod"))
-    }
-
-    this.setState(
-      {
-        leadId: storedLeadId,
-        utility: storedUtility.label,
-        currentUtility: storedUtility,
-        billingMethod: storedBillingMethod
-      },
-      this.getLinks()
-    )
-  }
-
-  renderUtilityLogin() {
-    const { query } = this.props
-    return (
-      <React.Fragment>
-        {query && query.error && (
-          <p className="error">
-            There was a problem connecting, could you please verify your login.
-          </p>
-        )}
-        <Formik
-          initialValues={{
-            utilityUser: "",
-            utilityPassword: ""
-          }}
-          onSubmit={values => {
-            this.setState({ isLoading: true })
-            window.firebase
-              .auth()
-              .currentUser.getIdToken(true)
-              .then(idToken => {
-                axios
-                  .put(
-                    `${API}/v1/subscribers/utilities/link`,
-                    {
-                      leadId: this.state.leadId,
-                      utility: this.state.utility,
-                      agreementChecked: !!values.acceptedTermsAndConditions,
-                      utilityUsername: values.utilityUser,
-                      utilityPwd: values.utilityPassword
-                    },
-                    {
-                      headers: {
-                        Authorization: idToken
-                      }
-                    }
-                  )
-                  .then(response => {
-                    const data = response.data.data
-
-                    localStorage.setItem("linkedUtility", JSON.stringify(data))
-
-                    if (data && data[0]) {
-                      if (data[0].hasLoggedIn) {
-                        localStorage.setItem("partialConnection", false)
-                        Router.push({
-                          pathname: "/onboarding/step7"
-                        })
-                      } else {
-                        this.setState({ isLoading: false })
-                        Router.push({
-                          pathname: "/onboarding/step6",
-                          query: {
-                            error: true
-                          }
-                        })
-                      }
-                    } else {
-                      localStorage.setItem("partialConnection", true)
-                      Router.push({
-                        pathname: "/onboarding/step7"
-                      })
-                    }
-                  })
-                  .catch(err => {
-                    console.log(err)
-                  })
-              })
-          }}
-          render={props => (
-            <React.Fragment>
-              <Form>
-                <Input label="User name" fieldname="utilityUser" />
-                <Input
-                  type="password"
-                  label="Password"
-                  fieldname="utilityPassword"
-                  autoComplete="no"
-                />
-                <Checkbox fieldname="acceptedTermsAndConditions">
-                  <p className="checkbox__label">
-                    I authorize Common Energy to act as my Agent and to enroll
-                    me in a clean energy savings program, according to these{" "}
-                    <a
-                      href={this.state.agreement.terms}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      terms
-                    </a>{" "}
-                    and{" "}
-                    <a
-                      href={this.state.agreement.conditions}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      conditions
-                    </a>
-                    .
-                  </p>
-                </Checkbox>
-                <Button
-                  primary
-                  disabled={
-                    !props.values.acceptedTermsAndConditions != "" ||
-                    !props.values.utilityUser != "" ||
-                    !props.values.utilityPassword != ""
-                  }
-                >
-                  Next
-                </Button>
-              </Form>
-            </React.Fragment>
-          )}
-        />
-        <style jsx>{`
-          .error {
-            text-align: center;
-            color: red;
-          }
-        `}</style>
-      </React.Fragment>
-    )
-  }
-
-  renderAskForUtilityAccount() {
-    return (
-      <Formik
-        initialValues={{
-          utilityAccountNumber: "",
-          acceptedTermsAndConditions: false
-        }}
-        onSubmit={values => {
-          window.firebase
-            .auth()
-            .currentUser.getIdToken(true)
-            .then(idToken => {
-              axios
-                .put(
-                  `${API}/v1/subscribers`,
-                  {
-                    leadId: this.state.leadId,
-                    agreementChecked: !!values.acceptedTermsAndConditions,
-                    utilityAccountNumber: values.utilityAccountNumber
-                  },
-                  {
-                    headers: {
-                      Authorization: idToken
-                    }
-                  }
-                )
-                .then(() => {
-                  localStorage.setItem("partialConnection", true)
-                  Router.push({
-                    pathname: "/onboarding/step7"
-                  })
-                })
-                .catch(error => {
-                  console.log(error)
-                })
-            })
-        }}
-        render={props => (
-          <React.Fragment>
-            <Form>
-              <Input label="Account Number" fieldname="utilityAccountNumber" />
-              <Checkbox fieldname="acceptedTermsAndConditions">
-                <p className="checkbox__label">
-                  I authorize Common Energy to act as my Agent and to enroll me
-                  in a clean energy savings program, according to these{" "}
-                  <a
-                    href={this.state.agreement.terms}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    terms
-                  </a>{" "}
-                  and{" "}
-                  <a
-                    href={this.state.agreement.conditions}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    conditions
-                  </a>
-                  .
-                </p>
-              </Checkbox>
-              <Button
-                primary
-                disabled={
-                  !props.values.utilityAccountNumber != "" ||
-                  !props.values.acceptedTermsAndConditions
-                }
-              >
-                Next
-              </Button>
-            </Form>
-          </React.Fragment>
-        )}
-      />
-    )
-  }
-
-  renderForms() {
-    const canLinkAccount =
-      this.state.billingMethod &&
-      this.state.billingMethod.billingMethod.indexOf("paper") !== 0
-
-    return canLinkAccount
-      ? this.renderUtilityLogin()
-      : this.renderAskForUtilityAccount()
-  }
-
-  renderLoader() {
-    return (
-      <React.Fragment>
-        <div className="loading">
-          <FadeLoader
-            className="spinner"
-            height={15}
-            width={4}
-            radius={1}
-            color={"#FF69A0"}
-            loading={true}
-          />
-          <p>Connecting your account</p>
-        </div>
-        <p className="suffix">(this may take up to 10 seconds)</p>
-        <style jsx>{`
-          .loading {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          }
-
-          .loading p {
-            font-size: 1rem;
-            text-align: center;
-          }
-
-          p.suffix {
-            font-size: 0.8rem;
-          }
-        `}</style>
-      </React.Fragment>
-    )
-  }
-
-  renderText() {
-    const canLinkAccount =
-      this.state.billingMethod &&
-      this.state.billingMethod.billingMethod.indexOf("paper") !== 0
-    let text = canLinkAccount
-      ? "Ok great. Let's connect your account and get you saving!"
-      : "No problem! We can use your account number to get you connected and saving."
-
-    if (this.state.currentUtility && this.state.currentUtility.paperOnly)
-      text = "We can use your account number to get you connected and saving."
-
-    return this.state.isLoading ? "" : text
+    return props
   }
 
   render() {
-    const canLinkAccount =
-      this.state.billingMethod &&
-      this.state.billingMethod.billingMethod.indexOf("paper") !== 0
     return (
       <main>
         <Header />
-        <SingleStep title={this.renderText()}>
-          {this.state && this.state.currentUtility && !this.state.isLoading && (
-            <figure>
-              <img
-                src={this.state.currentUtility.image.src}
-                alt={this.state.currentUtility.image.altText}
-              />
-            </figure>
-          )}
-          {this.state.isLoading ? this.renderLoader() : this.renderForms()}
-          {!this.state.isLoading && canLinkAccount && (
-            <div className="links">
-              {this.state.createLoginLink && (
-                <a className="cta" href={this.state.createLoginLink}>
-                  Create an account
-                </a>
-              )}
-              {this.state.forgotEmailLink && (
-                <a className="cta" href={this.state.forgotEmailLink}>
-                  Forgot username
-                </a>
-              )}
-              {this.state.forgotPwdLink && (
-                <a className="cta" href={this.state.forgotPwdLink}>
-                  Forgot password
-                </a>
-              )}
-            </div>
-          )}
-          {!this.state.isLoading && (
-            <Stepper>
-              <li className="steplist__step steplist__step-done">1</li>
-              <li className="steplist__step steplist__step-done">2</li>
-              <li className="steplist__step steplist__step-done">3</li>
-              <li className="steplist__step steplist__step-done">4</li>
-              <li className="steplist__step steplist__step-doing">5</li>
-              <li className="steplist__step">6</li>
-            </Stepper>
-          )}
+        <SingleStep title="Going forward, instead of paying your utility you will pay Common Energy a lower amount for your electricity:">
+          <Formik
+            initialValues={{
+              paymentMethod: ""
+            }}
+            onSubmit={values => {
+              window.localStorage.setItem(
+                "paymentMethod",
+                JSON.stringify(values)
+              )
+              Router.push({
+                pathname: "/onboarding/step7"
+              })
+            }}
+            render={props => (
+              <React.Fragment>
+                <Form>
+                  <RadioCard
+                    number="3"
+                    name="paymentMethod"
+                    value="manualBanking"
+                    heading="Automatic Payment via ACH"
+                    content="Receive an additional $25 credit with automatic deductions from your bank account"
+                    highlight="$25 credit"
+                  />
+                  <RadioCard
+                    number="1"
+                    name="paymentMethod"
+                    value="automatic"
+                    heading="Automatic Payment via Bank Link"
+                    content="Receive an additional $25 credit with automatic deductions from your bank account"
+                    highlight="$25 credit"
+                  />
+                  <RadioCard
+                    number="2"
+                    name="paymentMethod"
+                    value="creditCard"
+                    heading="Credit Card"
+                    content="A 2.9% processing fee is applied to cover transaction costs."
+                    highlight="2.9%"
+                  />
+                  <Button
+                    primary
+                    disabled={!!props.values.paymentMethod !== true}
+                  >
+                    Next
+                  </Button>
+                  <p className="small">
+                    <svg
+                      width="14"
+                      height="18"
+                      viewBox="0 0 14 18"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M13.9952011 10.470321c0-.92422-.7617776-1.67188-1.7018596-1.67032h-.5030834l-.0015915-3.9382c-.0023882-2.682-2.2256466-4.863999-4.957474-4.861799C4.0985501.002346 1.876979 2.184401 1.876979 4.865601l.0023882 3.9382h-.1775076C.7625723 8.806145 0 9.553801 0 10.475681l.0039798 5.853999C.0039798 17.25156.7657573 18 1.7058393 18l10.5923011-.00625C13.2374277 17.99375 14 17.24609 14 16.32343l-.0047989-5.853109zm-10.2882666-1.6664l-.0023883-3.9382c-.0023862-1.69376 1.4017601-3.0718 3.1259332-3.0742 1.7257401 0 3.1298028 1.37812 3.1322481 3.0704l.0023863 3.9382-6.2581793.0038z"
+                        fill="#2479FF"
+                        fillRule="evenodd"
+                      />
+                    </svg>
+                    All your information is 128 bit encrypted
+                  </p>
+                </Form>
+              </React.Fragment>
+            )}
+          />
+          <Stepper>
+            <li className="steplist__step steplist__step-done">1</li>
+            <li className="steplist__step steplist__step-done">2</li>
+            <li className="steplist__step steplist__step-done">3</li>
+            <li className="steplist__step steplist__step-doing">4</li>
+            <li className="steplist__step">5</li>
+          </Stepper>
         </SingleStep>
         <style jsx>{`
           main {
@@ -421,25 +105,14 @@ class Step6 extends React.Component {
             max-width: 700px;
             margin: 0 auto;
           }
-          figure {
+          p.small {
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #fff;
-            margin: 0;
-            margin-bottom: 1em;
-            padding: 1em;
+            font-size: 12px;
           }
-
-          img {
-            max-width: 60%;
-          }
-
-          .links {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+          p svg {
+            margin-right: 10px;
           }
         `}</style>
       </main>
