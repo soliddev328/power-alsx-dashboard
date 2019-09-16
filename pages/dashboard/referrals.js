@@ -1,11 +1,11 @@
-import Main from "../../components/Main"
-import Container from "../../components/Container"
-import Section from "../../components/Section"
-import Separator from "../../components/Separator"
-import Panel from "../../components/Panel"
-import Text from "../../components/Text"
-import Icon from "../../components/Icon"
-import SegmentedInput from "../../components/SegmentedInput"
+import Main from "../../components/Main";
+import Container from "../../components/Container";
+import Section from "../../components/Section";
+import Separator from "../../components/Separator";
+import Panel from "../../components/Panel";
+import Text from "../../components/Text";
+import Icon from "../../components/Icon";
+import SegmentedInput from "../../components/SegmentedInput";
 
 export default function Referrals() {
   return (
@@ -110,5 +110,5 @@ export default function Referrals() {
         <SegmentedInput hasBorder inputLabel="send" buttonText="send" />
       </Section>
     </Main>
-  )
+  );
 }

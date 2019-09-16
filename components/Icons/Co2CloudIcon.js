@@ -28,5 +28,5 @@ export default function Co2CloudIcon() {
         }
       `}</style>
     </span>
-  )
+  );
 }

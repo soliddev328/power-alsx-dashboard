@@ -10,11 +10,11 @@ export default class GeoSuggest extends React.Component {
     this.handleBlur = this.handleBlur.bind(this);
     this.handleChange = this.handleChange.bind(this);
 
-    this.state = {}
+    this.state = {};
   }
 
   handleChange(value) {
-    const { onChange, fieldname } = this.props
+    const { onChange, fieldname } = this.props;
 
     if (value.description) {
       onChange(fieldname, value);
@@ -22,7 +22,7 @@ export default class GeoSuggest extends React.Component {
   }
 
   handleBlur() {
-    const { onBlur, fieldname } = this.props
+    const { onBlur, fieldname } = this.props;
     const nextField = document.getElementById("apt");
 
     if (nextField) {
@@ -53,7 +53,7 @@ export default class GeoSuggest extends React.Component {
   }
 
   render() {
-    const { label, value } = this.props
+    const { label, value } = this.props;
 
     return (
       <div ref={this.inputField} onClick={this.scrollOnFocus}>

@@ -8,21 +8,21 @@ export default class Phoneinput extends React.PureComponent {
     this.handleChange = this.handleChange.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
 
-    this.state = {}
+    this.state = {};
   }
 
   handleChange(e) {
-    const { onChangeEvent, fieldname } = this.props
+    const { onChangeEvent, fieldname } = this.props;
     onChangeEvent(fieldname, e.target.value);
   }
 
   handleBlur() {
-    const { onBlurEvent, fieldname } = this.props
+    const { onBlurEvent, fieldname } = this.props;
     onBlurEvent(fieldname, true);
   }
 
   render() {
-    const { fieldname, label, secondary } = this.props
+    const { fieldname, label, secondary } = this.props;
 
     return (
       <div className="input__wrapper">

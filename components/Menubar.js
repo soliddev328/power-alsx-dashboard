@@ -1,10 +1,10 @@
-import React, { useState } from "react"
-import cn from "classnames"
-import LogoIcon from "./Icons/LogoIcon"
-import Menu from "./Menu"
+import React, { useState } from "react";
+import cn from "classnames";
+import LogoIcon from "./Icons/LogoIcon";
+import Menu from "./Menu";
 
 export default function MenuBar() {
-  const [menuVisibility, toggleVisibility] = useState(false)
+  const [menuVisibility, toggleVisibility] = useState(false);
 
   return (
     <div className="wrapper">
@@ -127,5 +127,5 @@ export default function MenuBar() {
         }
       `}</style>
     </div>
-  )
+  );
 }

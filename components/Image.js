@@ -1,4 +1,4 @@
-import cn from "classnames"
+import cn from "classnames";
 
 export default function Image({ src, alt, hasBorder, height, width }) {
   return (
@@ -25,5 +25,5 @@ export default function Image({ src, alt, hasBorder, height, width }) {
         }
       `}</style>
     </figure>
-  )
+  );
 }

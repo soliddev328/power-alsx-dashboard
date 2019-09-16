@@ -1,9 +1,9 @@
-import { Formik } from "formik"
-import Main from "../../components/Main"
-import Section from "../../components/Section"
-import Panel from "../../components/Panel"
-import Text from "../../components/Text"
-import Input from "../../components/Input"
+import { Formik } from "formik";
+import Main from "../../components/Main";
+import Section from "../../components/Section";
+import Panel from "../../components/Panel";
+import Text from "../../components/Text";
+import Input from "../../components/Input";
 
 export default function Profile() {
   return (
@@ -52,5 +52,5 @@ export default function Profile() {
         )}
       />
     </Main>
-  )
+  );
 }

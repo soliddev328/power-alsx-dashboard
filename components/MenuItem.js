@@ -1,12 +1,12 @@
-import Link from "next/link"
-import { useRouter } from "next/router"
-import cn from "classnames"
+import Link from "next/link";
+import { useRouter } from "next/router";
+import cn from "classnames";
 
 export default function MenuItem({ children, active, to = false }) {
-  const router = useRouter()
+  const router = useRouter();
   const url = to
     ? to
-    : `/dashboard/${children.replace(/\s+/g, "-").toLowerCase()}`
+    : `/dashboard/${children.replace(/\s+/g, "-").toLowerCase()}`;
 
   return (
     <div className={cn("menu-item", { active: router.pathname === url })}>
@@ -70,5 +70,5 @@ export default function MenuItem({ children, active, to = false }) {
         }
       `}</style>
     </div>
-  )
+  );
 }

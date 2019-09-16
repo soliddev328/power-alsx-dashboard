@@ -1,4 +1,3 @@
-
 export default function Error() {
   return (
     <section>
@@ -6,7 +5,7 @@ export default function Error() {
       <h3>Page not found</h3>
       <a href="/" className="button">
         Back to homepage
-        </a>
+      </a>
       <style jsx>{``}</style>
     </section>
   );

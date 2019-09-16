@@ -1,35 +1,35 @@
-import React from "react"
-import Router from "next/router"
-import axios from "axios"
-import Main from "../../components/Main"
-import Container from "../../components/Container"
-import Header from "../../components/Header"
-import Button from "../../components/Button"
-import Section from "../../components/Section"
-import Panel from "../../components/Panel"
-import Text from "../../components/Text"
-import Separator from "../../components/Separator"
-import Icon from "../../components/Icon"
-import ProductionChart from "../../components/Dashboard/ProductionChart"
-import UsersInAreaMap from "../../components/Dashboard/UsersInAreaMap"
-import SegmentedInput from "../../components/SegmentedInput"
+import React from "react";
+import Router from "next/router";
+import axios from "axios";
+import Main from "../../components/Main";
+import Container from "../../components/Container";
+import Header from "../../components/Header";
+import Button from "../../components/Button";
+import Section from "../../components/Section";
+import Panel from "../../components/Panel";
+import Text from "../../components/Text";
+import Separator from "../../components/Separator";
+import Icon from "../../components/Icon";
+import ProductionChart from "../../components/Dashboard/ProductionChart";
+import UsersInAreaMap from "../../components/Dashboard/UsersInAreaMap";
+import SegmentedInput from "../../components/SegmentedInput";
 
-import CONSTANTS from "../../globals"
+import CONSTANTS from "../../globals";
 
 const { API } =
-  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 class Dashboard extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
 
-    this.state = {}
+    this.state = {};
   }
 
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        global.analytics.page("Dashboard")
+        global.analytics.page("Dashboard");
 
         user.getIdToken(true).then(idToken => {
           axios
@@ -39,18 +39,18 @@ class Dashboard extends React.Component {
               }
             })
             .then(data => {
-              console.log("user data", data)
+              console.log("user data", data);
             })
             .catch(error => {
-              console.error(error)
-            })
-        })
+              console.error(error);
+            });
+        });
       } else {
         Router.push({
           pathname: "/"
-        })
+        });
       }
-    })
+    });
   }
 
   renderDashboard() {
@@ -255,12 +255,12 @@ class Dashboard extends React.Component {
           </Panel>
         </Section>
       </Main>
-    )
+    );
   }
 
   render() {
-    return this.renderDashboard()
+    return this.renderDashboard();
   }
 }
 
-export default Dashboard
+export default Dashboard;

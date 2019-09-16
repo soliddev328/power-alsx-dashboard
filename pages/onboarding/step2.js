@@ -25,12 +25,10 @@ const formikEnhancer = withFormik({
 
 class CustomForm extends React.Component {
   render() {
-    const { project } = this.props
+    const { project } = this.props;
     const imageUrl = project && project.imageUrl;
     const completion =
-      project && project.completion
-        ? project.completion
-        : false;
+      project && project.completion ? project.completion : false;
 
     return (
       <Form>
@@ -167,7 +165,7 @@ class Step2 extends React.Component {
   }
 
   render() {
-    const { utility } = this.state
+    const { utility } = this.state;
     return (
       <main>
         <Header />
@@ -175,9 +173,7 @@ class Step2 extends React.Component {
           prefix="Great news!"
           title="We've got a project in your area."
           suffix={
-            utility.project && utility.project.name
-              ? utility.project.name
-              : ""
+            utility.project && utility.project.name ? utility.project.name : ""
           }
         >
           <EnhancedCustomForm project={utility.project} />

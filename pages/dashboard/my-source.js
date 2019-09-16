@@ -1,8 +1,8 @@
-import Main from "../../components/Main"
-import Section from "../../components/Section"
-import Panel from "../../components/Panel"
-import Image from "../../components/Image"
-import Text from "../../components/Text"
+import Main from "../../components/Main";
+import Section from "../../components/Section";
+import Panel from "../../components/Panel";
+import Image from "../../components/Image";
+import Text from "../../components/Text";
 
 export default function MySource({ image = true }) {
   return (
@@ -30,5 +30,5 @@ export default function MySource({ image = true }) {
         </Panel>
       </Section>
     </Main>
-  )
+  );
 }

@@ -1,6 +1,6 @@
-import Input from "./Input"
-import Button from "./Button"
-import cn from "classnames"
+import Input from "./Input";
+import Button from "./Button";
+import cn from "classnames";
 
 export default function SegmentedInput({
   inputLabel,
@@ -36,5 +36,5 @@ export default function SegmentedInput({
         }
       `}</style>
     </div>
-  )
+  );
 }
