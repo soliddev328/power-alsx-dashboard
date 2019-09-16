@@ -37,16 +37,16 @@ export default function NotificationIcon({ number }) {
         </g>
       </svg>
       <style jsx>{`
-          .wrapper {
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            margin: 0 5px;
-            overflow: hidden;
-            transition: all 300ms ease-in-out;
-          }
-        `}</style>
+        .wrapper {
+          display: inline-flex;
+          justify-content: center;
+          align-items: center;
+          position: relative;
+          margin: 0 5px;
+          overflow: hidden;
+          transition: all 300ms ease-in-out;
+        }
+      `}</style>
     </span>
-  )
+  );
 }

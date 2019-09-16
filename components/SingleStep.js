@@ -1,41 +1,33 @@
-import React from "react"
-import Highlight from "./Highlight"
+import React from "react";
+import Highlight from "./Highlight";
 
 export default class SingleStep extends React.PureComponent {
   renderPrefix() {
-    const { highlight, prefix } = this.props
+    const { highlight, prefix } = this.props;
 
     return highlight ? (
-      <Highlight
-        className="prefix"
-        content={prefix}
-        highlight={highlight}
-      />
+      <Highlight className="prefix" content={prefix} highlight={highlight} />
     ) : (
-        <p className="prefix">{prefix}</p>
-      )
+      <p className="prefix">{prefix}</p>
+    );
   }
 
   renderTitle() {
-    const { highlight, title } = this.props
+    const { highlight, title } = this.props;
     return highlight ? (
-      <Highlight
-        className="title"
-        content={title}
-        highlight={highlight}
-      />
+      <Highlight className="title" content={title} highlight={highlight} />
     ) : (
-        <p className="title">{title}</p>
-      )
+      <p className="title">{title}</p>
+    );
   }
 
   renderSuffix() {
-    const { suffix } = this.props
-    return <p className="suffix">{suffix}</p>
+    const { suffix } = this.props;
+    return <p className="suffix">{suffix}</p>;
   }
 
   render() {
-    const { toast, prefix, title, suffix, image, children } = this.props
+    const { toast, prefix, title, suffix, image, children } = this.props;
 
     return (
       <div className="content">
@@ -116,6 +108,6 @@ export default class SingleStep extends React.PureComponent {
           }
         `}</style>
       </div>
-    )
+    );
   }
 }

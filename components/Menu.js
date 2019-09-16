@@ -1,6 +1,6 @@
-import Link from "next/link"
-import Router from "next/router"
-import MenuItem from "./MenuItem"
+import Link from "next/link";
+import Router from "next/router";
+import MenuItem from "./MenuItem";
 
 const signOut = () => {
   window.firebase
@@ -9,10 +9,10 @@ const signOut = () => {
     .then(() => {
       Router.push({
         pathname: "/"
-      })
+      });
     })
-    .catch(() => { })
-}
+    .catch(() => {});
+};
 
 export default function MainMenu() {
   return (
@@ -38,19 +38,19 @@ export default function MainMenu() {
         </li> */}
 
       <style jsx>{`
-          button {
-            appearance: none;
-            border: none;
-            background: none;
-            padding: 0;
-            color: #2479ff;
-          }
-          ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-          }
-        `}</style>
+        button {
+          appearance: none;
+          border: none;
+          background: none;
+          padding: 0;
+          color: #2479ff;
+        }
+        ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+      `}</style>
     </ul>
-  )
+  );
 }

@@ -8,8 +8,8 @@ import {
   CartesianGrid,
   Tooltip,
   Legend
-} from "recharts"
-import Container from "../../components/Container"
+} from "recharts";
+import Container from "../../components/Container";
 
 export default function ProductionChart() {
   const data = [
@@ -41,7 +41,7 @@ export default function ProductionChart() {
       time: "9:30",
       kw: 9
     }
-  ]
+  ];
 
   return (
     <div className="wrapper">
@@ -78,5 +78,5 @@ export default function ProductionChart() {
         }
       `}</style>
     </div>
-  )
+  );
 }

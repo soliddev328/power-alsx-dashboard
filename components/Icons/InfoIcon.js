@@ -6,51 +6,51 @@ export default function InfoIcon({ content }) {
       </svg>
       <p className="tooltip">{content}</p>
       <style jsx>{`
-          .wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex: 0;
-            position: relative;
-            margin: 0 0.5rem;
-          }
+        .wrapper {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex: 0;
+          position: relative;
+          margin: 0 0.5rem;
+        }
 
-          .wrapper svg {
-            opacity: 0.5;
-          }
+        .wrapper svg {
+          opacity: 0.5;
+        }
 
-          .tooltip {
-            width: 200px;
-            position: absolute;
-            right: 0;
-            bottom: 100%;
-            pointer-events: none;
-            padding: 0.5em;
-            margin: 0.8em 0;
-            border-radius: 1px;
-            font-size: 14px;
-            background-color: #161621;
-            color: #fff;
-            opacity: 0;
-            transition: all 200ms ease-in-out;
-          }
+        .tooltip {
+          width: 200px;
+          position: absolute;
+          right: 0;
+          bottom: 100%;
+          pointer-events: none;
+          padding: 0.5em;
+          margin: 0.8em 0;
+          border-radius: 1px;
+          font-size: 14px;
+          background-color: #161621;
+          color: #fff;
+          opacity: 0;
+          transition: all 200ms ease-in-out;
+        }
 
-          .tooltip:before {
-            content: '';
-            display: block;
-            position: absolute;
-            top: 100%;
-            right: 0;
-            width: 0;
-            height: 0;
-            border-top: 0.4em solid #161621;
-            border-left: 0.4em solid #fff;
-            border-right: 0.4em solid #fff;
-          }
-          .wrapper:hover .tooltip {
-            opacity: 1;
-          }
-        `}</style>
+        .tooltip:before {
+          content: "";
+          display: block;
+          position: absolute;
+          top: 100%;
+          right: 0;
+          width: 0;
+          height: 0;
+          border-top: 0.4em solid #161621;
+          border-left: 0.4em solid #fff;
+          border-right: 0.4em solid #fff;
+        }
+        .wrapper:hover .tooltip {
+          opacity: 1;
+        }
+      `}</style>
     </div>
-  )
+  );
 }

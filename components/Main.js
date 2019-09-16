@@ -1,7 +1,7 @@
-import React from "react"
-import LogoIcon from "./Icons/LogoIcon"
-import Menu from "../components/Menu"
-import Menubar from "./Menubar"
+import React from "react";
+import LogoIcon from "./Icons/LogoIcon";
+import Menu from "../components/Menu";
+import Menubar from "./Menubar";
 
 export default function Main({ children }) {
   return (
@@ -45,5 +45,5 @@ export default function Main({ children }) {
         }
       `}</style>
     </main>
-  )
+  );
 }

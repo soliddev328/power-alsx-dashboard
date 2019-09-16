@@ -1,4 +1,4 @@
-import cn from "classnames"
+import cn from "classnames";
 
 export default function Panel({
   children,
@@ -103,5 +103,5 @@ export default function Panel({
         }
       `}</style>
     </div>
-  )
+  );
 }

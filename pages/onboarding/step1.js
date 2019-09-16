@@ -43,7 +43,7 @@ class Step1 extends React.Component {
     localStorage.removeItem("email");
     localStorage.removeItem("username");
 
-    const { query } = this.props
+    const { query } = this.props;
     const storedCustomerReferral = Cookie.get("customer_referral");
     const storedPartnerReferral = Cookie.get("partner_referral");
     const storedSalesRep = Cookie.get("ce_rep_referral");
@@ -166,7 +166,16 @@ class Step1 extends React.Component {
           }
         })
         .then(userCredential => {
-          const { referrer, partner, salesRep, affiliate, utmCampaign, utmMedium, utmSource, referrerPage } = this.state
+          const {
+            referrer,
+            partner,
+            salesRep,
+            affiliate,
+            utmCampaign,
+            utmMedium,
+            utmSource,
+            referrerPage
+          } = this.state;
 
           if (userCredential) {
             window.localStorage.setItem(

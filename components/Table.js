@@ -7,8 +7,8 @@ function validURL(str) {
     "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
       "(\\#[-a-z\\d_]*)?$",
     "i"
-  ) // fragment locator
-  return !!pattern.test(str)
+  ); // fragment locator
+  return !!pattern.test(str);
 }
 
 export default function Table({ headers = [], data = [] }) {
@@ -42,9 +42,9 @@ export default function Table({ headers = [], data = [] }) {
                       </svg>
                     </a>
                   </td>
-                )
+                );
               }
-              return <td key={`column-content-${index}`}>{item}</td>
+              return <td key={`column-content-${index}`}>{item}</td>;
             })}
           </tr>
         ))}
@@ -75,5 +75,5 @@ export default function Table({ headers = [], data = [] }) {
         }
       `}</style>
     </table>
-  )
+  );
 }

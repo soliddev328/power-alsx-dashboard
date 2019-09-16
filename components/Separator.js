@@ -22,5 +22,5 @@ export default function Separator({ text, noMargin, small, margin }) {
         }
       `}</style>
     </div>
-  )
+  );
 }

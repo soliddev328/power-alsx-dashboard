@@ -1,20 +1,20 @@
-import { useEffect, useState } from "react"
-import GoogleMapReact from "google-map-react"
-import Container from "../../components/Container"
-import Text from "../Text"
+import { useEffect, useState } from "react";
+import GoogleMapReact from "google-map-react";
+import Container from "../../components/Container";
+import Text from "../Text";
 
 export default function UsersInAreaMap() {
-  const [lat, setLat] = useState(0)
-  const [lng, setLng] = useState(0)
+  const [lat, setLat] = useState(0);
+  const [lng, setLng] = useState(0);
 
   useEffect(() => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(position => {
-        setLat(position.coords.latitude)
-        setLng(position.coords.longitude)
-      })
+        setLat(position.coords.latitude);
+        setLng(position.coords.longitude);
+      });
     }
-  }, [])
+  }, []);
 
   return (
     <div className="wrapper">
@@ -70,5 +70,5 @@ export default function UsersInAreaMap() {
         }
       `}</style>
     </div>
-  )
+  );
 }

@@ -1,11 +1,11 @@
-import Main from "../../components/Main"
-import Container from "../../components/Container"
-import Section from "../../components/Section"
-import Separator from "../../components/Separator"
-import Panel from "../../components/Panel"
-import Text from "../../components/Text"
-import Icon from "../../components/Icon"
-import Table from "../../components/Table"
+import Main from "../../components/Main";
+import Container from "../../components/Container";
+import Section from "../../components/Section";
+import Separator from "../../components/Separator";
+import Panel from "../../components/Panel";
+import Text from "../../components/Text";
+import Icon from "../../components/Icon";
+import Table from "../../components/Table";
 
 export default function MyImpact() {
   return (
@@ -137,5 +137,5 @@ export default function MyImpact() {
         </Panel>
       </Section>
     </Main>
-  )
+  );
 }

@@ -16,7 +16,7 @@ class Step4 extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {}
+    this.state = {};
   }
 
   componentDidMount() {
@@ -42,7 +42,7 @@ class Step4 extends React.Component {
   }
 
   render() {
-    const { leadId, storedUtilityPaperOnly } = this.state
+    const { leadId, storedUtilityPaperOnly } = this.state;
     return (
       <main>
         <Header />
@@ -91,7 +91,7 @@ class Step4 extends React.Component {
                         });
                       }
                     })
-                    .catch(() => { });
+                    .catch(() => {});
                 });
             }}
             render={props => (
