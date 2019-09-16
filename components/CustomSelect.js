@@ -1,72 +1,72 @@
-import React from "react"
-import Select, { components } from "react-select"
-import axios from "axios"
-import CONSTANTS from "../globals"
+import React from "react";
+import Select, { components } from "react-select";
+import axios from "axios";
+import CONSTANTS from "../globals";
 
 const { API } =
-  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 export default class CustomSelect extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
 
-    this.inputField = React.createRef()
+    this.inputField = React.createRef();
 
     this.state = {
       options: null,
       singleOption: false
-    }
+    };
 
-    this.scrollOnFocus = this.scrollOnFocus.bind(this)
+    this.scrollOnFocus = this.scrollOnFocus.bind(this);
   }
 
   componentDidMount() {
-    this.getOptions(this.props.zipCode)
+    this.getOptions(this.props.zipCode);
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.zipCode !== prevProps.zipCode) {
-      this.getOptions(this.props.zipCode)
+      this.getOptions(this.props.zipCode);
     }
   }
 
   scrollOnFocus() {
     if (this.inputField) {
-      const offset = this.inputField.current.getBoundingClientRect().top
+      const offset = this.inputField.current.getBoundingClientRect().top;
       setTimeout(() => {
-        window.scrollTo(0, offset)
-      }, 200)
+        window.scrollTo(0, offset);
+      }, 200);
     }
   }
 
   handleChange = value => {
-    this.props.onChange(this.props.fieldname, value)
-  }
+    this.props.onChange(this.props.fieldname, value);
+  };
 
   handleBlur = () => {
-    this.props.onBlur(this.props.fieldname, true)
-  }
+    this.props.onBlur(this.props.fieldname, true);
+  };
 
   getOptions(code) {
     if (code && code.length > 4) {
-      let newOptions = []
+      let newOptions = [];
 
       axios(`${API}/v1/zipcodes/${code}`).then(response => {
-        const data = response.data.data
-        const utilities = data.utilities.split(",")
-        let terms = ""
-        let conditions = ""
+        const data = response.data.data;
+        const utilities = data.utilities.split(",");
+        let terms = "";
+        let conditions = "";
 
-        localStorage.setItem("state", data.state)
+        localStorage.setItem("state", data.state);
 
         if (data.utilities && data.utilities.length) {
           if (data.agreement) {
-            terms = data.agreement.termsLink
-            conditions = data.agreement.conditionsLink
+            terms = data.agreement.termsLink;
+            conditions = data.agreement.conditionsLink;
           }
 
           utilities.map((item, i) => {
-            const imageName = item.replace(/\s/g, "")
+            const imageName = item.replace(/\s/g, "");
             const utilityInfo = {
               code: i + 1,
               image: {
@@ -78,34 +78,36 @@ export default class CustomSelect extends React.Component {
               terms: terms,
               conditions: conditions,
               label: item
-            }
+            };
             // hack since Richard asked for this to be done in the next hour
-            if (item == "ConEd" || item == "ORU") utilityInfo.paperOnly = true
-            newOptions.push(utilityInfo)
-          })
+            if (item == "ConEd" || item == "ORU") utilityInfo.paperOnly = true;
+            newOptions.push(utilityInfo);
+          });
         } else {
-          newOptions = null
+          newOptions = null;
         }
 
         // Filter on utilities. Some partners pass that info to us
-        const storedUtility = localStorage.getItem("utility")
+        const storedUtility = localStorage.getItem("utility");
         if (storedUtility) {
-          const results = newOptions.filter(item => item.label == storedUtility)
-          if (results.length > 0) newOptions = results
+          const results = newOptions.filter(
+            item => item.label == storedUtility
+          );
+          if (results.length > 0) newOptions = results;
         }
 
         this.setState({
           options: newOptions,
           singleOption: utilities.length === 1 && utilities[0] !== ""
-        })
-      })
+        });
+      });
 
-      return newOptions.length
+      return newOptions.length;
     }
   }
 
   render() {
-    const { Option } = components
+    const { Option } = components;
     const CustomOption = props => (
       <Option {...props}>
         <img
@@ -115,10 +117,10 @@ export default class CustomSelect extends React.Component {
         />
         {props.data.label}
       </Option>
-    )
+    );
 
-    const getOptionValue = option => option.code
-    const { options = false } = this.state
+    const getOptionValue = option => option.code;
+    const { options = false } = this.state;
 
     return (
       <div ref={this.inputField} onClick={this.scrollOnFocus}>
@@ -214,6 +216,6 @@ export default class CustomSelect extends React.Component {
           }
         `}</style>
       </div>
-    )
+    );
   }
 }

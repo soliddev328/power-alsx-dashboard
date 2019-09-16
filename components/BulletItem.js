@@ -1,37 +1,37 @@
-import React from "react"
-import GiftIcon from "./Icons/GiftIcon"
-import LocationIcon from "./Icons/LocationIcon"
-import DollarIcon from "./Icons/DollarIcon"
-import MoneyIcon from "./Icons/MoneyIcon"
-import SignupIcon from "./Icons/SignupIcon"
-import CrossIcon from "./Icons/CrossIcon"
-import DiscountIcon from "./Icons/DiscountIcon"
-import CalendarIcon from "./Icons/CalendarIcon"
-import PlantIcon from "./Icons/PlantIcon"
-import Co2Icon from "./Icons/Co2Icon"
+import React from "react";
+import GiftIcon from "./Icons/GiftIcon";
+import LocationIcon from "./Icons/LocationIcon";
+import DollarIcon from "./Icons/DollarIcon";
+import MoneyIcon from "./Icons/MoneyIcon";
+import SignupIcon from "./Icons/SignupIcon";
+import CrossIcon from "./Icons/CrossIcon";
+import DiscountIcon from "./Icons/DiscountIcon";
+import CalendarIcon from "./Icons/CalendarIcon";
+import PlantIcon from "./Icons/PlantIcon";
+import Co2Icon from "./Icons/Co2Icon";
 
 export default class BulletItem extends React.Component {
   BulletIcon() {
     if (this.props.bulletIcon === "cross") {
-      return <CrossIcon />
+      return <CrossIcon />;
     } else if (this.props.bulletIcon === "discount") {
-      return <DiscountIcon />
+      return <DiscountIcon />;
     } else if (this.props.bulletIcon === "calendar") {
-      return <CalendarIcon />
+      return <CalendarIcon />;
     } else if (this.props.bulletIcon === "co2") {
-      return <Co2Icon />
+      return <Co2Icon />;
     } else if (this.props.bulletIcon === "signup") {
-      return <SignupIcon />
+      return <SignupIcon />;
     } else if (this.props.bulletIcon === "gift") {
-      return <GiftIcon />
+      return <GiftIcon />;
     } else if (this.props.bulletIcon === "money") {
-      return <MoneyIcon />
+      return <MoneyIcon />;
     } else if (this.props.bulletIcon === "dollar") {
-      return <DollarIcon />
+      return <DollarIcon />;
     } else if (this.props.bulletIcon === "location") {
-      return <LocationIcon />
+      return <LocationIcon />;
     } else if (this.props.bulletIcon === "plant") {
-      return <PlantIcon />
+      return <PlantIcon />;
     }
   }
 
@@ -66,6 +66,6 @@ export default class BulletItem extends React.Component {
           }
         `}</style>
       </div>
-    )
+    );
   }
 }

@@ -1,22 +1,22 @@
-import React from "react"
-import Router from "next/router"
-import { Formik, Form } from "formik"
-import axios from "axios"
-import { FadeLoader } from "react-spinners"
-import Header from "../../components/Header"
-import Input from "../../components/Input"
-import Checkbox from "../../components/Checkbox"
-import SingleStep from "../../components/SingleStep"
-import Button from "../../components/Button"
-import Stepper from "../../components/Stepper"
-import CONSTANTS from "../../globals"
+import React from "react";
+import Router from "next/router";
+import { Formik, Form } from "formik";
+import axios from "axios";
+import { FadeLoader } from "react-spinners";
+import Header from "../../components/Header";
+import Input from "../../components/Input";
+import Checkbox from "../../components/Checkbox";
+import SingleStep from "../../components/SingleStep";
+import Button from "../../components/Button";
+import Stepper from "../../components/Stepper";
+import CONSTANTS from "../../globals";
 
 const { API } =
-  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 class Step4 extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       isLoading: false,
@@ -28,24 +28,24 @@ class Step4 extends React.Component {
         terms: "",
         conditions: ""
       }
-    }
+    };
   }
 
   static async getInitialProps({ req, query, params }) {
     if (req) {
       try {
-        return { query: req.query, params: req.params }
+        return { query: req.query, params: req.params };
       } catch (err) {
-        return { query: req.query, params: req.params }
+        return { query: req.query, params: req.params };
       }
     }
 
-    return { query, params }
+    return { query, params };
   }
 
   getLinks() {
-    let storedPostalCode = JSON.parse(localStorage.getItem("postalCode"))
-    let storedUtility = JSON.parse(localStorage.getItem("utility"))
+    let storedPostalCode = JSON.parse(localStorage.getItem("postalCode"));
+    let storedUtility = JSON.parse(localStorage.getItem("utility"));
 
     if (storedPostalCode) {
       axios(`${API}/v1/zipcodes/${storedPostalCode}`).then(response => {
@@ -53,15 +53,15 @@ class Step4 extends React.Component {
           const rawParams = {
             utility: encodeURIComponent(storedUtility.label),
             state: response.data.data.state
-          }
+          };
 
           const generatedParams = Object.entries(rawParams)
             .map(([key, val]) => `${key}=${val}`)
-            .join("&")
+            .join("&");
 
           axios(`${API}/v1/utilities/?${generatedParams}`).then(response => {
             if (response.data.data) {
-              const data = response.data.data[0]
+              const data = response.data.data[0];
 
               this.setState({
                 forgotPwdLink: data.forgotPwdLink,
@@ -71,36 +71,36 @@ class Step4 extends React.Component {
                   terms: data.agreement.termsLink,
                   conditions: data.agreement.conditionsLink
                 }
-              })
+              });
             }
-          })
+          });
         }
-      })
+      });
     }
   }
 
   componentDidMount() {
-    global.analytics.page("Step 4")
+    global.analytics.page("Step 4");
 
-    let storedLeadId = ""
-    let storedUtility = ""
-    let storedBillingMethod = ""
-    let storedPostalCode = ""
+    let storedLeadId = "";
+    let storedUtility = "";
+    let storedBillingMethod = "";
+    let storedPostalCode = "";
 
     if (localStorage.getItem("postalCode")) {
-      storedPostalCode = JSON.parse(localStorage.getItem("postalCode"))
+      storedPostalCode = JSON.parse(localStorage.getItem("postalCode"));
     }
 
     if (localStorage.getItem("leadId")) {
-      storedLeadId = localStorage.getItem("leadId")
+      storedLeadId = localStorage.getItem("leadId");
     }
 
     if (localStorage.getItem("utility")) {
-      storedUtility = JSON.parse(localStorage.getItem("utility"))
+      storedUtility = JSON.parse(localStorage.getItem("utility"));
     }
 
     if (localStorage.getItem("billingMethod")) {
-      storedBillingMethod = JSON.parse(localStorage.getItem("billingMethod"))
+      storedBillingMethod = JSON.parse(localStorage.getItem("billingMethod"));
     }
 
     this.setState(
@@ -112,11 +112,11 @@ class Step4 extends React.Component {
         billingMethod: storedBillingMethod
       },
       this.getLinks()
-    )
+    );
   }
 
   renderUtilityLogin() {
-    const { query } = this.props
+    const { query } = this.props;
     return (
       <React.Fragment>
         {query && query.error && (
@@ -130,7 +130,7 @@ class Step4 extends React.Component {
             utilityPassword: ""
           }}
           onSubmit={values => {
-            this.setState({ isLoading: true })
+            this.setState({ isLoading: true });
             window.firebase
               .auth()
               .currentUser.getIdToken(true)
@@ -152,36 +152,36 @@ class Step4 extends React.Component {
                     }
                   )
                   .then(response => {
-                    const data = response.data.data
+                    const data = response.data.data;
 
-                    localStorage.setItem("linkedUtility", JSON.stringify(data))
+                    localStorage.setItem("linkedUtility", JSON.stringify(data));
 
                     if (data && data[0]) {
                       if (data[0].hasLoggedIn) {
-                        localStorage.setItem("partialConnection", false)
+                        localStorage.setItem("partialConnection", false);
                         Router.push({
                           pathname: "/onboarding/step5"
-                        })
+                        });
                       } else {
-                        this.setState({ isLoading: false })
+                        this.setState({ isLoading: false });
                         Router.push({
                           pathname: "/onboarding/step4",
                           query: {
                             error: true
                           }
-                        })
+                        });
                       }
                     } else {
-                      localStorage.setItem("partialConnection", true)
+                      localStorage.setItem("partialConnection", true);
                       Router.push({
                         pathname: "/onboarding/step5"
-                      })
+                      });
                     }
                   })
                   .catch(err => {
-                    console.log(err)
-                  })
-              })
+                    console.log(err);
+                  });
+              });
           }}
           render={props => (
             <React.Fragment>
@@ -236,7 +236,7 @@ class Step4 extends React.Component {
           }
         `}</style>
       </React.Fragment>
-    )
+    );
   }
 
   renderAskForUtilityAccount() {
@@ -266,15 +266,15 @@ class Step4 extends React.Component {
                   }
                 )
                 .then(() => {
-                  localStorage.setItem("partialConnection", true)
+                  localStorage.setItem("partialConnection", true);
                   Router.push({
                     pathname: "/onboarding/step4.2"
-                  })
+                  });
                 })
                 .catch(error => {
-                  console.log(error)
-                })
-            })
+                  console.log(error);
+                });
+            });
         }}
         render={props => (
           <React.Fragment>
@@ -315,17 +315,17 @@ class Step4 extends React.Component {
           </React.Fragment>
         )}
       />
-    )
+    );
   }
 
   renderForms() {
     const canLinkAccount =
       this.state.billingMethod &&
-      this.state.billingMethod.billingMethod.indexOf("paper") !== 0
+      this.state.billingMethod.billingMethod.indexOf("paper") !== 0;
 
     return canLinkAccount
       ? this.renderUtilityLogin()
-      : this.renderAskForUtilityAccount()
+      : this.renderAskForUtilityAccount();
   }
 
   renderLoader() {
@@ -360,28 +360,28 @@ class Step4 extends React.Component {
           }
         `}</style>
       </React.Fragment>
-    )
+    );
   }
 
   renderText() {
     const canLinkAccount =
       this.state.billingMethod &&
-      this.state.billingMethod.billingMethod.indexOf("paper") !== 0
+      this.state.billingMethod.billingMethod.indexOf("paper") !== 0;
     let text = canLinkAccount
       ? "Ok great. Let's connect your account and get you saving!"
-      : "No problem! We can use your account number to get you connected and saving."
+      : "No problem! We can use your account number to get you connected and saving.";
 
     if (this.state.currentUtility && this.state.currentUtility.paperOnly)
-      text = "We can use your account number to get you connected and saving."
+      text = "We can use your account number to get you connected and saving.";
 
-    return this.state.isLoading ? "" : text
+    return this.state.isLoading ? "" : text;
   }
 
   render() {
     const canLinkAccount =
       !this.state.currentUtility.paperOnly &&
       this.state.billingMethod &&
-      this.state.billingMethod.billingMethod.indexOf("paper") !== 0
+      this.state.billingMethod.billingMethod.indexOf("paper") !== 0;
     return (
       <main>
         <Header />
@@ -453,8 +453,8 @@ class Step4 extends React.Component {
           }
         `}</style>
       </main>
-    )
+    );
   }
 }
 
-export default Step4
+export default Step4;

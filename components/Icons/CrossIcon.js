@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 
 export default class CrossIcon extends React.Component {
   render() {
@@ -36,6 +36,6 @@ export default class CrossIcon extends React.Component {
           }
         `}</style>
       </span>
-    )
+    );
   }
 }
