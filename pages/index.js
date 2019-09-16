@@ -1,26 +1,26 @@
-import React from "react";
-import Router from "next/router";
-import { Formik, Form } from "formik";
-import axios from "axios";
-import SingleStep from "../components/SingleStep";
-import Header from "../components/Header";
-import Separator from "../components/Separator";
-import Input from "../components/Input";
-import Button from "../components/Button";
-import CONSTANTS from "../globals";
+import React from "react"
+import Router from "next/router"
+import { Formik, Form } from "formik"
+import axios from "axios"
+import SingleStep from "../components/SingleStep"
+import Header from "../components/Header"
+import Separator from "../components/Separator"
+import Input from "../components/Input"
+import Button from "../components/Button"
+import CONSTANTS from "../globals"
 
 const { API } =
-  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod
 
-class Step1 extends React.Component {
+class Index extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       error: {
         code: false,
         message: ""
       }
-    };
+    }
   }
 
   componentDidMount() {
@@ -38,7 +38,7 @@ class Step1 extends React.Component {
       .auth()
       .signInWithEmailAndPassword(values.emailAddress, values.password)
       .catch(error => {
-        this.setState({ error: { code: error.code, message: error.message } });
+        this.setState({ error: { code: error.code, message: error.message } })
       })
       .then(firebaseData => {
         if (!this.state.error.code) {
@@ -53,76 +53,83 @@ class Step1 extends React.Component {
                   }
                 })
                 .then(response => {
-                  const user = response.data.data;
-                  window.localStorage.setItem("leadId", user.leadId);
+                  const user = response.data.data
+                  window.localStorage.setItem("leadId", user.leadId)
                   global.analytics.identify(user.leadId, {
                     email: user.email
-                  });
-                  global.analytics.track("User Signed In", {});
+                  })
+                  global.analytics.track("User Signed In", {})
+
+                  const utility = user.milestones.utility
+                  const imageName = utility.replace(/\s/g, "")
+
+                  const utilityInfo = {
+                    image: {
+                      src: imageName
+                        ? `/static/images/utilities/${imageName}.png`
+                        : "/static/images/utilities/placeholder.png",
+                      altText: "Utility logo"
+                    },
+                    label: utility
+                  }
+
+                  localStorage.setItem("utility", JSON.stringify(utilityInfo))
+
+                  if (user.milestones.utilityPaperOnly) {
+                    localStorage.setItem(
+                      "billingMethod",
+                      JSON.stringify({ billingMethod: "paper" })
+                    )
+                  }
 
                   if (user.signupCompleted) {
                     Router.push({
                       pathname: "/dashboard"
-                    });
-                  } else if (!user.phone) {
+                    })
+                  } else if (!user.milestones.utilityInfoCompleted) {
                     Router.push({
                       pathname: "/onboarding/step2",
                       query: {
                         onboardingNotFinished: true
                       }
-                    });
-                  } else if (!user.milestones.utilityInfoCompleted) {
-                    const utility = user.milestones.utility;
-                    const imageName = utility.replace(/\s/g, "");
-                    const utilityInfo = {
-                      image: {
-                        src: imageName
-                          ? `/static/images/utilities/${imageName}.png`
-                          : "/static/images/utilities/placeholder.png",
-                        altText: "Utility logo"
-                      },
-                      label: utility
-                    };
-                    localStorage.setItem(
-                      "utility",
-                      JSON.stringify(utilityInfo)
-                    );
-                    if (user.milestones.utilityPaperOnly) {
-                      localStorage.setItem(
-                        "billingMethod",
-                        JSON.stringify({
-                          billingMethod: "paper"
-                        })
-                      );
-
-                      Router.push({
-                        pathname: "/onboarding/step8"
-                      });
-                    } else {
-                      Router.push({
-                        pathname: "/onboarding/step5",
-                        query: {
-                          onboardingNotFinished: true
-                        }
-                      });
-                    }
-                  } else if (!user.milestones.bankInfoCompleted) {
+                    })
+                  } else if (
+                    user.milestones.utilityInfoCompleted &&
+                    user.milestones.utilityLoginSuccessful
+                  ) {
                     Router.push({
-                      pathname: "/onboarding/step8",
+                      pathname: "/onboarding/step6",
                       query: {
                         onboardingNotFinished: true
                       }
-                    });
+                    })
+                  } else if (
+                    user.milestones.utilityInfoCompleted &&
+                    !user.milestones.addressInfoCompleted
+                  ) {
+                    Router.push({
+                      pathname: "/onboarding/step4.2",
+                      query: {
+                        onboardingNotFinished: true
+                      }
+                    })
+                  } else if (!user.milestones.bankInfoCompleted) {
+                    Router.push({
+                      pathname: "/onboarding/step6",
+                      query: {
+                        onboardingNotFinished: true
+                      }
+                    })
                   }
                 })
-                .catch(() => {});
-            });
+                .catch(() => {})
+            })
         }
-      });
+      })
   }
 
   static getInitialProps({ query }) {
-    return { query };
+    return { query }
   }
 
   render() {
@@ -136,7 +143,7 @@ class Step1 extends React.Component {
               password: ""
             }}
             onSubmit={values => {
-              this.autenticate(values);
+              this.autenticate(values)
             }}
             render={props => (
               <React.Fragment>
@@ -167,7 +174,7 @@ class Step1 extends React.Component {
                           code: false,
                           message: ""
                         }
-                      });
+                      })
                     }}
                   >
                     Sign in
@@ -187,7 +194,7 @@ class Step1 extends React.Component {
             onClick={() => {
               Router.push({
                 pathname: "/onboarding/step1"
-              });
+              })
             }}
           >
             Sign Up
@@ -213,8 +220,8 @@ class Step1 extends React.Component {
           }
         `}</style>
       </main>
-    );
+    )
   }
 }
 
-export default Step1;
+export default Index
