@@ -244,7 +244,7 @@ class Step1 extends React.Component {
     return (
       <main>
         <Header />
-        <SingleStep title="Hi, I’m Martin. If you provide a little information I can check to see your savings opportunities.">
+        <SingleStep title="Hi, I’m Martin. If you provide a little information, I can check to see your savings opportunities.">
           <Formik
             initialValues={{
               postalCode: query.zipcode,

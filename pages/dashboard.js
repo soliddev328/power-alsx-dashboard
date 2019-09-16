@@ -46,15 +46,15 @@ class Dashboard extends React.Component {
           <div className="pane">
             <h2>Welcome to Common Energy !</h2>
             <p>
-              We're delighted to have you as a customer and to provide you with
-              100% clean, lower cost Electricity.
+              We’re delighted to have you as a customer and to provide you with
+              100% lower cost electricity.
             </p>
             <p>
               The connection timing will vary by location and utility. In some
               cases, Common Energy can connect you to a project in as little as
-              2 - 4 weeks. In other cases, your enrollment will literally help
-              build a new clean energy project, which may take a couple months.
-              We will keep you posted along the way!
+              2-4 weeks. In other cases, your enrollment will literally help
+              build a new clean energy project, which may take a couple of
+              months. We will keep you posted along the way!
             </p>
             <p>Here's what happens next:</p>
             <ul>
@@ -67,10 +67,14 @@ class Dashboard extends React.Component {
                 your energy cost
               </li>
               <li>
-                Common will send you one, unified monthly statement showing you
-                your savings and impact!
+                Common will send you one, unified monthly statement showing your
+                savings and impact!
               </li>
             </ul>
+            <p>
+              Interested in adding an additional account? Email{" "}
+              <a href="mailto:hello@commonenergy.us">hello@commonenergy.us</a>
+            </p>
           </div>
         </section>
 

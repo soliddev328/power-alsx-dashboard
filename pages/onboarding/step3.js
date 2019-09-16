@@ -1,163 +1,56 @@
-import React from "react";
-import Router from "next/router";
-import { Formik, Form } from "formik";
-import axios from "axios";
-import GeoSuggest from "../../components/GeoSuggest";
-import Input from "../../components/Input";
-import Header from "../../components/Header";
-import SingleStep from "../../components/SingleStep";
-import Button from "../../components/Button";
-import Stepper from "../../components/Stepper";
-import CONSTANTS from "../../globals";
-
-const { API } =
-  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
+import React from "react"
+import Router from "next/router"
+import { Formik, Form } from "formik"
+import Header from "../../components/Header"
+import RadioCard from "../../components/RadioCard"
+import SingleStep from "../../components/SingleStep"
+import Button from "../../components/Button"
+import Stepper from "../../components/Stepper"
 
 class Step3 extends React.Component {
   constructor(props) {
-    super(props);
-
-    this.state = {
-      name: "user",
-      postalCode: "",
-      errorMessage: ""
-    };
+    super(props)
   }
 
   componentDidMount() {
-    global.analytics.page("Step 3");
-    let storedPostalCode = "";
-    let storedLeadId = "";
-    let storedName = "";
-
-    if (localStorage.getItem("postalCode")) {
-      storedPostalCode = JSON.parse(localStorage.getItem("postalCode"));
-    }
-    if (localStorage.getItem("leadId")) {
-      storedLeadId = localStorage.getItem("leadId");
-    }
-    if (localStorage.getItem("username")) {
-      storedName = JSON.parse(localStorage.getItem("username"));
-    }
-
-    this.setState({
-      postalCode: storedPostalCode,
-      leadId: storedLeadId,
-      name: storedName.firstName
-    });
-  }
-
-  getPostalCode(values) {
-    const components = values.address
-      ? values.address.gmaps.address_components
-      : null;
-
-    const postalCode = components
-      ? components.find(x => x.types[0] == "postal_code")
-      : null;
-
-    return postalCode ? postalCode.long_name : "";
-  }
-
-  getStateAddress(values) {
-    const components = values.address
-      ? values.address.gmaps.address_components
-      : null;
-    const state = components
-      ? components.find(x => x.types[0] == "administrative_area_level_1")
-      : null;
-
-    return state ? state.short_name : "";
-  }
-
-  capitalize(word) {
-    return word && word[0].toUpperCase() + word.slice(1);
+    global.analytics.page("Step 3")
   }
 
   render() {
-    const { name, leadId, postalCode, errorMessage } = this.state;
     return (
       <main>
         <Header />
-        <SingleStep
-          title={`Welcome ${this.capitalize(
-            name
-          )}! What is your address please?`}
-        >
+        <SingleStep title="Do you have an online account with your electric utility?">
           <Formik
             initialValues={{
-              address: "",
-              apt: ""
+              billingMethod: ""
             }}
             onSubmit={values => {
-              const arrayAddress = values.address.description.split(",");
-              const street = arrayAddress[0] ? arrayAddress[0] : "";
-              const city = arrayAddress[1]
-                ? arrayAddress[1].replace(/\s/g, "")
-                : "";
-
-              const address = {
-                street: street,
-                city: city,
-                state: this.getStateAddress(values),
-                postalCode: this.getPostalCode(values),
-                apt: values.apt ? values.apt : ""
-              };
-
-              localStorage.setItem("address", JSON.stringify(address));
-
-              //if (address.postalCode === postalCode) {
-              window.firebase
-                .auth()
-                .currentUser.getIdToken(true)
-                .then(idToken => {
-                  axios
-                    .put(
-                      `${API}/v1/subscribers`,
-                      {
-                        leadId: leadId,
-                        street: address.street,
-                        state: address.state,
-                        city: address.city,
-                        apt: address.apt
-                      },
-                      {
-                        headers: {
-                          Authorization: idToken
-                        }
-                      }
-                    )
-                    .then(() => {
-                      Router.push({
-                        pathname: "/onboarding/step4"
-                      });
-                    })
-                    .catch(() => {});
-                });
-              // } else {
-              //   this.setState({
-              //     errorMessage:
-              //       "Address has different zip code than the one initially provided."
-              //   })
-              // }
+              localStorage.setItem("billingMethod", JSON.stringify(values))
+              Router.push({
+                pathname: "/onboarding/step4"
+              })
             }}
             render={props => (
-              <Form>
-                <GeoSuggest
-                  label="Address"
-                  fieldname="address"
-                  value={props.values.address}
-                  onChange={props.setFieldValue}
-                  onBlur={props.setFieldTouched}
-                  error={props.errors.topics}
-                  touched={props.touched.topics}
-                />
-                <Input label="Apartment No." fieldname="apt" />
-                <p className="error">{errorMessage}</p>
-                <Button primary disabled={!props.values.address != ""}>
-                  Next
-                </Button>
-              </Form>
+              <React.Fragment>
+                <Form>
+                  <RadioCard
+                    number="1"
+                    name="billingMethod"
+                    value="electronic"
+                    heading="Yes"
+                  />
+                  <RadioCard
+                    number="2"
+                    name="billingMethod"
+                    value="paper"
+                    heading="No"
+                  />
+                  <Button primary disabled={!props.values.billingMethod != ""}>
+                    Next
+                  </Button>
+                </Form>
+              </React.Fragment>
             )}
           />
           <Stepper>
@@ -166,7 +59,6 @@ class Step3 extends React.Component {
             <li className="steplist__step">3</li>
             <li className="steplist__step">4</li>
             <li className="steplist__step">5</li>
-            <li className="steplist__step">6</li>
           </Stepper>
         </SingleStep>
         <style jsx>{`
@@ -176,15 +68,10 @@ class Step3 extends React.Component {
             max-width: 700px;
             margin: 0 auto;
           }
-          .error {
-            height: 45px;
-            color: red;
-            text-align: center;
-          }
         `}</style>
       </main>
-    );
+    )
   }
 }
 
-export default Step3;
+export default Step3
