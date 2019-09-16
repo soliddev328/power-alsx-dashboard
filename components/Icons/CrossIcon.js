@@ -13,25 +13,25 @@ export default function CrossIcon() {
         </g>
       </svg>
       <style jsx>{`
-          .wrapper {
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            width: 2.3rem;
-            height: 2.3rem;
-            margin: 0;
-            background-color: #2479ff;
-            font-weight: 700;
-            border-radius: 50%;
-            overflow: hidden;
-            transition: all 300ms ease-in-out;
-          }
+        .wrapper {
+          display: inline-flex;
+          justify-content: center;
+          align-items: center;
+          position: relative;
+          width: 2.3rem;
+          height: 2.3rem;
+          margin: 0;
+          background-color: #2479ff;
+          font-weight: 700;
+          border-radius: 50%;
+          overflow: hidden;
+          transition: all 300ms ease-in-out;
+        }
 
-          svg {
-            width: 35%;
-          }
-        `}</style>
+        svg {
+          width: 35%;
+        }
+      `}</style>
     </span>
-  )
+  );
 }

@@ -1,21 +1,21 @@
-import React from "react"
-import Router from "next/router"
-import { Formik, Form } from "formik"
-import Header from "../../components/Header"
-import RadioCard from "../../components/RadioCard"
-import SingleStep from "../../components/SingleStep"
-import Button from "../../components/Button"
-import Stepper from "../../components/Stepper"
+import React from "react";
+import Router from "next/router";
+import { Formik, Form } from "formik";
+import Header from "../../components/Header";
+import RadioCard from "../../components/RadioCard";
+import SingleStep from "../../components/SingleStep";
+import Button from "../../components/Button";
+import Stepper from "../../components/Stepper";
 
 class Step5 extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
 
-    this.state = {}
+    this.state = {};
   }
 
   componentDidMount() {
-    global.analytics.page("Step 5")
+    global.analytics.page("Step 5");
   }
 
   render() {
@@ -28,10 +28,10 @@ class Step5 extends React.Component {
               billingMethod: ""
             }}
             onSubmit={values => {
-              localStorage.setItem("billingMethod", JSON.stringify(values))
+              localStorage.setItem("billingMethod", JSON.stringify(values));
               Router.push({
                 pathname: "/onboarding/step6"
-              })
+              });
             }}
             render={props => (
               <React.Fragment>
@@ -73,8 +73,8 @@ class Step5 extends React.Component {
           }
         `}</style>
       </main>
-    )
+    );
   }
 }
 
-export default Step5
+export default Step5;

@@ -1,27 +1,27 @@
-import React from "react"
-import Router from "next/router"
-import { Formik, Form } from "formik"
-import Header from "../../components/Header"
-import RadioCard from "../../components/RadioCard"
-import SingleStep from "../../components/SingleStep"
-import Button from "../../components/Button"
-import Stepper from "../../components/Stepper"
+import React from "react";
+import Router from "next/router";
+import { Formik, Form } from "formik";
+import Header from "../../components/Header";
+import RadioCard from "../../components/RadioCard";
+import SingleStep from "../../components/SingleStep";
+import Button from "../../components/Button";
+import Stepper from "../../components/Stepper";
 
 class Step8 extends React.Component {
   componentDidMount() {
-    global.analytics.page("Step 8")
+    global.analytics.page("Step 8");
   }
 
   static async getInitialProps({ query }) {
     const props = {
       displayMessage: query.onboardingNotFinished
-    }
+    };
 
-    return props
+    return props;
   }
 
   render() {
-    const { displayMessage } = this.props
+    const { displayMessage } = this.props;
     return (
       <main>
         <Header />
@@ -40,10 +40,10 @@ class Step8 extends React.Component {
               window.localStorage.setItem(
                 "paymentMethod",
                 JSON.stringify(values)
-              )
+              );
               Router.push({
                 pathname: "/onboarding/step9"
-              })
+              });
             }}
             render={props => (
               <React.Fragment>
@@ -124,8 +124,8 @@ class Step8 extends React.Component {
           }
         `}</style>
       </main>
-    )
+    );
   }
 }
 
-export default Step8
+export default Step8;

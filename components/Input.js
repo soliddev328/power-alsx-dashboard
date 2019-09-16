@@ -1,46 +1,45 @@
-import React from "react"
-import { Field } from "formik"
-import cn from "classnames"
+import React from "react";
+import { Field } from "formik";
+import cn from "classnames";
 
 export default class Input extends React.PureComponent {
   constructor(props) {
-    super(props)
-    this.inputField = React.createRef()
-    this.scrollOnFocus = this.scrollOnFocus.bind(this)
-    this.applyValidation = this.applyValidation.bind(this)
-    this.customSetCustomValidity = this.customSetCustomValidity.bind(this)
+    super(props);
+    this.inputField = React.createRef();
+    this.scrollOnFocus = this.scrollOnFocus.bind(this);
+    this.applyValidation = this.applyValidation.bind(this);
+    this.customSetCustomValidity = this.customSetCustomValidity.bind(this);
 
     this.state = {
       displayLabel: true
-    }
+    };
   }
 
   applyValidation(x) {
-    const { type } = this.props
-    let msg
+    const { type } = this.props;
+    let msg;
 
     if (type === "email") {
-      msg = "Please enter a valid email address"
+      msg = "Please enter a valid email address";
     } else if (type === "password") {
-      msg = "Please complete password fields"
+      msg = "Please complete password fields";
     }
-    x.target.setCustomValidity(msg)
+    x.target.setCustomValidity(msg);
   }
 
   customSetCustomValidity(e) {
-
-    e.target.setCustomValidity("")
+    e.target.setCustomValidity("");
     e.target.value !== ""
       ? this.setState({ displayLabel: false })
-      : this.setState({ displayLabel: true })
+      : this.setState({ displayLabel: true });
   }
 
   scrollOnFocus() {
     if (this.inputField) {
-      const offset = this.inputField.current.getBoundingClientRect().top
+      const offset = this.inputField.current.getBoundingClientRect().top;
       setTimeout(() => {
-        window.scrollTo(0, offset)
-      }, 200)
+        window.scrollTo(0, offset);
+      }, 200);
     }
   }
 
@@ -54,8 +53,8 @@ export default class Input extends React.PureComponent {
       label,
       autoFocus,
       outerLabel
-    } = this.props
-    const { displayLabel } = this.state
+    } = this.props;
+    const { displayLabel } = this.state;
     return (
       <div
         ref={this.inputField}
@@ -109,6 +108,6 @@ export default class Input extends React.PureComponent {
           }
         `}</style>
       </div>
-    )
+    );
   }
 }

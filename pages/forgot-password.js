@@ -29,7 +29,7 @@ export default class forgotPassword extends React.Component {
   }
 
   renderForm() {
-    const { error } = this.state
+    const { error } = this.state;
     return (
       <Formik
         initialValues={{

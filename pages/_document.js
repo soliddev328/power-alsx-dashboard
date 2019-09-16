@@ -152,9 +152,7 @@ export default class MyDocument extends Document {
           <script src="https://js.stripe.com/v3/" />
           <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js" />
           <script
-            src={`https://maps.googleapis.com/maps/api/js?key=${
-              settings.meta.gmapsApiKey
-              }&libraries=places`}
+            src={`https://maps.googleapis.com/maps/api/js?key=${settings.meta.gmapsApiKey}&libraries=places`}
           />
           <script
             dangerouslySetInnerHTML={{

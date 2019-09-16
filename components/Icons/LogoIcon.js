@@ -13,19 +13,15 @@ export default function LogoIcon({ small, medium }) {
         />
       </g>
       <style jsx>{`
-          svg {
-            display: block;
-            width: ${small
-          ? "33%"
-          : medium
-            ? "50%"
-            : "100%"};
-            margin-top: ${small || medium ? '1.5em' : '0'};
-            margin-bottom: ${small ? "1em" : "1.5em"};
-            margin-left: ${small ? "0" : "auto"};
-            margin-right: ${small ? "0" : "auto"};
-          }
-        `}</style>
+        svg {
+          display: block;
+          width: ${small ? "33%" : medium ? "50%" : "100%"};
+          margin-top: ${small || medium ? "1.5em" : "0"};
+          margin-bottom: ${small ? "1em" : "1.5em"};
+          margin-left: ${small ? "0" : "auto"};
+          margin-right: ${small ? "0" : "auto"};
+        }
+      `}</style>
     </svg>
-  )
+  );
 }

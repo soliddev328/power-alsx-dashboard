@@ -1,27 +1,27 @@
-import cn from "classnames"
+import cn from "classnames";
 
 // Conditionally wrap a React element with another
 const wrap = (needed, children, tag) => {
-  if (!needed) return children
+  if (!needed) return children;
 
-  return React.createElement(tag, {}, children)
-}
+  return React.createElement(tag, {}, children);
+};
 
 // Wrap the text in modifier elements like bold and italics
 const wrapModifiers = (
   component,
   { mark, underline, strike, bold, italic }
 ) => {
-  let result = component
+  let result = component;
 
-  result = wrap(mark, result, "mark")
-  result = wrap(underline, result, "u")
-  result = wrap(strike, result, "s")
-  result = wrap(bold, result, "b")
-  result = wrap(italic, result, "i")
+  result = wrap(mark, result, "mark");
+  result = wrap(underline, result, "u");
+  result = wrap(strike, result, "s");
+  result = wrap(bold, result, "b");
+  result = wrap(italic, result, "i");
 
-  return result
-}
+  return result;
+};
 
 const presets = {
   h1: `
@@ -69,7 +69,7 @@ const presets = {
     font-size: 12px;
   `,
   span: ``
-}
+};
 
 const getComponent = defaultElement => {
   const C = ({
@@ -144,23 +144,23 @@ const getComponent = defaultElement => {
           `}
         </style>
       </Component>
-    )
-  }
+    );
+  };
 
-  return C
-}
+  return C;
+};
 
-export const H1 = getComponent("h1")
-export const H2 = getComponent("h2")
-export const H3 = getComponent("h3")
-export const H4 = getComponent("h4")
-export const H5 = getComponent("h5")
-export const P = getComponent("p")
-export const Small = getComponent("small")
-export const Description = getComponent("description")
-export const Span = getComponent("span")
+export const H1 = getComponent("h1");
+export const H2 = getComponent("h2");
+export const H3 = getComponent("h3");
+export const H4 = getComponent("h4");
+export const H5 = getComponent("h5");
+export const P = getComponent("p");
+export const Small = getComponent("small");
+export const Description = getComponent("description");
+export const Span = getComponent("span");
 
-const components = [H1, H2, H3, H4, H5, P, Small, Description, Span]
+const components = [H1, H2, H3, H4, H5, P, Small, Description, Span];
 
 const Text = ({
   // HTML element
@@ -188,13 +188,13 @@ const Text = ({
   const Styler =
     components[
       [h1, h2, h3, h4, h5, p, small, description, span].indexOf(true)
-    ] || P
+    ] || P;
 
   return (
     <Styler Component={Component} {...props}>
       {wrapModifiers(children, { mark, underline, strike, bold, italic })}
     </Styler>
-  )
-}
+  );
+};
 
-export default Text
+export default Text;

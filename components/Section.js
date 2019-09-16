@@ -1,7 +1,7 @@
-import cn from "classnames"
+import cn from "classnames";
 
 export default function Section({ children, disabled, columns = 1, noMargin }) {
-  const columnsInt = parseInt(columns, 10)
+  const columnsInt = parseInt(columns, 10);
 
   return (
     <section className={cn("section", { disabled: disabled })}>
@@ -36,5 +36,5 @@ export default function Section({ children, disabled, columns = 1, noMargin }) {
         }
       `}</style>
     </section>
-  )
+  );
 }

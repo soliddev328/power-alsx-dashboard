@@ -1,9 +1,9 @@
-import ArrowIcon from "./Icons/ArrowIcon"
-import FacebookIcon from "./Icons/FacebookIcon"
+import ArrowIcon from "./Icons/ArrowIcon";
+import FacebookIcon from "./Icons/FacebookIcon";
 
 const shareIcon = icon => {
-  if (icon === "facebook") return <FacebookIcon />
-}
+  if (icon === "facebook") return <FacebookIcon />;
+};
 
 export default function Button({
   type,
@@ -77,5 +77,5 @@ export default function Button({
         }
       `}</style>
     </button>
-  )
+  );
 }
