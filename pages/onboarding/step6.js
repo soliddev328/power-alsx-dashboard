@@ -1,23 +1,23 @@
-import React from "react"
-import Router from "next/router"
-import { Formik, Form } from "formik"
-import Header from "../../components/Header"
-import RadioCard from "../../components/RadioCard"
-import SingleStep from "../../components/SingleStep"
-import Button from "../../components/Button"
-import Stepper from "../../components/Stepper"
+import React from "react";
+import Router from "next/router";
+import { Formik, Form } from "formik";
+import Header from "../../components/Header";
+import RadioCard from "../../components/RadioCard";
+import SingleStep from "../../components/SingleStep";
+import Button from "../../components/Button";
+import Stepper from "../../components/Stepper";
 
 class Step6 extends React.Component {
   componentDidMount() {
-    global.analytics.page("Step 6")
+    global.analytics.page("Step 6");
   }
 
   static async getInitialProps({ query }) {
     const props = {
       displayMessage: query.onboardingNotFinished
-    }
+    };
 
-    return props
+    return props;
   }
 
   render() {
@@ -33,10 +33,10 @@ class Step6 extends React.Component {
               window.localStorage.setItem(
                 "paymentMethod",
                 JSON.stringify(values)
-              )
+              );
               Router.push({
                 pathname: "/onboarding/step7"
-              })
+              });
             }}
             render={props => (
               <React.Fragment>
@@ -116,8 +116,8 @@ class Step6 extends React.Component {
           }
         `}</style>
       </main>
-    )
+    );
   }
 }
 
-export default Step6
+export default Step6;

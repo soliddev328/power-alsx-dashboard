@@ -1,12 +1,12 @@
-import React from 'react'
+import React from "react";
 
 export default class NotificationIcon extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       number: this.props.number
-    }
+    };
   }
 
   render() {
@@ -59,6 +59,6 @@ export default class NotificationIcon extends React.Component {
           }
         `}</style>
       </span>
-    )
+    );
   }
 }
