@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 export default class InfoIcon extends React.Component {
   render() {
@@ -39,7 +39,7 @@ export default class InfoIcon extends React.Component {
           }
 
           .tooltip:before {
-            content: '';
+            content: "";
             display: block;
             position: absolute;
             top: 100%;
@@ -55,6 +55,6 @@ export default class InfoIcon extends React.Component {
           }
         `}</style>
       </div>
-    )
+    );
   }
 }

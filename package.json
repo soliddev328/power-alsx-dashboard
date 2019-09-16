@@ -34,5 +34,8 @@
     "react-spinners": "0.5.4",
     "react-stripe-elements": "^4.0.0",
     "zippo": "^1.0.1"
+  },
+  "devDependencies": {
+    "prettier": "1.18.2"
   }
 }

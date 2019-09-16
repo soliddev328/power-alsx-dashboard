@@ -1,46 +1,46 @@
-import React, { Component } from "react"
-import axios from "axios"
-import Router from "next/router"
+import React, { Component } from "react";
+import axios from "axios";
+import Router from "next/router";
 import {
   injectStripe,
   CardElement,
   CardNumberElement,
   CardExpiryElement,
   CardCVCElement
-} from "react-stripe-elements"
-import Button from "../components/Button"
-import CONSTANTS from "../globals"
+} from "react-stripe-elements";
+import Button from "../components/Button";
+import CONSTANTS from "../globals";
 
 const { API } =
-  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 class CheckoutForm extends Component {
   constructor(props) {
-    super(props)
-    this.submit = this.submit.bind(this)
+    super(props);
+    this.submit = this.submit.bind(this);
   }
 
   componentDidMount() {
-    let storedLeadId = ""
-    let storedEmail = ""
+    let storedLeadId = "";
+    let storedEmail = "";
 
     if (localStorage.getItem("leadId")) {
-      storedLeadId = localStorage.getItem("leadId")
+      storedLeadId = localStorage.getItem("leadId");
     }
 
     if (localStorage.getItem("email")) {
-      storedEmail = localStorage.getItem("email")
+      storedEmail = localStorage.getItem("email");
     }
 
     this.setState({
       leadId: storedLeadId,
       email: storedEmail,
       errorMessage: null
-    })
+    });
   }
 
   submit(ev) {
-    ev.preventDefault()
+    ev.preventDefault();
     window.firebase
       .auth()
       .currentUser.getIdToken(true)
@@ -63,16 +63,16 @@ class CheckoutForm extends Component {
                   }
                 )
                 .then(() => {
-                  global.analytics.track("Sign-Up Completed", {})
-                  localStorage.setItem("usercreated", true)
+                  global.analytics.track("Sign-Up Completed", {});
+                  localStorage.setItem("usercreated", true);
                   Router.push({
                     pathname: "/dashboard"
-                  })
-                })
+                  });
+                });
             }
-          })
+          });
         }
-      })
+      });
   }
 
   render() {
@@ -101,9 +101,9 @@ class CheckoutForm extends Component {
             }}
             onChange={event => {
               if (event.error) {
-                this.setState({ errorMessage: event.error.message })
+                this.setState({ errorMessage: event.error.message });
               } else {
-                this.setState({ errorMessage: "" })
+                this.setState({ errorMessage: "" });
               }
             }}
           />
@@ -129,9 +129,9 @@ class CheckoutForm extends Component {
               }}
               onChange={event => {
                 if (event.error) {
-                  this.setState({ errorMessage: event.error.message })
+                  this.setState({ errorMessage: event.error.message });
                 } else {
-                  this.setState({ errorMessage: "" })
+                  this.setState({ errorMessage: "" });
                 }
               }}
             />
@@ -156,9 +156,9 @@ class CheckoutForm extends Component {
               }}
               onChange={event => {
                 if (event.error) {
-                  this.setState({ errorMessage: event.error.message })
+                  this.setState({ errorMessage: event.error.message });
                 } else {
-                  this.setState({ errorMessage: "" })
+                  this.setState({ errorMessage: "" });
                 }
               }}
             />
@@ -209,8 +209,8 @@ class CheckoutForm extends Component {
           }
         `}</style>
       </div>
-    )
+    );
   }
 }
 
-export default injectStripe(CheckoutForm)
+export default injectStripe(CheckoutForm);
