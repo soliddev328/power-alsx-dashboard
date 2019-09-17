@@ -28,10 +28,13 @@ export default class Input extends React.PureComponent {
   }
 
   customSetCustomValidity(e) {
+    const { outerLabel } = this.props;
     e.target.setCustomValidity("");
-    e.target.value !== ""
-      ? this.setState({ displayLabel: false })
-      : this.setState({ displayLabel: true });
+    if (!outerLabel) {
+      e.target.value !== ""
+        ? this.setState({ displayLabel: false })
+        : this.setState({ displayLabel: true });
+    }
   }
 
   scrollOnFocus() {
@@ -69,7 +72,7 @@ export default class Input extends React.PureComponent {
           validate={validator ? validator : false}
           onInvalid={this.applyValidation}
           onInput={this.customSetCustomValidity}
-          autoFocus={false}
+          autoFocus="negative"
           ref={this.inputRef}
           {...this.props}
         />
