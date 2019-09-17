@@ -65,7 +65,7 @@ export default class Plaid extends React.Component {
             });
           }
           Router.push({
-            pathname: "/step6"
+            pathname: "/onboarding/step6"
           });
         }}
       />
