@@ -60,9 +60,9 @@ class Index extends React.Component {
                   });
                   global.analytics.track("User Signed In", {});
 
+                  // retrieve utility information
                   const utility = user.milestones.utility;
                   const imageName = utility.replace(/\s/g, "");
-
                   const utilityInfo = {
                     image: {
                       src: imageName
@@ -72,8 +72,19 @@ class Index extends React.Component {
                     },
                     label: utility
                   };
-
                   localStorage.setItem("utility", JSON.stringify(utilityInfo));
+
+                  // retrieve postalcode
+                  if (
+                    user.milestones.address &&
+                    user.milestones.address.postalCode
+                  ) {
+                    const postalCode = user.milestones.address.postalCode;
+                    localStorage.setItem(
+                      "postalCode",
+                      JSON.stringify(postalCode)
+                    );
+                  }
 
                   if (user.milestones.utilityPaperOnly) {
                     localStorage.setItem(
@@ -82,6 +93,7 @@ class Index extends React.Component {
                     );
                   }
 
+                  // forward to the right page
                   if (user.signupCompleted) {
                     Router.push({
                       pathname: "/dashboard"
