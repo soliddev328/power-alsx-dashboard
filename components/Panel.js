@@ -31,10 +31,10 @@ export default function Panel({
         >
           <g
             fill="none"
-            fill-rule="evenodd"
+            fillRule="evenodd"
             stroke="#41EF8B"
-            stroke-linecap="square"
-            stroke-width="4"
+            strokeLinecap="square"
+            strokeWidth="4"
           >
             <path d="M41.537 4.374L33.423 15.96M20.98 2.342L22.9 15.36M52.28 23.793l-12.887 2.65M37.521 35.968l9.432 6.604M2.795 11.652l9.432 6.605" />
           </g>
