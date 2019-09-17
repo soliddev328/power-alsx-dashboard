@@ -10,7 +10,12 @@ export default function SegmentedInput({
 }) {
   return (
     <div className="wrapper">
-      <input type="text" className={cn({ "has-border": hasBorder })} />
+      <input
+        type="text"
+        htmlFor="segmented-field"
+        className={cn({ "has-border": hasBorder })}
+      />
+      <label htmlFor="segmented-field">{inputLabel}</label>
       <Button maxWidth="170px" primary onClick={onClick}>
         {buttonText}
       </Button>
@@ -18,6 +23,11 @@ export default function SegmentedInput({
         .wrapper {
           display: flex;
           align-items: center;
+          position: relative;
+          height: 3.75rem;
+          width: 100%;
+          margin: 0 auto;
+          margin-bottom: 0.5rem;
         }
         .wrapper input {
           max-height: 53px;
@@ -33,6 +43,11 @@ export default function SegmentedInput({
           border-top-right-radius: 5px;
           border-bottom-right-radius: 5px;
           text-transform: capitalize;
+        }
+
+        label {
+          position: absolute;
+          top: -25%;
         }
       `}</style>
     </div>

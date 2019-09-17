@@ -1,11 +1,12 @@
 import cn from "classnames";
 
-export default function Image({ src, alt, hasBorder, height, width }) {
+export default function Image({ src, alt, hasBorder, height, width, bgColor }) {
   return (
     <figure className={cn({ "has-border": hasBorder })}>
       <img src={src} alt={alt} />
       <style jsx>{`
         figure {
+          display: flex;
           margin: 0;
           border-radius: 5px;
           overflow: hidden;
@@ -22,6 +23,7 @@ export default function Image({ src, alt, hasBorder, height, width }) {
           display: flex;
           width: 100%;
           object-fit: cover;
+          ${bgColor && `background-color: ${bgColor};`}
         }
       `}</style>
     </figure>
