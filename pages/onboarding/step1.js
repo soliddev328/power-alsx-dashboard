@@ -1,22 +1,22 @@
-import React from "react"
-import Router from "next/router"
-import { Formik, Form } from "formik"
-import Cookie from "js-cookie"
-import Header from "../../components/Header"
-import Input from "../../components/Input"
-import ZipCodeInput from "../../components/ZipcodeInput"
-import SingleStep from "../../components/SingleStep"
-import CustomSelect from "../../components/CustomSelect"
-import Button from "../../components/Button"
-import axios from "axios"
-import CONSTANTS from "../../globals"
+import React from "react";
+import Router from "next/router";
+import { Formik, Form } from "formik";
+import Cookie from "js-cookie";
+import Header from "../../components/Header";
+import Input from "../../components/Input";
+import ZipCodeInput from "../../components/ZipcodeInput";
+import SingleStep from "../../components/SingleStep";
+import CustomSelect from "../../components/CustomSelect";
+import Button from "../../components/Button";
+import axios from "axios";
+import CONSTANTS from "../../globals";
 
 const { API } =
-  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 class Step1 extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       address: "",
@@ -26,85 +26,85 @@ class Step1 extends React.Component {
         code: false,
         message: ""
       }
-    }
-    this.select = React.createRef()
+    };
+    this.select = React.createRef();
   }
 
   componentDidMount() {
-    global.analytics.page("Step 1")
-    global.analytics.track("Sign-Up Initiated", {})
+    global.analytics.page("Step 1");
+    global.analytics.track("Sign-Up Initiated", {});
 
-    localStorage.removeItem("Partner")
-    localStorage.removeItem("Referrer")
-    localStorage.removeItem("SalesRep")
-    localStorage.removeItem("Affiliate")
-    localStorage.removeItem("postalCode")
-    localStorage.removeItem("utility")
-    localStorage.removeItem("email")
-    localStorage.removeItem("username")
+    localStorage.removeItem("Partner");
+    localStorage.removeItem("Referrer");
+    localStorage.removeItem("SalesRep");
+    localStorage.removeItem("Affiliate");
+    localStorage.removeItem("postalCode");
+    localStorage.removeItem("utility");
+    localStorage.removeItem("email");
+    localStorage.removeItem("username");
 
-    let storedCustomerReferral = Cookie.get("customer_referral")
-    let storedPartnerReferral = Cookie.get("partner_referral")
-    let storedSalesRep = Cookie.get("ce_rep_referral")
-    let storedUtmCampaign = Cookie.get("_ce_campaign")
-    let storedUtmSource = Cookie.get("_ce_source")
-    let storedUtmMedium = Cookie.get("_ce_medium")
-    let storedAffiliate = ""
-    let storedReferrerPage = ""
+    let storedCustomerReferral = Cookie.get("customer_referral");
+    let storedPartnerReferral = Cookie.get("partner_referral");
+    let storedSalesRep = Cookie.get("ce_rep_referral");
+    let storedUtmCampaign = Cookie.get("_ce_campaign");
+    let storedUtmSource = Cookie.get("_ce_source");
+    let storedUtmMedium = Cookie.get("_ce_medium");
+    let storedAffiliate = "";
+    let storedReferrerPage = "";
 
     if (storedPartnerReferral) {
-      localStorage.setItem("Partner", storedPartnerReferral)
+      localStorage.setItem("Partner", storedPartnerReferral);
     }
     if (storedSalesRep) {
-      localStorage.setItem("SalesRep", storedSalesRep)
+      localStorage.setItem("SalesRep", storedSalesRep);
     }
     if (storedCustomerReferral) {
-      localStorage.setItem("Referrer", storedCustomerReferral)
+      localStorage.setItem("Referrer", storedCustomerReferral);
     }
     if (storedUtmCampaign) {
-      localStorage.setItem("UtmCampaign", storedUtmCampaign)
+      localStorage.setItem("UtmCampaign", storedUtmCampaign);
     }
     if (storedUtmSource) {
-      localStorage.setItem("UtmSource", storedUtmSource)
+      localStorage.setItem("UtmSource", storedUtmSource);
     }
     if (storedUtmMedium) {
-      localStorage.setItem("UtmMedium", storedUtmMedium)
+      localStorage.setItem("UtmMedium", storedUtmMedium);
     }
 
     if (this.props) {
       if (this.props.query.partner) {
-        storedPartnerReferral = this.props.query.partner
-        localStorage.setItem("Partner", storedPartnerReferral)
+        storedPartnerReferral = this.props.query.partner;
+        localStorage.setItem("Partner", storedPartnerReferral);
       }
       if (this.props.query.advocate) {
-        storedCustomerReferral = this.props.query.advocate
-        localStorage.setItem("Referrer", storedCustomerReferral)
+        storedCustomerReferral = this.props.query.advocate;
+        localStorage.setItem("Referrer", storedCustomerReferral);
       }
       if (this.props.query.rep) {
-        storedSalesRep = this.props.query.rep
-        localStorage.setItem("SalesRep", storedSalesRep)
+        storedSalesRep = this.props.query.rep;
+        localStorage.setItem("SalesRep", storedSalesRep);
       }
       if (this.props.query.affiliate) {
-        storedAffiliate = this.props.query.affiliate
-        localStorage.setItem("Affiliate", storedAffiliate)
+        storedAffiliate = this.props.query.affiliate;
+        localStorage.setItem("Affiliate", storedAffiliate);
       }
       if (this.props.query.utm_campaign) {
-        storedUtmCampaign = this.props.query.utm_campaign
-        localStorage.setItem("UtmCampaign", storedUtmCampaign)
+        storedUtmCampaign = this.props.query.utm_campaign;
+        localStorage.setItem("UtmCampaign", storedUtmCampaign);
       }
       if (this.props.query.utm_source) {
-        storedUtmSource = this.props.query.utm_source
-        localStorage.setItem("UtmSource", storedUtmSource)
+        storedUtmSource = this.props.query.utm_source;
+        localStorage.setItem("UtmSource", storedUtmSource);
       }
       if (this.props.query.utm_medium) {
-        storedUtmMedium = this.props.query.utm_medium
-        localStorage.setItem("UtmMedium", storedUtmMedium)
+        storedUtmMedium = this.props.query.utm_medium;
+        localStorage.setItem("UtmMedium", storedUtmMedium);
       }
       // some partners pass that information to us
       if (this.props.query.utility)
-        localStorage.setItem("utility", this.props.query.utility)
+        localStorage.setItem("utility", this.props.query.utility);
     }
-    if (document.referrer) storedReferrerPage = document.referrer
+    if (document.referrer) storedReferrerPage = document.referrer;
 
     this.setState({
       referrer: storedCustomerReferral,
@@ -115,35 +115,35 @@ class Step1 extends React.Component {
       utmMedium: storedUtmMedium,
       utmSource: storedUtmSource,
       referrerPage: storedReferrerPage
-    })
+    });
   }
 
   capitalize(word) {
-    return word && word[0].toUpperCase() + word.slice(1)
+    return word && word[0].toUpperCase() + word.slice(1);
   }
 
   autenticate(values) {
-    let utility = ""
-    const options = this.select.current.state.options
-    const singleOption = this.select.current.state.singleOption
+    let utility = "";
+    const options = this.select.current.state.options;
+    const singleOption = this.select.current.state.singleOption;
 
     const name = {
       firstName: values.firstName,
       lastName: values.lastName
-    }
+    };
 
-    utility = values.currentUtility
+    utility = values.currentUtility;
 
     if (singleOption) {
-      utility = options[0]
+      utility = options[0];
     }
 
-    localStorage.setItem("email", values.emailAddress)
-    localStorage.setItem("postalCode", JSON.stringify(values.postalCode))
-    localStorage.setItem("username", JSON.stringify(name))
+    localStorage.setItem("email", values.emailAddress);
+    localStorage.setItem("postalCode", JSON.stringify(values.postalCode));
+    localStorage.setItem("username", JSON.stringify(name));
 
     if (options !== null && utility !== "") {
-      localStorage.setItem("utility", JSON.stringify(utility))
+      localStorage.setItem("utility", JSON.stringify(utility));
       window.firebase
         .auth()
         .createUserWithEmailAndPassword(values.emailAddress, values.password)
@@ -155,11 +155,11 @@ class Step1 extends React.Component {
                 message: "Already have a login and password?",
                 link: <a href="/">Go here</a>
               }
-            })
+            });
           } else {
             this.setState({
               error: { code: error.code, message: error.message }
-            })
+            });
           }
         })
         .then(userCredential => {
@@ -167,7 +167,7 @@ class Step1 extends React.Component {
             window.localStorage.setItem(
               "firebaseUserId",
               userCredential.user.uid
-            )
+            );
             window.firebase
               .auth()
               .currentUser.getIdToken(true)
@@ -202,44 +202,44 @@ class Step1 extends React.Component {
                     window.localStorage.setItem(
                       "leadId",
                       response.data.data.leadId
-                    )
+                    );
 
                     // Call Segement events
-                    global.analytics.alias(response.data.data.leadId)
+                    global.analytics.alias(response.data.data.leadId);
                     global.analytics.identify(response.data.data.leadId, {
                       firstName: values.firstName,
                       lastName: values.lastName,
                       email: values.emailAddress
-                    })
-                    global.analytics.track("Lead Created", {})
+                    });
+                    global.analytics.track("Lead Created", {});
 
                     Router.push({
                       pathname: "/onboarding/step2"
-                    })
-                  })
-              })
+                    });
+                  });
+              });
           }
-        })
+        });
     } else if (options === null) {
       Router.push({
         pathname: "/onboarding/sorry"
-      })
+      });
     } else {
       this.setState({
         error: {
           message: "Please select your utility"
         }
-      })
+      });
     }
   }
 
   static getInitialProps({ query }) {
-    return { query }
+    return { query };
   }
 
   render() {
-    const { email, error, firstName, lastName } = this.state
-    const { query } = this.props
+    const { email, error, firstName, lastName } = this.state;
+    const { query } = this.props;
 
     return (
       <main>
@@ -255,7 +255,7 @@ class Step1 extends React.Component {
               password: ""
             }}
             onSubmit={values => {
-              this.autenticate(values)
+              this.autenticate(values);
             }}
             render={props => (
               <>
@@ -328,8 +328,8 @@ class Step1 extends React.Component {
           }
         `}</style>
       </main>
-    )
+    );
   }
 }
 
-export default Step1
+export default Step1;
