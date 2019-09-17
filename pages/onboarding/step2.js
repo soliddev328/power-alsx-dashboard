@@ -1,36 +1,36 @@
-import React from "react"
-import Router from "next/router"
-import { Form, withFormik } from "formik"
-import axios from "axios"
-import Header from "../../components/Header"
-import Checkbox from "../../components/Checkbox"
-import BulletItem from "../../components/BulletItem"
-import Progressbar from "../../components/Progressbar"
-import SingleStep from "../../components/SingleStep"
-import Button from "../../components/Button"
-import CONSTANTS from "../../globals"
+import React from "react";
+import Router from "next/router";
+import { Form, withFormik } from "formik";
+import axios from "axios";
+import Header from "../../components/Header";
+import Checkbox from "../../components/Checkbox";
+import BulletItem from "../../components/BulletItem";
+import Progressbar from "../../components/Progressbar";
+import SingleStep from "../../components/SingleStep";
+import Button from "../../components/Button";
+import CONSTANTS from "../../globals";
 
 const { API } =
-  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 const formikEnhancer = withFormik({
   mapValuesToPayload: x => x,
   handleSubmit: payload => {
     Router.push({
       pathname: "/onboarding/step3"
-    })
+    });
   },
   displayName: "CustomForm"
-})
+});
 
 class CustomForm extends React.Component {
   render() {
-    const imageUrl = this.props.project && this.props.project.imageUrl
+    const imageUrl = this.props.project && this.props.project.imageUrl;
 
     const completion =
       this.props.project && this.props.project.completion
         ? this.props.project.completion
-        : false
+        : false;
 
     return (
       <Form>
@@ -97,15 +97,15 @@ class CustomForm extends React.Component {
           }
         `}</style>
       </Form>
-    )
+    );
   }
 }
 
-const EnhancedCustomForm = formikEnhancer(CustomForm)
+const EnhancedCustomForm = formikEnhancer(CustomForm);
 
 class Step2 extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       utility: {
@@ -115,42 +115,42 @@ class Step2 extends React.Component {
           completion: ""
         }
       }
-    }
+    };
 
-    this.getData = this.getData.bind(this)
+    this.getData = this.getData.bind(this);
   }
 
   componentDidMount() {
-    global.analytics.page("Step 2")
+    global.analytics.page("Step 2");
 
-    this.getData()
+    this.getData();
   }
 
   getData() {
-    let utility = ""
-    let state = ""
+    let utility = "";
+    let state = "";
 
     if (localStorage.getItem("utility")) {
-      utility = JSON.parse(localStorage.getItem("utility"))
+      utility = JSON.parse(localStorage.getItem("utility"));
     }
 
     if (localStorage.getItem("state")) {
-      state = localStorage.getItem("state")
+      state = localStorage.getItem("state");
     }
 
     const rawParams = {
       state: state,
       utility: encodeURIComponent(utility.label)
-    }
+    };
 
     const generatedParams = Object.entries(rawParams)
       .map(([key, val]) => `${key}=${val}`)
-      .join("&")
+      .join("&");
 
     axios(`${API}/v1/utilities?${generatedParams}`)
       .then(response => {
         if (response.data.data) {
-          const data = response.data.data[0]
+          const data = response.data.data[0];
 
           this.setState({
             utility: {
@@ -163,10 +163,10 @@ class Step2 extends React.Component {
                 completion: data.projects[0].completion || false
               }
             }
-          })
+          });
         }
       })
-      .catch(error => console.log(error))
+      .catch(error => console.log(error));
   }
 
   render() {
@@ -203,8 +203,8 @@ class Step2 extends React.Component {
           }
         `}</style>
       </main>
-    )
+    );
   }
 }
 
-export default Step2
+export default Step2;

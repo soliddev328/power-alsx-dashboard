@@ -1,23 +1,23 @@
-import React from "react"
-import { Formik, Form } from "formik"
-import axios from "axios"
-import { Elements, StripeProvider } from "react-stripe-elements"
-import Header from "../../components/Header"
-import Input from "../../components/Input"
-import Button from "../../components/Button"
-import SingleStep from "../../components/SingleStep"
-import Plaid from "../../components/Plaid"
-import Checkout from "../../components/Checkout"
-import Stepper from "../../components/Stepper"
-import CONSTANTS from "../../globals"
-import Router from "next/router"
+import React from "react";
+import { Formik, Form } from "formik";
+import axios from "axios";
+import { Elements, StripeProvider } from "react-stripe-elements";
+import Header from "../../components/Header";
+import Input from "../../components/Input";
+import Button from "../../components/Button";
+import SingleStep from "../../components/SingleStep";
+import Plaid from "../../components/Plaid";
+import Checkout from "../../components/Checkout";
+import Stepper from "../../components/Stepper";
+import CONSTANTS from "../../globals";
+import Router from "next/router";
 
 const { STRIPE_KEY, API } =
-  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 class Step7 extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       name: "",
@@ -25,28 +25,28 @@ class Step7 extends React.Component {
       errorMessage: "",
       paymentMethod: "",
       stripe: null
-    }
+    };
   }
 
   componentDidMount() {
-    global.analytics.page("Step 7")
+    global.analytics.page("Step 7");
 
-    let storedPaymentMethod = ""
-    let storedLeadId = ""
+    let storedPaymentMethod = "";
+    let storedLeadId = "";
 
     if (localStorage.getItem("paymentMethod")) {
-      storedPaymentMethod = JSON.parse(localStorage.getItem("paymentMethod"))
+      storedPaymentMethod = JSON.parse(localStorage.getItem("paymentMethod"));
     }
 
     if (localStorage.getItem("leadId")) {
-      storedLeadId = localStorage.getItem("leadId")
+      storedLeadId = localStorage.getItem("leadId");
     }
 
     this.setState({
       paymentMethod: storedPaymentMethod.paymentMethod,
       leadId: storedLeadId,
       stripe: window.Stripe(STRIPE_KEY)
-    })
+    });
   }
 
   renderBankLink() {
@@ -63,7 +63,7 @@ class Step7 extends React.Component {
           }
         `}</style>
       </SingleStep>
-    )
+    );
   }
 
   renderCreditCard() {
@@ -129,22 +129,22 @@ class Step7 extends React.Component {
           <li className="steplist__step steplist__step-doing">5</li>
         </Stepper>
       </SingleStep>
-    )
+    );
   }
 
   updateInfo(values) {
     if (values.bankAccountNumber !== values.bankAccountNumberConfirmation) {
       this.setState({
         errorMessage: "Bank account number and confirmation don't match"
-      })
+      });
     } else if (values.bankRoutingNumber.length !== 9) {
       this.setState({
         errorMessage: "Bank Routing Number should have 9 digits"
-      })
+      });
     } else if (values.bankAccountNumber.length < 4) {
       this.setState({
         errorMessage: "Bank Account Number should have at least 4 digits"
-      })
+      });
     } else {
       window.firebase
         .auth()
@@ -166,14 +166,14 @@ class Step7 extends React.Component {
               }
             )
             .then(() => {
-              global.analytics.track("Sign-Up Completed", {})
-              localStorage.setItem("usercreated", true)
+              global.analytics.track("Sign-Up Completed", {});
+              localStorage.setItem("usercreated", true);
               Router.push({
                 pathname: "/dashboard"
-              })
+              });
             })
-            .catch(() => {})
-        })
+            .catch(() => {});
+        });
     }
   }
 
@@ -188,7 +188,7 @@ class Step7 extends React.Component {
             bankAccountNumberConfirmation: ""
           }}
           onSubmit={values => {
-            this.updateInfo(values)
+            this.updateInfo(values);
           }}
           render={props => (
             <Form>
@@ -240,22 +240,22 @@ class Step7 extends React.Component {
           <li className="steplist__step steplist__step-doing">5</li>
         </Stepper>
       </SingleStep>
-    )
+    );
   }
 
   renderForm() {
-    const { paymentMethod } = this.state
+    const { paymentMethod } = this.state;
     if (paymentMethod === "automatic") {
-      return this.renderBankLink()
+      return this.renderBankLink();
     } else if (paymentMethod === "creditCard") {
-      return this.renderCreditCard()
+      return this.renderCreditCard();
     } else {
-      return this.renderManualDataInsert()
+      return this.renderManualDataInsert();
     }
   }
 
   render() {
-    const { paymentMethod } = this.state
+    const { paymentMethod } = this.state;
     return (
       <main>
         <Header />
@@ -270,8 +270,8 @@ class Step7 extends React.Component {
           }
         `}</style>
       </main>
-    )
+    );
   }
 }
 
-export default Step7
+export default Step7;

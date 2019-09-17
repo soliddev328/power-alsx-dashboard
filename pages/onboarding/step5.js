@@ -1,30 +1,30 @@
-import React from "react"
-import Router from "next/router"
-import Header from "../../components/Header"
-import SingleStep from "../../components/SingleStep"
-import Button from "../../components/Button"
+import React from "react";
+import Router from "next/router";
+import Header from "../../components/Header";
+import SingleStep from "../../components/SingleStep";
+import Button from "../../components/Button";
 
 class Step5 extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
 
-    this.state = {}
+    this.state = {};
   }
 
   componentDidMount() {
-    global.analytics.page("Step 5")
+    global.analytics.page("Step 5");
 
-    let storedPartialConnection = false
+    let storedPartialConnection = false;
 
     if (window.localStorage.getItem("partialConnection")) {
       storedPartialConnection = JSON.parse(
         window.localStorage.getItem("partialConnection")
-      )
+      );
     }
 
     this.setState({
       partialConnection: storedPartialConnection
-    })
+    });
   }
 
   renderContent() {
@@ -39,7 +39,7 @@ class Step5 extends React.Component {
             }
           `}</style>
         </p>
-      )
+      );
     } else {
       return (
         <React.Fragment>
@@ -54,7 +54,7 @@ class Step5 extends React.Component {
           </svg>
           <p>Congratulations, you're connected!</p>
         </React.Fragment>
-      )
+      );
     }
   }
 
@@ -69,7 +69,7 @@ class Step5 extends React.Component {
             onClick={() => {
               Router.push({
                 pathname: "/onboarding/step6"
-              })
+              });
             }}
           >
             Next
@@ -93,8 +93,8 @@ class Step5 extends React.Component {
           }
         `}</style>
       </main>
-    )
+    );
   }
 }
 
-export default Step5
+export default Step5;
