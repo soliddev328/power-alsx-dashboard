@@ -126,10 +126,14 @@ export default function Referrals() {
           Let's make this city green, share your unique link and earn $25 per
           referral!
         </Text>
-        <SegmentedInput hasBorder inputLabel="send" buttonText="send" />
       </Section>
       <Section columns="2">
-        <Image src="/static/images/share/share.png" alt="" />
+        <Image
+          src="/static/images/share/share.png"
+          alt=""
+          bgColor="#fff"
+          hasBorder
+        />
         <Container column>
           <Button secondary share="facebook" onClick={() => FacebookShare()}>
             Share on Facebook
@@ -143,14 +147,11 @@ export default function Referrals() {
         </Container>
       </Section>
       <Section>
-        <Text noMargin h3>
-          Share Your Referral Link
-        </Text>
-        <Text noMargin>
-          Let's make this city green, share your unique link and earn $25 per
-          referral!
-        </Text>
-        <SegmentedInput hasBorder inputLabel="send" buttonText="send" />
+        <SegmentedInput
+          hasBorder
+          inputLabel="Type your friends email here"
+          buttonText="send"
+        />
       </Section>
       <Section>
         <Panel>
