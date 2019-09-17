@@ -1,11 +1,30 @@
 import Main from "../../components/Main";
 import Container from "../../components/Container";
 import Section from "../../components/Section";
+import Button from "../../components/Button";
 import Separator from "../../components/Separator";
 import Panel from "../../components/Panel";
 import Text from "../../components/Text";
+import Image from "../../components/Image";
 import Icon from "../../components/Icon";
 import SegmentedInput from "../../components/SegmentedInput";
+import Table from "../../components/Table";
+import UsersInAreaMap from "../../components/Dashboard/UsersInAreaMap";
+
+const FacebookShare = () => {
+  FB.ui({
+    method: "share",
+    href: "https://www.commonenergy.us"
+  });
+};
+
+const TwitterShare = () => {
+  console.log("Twitter share");
+};
+
+const LinkedinShare = () => {
+  console.log("Linkedin share");
+};
 
 export default function Referrals() {
   return (
@@ -108,6 +127,57 @@ export default function Referrals() {
           referral!
         </Text>
         <SegmentedInput hasBorder inputLabel="send" buttonText="send" />
+      </Section>
+      <Section columns="2">
+        <Image src="/static/images/share/share.png" alt="" />
+        <Container column>
+          <Button secondary share="facebook" onClick={() => FacebookShare()}>
+            Share on Facebook
+          </Button>
+          <Button secondary share="twitter" onClick={() => TwitterShare()}>
+            Share on Twitter
+          </Button>
+          <Button secondary share="linkedin" onClick={() => LinkedinShare()}>
+            Share on LinkedIn
+          </Button>
+        </Container>
+      </Section>
+      <Section>
+        <Text noMargin h3>
+          Share Your Referral Link
+        </Text>
+        <Text noMargin>
+          Let's make this city green, share your unique link and earn $25 per
+          referral!
+        </Text>
+        <SegmentedInput hasBorder inputLabel="send" buttonText="send" />
+      </Section>
+      <Section>
+        <Panel>
+          <Container column alignLeft>
+            <Text h3 noMargin>
+              Help us bring clean energy to your community
+            </Text>
+            <Text style={{ marginBottom: "20px" }}>
+              Share the link below and earn $25 per referral!
+            </Text>
+          </Container>
+          <UsersInAreaMap />
+          <SegmentedInput buttonText="Copy Link" hasBorder></SegmentedInput>
+        </Panel>
+      </Section>
+      <Section>
+        <Panel>
+          <Text h3>Your referrals</Text>
+          <Table
+            data={[
+              ["Jennifer Williams", "Status", "$15"],
+              ["Jennifer Williams", "Status", "$15"],
+              ["Jennifer Williams", "Status", "$15"],
+              ["Jennifer Williams", "Status", "$15"]
+            ]}
+          />
+        </Panel>
       </Section>
     </Main>
   );

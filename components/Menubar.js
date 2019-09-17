@@ -33,7 +33,7 @@ export default function MenuBar() {
           >
             <path
               fill="#2479FF"
-              fill-rule="evenodd"
+              fillRule="evenodd"
               d="M0 0v3.086h20V0H0zm0 7.457v3.086h20V7.457H0zm0 7.457V18h20v-3.086H0z"
             />
           </svg>
@@ -56,7 +56,7 @@ export default function MenuBar() {
           >
             <path
               fill="#2479FF"
-              fill-rule="evenodd"
+              fillRule="evenodd"
               d="M18 2.34L15.658 0 8.999 6.658 2.341 0 0 2.341 6.658 9 0 15.659 2.341 18 9 11.342 15.658 18 18 15.659 11.341 9z"
             />
           </svg>
