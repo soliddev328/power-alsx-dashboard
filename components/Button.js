@@ -1,8 +1,12 @@
 import ArrowIcon from "./Icons/ArrowIcon";
 import FacebookIcon from "./Icons/FacebookIcon";
+import TwitterIcon from "./Icons/TwitterIcon";
+import LinkedinIcon from "./Icons/LinkedinIcon";
 
 const shareIcon = icon => {
   if (icon === "facebook") return <FacebookIcon />;
+  if (icon === "twitter") return <TwitterIcon />;
+  if (icon === "linkedin") return <LinkedinIcon />;
 };
 
 export default function Button({
