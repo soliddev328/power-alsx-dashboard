@@ -1,31 +1,32 @@
-import ReactPlaid from "react-plaid"
-import React from "react"
-import axios from "axios"
-import Router from "next/router"
-import CONSTANTS from "../globals"
+import ReactPlaid from "react-plaid";
+import React from "react";
+import axios from "axios";
+import Router from "next/router";
+import CONSTANTS from "../globals";
 
 const { PLAID_KEY, API } =
-  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod
-const PLAID_ENV = CONSTANTS.NODE_ENV !== "production" ? "sandbox" : "production"
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
+const PLAID_ENV =
+  CONSTANTS.NODE_ENV !== "production" ? "sandbox" : "production";
 
 export default class Plaid extends React.Component {
   constructor(props, context) {
-    super(props, context)
+    super(props, context);
     this.state = {
       open: false,
       plaidData: []
-    }
+    };
   }
 
   componentDidMount() {
-    let storedLeadId = ""
+    let storedLeadId = "";
     if (localStorage.getItem("leadId")) {
-      storedLeadId = localStorage.getItem("leadId")
+      storedLeadId = localStorage.getItem("leadId");
     }
 
     this.setState({
       leadId: storedLeadId
-    })
+    });
   }
 
   render() {
@@ -46,12 +47,12 @@ export default class Plaid extends React.Component {
               item: this.state.leadId
             })
             .then(() => {
-              global.analytics.track("Sign-Up Completed", {})
-              localStorage.setItem("usercreated", true)
+              global.analytics.track("Sign-Up Completed", {});
+              localStorage.setItem("usercreated", true);
               Router.push({
                 pathname: "/dashboard"
-              })
-            })
+              });
+            });
         }}
         onExit={(err, metadata) => {
           if (err !== null) {
@@ -61,13 +62,13 @@ export default class Plaid extends React.Component {
               institution: metadata.institution,
               link_session_id: metadata.link_session_id,
               item: this.state.leadId
-            })
+            });
           }
           Router.push({
-            pathname: "/dashboard"
-          })
+            pathname: "/step6"
+          });
         }}
       />
-    )
+    );
   }
 }

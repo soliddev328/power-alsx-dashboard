@@ -1,18 +1,18 @@
-import React from "react"
-import Router from "next/router"
-import Header from "../../components/Header"
-import { FadeLoader } from "react-spinners"
-import SingleStep from "../../components/SingleStep"
+import React from "react";
+import Router from "next/router";
+import Header from "../../components/Header";
+import { FadeLoader } from "react-spinners";
+import SingleStep from "../../components/SingleStep";
 
 class Searching extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
 
-    this.state = {}
+    this.state = {};
   }
 
   componentDidMount() {
-    global.analytics.page("Searching")
+    global.analytics.page("Searching");
   }
 
   renderLoader() {
@@ -20,8 +20,8 @@ class Searching extends React.Component {
       setTimeout(() => {
         Router.push({
           pathname: "/onboarding/step2"
-        })
-      }, 2000)
+        });
+      }, 2000);
     }
 
     return (
@@ -55,7 +55,7 @@ class Searching extends React.Component {
           }
         `}</style>
       </SingleStep>
-    )
+    );
   }
 
   render() {
@@ -72,8 +72,8 @@ class Searching extends React.Component {
           }
         `}</style>
       </main>
-    )
+    );
   }
 }
 
-export default Searching
+export default Searching;

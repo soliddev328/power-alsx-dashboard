@@ -1,26 +1,26 @@
-import React from "react"
-import Router from "next/router"
-import { Formik, Form } from "formik"
-import axios from "axios"
-import SingleStep from "../components/SingleStep"
-import Header from "../components/Header"
-import Separator from "../components/Separator"
-import Input from "../components/Input"
-import Button from "../components/Button"
-import CONSTANTS from "../globals"
+import React from "react";
+import Router from "next/router";
+import { Formik, Form } from "formik";
+import axios from "axios";
+import SingleStep from "../components/SingleStep";
+import Header from "../components/Header";
+import Separator from "../components/Separator";
+import Input from "../components/Input";
+import Button from "../components/Button";
+import CONSTANTS from "../globals";
 
 const { API } =
-  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 class Index extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       error: {
         code: false,
         message: ""
       }
-    }
+    };
   }
 
   componentDidMount() {
@@ -38,7 +38,7 @@ class Index extends React.Component {
       .auth()
       .signInWithEmailAndPassword(values.emailAddress, values.password)
       .catch(error => {
-        this.setState({ error: { code: error.code, message: error.message } })
+        this.setState({ error: { code: error.code, message: error.message } });
       })
       .then(firebaseData => {
         if (!this.state.error.code) {
@@ -53,15 +53,15 @@ class Index extends React.Component {
                   }
                 })
                 .then(response => {
-                  const user = response.data.data
-                  window.localStorage.setItem("leadId", user.leadId)
+                  const user = response.data.data;
+                  window.localStorage.setItem("leadId", user.leadId);
                   global.analytics.identify(user.leadId, {
                     email: user.email
-                  })
-                  global.analytics.track("User Signed In", {})
+                  });
+                  global.analytics.track("User Signed In", {});
 
-                  const utility = user.milestones.utility
-                  const imageName = utility.replace(/\s/g, "")
+                  const utility = user.milestones.utility;
+                  const imageName = utility.replace(/\s/g, "");
 
                   const utilityInfo = {
                     image: {
@@ -71,28 +71,28 @@ class Index extends React.Component {
                       altText: "Utility logo"
                     },
                     label: utility
-                  }
+                  };
 
-                  localStorage.setItem("utility", JSON.stringify(utilityInfo))
+                  localStorage.setItem("utility", JSON.stringify(utilityInfo));
 
                   if (user.milestones.utilityPaperOnly) {
                     localStorage.setItem(
                       "billingMethod",
                       JSON.stringify({ billingMethod: "paper" })
-                    )
+                    );
                   }
 
                   if (user.signupCompleted) {
                     Router.push({
                       pathname: "/dashboard"
-                    })
+                    });
                   } else if (!user.milestones.utilityInfoCompleted) {
                     Router.push({
                       pathname: "/onboarding/step2",
                       query: {
                         onboardingNotFinished: true
                       }
-                    })
+                    });
                   } else if (
                     user.milestones.utilityInfoCompleted &&
                     user.milestones.utilityLoginSuccessful
@@ -102,7 +102,7 @@ class Index extends React.Component {
                       query: {
                         onboardingNotFinished: true
                       }
-                    })
+                    });
                   } else if (
                     user.milestones.utilityInfoCompleted &&
                     !user.milestones.addressInfoCompleted
@@ -112,24 +112,24 @@ class Index extends React.Component {
                       query: {
                         onboardingNotFinished: true
                       }
-                    })
+                    });
                   } else if (!user.milestones.bankInfoCompleted) {
                     Router.push({
                       pathname: "/onboarding/step6",
                       query: {
                         onboardingNotFinished: true
                       }
-                    })
+                    });
                   }
                 })
-                .catch(() => {})
-            })
+                .catch(() => {});
+            });
         }
-      })
+      });
   }
 
   static getInitialProps({ query }) {
-    return { query }
+    return { query };
   }
 
   render() {
@@ -143,7 +143,7 @@ class Index extends React.Component {
               password: ""
             }}
             onSubmit={values => {
-              this.autenticate(values)
+              this.autenticate(values);
             }}
             render={props => (
               <React.Fragment>
@@ -174,7 +174,7 @@ class Index extends React.Component {
                           code: false,
                           message: ""
                         }
-                      })
+                      });
                     }}
                   >
                     Sign in
@@ -194,7 +194,7 @@ class Index extends React.Component {
             onClick={() => {
               Router.push({
                 pathname: "/onboarding/step1"
-              })
+              });
             }}
           >
             Sign Up
@@ -220,8 +220,8 @@ class Index extends React.Component {
           }
         `}</style>
       </main>
-    )
+    );
   }
 }
 
-export default Index
+export default Index;
