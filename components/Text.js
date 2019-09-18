@@ -30,7 +30,7 @@ const presets = {
     font-weight: 700;
     `,
   h2: `
-    font-size: calc(26px + (35 - 26) * (100vw - 320px) / (1920 - 320));
+    font-size: calc(24px + (32 - 24) * (100vw - 320px) / (1920 - 320));
     line-height: 1.1em;
     font-weight: 700;
     margin-top: 0;

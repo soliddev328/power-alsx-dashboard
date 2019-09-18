@@ -1,6 +1,7 @@
 export default function Container({
   children,
   column,
+  centered,
   height,
   alignLeft = false
 }) {
@@ -10,10 +11,10 @@ export default function Container({
       <style jsx>{`
         section {
           display: flex;
-          justify-content: center;
           align-items: ${alignLeft ? "left" : "center"};
           ${column ? "flex-direction: column;" : ""}
           ${height ? `height: ${height};` : ""}
+          ${centered ? "justify-content: center;" : ""}
         }
       `}</style>
     </section>

@@ -17,6 +17,7 @@ export default function Button({
   children,
   maxWidth,
   arrow,
+  transparent,
   primary
 }) {
   return (
@@ -57,7 +58,11 @@ export default function Button({
             sans-serif;
           font-weight: 800;
           color: ${primary ? "#fff" : "#2479ff"};
-          background-color: ${primary ? "#2479ff" : "#fff"};
+          background-color: ${transparent
+            ? "transparent"
+            : primary
+            ? "#2479ff"
+            : "#fff"};
           border: ${primary ? "none" : "1px solid #2479ff"};
           padding: 1.15em 0;
           border-radius: 1px;

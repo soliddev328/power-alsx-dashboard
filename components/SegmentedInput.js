@@ -1,23 +1,71 @@
+import { useEffect, useState } from "react";
+import copy from "copy-to-clipboard";
+import axios from "axios";
+import cn from "classnames";
 import Input from "./Input";
 import Button from "./Button";
-import cn from "classnames";
+import CONSTANTS from "../globals";
+
+const { API } =
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 export default function SegmentedInput({
   inputLabel,
+  referral,
   buttonText,
   hasBorder,
   onClick
 }) {
+  const [value, setValue] = useState("");
+  const [userName, setUserName] = useState("");
+  const [copied, setCopied] = useState(false);
+
+  const copyLink = () => {
+    copy(`https://www.commonenergy.us/referrals?advocate=${userName}`);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1000);
+  };
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        user.getIdToken(true).then(idToken => {
+          axios
+            .get(`${API}/v1/subscribers/${user.uid}`, {
+              headers: {
+                Authorization: idToken
+              }
+            })
+            .then(response => {
+              setUserName(response.data.data.username);
+            })
+            .catch(error => {
+              console.error(error);
+            });
+        });
+      } else {
+        Router.push({
+          pathname: "/"
+        });
+      }
+    });
+  }, []);
+
   return (
     <div className="wrapper">
       <input
         type="text"
         htmlFor="segmented-field"
+        value={
+          referral
+            ? `https://www.commonenergy.us/referrals?advocate=${userName}`
+            : ""
+        }
         className={cn({ "has-border": hasBorder })}
       />
       <label htmlFor="segmented-field">{inputLabel}</label>
-      <Button maxWidth="170px" primary onClick={onClick}>
-        {buttonText}
+      <Button maxWidth="170px" primary onClick={referral ? copyLink : onClick}>
+        {copied ? "Copied!" : buttonText}
       </Button>
       <style jsx>{`
         .wrapper {

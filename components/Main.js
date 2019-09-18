@@ -12,7 +12,6 @@ export default function Main({ children }) {
         main {
           display: grid;
           grid-template-columns: 250px 1fr;
-          overflow-x: hidden;
         }
 
         .content {
@@ -37,6 +36,7 @@ export default function Main({ children }) {
         @media (max-width: 800px) {
           main {
             grid-template-columns: 1fr;
+            overflow-x: hidden;
           }
           .content {
             padding: 0 20px;
