@@ -2,12 +2,52 @@ import Main from "../../components/Main";
 import Container from "../../components/Container";
 import Section from "../../components/Section";
 import Separator from "../../components/Separator";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import Panel from "../../components/Panel";
 import Text from "../../components/Text";
 import Icon from "../../components/Icon";
 import Table from "../../components/Table";
+import CONSTANTS from "../../globals";
+
+const { API } =
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 export default function MyImpact() {
+  const [userData, setUserdata] = useState({});
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        global.analytics.page("My Source");
+        let storedContactId = {};
+
+        if (localStorage.getItem("contactId")) {
+          storedContactId = localStorage.getItem("contactId");
+        }
+
+        user.getIdToken(true).then(idToken => {
+          axios
+            .get(`${API}/v1/subscribers/${storedContactId}/billings`, {
+              headers: {
+                Authorization: idToken
+              }
+            })
+            .then(response => {
+              setUserdata(response.data.data);
+              console.log(response);
+            })
+            .catch(error => {
+              console.error(error);
+            });
+        });
+      } else {
+        Router.push({
+          pathname: "/"
+        });
+      }
+    });
+  }, []);
   return (
     <Main>
       <Text h2 hasDecoration>

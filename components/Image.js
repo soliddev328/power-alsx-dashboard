@@ -1,6 +1,13 @@
 import cn from "classnames";
 
-export default function Image({ src, alt, hasBorder, height, width, bgColor }) {
+export default function Image({
+  src,
+  alt,
+  hasBorder,
+  height,
+  width,
+  bgColor = false
+}) {
   return (
     <figure className={cn({ "has-border": hasBorder })}>
       <img src={src} alt={alt} />
@@ -23,6 +30,7 @@ export default function Image({ src, alt, hasBorder, height, width, bgColor }) {
           display: flex;
           width: 100%;
           object-fit: cover;
+          object-position: top;
           ${bgColor && `background-color: ${bgColor};`}
         }
       `}</style>

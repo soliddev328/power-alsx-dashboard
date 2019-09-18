@@ -22,6 +22,7 @@
     "axios": "^0.19.0",
     "babel-plugin-emotion": "^10.0.17",
     "classnames": "^2.2.6",
+    "copy-to-clipboard": "^3.2.0",
     "formik": "^1.5.8",
     "google-map-react": "^1.1.4",
     "js-cookie": "^2.2.1",

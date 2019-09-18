@@ -2,10 +2,17 @@ import { useEffect, useState } from "react";
 import GoogleMapReact from "google-map-react";
 import Container from "../../components/Container";
 import Text from "../Text";
+import axios from "axios";
+import CONSTANTS from "../../globals";
+
+const { API } =
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 export default function UsersInAreaMap() {
   const [lat, setLat] = useState(0);
   const [lng, setLng] = useState(0);
+  const [empty, setEmpty] = useState(false);
+  const [nearbyUsers, setNearbyUsers] = useState([]);
 
   useEffect(() => {
     if ("geolocation" in navigator) {
@@ -14,6 +21,35 @@ export default function UsersInAreaMap() {
         setLng(position.coords.longitude);
       });
     }
+  }, []);
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        user.getIdToken(true).then(idToken => {
+          axios
+            .get(`${API}/v1/subscribers/map?lat=${lat}&lon=${lng}`, {
+              headers: {
+                Authorization: idToken
+              }
+            })
+            .then(response => {
+              if (response.data.data) {
+                setNearbyUsers(response.data.data);
+              } else {
+                setEmpty(true);
+              }
+            })
+            .catch(error => {
+              console.error(error);
+            });
+        });
+      } else {
+        Router.push({
+          pathname: "/"
+        });
+      }
+    });
   }, []);
 
   return (
@@ -31,12 +67,18 @@ export default function UsersInAreaMap() {
           bootstrapURLKeys={{ key: "AIzaSyA1ifW2pZAo6qVj-vVYGI9ab3MHPeW-70w" }}
         ></GoogleMapReact>
       </Container>
-      <div className="users-orb">
-        <Text h4 bold noMargin>
-          5
-        </Text>
-        <Text>users in this area</Text>
-      </div>
+      {!empty ? (
+        <div className="users-orb">
+          <Text h4 bold noMargin>
+            {nearbyUsers.length}
+          </Text>
+          <Text>users in this area</Text>
+        </div>
+      ) : (
+        <div className="users-orb">
+          <Text>There are users nearby</Text>
+        </div>
+      )}
       <style jsx>{`
         .wrapper {
           position: relative;
@@ -55,6 +97,7 @@ export default function UsersInAreaMap() {
           display: flex;
           align-items: center;
           justify-content: center;
+          text-align: center;
           flex-direction: column;
           border: 2px solid #41ef8b;
           transform: translate(-50%, -50%);
