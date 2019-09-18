@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import Router from "next/router";
+import axios from "axios";
 import Main from "../../components/Main";
 import Container from "../../components/Container";
 import Section from "../../components/Section";
@@ -10,6 +13,10 @@ import Icon from "../../components/Icon";
 import SegmentedInput from "../../components/SegmentedInput";
 import Table from "../../components/Table";
 import UsersInAreaMap from "../../components/Dashboard/UsersInAreaMap";
+import CONSTANTS from "../../globals";
+
+const { API } =
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 const FacebookShare = () => {
   FB.ui({
@@ -26,7 +33,82 @@ const LinkedinShare = () => {
   console.log("Linkedin share");
 };
 
+const getReferralsDetails = referralsDetails => {
+  const allItems = [];
+
+  referralsDetails.forEach(element => {
+    const singleItem = [];
+    singleItem.push(element.name);
+    singleItem.push(element.status);
+    singleItem.push(element.convertedDate);
+    allItems.push(singleItem);
+  });
+
+  return allItems;
+};
+
 export default function Referrals() {
+  const [userData, setUserdata] = useState({});
+  const [referralsData, setReferralsData] = useState({});
+  const [referralsDetails, setReferralsDetails] = useState({});
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        global.analytics.page("Referrals");
+
+        user.getIdToken(true).then(idToken => {
+          axios
+            .get(`${API}/v1/subscribers/${user.uid}`, {
+              headers: {
+                Authorization: idToken
+              }
+            })
+            .then(subscribersResponse => {
+              setUserdata(subscribersResponse.data.data);
+
+              axios
+                .get(
+                  `${API}/v1/subscribers/referrals/${subscribersResponse.data.data.username}`,
+                  {
+                    headers: {
+                      Authorization: idToken
+                    }
+                  }
+                )
+                .then(referralsResponse => {
+                  setReferralsData(referralsResponse);
+                });
+
+              axios
+                .get(
+                  `${API}/v1/subscribers/referrals/details/${subscribersResponse.data.data.username}`,
+                  {
+                    headers: {
+                      Authorization: idToken
+                    }
+                  }
+                )
+                .then(referralsDetailsResponse => {
+                  setReferralDetails(
+                    getReferralsDetails(
+                      referralsDetailsResponse.data[0].contacts
+                    )
+                  );
+                });
+            })
+            .catch(error => {
+              console.error(error);
+            });
+        });
+      } else {
+        Router.push({
+          pathname: "/"
+        });
+      }
+    });
+  }, []);
+
   return (
     <Main>
       <Text h2 hasDecoration>
@@ -52,7 +134,7 @@ export default function Referrals() {
               }
             />
             <Text h2 bold style={{ marginTop: "20px" }}>
-              4
+              {(referralsData.leads && referralsData.leads.allTime) || 0}
             </Text>
           </Container>
           <Separator margin="10px auto" small />
@@ -84,7 +166,7 @@ export default function Referrals() {
               }
             />
             <Text h2 bold style={{ marginTop: "20px" }}>
-              230
+              {(referralsData.contacts && referralsData.contacts.allTime) || 0}
             </Text>
           </Container>
           <Separator margin="10px auto" small />
@@ -111,7 +193,7 @@ export default function Referrals() {
               }
             />
             <Text h2 bold style={{ marginTop: "20px" }}>
-              230
+              {referralsData.totalEarned || 0}
             </Text>
           </Container>
           <Separator margin="10px auto" small />
@@ -135,13 +217,28 @@ export default function Referrals() {
           hasBorder
         />
         <Container column>
-          <Button secondary share="facebook" onClick={() => FacebookShare()}>
+          <Button
+            secondary
+            transparent
+            share="facebook"
+            onClick={() => FacebookShare()}
+          >
             Share on Facebook
           </Button>
-          <Button secondary share="twitter" onClick={() => TwitterShare()}>
+          <Button
+            secondary
+            transparent
+            share="twitter"
+            onClick={() => TwitterShare()}
+          >
             Share on Twitter
           </Button>
-          <Button secondary share="linkedin" onClick={() => LinkedinShare()}>
+          <Button
+            secondary
+            transparent
+            share="linkedin"
+            onClick={() => LinkedinShare()}
+          >
             Share on LinkedIn
           </Button>
         </Container>
@@ -164,20 +261,21 @@ export default function Referrals() {
             </Text>
           </Container>
           <UsersInAreaMap />
-          <SegmentedInput buttonText="Copy Link" hasBorder></SegmentedInput>
+          <SegmentedInput
+            buttonText="Copy Link"
+            referral
+            hasBorder
+          ></SegmentedInput>
         </Panel>
       </Section>
       <Section>
         <Panel>
           <Text h3>Your referrals</Text>
-          <Table
-            data={[
-              ["Jennifer Williams", "Status", "$15"],
-              ["Jennifer Williams", "Status", "$15"],
-              ["Jennifer Williams", "Status", "$15"],
-              ["Jennifer Williams", "Status", "$15"]
-            ]}
-          />
+          {referralsDetails.length > 0 ? (
+            <Table data={referralsDetails} />
+          ) : (
+            <Text>You have no referrals yet</Text>
+          )}
         </Panel>
       </Section>
     </Main>

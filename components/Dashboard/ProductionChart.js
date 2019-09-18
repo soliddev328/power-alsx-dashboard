@@ -9,10 +9,21 @@ import {
   Tooltip,
   Legend
 } from "recharts";
+import cn from "classnames";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Text from "../../components/Text";
 import Container from "../../components/Container";
+import CONSTANTS from "../../globals";
 
-export default function ProductionChart() {
-  const data = [
+const { API } =
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
+
+export default function ProductionChart({ projectName }) {
+  const [data, setData] = useState([]);
+  const [mocked, setMocked] = useState(true);
+
+  const mockedData = [
     {
       time: "8:00",
       kw: 12
@@ -43,8 +54,46 @@ export default function ProductionChart() {
     }
   ];
 
+  useEffect(() => {
+    const currentTime = new Date();
+    let productionInfo = mockedData;
+
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        user.getIdToken(true).then(idToken => {
+          axios
+            .get(
+              `${API}/v1/productions/${projectName
+                .split(" ")
+                .join("")}?startTime=${currentTime.setHours(
+                currentTime.getHours() - 2
+              )}&endTime=${Date.now()}`,
+              {
+                headers: {
+                  Authorization: idToken
+                }
+              }
+            )
+            .then(response => {
+              productionInfo = response;
+              setMocked(false);
+            })
+            .catch(error => {
+              console.error(error);
+            });
+        });
+      } else {
+        Router.push({
+          pathname: "/"
+        });
+      }
+    });
+
+    setData(productionInfo);
+  }, []);
+
   return (
-    <div className="wrapper">
+    <div className={cn("wrapper", { disabled: mocked })}>
       <Container height="295px">
         <ResponsiveContainer width="100%">
           <AreaChart data={data} margin={{ bottom: 15 }}>
@@ -71,10 +120,33 @@ export default function ProductionChart() {
           </AreaChart>
         </ResponsiveContainer>
       </Container>
+      <div className="disclaimer">
+        <Text>Currently there is no information available</Text>
+      </div>
       <style jsx>{`
         .wrapper {
           margin-top: 30px;
           margin-left: -30px;
+          position: relative;
+        }
+
+        .wrapper.disabled > :global(*:not(.disclaimer)) {
+          opacity: 0.1;
+          pointer-events: none;
+        }
+
+        .disclaimer {
+          display: none;
+          visibility: hidden;
+        }
+
+        .wrapper.disabled .disclaimer {
+          display: block;
+          visibility: visible;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
         }
       `}</style>
     </div>

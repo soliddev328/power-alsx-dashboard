@@ -1,6 +1,7 @@
 import React from "react";
 import Router from "next/router";
 import axios from "axios";
+import { FadeLoader } from "react-spinners";
 import Main from "../../components/Main";
 import Container from "../../components/Container";
 import Header from "../../components/Header";
@@ -19,11 +20,17 @@ import CONSTANTS from "../../globals";
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
+const formatNumber = num => {
+  return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+};
+
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      userdata: {}
+    };
   }
 
   componentDidMount() {
@@ -38,8 +45,12 @@ class Dashboard extends React.Component {
                 Authorization: idToken
               }
             })
-            .then(data => {
-              console.log("user data", data);
+            .then(subscribersResponse => {
+              localStorage.setItem(
+                "contactId",
+                subscribersResponse.data.data.contactId
+              );
+              this.setState({ userdata: subscribersResponse.data.data });
             })
             .catch(error => {
               console.error(error);
@@ -53,11 +64,13 @@ class Dashboard extends React.Component {
     });
   }
 
-  renderDashboard() {
+  renderDashboard(userdata) {
+    const account = userdata.accounts[0];
+
     return (
       <Main>
         <Text h2 hasDecoration>
-          Welcome user
+          Welcome {userdata.firstName}
         </Text>
         <Section columns="5">
           <span style={{ gridColumn: "1 / 4" }} className="desktop-only">
@@ -109,7 +122,7 @@ class Dashboard extends React.Component {
                 }
               />
               <Text h2 bold style={{ marginTop: "20px" }}>
-                678 kWh
+                {formatNumber(account.totalCleanEnergyGenerated)} kWh
               </Text>
             </Container>
             <Separator margin="10px auto 25px auto" small />
@@ -137,7 +150,7 @@ class Dashboard extends React.Component {
                 }
               />
               <Text h2 bold style={{ marginTop: "20px" }}>
-                678 kWh
+                {formatNumber(account.totalCleanEnergyGenerated)} kWh
               </Text>
             </Container>
             <Separator margin="10px auto 25px auto" small />
@@ -162,7 +175,7 @@ class Dashboard extends React.Component {
                 }
               />
               <Text h2 bold style={{ marginTop: "20px" }}>
-                500 lbs
+                {formatNumber(account.totalC02Avoided)} lbs
               </Text>
             </Container>
             <Separator margin="10px auto 25px auto" small />
@@ -198,7 +211,7 @@ class Dashboard extends React.Component {
                 }
               />
               <Text h2 bold style={{ marginTop: "20px" }}>
-                $13,000
+                ${formatNumber(account.lifetimeEstimatedSavings)}
               </Text>
             </Container>
             <Separator margin="10px auto 25px auto" small />
@@ -223,7 +236,7 @@ class Dashboard extends React.Component {
                 }
               />
               <Text h2 bold style={{ marginTop: "20px" }}>
-                $11,000
+                ${formatNumber(account.totalSavingsToDate)}
               </Text>
             </Container>
             <Separator margin="10px auto 25px auto" small />
@@ -237,7 +250,7 @@ class Dashboard extends React.Component {
                 Production chart
               </Text>
             </Container>
-            <ProductionChart />
+            <ProductionChart projectName={account.project} />
           </Panel>
         </Section>
         <Section>
@@ -251,15 +264,47 @@ class Dashboard extends React.Component {
               </Text>
             </Container>
             <UsersInAreaMap />
-            <SegmentedInput buttonText="Copy Link" hasBorder></SegmentedInput>
+            <SegmentedInput
+              buttonText="Copy Link"
+              referral
+              hasBorder
+            ></SegmentedInput>
           </Panel>
         </Section>
       </Main>
     );
   }
 
+  renderLoader() {
+    return (
+      <div className="wrapper">
+        <FadeLoader
+          className="spinner"
+          height={15}
+          width={4}
+          radius={1}
+          color={"#FF69A0"}
+          loading
+        />
+        <style jsx>{`
+          .wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100vw;
+            height: 100vh;
+          }
+        `}</style>
+      </div>
+    );
+  }
+
   render() {
-    return this.renderDashboard();
+    const { userdata } = this.state;
+
+    return userdata.firstName
+      ? this.renderDashboard(userdata)
+      : this.renderLoader();
   }
 }
 
