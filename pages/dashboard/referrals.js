@@ -77,7 +77,7 @@ export default function Referrals() {
                   }
                 )
                 .then(referralsResponse => {
-                  setReferralsData(referralsResponse);
+                  setReferralsData(referralsResponse.data.data[0]);
                 });
 
               axios
@@ -90,9 +90,9 @@ export default function Referrals() {
                   }
                 )
                 .then(referralsDetailsResponse => {
-                  setReferralDetails(
+                  setReferralsDetails(
                     getReferralsDetails(
-                      referralsDetailsResponse.data[0].contacts
+                      referralsDetailsResponse.data.data[0].contacts
                     )
                   );
                 });
