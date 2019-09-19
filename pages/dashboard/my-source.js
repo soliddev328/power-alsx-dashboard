@@ -25,7 +25,7 @@ export default function MySource({ image = true }) {
 
         user.getIdToken(true).then(idToken => {
           axios
-            .get(`${API}/v1/subscribers/${storedContactId}/billings`, {
+            .get(`${API}/v1/subscribers/accounts/${storedContactId}/billings`, {
               headers: {
                 Authorization: idToken
               }
