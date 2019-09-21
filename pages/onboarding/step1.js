@@ -49,8 +49,8 @@ class Step1 extends React.Component {
     let storedUtmCampaign = Cookie.get("_ce_campaign");
     let storedUtmSource = Cookie.get("_ce_source");
     let storedUtmMedium = Cookie.get("_ce_medium");
-    let storedAffiliate = "";
-    let storedReferrerPage = "";
+    let storedAffiliate = Cookie.get("ce_aff");
+    let storedReferrerPage = Cookie.get("ce_aff_slug");
 
     if (storedPartnerReferral) {
       localStorage.setItem("Partner", storedPartnerReferral);
