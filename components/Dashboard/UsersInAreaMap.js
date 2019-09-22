@@ -5,7 +5,6 @@ import Container from "../../components/Container";
 import Text from "../Text";
 import axios from "axios";
 import CONSTANTS from "../../globals";
-import { runInThisContext } from "vm";
 
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
