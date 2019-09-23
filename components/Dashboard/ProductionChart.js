@@ -19,6 +19,17 @@ import CONSTANTS from "../../globals";
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
+const debounce = (fn, ms) => {
+  let timer;
+  return _ => {
+    clearTimeout(timer);
+    timer = setTimeout(_ => {
+      timer = null;
+      fn.apply(this, arguments);
+    }, ms);
+  };
+};
+
 export default function ProductionChart({ projectName }) {
   const [data, setData] = useState([]);
   const [mocked, setMocked] = useState(true);
@@ -125,6 +136,7 @@ export default function ProductionChart({ projectName }) {
       </div>
       <style jsx>{`
         .wrapper {
+          max-width: 100%;
           margin-top: 30px;
           margin-left: -30px;
           position: relative;
