@@ -57,6 +57,7 @@ export default class Input extends React.PureComponent {
       style,
       value,
       autoFocus,
+      readOnly,
       outerLabel
     } = this.props;
     const { displayLabel } = this.state;
@@ -76,6 +77,7 @@ export default class Input extends React.PureComponent {
           onInput={this.customSetCustomValidity}
           autoFocus="negative"
           ref={this.inputRef}
+          readOnly={readOnly}
           value={this.props.value}
           style={this.props.style}
         />
@@ -97,6 +99,7 @@ export default class Input extends React.PureComponent {
             max-width: ${fullWidth ? "100%" : "350px"};
             margin: 0 auto;
             margin-bottom: 0.5rem;
+            ${readOnly && "pointer-events: none;"}
           }
 
           .input__wrapper:last-of-type {
