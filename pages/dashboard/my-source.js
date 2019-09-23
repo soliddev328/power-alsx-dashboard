@@ -52,7 +52,7 @@ export default function MySource() {
         My Source
       </Text>
       <Section>
-        {userData.image ? (
+        {userData && userData.image ? (
           <Image hasBorder src="/static/images/illustrations/t&c.png" alt="" />
         ) : (
           <Panel>
