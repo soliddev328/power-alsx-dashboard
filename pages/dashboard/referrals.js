@@ -51,6 +51,7 @@ export default function Referrals() {
   const [userData, setUserdata] = useState({});
   const [referralsData, setReferralsData] = useState({});
   const [referralsDetails, setReferralsDetails] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
@@ -95,6 +96,7 @@ export default function Referrals() {
                       referralsDetailsResponse.data.data[0].contacts
                     )
                   );
+                  setIsLoading(false);
                 });
             })
             .catch(error => {
@@ -110,7 +112,7 @@ export default function Referrals() {
   }, []);
 
   return (
-    <Main>
+    <Main isLoading={isLoading}>
       <Text h2 hasDecoration>
         Your Referrals
       </Text>
