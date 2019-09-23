@@ -82,6 +82,7 @@ export default function MenuBar() {
           margin: 0 auto;
           position: sticky;
           top: 48px;
+          height: 100%;
         }
 
         nav.mobile {
