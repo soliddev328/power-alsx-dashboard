@@ -15,6 +15,7 @@ const { API } =
 
 export default function MyImpact() {
   const [userData, setUserdata] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
@@ -35,6 +36,7 @@ export default function MyImpact() {
             })
             .then(response => {
               setUserdata(response.data.data);
+              setIsLoading(false);
               console.log(response);
             })
             .catch(error => {
@@ -49,7 +51,7 @@ export default function MyImpact() {
     });
   }, []);
   return (
-    <Main>
+    <Main isLoading={isLoading}>
       <Text h2 hasDecoration>
         My Impact
       </Text>

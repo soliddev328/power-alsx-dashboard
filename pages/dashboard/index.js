@@ -23,6 +23,7 @@ const formatNumber = num => {
 };
 export default function Dashboard() {
   const [userData, setUserdata] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
@@ -38,6 +39,7 @@ export default function Dashboard() {
             })
             .then(response => {
               setUserdata(response.data.data);
+              setIsLoading(false);
             })
             .catch(error => {
               console.error(error);
@@ -52,7 +54,7 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <Main>
+    <Main isLoading={isLoading}>
       <Text h2 hasDecoration>
         Welcome {userData.firstName}
       </Text>

@@ -29,7 +29,7 @@ export default function Section({ children, disabled, columns = 1, noMargin }) {
           pointer-events: none;
         }
 
-        @media (max-width: 1000px) {
+        @media (max-width: 1050px) {
           .section {
             grid-template-columns: 1fr;
           }
