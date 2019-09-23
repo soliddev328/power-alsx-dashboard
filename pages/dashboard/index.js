@@ -56,7 +56,7 @@ export default function Dashboard() {
   return (
     <Main isLoading={isLoading}>
       <Text h2 hasDecoration>
-        Welcome {userData.firstName}
+        Welcome {userData && userData.firstName}
       </Text>
       <Section columns="5">
         <span style={{ gridColumn: "1 / 4" }} className="desktop-only">
