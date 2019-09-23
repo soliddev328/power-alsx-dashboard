@@ -29,6 +29,7 @@ const getPaymentMethods = accounts => {
 export default function Profile() {
   const [userData, setUserdata] = useState({});
   const [paymentMethods, setPaymentMethods] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
@@ -45,6 +46,7 @@ export default function Profile() {
             .then(response => {
               setUserdata(response.data.data);
               setPaymentMethods(getPaymentMethods(response.data.data.accounts));
+              setIsLoading(false);
             })
             .catch(error => {
               console.error(error);
@@ -59,7 +61,7 @@ export default function Profile() {
   }, []);
 
   return (
-    <Main>
+    <Main isLoading={isLoading}>
       <Text h2 hasDecoration>
         Profile
       </Text>
