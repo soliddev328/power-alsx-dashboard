@@ -13,8 +13,13 @@ import CONSTANTS from "../../globals";
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
+const formatNumber = num => {
+  return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+};
+
 export default function MyImpact() {
   const [userData, setUserdata] = useState({});
+  const [billingData, setBillingData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -29,15 +34,40 @@ export default function MyImpact() {
 
         user.getIdToken(true).then(idToken => {
           axios
-            .get(`${API}/v1/subscribers/accounts/${storedContactId}/billings`, {
+            .get(`${API}/v1/subscribers/${user.uid}`, {
               headers: {
                 Authorization: idToken
               }
             })
-            .then(response => {
-              setUserdata(response.data.data);
-              setIsLoading(false);
-              console.log(response);
+            .then(userDataResponse => {
+              setUserdata(userDataResponse.data.data);
+
+              axios
+                .get(
+                  `${API}/v1/subscribers/accounts/${userDataResponse.data.data.contactId}/billings`,
+                  {
+                    headers: {
+                      Authorization: idToken
+                    }
+                  }
+                )
+                .then(billingDataResponse => {
+                  const finalBillingArray = [];
+
+                  if (billingDataResponse.data.data.length > 0) {
+                    billingDataResponse.data.data.map(item => {
+                      const formatedItems = [];
+                      formatedItems.push(item.invoiceDate);
+                      formatedItems.push(item.cleanEnergy);
+                      formatedItems.push(item.avoidedC02);
+                      formatedItems.push(item.savings);
+                      finalBillingArray.push(formatedItems);
+                    });
+                  }
+
+                  setBillingData(finalBillingArray);
+                  setIsLoading(false);
+                });
             })
             .catch(error => {
               console.error(error);
@@ -79,7 +109,10 @@ export default function MyImpact() {
               }
             />
             <Text h2 bold style={{ margin: "5px 0 0 20px" }}>
-              230
+              {(userData.accounts &&
+                userData.accounts[0].totalCleanEnergyGenerated) ||
+                "0"}{" "}
+              kWh
             </Text>
           </Container>
         </Panel>
@@ -103,7 +136,9 @@ export default function MyImpact() {
               }
             />
             <Text h2 bold style={{ margin: "5px 0 0 20px" }}>
-              123Lb
+              {(userData.accounts && userData.accounts[0].totalC02Avoided) ||
+                "0"}{" "}
+              lbs
             </Text>
           </Container>
         </Panel>
@@ -127,7 +162,8 @@ export default function MyImpact() {
               }
             />
             <Text h2 bold style={{ margin: "5px 0 0 20px" }}>
-              23
+              {(userData.accounts && userData.accounts[0].totalTreesPlanted) ||
+                "0"}
             </Text>
           </Container>
         </Panel>
@@ -152,7 +188,10 @@ export default function MyImpact() {
               }
             />
             <Text h2 bold style={{ margin: "5px 0 0 20px" }}>
-              $12,000
+              $
+              {(userData.accounts &&
+                userData.accounts[0].lifetimeEstimatedSavings) ||
+                "0"}
             </Text>
           </Container>
         </Panel>
@@ -161,21 +200,20 @@ export default function MyImpact() {
       <Section>
         <Panel>
           <Text h3>Utility Invoices</Text>
-          <Table
-            headers={[
-              "Month",
-              "Clean Energy Generated (kWh)",
-              "Pounds of CO2 Avoided",
-              "Savings with Common Energy",
-              "Invoice"
-            ]}
-            data={[
-              ["Jan-19", "200", "260 Lb", "$12", "$243", "https://google.com"],
-              ["Jan-20", "200", "260 Lb", "$12", "$243", "https://google.com"],
-              ["Jan-21", "200", "260 Lb", "$12", "$243", "https://google.com"],
-              ["Jan-22", "200", "260 Lb", "$12", "$243", "https://google.com"]
-            ]}
-          />
+          {billingData.length > 0 ? (
+            <Table
+              headers={[
+                "Date",
+                "Clean Energy Generated (kWh)",
+                "Pounds of CO2 Avoided",
+                "Savings with Common Energy",
+                "Invoice"
+              ]}
+              data={billingData}
+            />
+          ) : (
+            <Text>You have no Utility Invoices available yet</Text>
+          )}
         </Panel>
       </Section>
     </Main>

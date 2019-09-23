@@ -54,6 +54,8 @@ export default class Input extends React.PureComponent {
       validator,
       secondary,
       label,
+      style,
+      value,
       autoFocus,
       outerLabel
     } = this.props;
@@ -74,7 +76,8 @@ export default class Input extends React.PureComponent {
           onInput={this.customSetCustomValidity}
           autoFocus="negative"
           ref={this.inputRef}
-          {...this.props}
+          value={this.props.value}
+          style={this.props.style}
         />
         <label
           htmlFor={fieldname}
