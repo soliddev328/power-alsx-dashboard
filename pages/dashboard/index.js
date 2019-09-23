@@ -96,7 +96,8 @@ export default function Dashboard() {
               }
             />
             <Text h2 bold style={{ marginTop: "20px" }}>
-              {(userData.accounts &&
+              {(userData &&
+                userData.accounts &&
                 userData.accounts[0].totalCleanEnergyGenerated) ||
                 "0"}{" "}
               kWh
@@ -127,7 +128,8 @@ export default function Dashboard() {
               }
             />
             <Text h2 bold style={{ marginTop: "20px" }}>
-              {(userData.accounts &&
+              {(userData &&
+                userData.accounts &&
                 userData.accounts[0].totalCleanEnergyGenerated) ||
                 "0"}{" "}
               kWh
@@ -155,7 +157,9 @@ export default function Dashboard() {
               }
             />
             <Text h2 bold style={{ marginTop: "20px" }}>
-              {(userData.accounts && userData.accounts[0].totalC02Avoided) ||
+              {(userData &&
+                userData.accounts &&
+                userData.accounts[0].totalC02Avoided) ||
                 "0"}{" "}
               lbs
             </Text>
@@ -190,7 +194,8 @@ export default function Dashboard() {
             />
             <Text h2 bold style={{ marginTop: "20px" }}>
               $
-              {(userData.accounts &&
+              {(userData &&
+                userData.accounts &&
                 userData.accounts[0].lifetimeEstimatedSavings) ||
                 "0"}{" "}
             </Text>
@@ -218,7 +223,9 @@ export default function Dashboard() {
             />
             <Text h2 bold style={{ marginTop: "20px" }}>
               $
-              {(userData.accounts && userData.accounts[0].totalSavingsToDate) ||
+              {(userData &&
+                userData.accounts &&
+                userData.accounts[0].totalSavingsToDate) ||
                 "0"}{" "}
             </Text>
           </Container>
@@ -234,7 +241,9 @@ export default function Dashboard() {
             </Text>
           </Container>
           <ProductionChart
-            projectName={userData.accounts && userData.accounts[0].project}
+            projectName={
+              userData && userData.accounts && userData.accounts[0].project
+            }
           />
         </Panel>
       </Section>
