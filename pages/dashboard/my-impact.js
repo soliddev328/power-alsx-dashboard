@@ -109,7 +109,8 @@ export default function MyImpact() {
               }
             />
             <Text h2 bold style={{ margin: "5px 0 0 20px" }}>
-              {(userData.accounts &&
+              {(userData &&
+                userData.accounts &&
                 userData.accounts[0].totalCleanEnergyGenerated) ||
                 "0"}{" "}
               kWh
@@ -136,7 +137,9 @@ export default function MyImpact() {
               }
             />
             <Text h2 bold style={{ margin: "5px 0 0 20px" }}>
-              {(userData.accounts && userData.accounts[0].totalC02Avoided) ||
+              {(userData &&
+                userData.accounts &&
+                userData.accounts[0].totalC02Avoided) ||
                 "0"}{" "}
               lbs
             </Text>
@@ -162,7 +165,9 @@ export default function MyImpact() {
               }
             />
             <Text h2 bold style={{ margin: "5px 0 0 20px" }}>
-              {(userData.accounts && userData.accounts[0].totalTreesPlanted) ||
+              {(userData &&
+                userData.accounts &&
+                userData.accounts[0].totalTreesPlanted) ||
                 "0"}
             </Text>
           </Container>
@@ -189,7 +194,8 @@ export default function MyImpact() {
             />
             <Text h2 bold style={{ margin: "5px 0 0 20px" }}>
               $
-              {(userData.accounts &&
+              {(userData &&
+                userData.accounts &&
                 userData.accounts[0].lifetimeEstimatedSavings) ||
                 "0"}
             </Text>
@@ -200,7 +206,7 @@ export default function MyImpact() {
       <Section>
         <Panel>
           <Text h3>Utility Invoices</Text>
-          {billingData.length > 0 ? (
+          {billingData && billingData.length > 0 ? (
             <Table
               headers={[
                 "Date",
