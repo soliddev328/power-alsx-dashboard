@@ -77,7 +77,7 @@ export default function Profile() {
                 fullWidth
                 label="Name"
                 fieldname="name"
-                value={userData.firstName}
+                value={userData && userData.firstName}
               />
               <Input
                 readOnly
@@ -85,7 +85,7 @@ export default function Profile() {
                 fullWidth
                 label="Last Name"
                 fieldname="last-name"
-                value={userData.lastName}
+                value={userData && userData.lastName}
               />
             </Section>
             <Section columns="3">
@@ -95,7 +95,7 @@ export default function Profile() {
                 fullWidth
                 label="Email"
                 fieldname="email"
-                value={userData.email}
+                value={userData && userData.email}
               />
               <Input
                 readOnly
@@ -104,7 +104,9 @@ export default function Profile() {
                 label="Primary Address"
                 fieldname="primary-address"
                 value={
-                  userData.accounts ? userData.accounts[0].address.street : ""
+                  userData && userData.accounts
+                    ? userData.accounts[0].address.street
+                    : ""
                 }
               />
               <Input
@@ -113,7 +115,7 @@ export default function Profile() {
                 fullWidth
                 label="Phone Number"
                 fieldname="phone-number"
-                value={userData.phone || ""}
+                value={(userData && userData.phone) || ""}
               />
             </Section>
             <Section>

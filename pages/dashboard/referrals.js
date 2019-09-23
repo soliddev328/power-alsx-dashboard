@@ -273,7 +273,7 @@ export default function Referrals() {
       <Section>
         <Panel>
           <Text h3>Your referrals</Text>
-          {referralsDetails.length > 0 ? (
+          {referralsDetails && referralsDetails.length > 0 ? (
             <Table data={referralsDetails} />
           ) : (
             <Text>You have no referrals yet</Text>
