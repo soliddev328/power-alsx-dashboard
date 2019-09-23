@@ -96,8 +96,9 @@ export default function Dashboard() {
               }
             />
             <Text h2 bold style={{ marginTop: "20px" }}>
-              {userData.accounts &&
-                userData.accounts[0].totalCleanEnergyGenerated}{" "}
+              {(userData.accounts &&
+                userData.accounts[0].totalCleanEnergyGenerated) ||
+                "0"}{" "}
               kWh
             </Text>
           </Container>
@@ -126,8 +127,9 @@ export default function Dashboard() {
               }
             />
             <Text h2 bold style={{ marginTop: "20px" }}>
-              {userData.accounts &&
-                userData.accounts[0].totalCleanEnergyGenerated}{" "}
+              {(userData.accounts &&
+                userData.accounts[0].totalCleanEnergyGenerated) ||
+                "0"}{" "}
               kWh
             </Text>
           </Container>
@@ -153,7 +155,9 @@ export default function Dashboard() {
               }
             />
             <Text h2 bold style={{ marginTop: "20px" }}>
-              {userData.accounts && userData.accounts[0].totalC02Avoided} lbs
+              {(userData.accounts && userData.accounts[0].totalC02Avoided) ||
+                "0"}{" "}
+              lbs
             </Text>
           </Container>
           <Separator margin="10px auto 25px auto" small />
@@ -186,8 +190,9 @@ export default function Dashboard() {
             />
             <Text h2 bold style={{ marginTop: "20px" }}>
               $
-              {userData.accounts &&
-                userData.accounts[0].lifetimeEstimatedSavings}
+              {(userData.accounts &&
+                userData.accounts[0].lifetimeEstimatedSavings) ||
+                "0"}{" "}
             </Text>
           </Container>
           <Separator margin="10px auto 25px auto" small />
@@ -212,7 +217,9 @@ export default function Dashboard() {
               }
             />
             <Text h2 bold style={{ marginTop: "20px" }}>
-              ${userData.accounts && userData.accounts[0].totalSavingsToDate}
+              $
+              {(userData.accounts && userData.accounts[0].totalSavingsToDate) ||
+                "0"}{" "}
             </Text>
           </Container>
           <Separator margin="10px auto 25px auto" small />

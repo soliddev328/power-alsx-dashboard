@@ -72,6 +72,7 @@ export default function Profile() {
           <>
             <Section columns="2">
               <Input
+                readOnly
                 outerLabel
                 fullWidth
                 label="Name"
@@ -79,6 +80,7 @@ export default function Profile() {
                 value={userData.firstName}
               />
               <Input
+                readOnly
                 outerLabel
                 fullWidth
                 label="Last Name"
@@ -88,6 +90,7 @@ export default function Profile() {
             </Section>
             <Section columns="3">
               <Input
+                readOnly
                 outerLabel
                 fullWidth
                 label="Email"
@@ -95,6 +98,7 @@ export default function Profile() {
                 value={userData.email}
               />
               <Input
+                readOnly
                 outerLabel
                 fullWidth
                 label="Primary Address"
@@ -104,11 +108,12 @@ export default function Profile() {
                 }
               />
               <Input
+                readOnly
                 outerLabel
                 fullWidth
                 label="Phone Number"
                 fieldname="phone-number"
-                value={userData.phone}
+                value={userData.phone || ""}
               />
             </Section>
             <Section>

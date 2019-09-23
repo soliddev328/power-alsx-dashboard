@@ -61,6 +61,7 @@ export default function SegmentedInput({
             ? `https://www.commonenergy.us/referrals?advocate=${userName}`
             : ""
         }
+        readOnly
         className={cn({ "has-border": hasBorder })}
       />
       <label htmlFor="segmented-field">{inputLabel}</label>
