@@ -29,7 +29,7 @@ export default function Image({
         img {
           display: flex;
           width: 100%;
-          object-fit: cover;
+          object-fit: contain;
           object-position: top;
           ${bgColor && `background-color: ${bgColor};`}
         }

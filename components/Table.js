@@ -73,6 +73,17 @@ export default function Table({ headers = [], data = [] }) {
         tbody tr {
           text-align: center;
         }
+
+        @media (max-width: 1050px) {
+          th {
+            width: 80px;
+          }
+
+          th,
+          td {
+            padding: 7px 10px;
+          }
+        }
       `}</style>
     </table>
   );
