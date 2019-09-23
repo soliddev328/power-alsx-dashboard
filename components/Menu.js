@@ -33,9 +33,9 @@ export default function MainMenu() {
         <MenuItem>Profile</MenuItem>
       </li>
 
-      {/* <li>
-          <button onClick={this.signOut}>Sign out</button>
-        </li> */}
+      <li className="sign-out">
+        <button onClick={signOut}>Sign out</button>
+      </li>
 
       <style jsx>{`
         button {
@@ -44,11 +44,22 @@ export default function MainMenu() {
           background: none;
           padding: 0;
           color: #2479ff;
+          cursor: pointer;
         }
         ul {
+          position: relative;
           list-style: none;
           padding: 0;
           margin: 0;
+          height: calc(100vh - 128px);
+        }
+        .sign-out {
+          display: flex;
+          width: 100%;
+          justify-content: center;
+          align-items: center;
+          position: absolute;
+          bottom: 0;
         }
       `}</style>
     </ul>

@@ -34,36 +34,41 @@ export default class UsersInAreaMap extends React.PureComponent {
               }
             })
             .then(subscribersResponse => {
-              mapLocation.push(
-                parseFloat(
-                  subscribersResponse.data.data.accounts[0].address.lat
-                )
-              );
-              mapLocation.push(
-                parseFloat(
-                  subscribersResponse.data.data.accounts[0].address.lon
-                )
-              );
+              if (
+                subscribersResponse.data.data &&
+                subscribersResponse.data.data.accounts
+              ) {
+                mapLocation.push(
+                  parseFloat(
+                    subscribersResponse.data.data.accounts[0].address.lat
+                  )
+                );
+                mapLocation.push(
+                  parseFloat(
+                    subscribersResponse.data.data.accounts[0].address.lon
+                  )
+                );
 
-              axios
-                .get(
-                  `${API}/v1/subscribers/neighborhood/map?lat=${subscribersResponse.data.data.accounts[0].address.lat}&lon=${subscribersResponse.data.data.accounts[0].address.lon}`,
-                  {
-                    headers: {
-                      Authorization: idToken
+                axios
+                  .get(
+                    `${API}/v1/subscribers/neighborhood/map?lat=${subscribersResponse.data.data.accounts[0].address.lat}&lon=${subscribersResponse.data.data.accounts[0].address.lon}`,
+                    {
+                      headers: {
+                        Authorization: idToken
+                      }
                     }
-                  }
-                )
-                .then(response => {
-                  if (response.data.data) {
-                    this.setState({ nearbyUsers: response.data.data });
-                  } else {
-                    this.setState({ empty: true });
-                  }
-                })
-                .catch(error => {
-                  console.error(error);
-                });
+                  )
+                  .then(response => {
+                    if (response.data.data) {
+                      this.setState({ nearbyUsers: response.data.data });
+                    } else {
+                      this.setState({ empty: true });
+                    }
+                  })
+                  .catch(error => {
+                    console.error(error);
+                  });
+              }
             });
         });
       } else {
