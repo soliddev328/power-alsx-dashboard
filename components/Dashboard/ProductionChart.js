@@ -19,17 +19,6 @@ import CONSTANTS from "../../globals";
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
-const debounce = (fn, ms) => {
-  let timer;
-  return _ => {
-    clearTimeout(timer);
-    timer = setTimeout(_ => {
-      timer = null;
-      fn.apply(this, arguments);
-    }, ms);
-  };
-};
-
 export default function ProductionChart({ projectName }) {
   const [data, setData] = useState([]);
   const [mocked, setMocked] = useState(true);
