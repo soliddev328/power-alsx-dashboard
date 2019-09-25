@@ -53,7 +53,6 @@ export default function MyImpact() {
                 )
                 .then(billingDataResponse => {
                   const finalBillingArray = [];
-
                   if (billingDataResponse.data.data.length > 0) {
                     billingDataResponse.data.data.map(item => {
                       const formatedItems = [];

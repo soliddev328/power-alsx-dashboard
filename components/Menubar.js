@@ -80,9 +80,10 @@ export default function MenuBar() {
           flex-direction: column;
           padding: 0 2rem;
           margin: 0 auto;
-          position: sticky;
+          position: fixed;
           top: 48px;
           height: 100%;
+          width: 250px;
         }
 
         nav.mobile {

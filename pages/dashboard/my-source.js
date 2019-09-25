@@ -30,9 +30,9 @@ export default function MySource() {
             .then(response => {
               setUserdata(response.data.data);
               setIsLoading(false);
-              // setProjectInfoIsAvailable(
-              //   !!response.data.data.accounts[0].project
-              // );
+              setProjectInfoIsAvailable(
+                !!response.data.data.accounts[0].project
+              );
             })
             .catch(error => {
               console.error(error);
@@ -49,7 +49,7 @@ export default function MySource() {
   return (
     <Main isLoading={isLoading}>
       <Text h2 hasDecoration>
-        My Source
+        My Source {console.log(userData)}
       </Text>
       <Section>
         {userData && userData.image ? (
@@ -96,7 +96,10 @@ export default function MySource() {
       <Section disabled={!projectInfoIsAvailable}>
         <Panel>
           <Text h3>Project Summary</Text>
-          <Text>Project Address: {projectInfoIsAvailable ? `` : ""}</Text>
+          <Text>
+            Project Address:{" "}
+            {projectInfoIsAvailable ? `${userData.accounts[0].name}` : ""}
+          </Text>
           <Text>
             Project Size:{" "}
             {projectInfoIsAvailable
@@ -106,13 +109,13 @@ export default function MySource() {
           <Text>
             Annual generation:{" "}
             {projectInfoIsAvailable
-              ? `${userData.accounts[0].project} kWh`
+              ? `${userData.accounts[0].totalCleanEnergyGenerated} kWh`
               : ""}{" "}
           </Text>
           <Text>
             Annual avoided CO2:{" "}
             {projectInfoIsAvailable
-              ? `${userData.accounts[0].project} pounds`
+              ? `${userData.accounts[0].totalC02Avoided} pounds`
               : ""}{" "}
           </Text>
           <Text>
