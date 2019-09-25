@@ -15,11 +15,12 @@ const { API } =
 
 const getPaymentMethods = accounts => {
   const allMethods = [];
-
   accounts.forEach(element => {
     const singleMethod = [];
     singleMethod.push(element.address.street);
-    singleMethod.push("Testing Payment Method");
+    element.hasACH
+      ? singleMethod.push("ACH")
+      : singleMethod.push("Credit Card");
     allMethods.push(singleMethod);
   });
 

@@ -274,7 +274,10 @@ export default function Referrals() {
         <Panel>
           <Text h3>Your referrals</Text>
           {referralsDetails && referralsDetails.length > 0 ? (
-            <Table data={referralsDetails} />
+            <Table
+              headers={["Name", "Status", "Date"]}
+              data={referralsDetails}
+            />
           ) : (
             <Text>You have no referrals yet</Text>
           )}

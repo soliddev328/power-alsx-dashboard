@@ -20,9 +20,6 @@ const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 export default function ProductionChart({ projectName }) {
-  const [data, setData] = useState([]);
-  const [mocked, setMocked] = useState(true);
-
   const mockedData = [
     {
       time: "8:00",
@@ -54,10 +51,11 @@ export default function ProductionChart({ projectName }) {
     }
   ];
 
+  const [data, setData] = useState(mockedData);
+  const [mocked, setMocked] = useState(true);
+
   useEffect(() => {
     const currentTime = new Date();
-    let productionInfo = mockedData;
-
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         user.getIdToken(true).then(idToken => {
@@ -75,7 +73,8 @@ export default function ProductionChart({ projectName }) {
               }
             )
             .then(response => {
-              productionInfo = response;
+              debugger;
+              setData(response);
               setMocked(false);
             })
             .catch(error => {
@@ -88,8 +87,6 @@ export default function ProductionChart({ projectName }) {
         });
       }
     });
-
-    setData(productionInfo);
   }, []);
 
   return (
