@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Router from "next/router";
-import Main, { MainContext } from "../../components/Main";
+import { useStateValue } from "../../state";
+import Main from "../../components/Main";
 import Container from "../../components/Container";
 import Header from "../../components/Header";
 import Button from "../../components/Button";
@@ -18,10 +19,8 @@ import CONSTANTS from "../../globals";
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
-const formatNumber = num => {
-  return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
-};
-export default function Dashboard() {
+const Dashboard = () => {
+  // const [{ selectedAccount }, dispatch] = useStateValue();
   const [userData, setUserdata] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
@@ -267,4 +266,6 @@ export default function Dashboard() {
       </Section>
     </Main>
   );
-}
+};
+
+export default Dashboard;
