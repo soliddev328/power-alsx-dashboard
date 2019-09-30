@@ -19,30 +19,27 @@ import CONSTANTS from "../../globals";
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
+const getUserData = async (userUid, idToken) => {
+  const response = await axios.get(`${API}/v1/subscribers/${userUid}`, {
+    headers: {
+      Authorization: idToken
+    }
+  });
+  return response && response.data && response.data.data;
+};
+
 const Dashboard = () => {
-  // const [{ selectedAccount }, dispatch] = useStateValue();
-  const [userData, setUserdata] = useState({});
+  const [{ selectedAccount }, dispatch] = useStateValue();
+  const [userData, setUserData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         global.analytics.page("Dashboard");
-
-        user.getIdToken(true).then(idToken => {
-          axios
-            .get(`${API}/v1/subscribers/${user.uid}`, {
-              headers: {
-                Authorization: idToken
-              }
-            })
-            .then(response => {
-              setUserdata(response.data.data);
-              setIsLoading(false);
-            })
-            .catch(error => {
-              console.error(error);
-            });
+        user.getIdToken(true).then(async idToken => {
+          setUserData(await getUserData(user.uid, idToken));
+          setIsLoading(false);
         });
       } else {
         Router.push({
@@ -97,7 +94,8 @@ const Dashboard = () => {
             <Text h2 bold style={{ marginTop: "20px" }}>
               {(userData &&
                 userData.accounts &&
-                userData.accounts[0].totalCleanEnergyGenerated) ||
+                userData.accounts[selectedAccount.value]
+                  .totalCleanEnergyGenerated) ||
                 "0"}{" "}
               kWh
             </Text>
@@ -129,7 +127,8 @@ const Dashboard = () => {
             <Text h2 bold style={{ marginTop: "20px" }}>
               {(userData &&
                 userData.accounts &&
-                userData.accounts[0].totalCleanEnergyGenerated) ||
+                userData.accounts[selectedAccount.value]
+                  .totalCleanEnergyGenerated) ||
                 "0"}{" "}
               kWh
             </Text>
@@ -158,7 +157,7 @@ const Dashboard = () => {
             <Text h2 bold style={{ marginTop: "20px" }}>
               {(userData &&
                 userData.accounts &&
-                userData.accounts[0].totalC02Avoided) ||
+                userData.accounts[selectedAccount.value].totalC02Avoided) ||
                 "0"}{" "}
               lbs
             </Text>
@@ -195,7 +194,8 @@ const Dashboard = () => {
               $
               {(userData &&
                 userData.accounts &&
-                userData.accounts[0].lifetimeEstimatedSavings) ||
+                userData.accounts[selectedAccount.value]
+                  .lifetimeEstimatedSavings) ||
                 "0"}{" "}
             </Text>
           </Container>
@@ -224,7 +224,7 @@ const Dashboard = () => {
               $
               {(userData &&
                 userData.accounts &&
-                userData.accounts[0].totalSavingsToDate) ||
+                userData.accounts[selectedAccount.value].totalSavingsToDate) ||
                 "0"}{" "}
             </Text>
           </Container>
@@ -241,7 +241,9 @@ const Dashboard = () => {
           </Container>
           <ProductionChart
             projectName={
-              userData && userData.accounts && userData.accounts[0].project
+              userData &&
+              userData.accounts &&
+              userData.accounts[selectedAccount.value].project
             }
           />
         </Panel>
