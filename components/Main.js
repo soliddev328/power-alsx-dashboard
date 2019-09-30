@@ -1,11 +1,32 @@
 import React from "react";
 import cn from "classnames";
 import { FadeLoader } from "react-spinners";
+import { StateProvider } from "../state";
 import LogoIcon from "./Icons/LogoIcon";
 import Menu from "../components/Menu";
 import Menubar from "./Menubar";
 
 export default function Main({ isLoading = true, children }) {
+  const initialState = {
+    selectedAccount: {
+      value: 0
+    }
+  };
+
+  const reducer = (state, action) => {
+    console.log(action);
+    switch (action.type) {
+      case "changeSelectedAccount":
+        return {
+          ...state,
+          selectedAccount: action.newValue
+        };
+
+      default:
+        return state;
+    }
+  };
+
   const renderLoader = () => {
     return (
       <div className="wrapper">
@@ -31,11 +52,13 @@ export default function Main({ isLoading = true, children }) {
   };
 
   return (
-    <main>
-      <Menubar />
-      <div className={cn("content", { loading: isLoading })}>
-        {isLoading ? renderLoader() : children}
-      </div>
+    <StateProvider initialState={initialState} reducer={reducer}>
+      <main>
+        <Menubar />
+        <div className={cn("content", { loading: isLoading })}>
+          {isLoading ? renderLoader() : children}
+        </div>
+      </main>
       <style jsx>{`
         main {
           display: grid;
@@ -74,6 +97,6 @@ export default function Main({ isLoading = true, children }) {
           }
         }
       `}</style>
-    </main>
+    </StateProvider>
   );
 }
