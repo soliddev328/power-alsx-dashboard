@@ -330,6 +330,8 @@ class Step1 extends React.Component {
             text-align: center;
           }
           .password-explanation {
+            max-width: 350px;
+            margin: 0 auto;
             font-size: 12px;
           }
         `}</style>
