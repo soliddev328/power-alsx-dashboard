@@ -71,7 +71,9 @@ export default function MainMenu() {
       {accounts.length > 1 && (
         <li>
           <Select
-            placeholder="Select account"
+            className="select__wrapper"
+            classNamePrefix="select"
+            placeholder={accounts[selectedAccount.value].label}
             options={accounts}
             onChange={item => {
               dispatch({
@@ -178,6 +180,20 @@ export default function MainMenu() {
           width: 30px;
           margin-right: 1em;
           background-color: #fff;
+        }
+
+        .select__placeholder {
+          color: hsl(0, 0%, 20%);
+          margin-left: 2px;
+          margin-right: 2px;
+          max-width: calc(100% - 8px);
+          overflow: hidden;
+          position: absolute;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          top: 50%;
+          transform: translateY(-50%);
+          box-sizing: border-box;
         }
       `}</style>
     </ul>

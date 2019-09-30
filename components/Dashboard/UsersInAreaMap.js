@@ -10,6 +10,27 @@ import CONSTANTS from "../../globals";
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
+const getUserData = async (userUid, idToken) => {
+  const response = await axios.get(`${API}/v1/subscribers/${userUid}`, {
+    headers: {
+      Authorization: idToken
+    }
+  });
+  return response && response.data && response.data.data;
+};
+
+const getNearbyUsers = async (lat, lon, idToken) => {
+  const response = await axios.get(
+    `${API}/v1/subscribers/neighborhood/map?lat=${lat}&lon=${lon}`,
+    {
+      headers: {
+        Authorization: idToken
+      }
+    }
+  );
+  return response && response.data && response.data.data;
+};
+
 export default function UsersInAreaMap() {
   const [empty, setEmpty] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -20,58 +41,24 @@ export default function UsersInAreaMap() {
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        user.getIdToken(true).then(idToken => {
-          axios
-            .get(`${API}/v1/subscribers/${user.uid}`, {
-              headers: {
-                Authorization: idToken
-              }
-            })
-            .then(subscribersResponse => {
-              if (
-                subscribersResponse.data.data &&
-                subscribersResponse.data.data.accounts
-              ) {
-                mapLocation.push(
-                  parseFloat(
-                    subscribersResponse.data.data.accounts[
-                      selectedAccount.value
-                    ].address.lat
-                  )
-                );
-                mapLocation.push(
-                  parseFloat(
-                    subscribersResponse.data.data.accounts[
-                      selectedAccount.value
-                    ].address.lon
-                  )
-                );
+        user.getIdToken(true).then(async idToken => {
+          const userInfo = await getUserData(user.uid, idToken);
+          const nearbyUsersInfo = await getNearbyUsers(
+            userInfo.accounts[selectedAccount.value].address.lat,
+            userInfo.accounts[selectedAccount.value].address.lon,
+            idToken
+          );
 
-                axios
-                  .get(
-                    `${API}/v1/subscribers/neighborhood/map?lat=${subscribersResponse.data.data.accounts[selectedAccount.value].address.lat}&lon=${subscribersResponse.data.data.accounts[selectedAccount.value].address.lon}`,
-                    {
-                      headers: {
-                        Authorization: idToken
-                      }
-                    }
-                  )
-                  .then(response => {
-                    if (response.data.data) {
-                      setNearbyUsers(response.data.data);
-                    } else {
-                      setEmpty(true);
-                    }
-                  })
-                  .catch(error => {
-                    console.error(error);
-                  });
-              }
-            });
-        });
-      } else {
-        Router.push({
-          pathname: "/"
+          setMapLocation([
+            parseFloat(userInfo.accounts[selectedAccount.value].address.lat),
+            parseFloat(userInfo.accounts[selectedAccount.value].address.lon)
+          ]);
+
+          if (nearbyUsersInfo) {
+            setNearbyUsers(nearbyUsersInfo);
+          } else {
+            setEmpty(true);
+          }
         });
       }
     });

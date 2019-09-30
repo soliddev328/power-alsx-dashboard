@@ -13,6 +13,15 @@ import CONSTANTS from "../../globals";
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
+const getUserData = async (userUid, idToken) => {
+  const response = await axios.get(`${API}/v1/subscribers/${userUid}`, {
+    headers: {
+      Authorization: idToken
+    }
+  });
+  return response && response.data && response.data.data;
+};
+
 const getPaymentMethods = accounts => {
   const allMethods = [];
   accounts.forEach(element => {
@@ -36,22 +45,11 @@ export default function Profile() {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         global.analytics.page("Profile");
-
-        user.getIdToken(true).then(idToken => {
-          axios
-            .get(`${API}/v1/subscribers/${user.uid}`, {
-              headers: {
-                Authorization: idToken
-              }
-            })
-            .then(response => {
-              setUserdata(response.data.data);
-              setPaymentMethods(getPaymentMethods(response.data.data.accounts));
-              setIsLoading(false);
-            })
-            .catch(error => {
-              console.error(error);
-            });
+        user.getIdToken(true).then(async idToken => {
+          const userInfo = await getUserData(user.uid, idToken);
+          setUserdata(userInfo);
+          setPaymentMethods(getPaymentMethods(userInfo.accounts));
+          setIsLoading(false);
         });
       } else {
         Router.push({
