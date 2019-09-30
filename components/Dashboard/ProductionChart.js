@@ -10,6 +10,7 @@ import {
   Legend
 } from "recharts";
 import cn from "classnames";
+import Router from "next/router";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Text from "../../components/Text";
@@ -67,7 +68,6 @@ export default function ProductionChart({ projectName }) {
       kw: 9
     }
   ];
-
   const [data, setData] = useState(mockedData);
   const [mocked, setMocked] = useState(true);
 
@@ -75,9 +75,7 @@ export default function ProductionChart({ projectName }) {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         user.getIdToken(true).then(async idToken => {
-          // setData(getProductionData(projectName, idToken));
-          const test = await getProductionData(projectName, idToken);
-          console.log("test");
+          setData(await getProductionData(projectName, idToken));
           setMocked(false);
         });
       } else {

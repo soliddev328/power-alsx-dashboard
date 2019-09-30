@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useStateValue } from "../../state";
 import Main from "../../components/Main";
 import Section from "../../components/Section";
 import Panel from "../../components/Panel";
@@ -10,45 +11,44 @@ import CONSTANTS from "../../globals";
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
+const getUserData = async (userUid, idToken) => {
+  const response = await axios.get(`${API}/v1/subscribers/${userUid}`, {
+    headers: {
+      Authorization: idToken
+    }
+  });
+  return response && response.data && response.data.data;
+};
+
+const getProjectInfo = async (projectId, idToken) => {
+  const response = await axios.get(`${API}/v1/projects/${projectId}`, {
+    headers: {
+      Authorization: idToken
+    }
+  });
+  return response && response.data && response.data.data[0];
+};
+
 export default function MySource() {
   const [userData, setUserdata] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [projectInfo, setProjectInfo] = useState({});
+  const [{ selectedAccount }, dispatch] = useStateValue();
 
   useEffect(() => {
+    setIsLoading(true);
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         global.analytics.page("My Source");
-
-        user.getIdToken(true).then(idToken => {
-          axios
-            .get(`${API}/v1/subscribers/${user.uid}`, {
-              headers: {
-                Authorization: idToken
-              }
-            })
-            .then(subscribersResponse => {
-              setUserdata(subscribersResponse.data.data);
-              setIsLoading(false);
-              if (subscribersResponse.data.data !== null) {
-                axios
-                  .get(
-                    `${API}/v1/projects/${subscribersResponse.data.data.accounts[0].projectId}`,
-                    {
-                      headers: {
-                        Authorization: idToken
-                      }
-                    }
-                  )
-                  .then(projectsResponse => {
-                    setIsLoading(false);
-                    setProjectInfo(projectsResponse.data.data[0]);
-                  });
-              }
-            })
-            .catch(error => {
-              console.error(error);
-            });
+        user.getIdToken(true).then(async idToken => {
+          const userInfo = await getUserData(user.uid, idToken);
+          const projectData = await getProjectInfo(
+            userInfo.accounts[selectedAccount.value].projectId,
+            idToken
+          );
+          setUserdata(userInfo);
+          setProjectInfo(projectData);
+          setIsLoading(false);
         });
       } else {
         Router.push({
@@ -56,7 +56,7 @@ export default function MySource() {
         });
       }
     });
-  }, []);
+  }, [selectedAccount.value]);
 
   return (
     <Main isLoading={isLoading}>
