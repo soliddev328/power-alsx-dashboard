@@ -14,10 +14,28 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Text from "../../components/Text";
 import Container from "../../components/Container";
+
 import CONSTANTS from "../../globals";
 
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
+
+const getProductionData = async (project, idToken) => {
+  const currentTime = new Date();
+  const response = await axios.get(
+    `${API}/v1/productions/${project
+      .split(" ")
+      .join("")}?startTime=${currentTime.setHours(
+      currentTime.getHours() - 2
+    )}&endTime=${Date.now()}`,
+    {
+      headers: {
+        Authorization: idToken
+      }
+    }
+  );
+  return response && response.data && response.data.data;
+};
 
 export default function ProductionChart({ projectName }) {
   const mockedData = [
@@ -55,31 +73,13 @@ export default function ProductionChart({ projectName }) {
   const [mocked, setMocked] = useState(true);
 
   useEffect(() => {
-    const currentTime = new Date();
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        user.getIdToken(true).then(idToken => {
-          axios
-            .get(
-              `${API}/v1/productions/${projectName
-                .split(" ")
-                .join("")}?startTime=${currentTime.setHours(
-                currentTime.getHours() - 2
-              )}&endTime=${Date.now()}`,
-              {
-                headers: {
-                  Authorization: idToken
-                }
-              }
-            )
-            .then(response => {
-              debugger;
-              setData(response);
-              setMocked(false);
-            })
-            .catch(error => {
-              console.error(error);
-            });
+        user.getIdToken(true).then(async idToken => {
+          // setData(getProductionData(projectName, idToken));
+          const test = await getProductionData(projectName, idToken);
+          console.log("test");
+          setMocked(false);
         });
       } else {
         Router.push({
