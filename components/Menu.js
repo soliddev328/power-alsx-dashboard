@@ -68,18 +68,20 @@ export default function MainMenu() {
       <li>
         <MenuItem>Profile</MenuItem>
       </li>
-      <li>
-        <Select
-          placeholder="Select account"
-          options={accounts}
-          onChange={item => {
-            dispatch({
-              type: "changeSelectedAccount",
-              newValue: { value: item.value }
-            });
-          }}
-        />
-      </li>
+      {accounts.length > 1 && (
+        <li>
+          <Select
+            placeholder="Select account"
+            options={accounts}
+            onChange={item => {
+              dispatch({
+                type: "changeSelectedAccount",
+                newValue: { value: item.value }
+              });
+            }}
+          />
+        </li>
+      )}
 
       <li className="sign-out">
         <button onClick={signOut}>Sign out</button>
