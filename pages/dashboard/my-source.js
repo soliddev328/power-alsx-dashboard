@@ -13,7 +13,7 @@ const { API } =
 export default function MySource() {
   const [userData, setUserdata] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const [projectInfoIsAvailable, setProjectInfoIsAvailable] = useState(false);
+  const [projectInfo, setProjectInfo] = useState({});
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
@@ -27,12 +27,24 @@ export default function MySource() {
                 Authorization: idToken
               }
             })
-            .then(response => {
-              setUserdata(response.data.data);
+            .then(subscribersResponse => {
+              setUserdata(subscribersResponse.data.data);
               setIsLoading(false);
-              setProjectInfoIsAvailable(
-                !!response.data.data.accounts[0].project
-              );
+              if (subscribersResponse.data.data !== null) {
+                axios
+                  .get(
+                    `${API}/v1/projects/${subscribersResponse.data.data.accounts[0].projectId}`,
+                    {
+                      headers: {
+                        Authorization: idToken
+                      }
+                    }
+                  )
+                  .then(projectsResponse => {
+                    setIsLoading(false);
+                    setProjectInfo(projectsResponse.data.data[0]);
+                  });
+              }
             })
             .catch(error => {
               console.error(error);
@@ -49,11 +61,19 @@ export default function MySource() {
   return (
     <Main isLoading={isLoading}>
       <Text h2 hasDecoration>
-        My Source {console.log(userData)}
+        My Source
       </Text>
       <Section>
-        {userData && userData.image ? (
-          <Image hasBorder src="/static/images/illustrations/t&c.png" alt="" />
+        {projectInfo ? (
+          <Image
+            hasBorder
+            src={
+              projectInfo.imageUrl
+                ? projectInfo.imageUrl
+                : "/static/images/illustrations/t&c.png"
+            }
+            alt=""
+          />
         ) : (
           <Panel>
             <svg
@@ -93,34 +113,26 @@ export default function MySource() {
           </Panel>
         )}
       </Section>
-      <Section disabled={!projectInfoIsAvailable}>
+      <Section disabled={!projectInfo}>
         <Panel>
           <Text h3>Project Summary</Text>
           <Text>
-            Project Address:{" "}
-            {projectInfoIsAvailable ? `${userData.accounts[0].name}` : ""}
+            Project Address: {projectInfo ? `${projectInfo.name}` : ""}
           </Text>
           <Text>
-            Project Size:{" "}
-            {projectInfoIsAvailable
-              ? `${userData.accounts[0].project} MW DC`
-              : ""}{" "}
+            Project Size: {projectInfo ? `${projectInfo.sizeDC} MW DC` : ""}{" "}
           </Text>
           <Text>
             Annual generation:{" "}
-            {projectInfoIsAvailable
-              ? `${userData.accounts[0].totalCleanEnergyGenerated} kWh`
-              : ""}{" "}
+            {projectInfo ? `${projectInfo.annualGeneration} kWh` : ""}{" "}
           </Text>
           <Text>
             Annual avoided CO2:{" "}
-            {projectInfoIsAvailable
-              ? `${userData.accounts[0].totalC02Avoided} pounds`
-              : ""}{" "}
+            {projectInfo ? `${projectInfo.annualAvoidedC02} pounds` : ""}{" "}
           </Text>
           <Text>
             Equivalent trees planted:{" "}
-            {projectInfoIsAvailable ? `${userData.accounts[0].project} ` : ""}
+            {projectInfo ? `${projectInfo.annualTreesPlanted} ` : ""}
           </Text>
         </Panel>
       </Section>

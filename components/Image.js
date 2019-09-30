@@ -29,9 +29,16 @@ export default function Image({
         img {
           display: flex;
           width: 100%;
-          object-fit: contain;
-          object-position: top;
+          object-fit: cover;
+          object-position: center;
           ${bgColor && `background-color: ${bgColor};`}
+        }
+
+        @media (max-width: 1050px) {
+          img {
+            object-fit: contain;
+            object-position: top;
+          }
         }
       `}</style>
     </figure>

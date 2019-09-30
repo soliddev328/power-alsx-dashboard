@@ -13,64 +13,75 @@ import CONSTANTS from "../../globals";
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
-const formatNumber = num => {
-  return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
-};
-
 export default function MyImpact() {
   const [userData, setUserdata] = useState({});
-  const [billingData, setBillingData] = useState({});
+  const [billingData, setBillingData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const getUserData = async (userUid, idToken) => {
+    const response = await axios.get(`${API}/v1/subscribers/${userUid}`, {
+      headers: {
+        Authorization: idToken
+      }
+    });
+    return response && response.data && response.data.data;
+  };
+
+  const getBillings = async (id, idToken) => {
+    const response = await axios.get(
+      `${API}/v1/subscribers/accounts/${id}/billings`,
+      {
+        headers: {
+          Authorization: idToken
+        }
+      }
+    );
+    return response && response.data && response.data.data;
+  };
+
+  const getInvoiceData = async (id, idToken) => {
+    const response = await axios.get(`${API}/v1/subscribers/invoice/${id}`, {
+      headers: {
+        Authorization: idToken
+      }
+    });
+    return response && response.data;
+  };
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        global.analytics.page("My Source");
-        let storedContactId = {};
+        global.analytics.page("My Impact");
 
-        if (localStorage.getItem("contactId")) {
-          storedContactId = localStorage.getItem("contactId");
-        }
+        user.getIdToken(true).then(async idToken => {
+          const userData = await getUserData(user.uid, idToken);
+          setUserdata(userData);
 
-        user.getIdToken(true).then(idToken => {
-          axios
-            .get(`${API}/v1/subscribers/${user.uid}`, {
-              headers: {
-                Authorization: idToken
-              }
-            })
-            .then(userDataResponse => {
-              setUserdata(userDataResponse.data.data);
+          const billings = await getBillings(userData.accounts[0].id, idToken);
 
-              axios
-                .get(
-                  `${API}/v1/subscribers/accounts/${userDataResponse.data.data.contactId}/billings`,
-                  {
-                    headers: {
-                      Authorization: idToken
-                    }
-                  }
-                )
-                .then(billingDataResponse => {
-                  const finalBillingArray = [];
-                  if (billingDataResponse.data.data.length > 0) {
-                    billingDataResponse.data.data.map(item => {
-                      const formatedItems = [];
-                      formatedItems.push(item.invoiceDate);
-                      formatedItems.push(item.cleanEnergy);
-                      formatedItems.push(item.avoidedC02);
-                      formatedItems.push(item.savings);
-                      finalBillingArray.push(formatedItems);
-                    });
-                  }
+          const finalData = [];
 
-                  setBillingData(finalBillingArray);
-                  setIsLoading(false);
-                });
-            })
-            .catch(error => {
-              console.error(error);
-            });
+          billings.forEach(async item => {
+            const tableItem = [];
+            // const base64 = await getInvoiceData(item.id, idToken);
+            // let base64Encoded;
+
+            // if (base64 !== "No invoice found.") {
+            //   base64Encoded = `data:application/octet-stream;base64,${base64}`;
+            // } else {
+            //   base64Encoded = base64;
+            // }
+
+            tableItem.push(item.invoiceDate);
+            tableItem.push(item.totalCleanEnergy);
+            tableItem.push(item.totalAvoidedC02);
+            tableItem.push(item.totalSavings);
+            tableItem.push(item.id);
+            finalData.push(tableItem);
+          });
+
+          setBillingData(finalData);
+          setIsLoading(false);
         });
       } else {
         Router.push({
@@ -79,6 +90,7 @@ export default function MyImpact() {
       }
     });
   }, []);
+
   return (
     <Main isLoading={isLoading}>
       <Text h2 hasDecoration>
@@ -207,6 +219,7 @@ export default function MyImpact() {
           <Text h3>Utility Invoices</Text>
           {billingData && billingData.length > 0 ? (
             <Table
+              hasDownloads
               headers={[
                 "Date",
                 "Clean Energy Generated (kWh)",
