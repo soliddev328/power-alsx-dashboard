@@ -1,9 +1,10 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useStateValue } from "../../state";
 import Main from "../../components/Main";
 import Container from "../../components/Container";
 import Section from "../../components/Section";
 import Separator from "../../components/Separator";
-import { useEffect, useState } from "react";
-import axios from "axios";
 import Panel from "../../components/Panel";
 import Text from "../../components/Text";
 import Icon from "../../components/Icon";
@@ -17,6 +18,7 @@ export default function MyImpact() {
   const [userData, setUserdata] = useState({});
   const [billingData, setBillingData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [{ selectedAccount }, dispatch] = useStateValue();
 
   const getUserData = async (userUid, idToken) => {
     const response = await axios.get(`${API}/v1/subscribers/${userUid}`, {
@@ -49,6 +51,7 @@ export default function MyImpact() {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         global.analytics.page("My Impact");
@@ -57,7 +60,10 @@ export default function MyImpact() {
           const userData = await getUserData(user.uid, idToken);
           setUserdata(userData);
 
-          const billings = await getBillings(userData.accounts[0].id, idToken);
+          const billings = await getBillings(
+            userData.accounts[selectedAccount.value].id,
+            idToken
+          );
 
           const finalData = [];
 
@@ -89,7 +95,7 @@ export default function MyImpact() {
         });
       }
     });
-  }, []);
+  }, [selectedAccount]);
 
   return (
     <Main isLoading={isLoading}>
@@ -122,7 +128,8 @@ export default function MyImpact() {
             <Text h2 bold style={{ margin: "5px 0 0 20px" }}>
               {(userData &&
                 userData.accounts &&
-                userData.accounts[0].totalCleanEnergyGenerated) ||
+                userData.accounts[selectedAccount.value]
+                  .totalCleanEnergyGenerated) ||
                 "0"}{" "}
               kWh
             </Text>
@@ -150,7 +157,7 @@ export default function MyImpact() {
             <Text h2 bold style={{ margin: "5px 0 0 20px" }}>
               {(userData &&
                 userData.accounts &&
-                userData.accounts[0].totalC02Avoided) ||
+                userData.accounts[selectedAccount.value].totalC02Avoided) ||
                 "0"}{" "}
               lbs
             </Text>
@@ -178,7 +185,7 @@ export default function MyImpact() {
             <Text h2 bold style={{ margin: "5px 0 0 20px" }}>
               {(userData &&
                 userData.accounts &&
-                userData.accounts[0].totalTreesPlanted) ||
+                userData.accounts[selectedAccount.value].totalTreesPlanted) ||
                 "0"}
             </Text>
           </Container>
@@ -207,7 +214,8 @@ export default function MyImpact() {
               $
               {(userData &&
                 userData.accounts &&
-                userData.accounts[0].lifetimeEstimatedSavings) ||
+                userData.accounts[selectedAccount.value]
+                  .lifetimeEstimatedSavings) ||
                 "0"}
             </Text>
           </Container>
