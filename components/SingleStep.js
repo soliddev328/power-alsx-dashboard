@@ -28,7 +28,6 @@ export default class SingleStep extends React.PureComponent {
 
   render() {
     const { toast, prefix, title, suffix, image, children } = this.props;
-
     return (
       <div className="content">
         <div className="heading">
