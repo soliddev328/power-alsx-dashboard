@@ -289,10 +289,13 @@ class Step1 extends React.Component {
                   />
                   <Input
                     type="password"
-                    label="Password"
+                    label="Create a Password"
                     fieldname="password"
                     required
                   />
+                  <p className="password-explanation">
+                    * This password will let you log back in later
+                  </p>
                   <p className="error">
                     {error.message} {error.link && error.link}
                   </p>
@@ -325,6 +328,11 @@ class Step1 extends React.Component {
             margin: 0;
             padding: 1em 0;
             text-align: center;
+          }
+          .password-explanation {
+            max-width: 350px;
+            margin: 0 auto;
+            font-size: 12px;
           }
         `}</style>
       </main>

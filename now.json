@@ -6,7 +6,6 @@
       "NODE_ENV": "production"
     }
   },
-  "builds": [{ "src": "next.config.js", "use": "@now/next" }],
   "alias": ["my.commonenergy.us"],
   "routes": [
     { "src": "/sitemap.xml", "dest": "/static/sitemap.xml" },
