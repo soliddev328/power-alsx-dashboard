@@ -177,19 +177,6 @@ input + label {
   pointer-events: none;
 }
 
-.input__wrapper {
-  position: relative;
-  height: 3.75rem;
-  width: 100%;
-  max-width: 350px;
-  margin: 0 auto;
-  margin-bottom: 0.5rem;
-}
-
-.input__wrapper:last-of-type {
-  margin-bottom: 0.5rem;
-}
-
 img {
   -webkit-touch-callout: none;
   -webkit-user-select: none;

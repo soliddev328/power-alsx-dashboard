@@ -2,12 +2,22 @@ import { useEffect, useState } from "react";
 import copy from "copy-to-clipboard";
 import axios from "axios";
 import cn from "classnames";
+import { Formik, Form } from "formik";
 import Input from "./Input";
 import Button from "./Button";
 import CONSTANTS from "../globals";
 
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
+
+const getUserData = async (userUid, idToken) => {
+  const response = await axios.get(`${API}/v1/subscribers/${userUid}`, {
+    headers: {
+      Authorization: idToken
+    }
+  });
+  return response && response.data && response.data.data;
+};
 
 export default function SegmentedInput({
   inputLabel,
@@ -18,7 +28,9 @@ export default function SegmentedInput({
 }) {
   const [value, setValue] = useState("");
   const [userName, setUserName] = useState("");
+  const [token, setToken] = useState();
   const [copied, setCopied] = useState(false);
+  const [sent, setSent] = useState(false);
 
   const copyLink = () => {
     copy(`https://www.commonenergy.us/referrals?advocate=${userName}`);
@@ -26,22 +38,32 @@ export default function SegmentedInput({
     setTimeout(() => setCopied(false), 1000);
   };
 
+  const inviteReferral = values => {
+    if (values.emailAddress) {
+      setSent(true);
+
+      const payload = {
+        email: values.emailAddress,
+        username: userName
+      };
+
+      axios
+        .post(`${API}/v1/subscribers/referrals`, payload, {
+          headers: { Authorization: token }
+        })
+        .then(() => {
+          setTimeout(() => setSent(false), 1000);
+        });
+    }
+  };
+
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        user.getIdToken(true).then(idToken => {
-          axios
-            .get(`${API}/v1/subscribers/${user.uid}`, {
-              headers: {
-                Authorization: idToken
-              }
-            })
-            .then(response => {
-              setUserName(response.data.data.username);
-            })
-            .catch(error => {
-              console.error(error);
-            });
+        user.getIdToken(true).then(async idToken => {
+          setToken(idToken);
+          const userInfo = await getUserData(user.uid, idToken);
+          setUserName(userInfo.username);
         });
       } else {
         Router.push({
@@ -52,24 +74,60 @@ export default function SegmentedInput({
   }, []);
 
   return (
-    <div className="wrapper">
-      <input
-        type="text"
-        htmlFor="segmented-field"
-        value={
-          referral
-            ? `https://www.commonenergy.us/referrals?advocate=${userName}`
-            : ""
-        }
-        readOnly
-        className={cn({ "has-border": hasBorder })}
-      />
-      <label htmlFor="segmented-field">{inputLabel}</label>
-      <Button maxWidth="170px" primary onClick={referral ? copyLink : onClick}>
-        {copied ? "Copied!" : buttonText}
-      </Button>
-      <style jsx>{`
-        .wrapper {
+    <div className="segmented-input-wrapper">
+      {referral ? (
+        <>
+          <input
+            type="text"
+            htmlFor="segmented-field"
+            value={
+              referral
+                ? `https://www.commonenergy.us/referrals?advocate=${userName}`
+                : ""
+            }
+            readOnly
+            className={cn({ "has-border": hasBorder })}
+          />
+          <label htmlFor="segmented-field">{inputLabel}</label>
+          <Button
+            maxWidth="170px"
+            primary
+            onClick={referral ? copyLink : onClick}
+          >
+            {copied ? "Copied!" : buttonText}
+          </Button>
+        </>
+      ) : (
+        <Formik
+          initialValues={{}}
+          onSubmit={values => {
+            inviteReferral(values);
+          }}
+          render={props => (
+            <Form>
+              <Input
+                fullWidth
+                noMargin
+                outerLabel
+                type="email"
+                fieldname="emailAddress"
+                label={inputLabel}
+                className={cn({ "has-border": hasBorder })}
+              />
+              <Button
+                maxWidth="170px"
+                primary
+                onClick={onClick}
+                style={{ marginTop: "2.3em", marginBottom: "0" }}
+              >
+                {sent ? "Sent!" : buttonText}
+              </Button>
+            </Form>
+          )}
+        />
+      )}
+      <style jsx global>{`
+        .segmented-input-wrapper {
           display: flex;
           align-items: center;
           position: relative;
@@ -78,23 +136,33 @@ export default function SegmentedInput({
           margin: 0 auto;
           margin-bottom: 0.5rem;
         }
-        .wrapper input {
+
+        .segmented-input-wrapper form {
+          display: flex;
+          align-items: center;
+          position: relative;
+          height: 3.75rem;
+          width: 100%;
+          margin: 0 auto;
+        }
+
+        .segmented-input-wrapper input {
           max-height: 53px;
           border-top-right-radius: 0;
           border-bottom-right-radius: 0;
           border-right: none;
         }
-        .wrapper input.has-border {
+        .segmented-input-wrapper input.has-border {
           border: 1px solid #2479ff;
         }
 
-        .wrapper :global(button) {
+        .segmented-input-wrapper button {
           border-top-right-radius: 5px;
           border-bottom-right-radius: 5px;
           text-transform: capitalize;
         }
 
-        label {
+        .segmented-input-wrapper label {
           position: absolute;
           top: -25%;
         }

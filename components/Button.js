@@ -18,7 +18,8 @@ export default function Button({
   maxWidth,
   arrow,
   transparent,
-  primary
+  primary,
+  style
 }) {
   return (
     <button
@@ -26,6 +27,7 @@ export default function Button({
       onClick={onClick}
       className={share ? "share" : ""}
       disabled={disabled}
+      style={style}
     >
       {share && shareIcon(share)}
       {children}
