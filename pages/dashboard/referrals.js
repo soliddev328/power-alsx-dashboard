@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Router from "next/router";
 import axios from "axios";
+import { useStateValue } from "../../state";
 import Main from "../../components/Main";
 import Container from "../../components/Container";
 import Section from "../../components/Section";
@@ -35,7 +36,6 @@ const LinkedinShare = () => {
 
 const getReferralsDetails = referralsDetails => {
   const allItems = [];
-
   referralsDetails.forEach(element => {
     const singleItem = [];
     singleItem.push(element.name);
@@ -47,10 +47,50 @@ const getReferralsDetails = referralsDetails => {
   return allItems;
 };
 
+const getUserData = async (userUid, idToken) => {
+  const response = await axios.get(`${API}/v1/subscribers/${userUid}`, {
+    headers: {
+      Authorization: idToken
+    }
+  });
+  return response && response.data && response.data.data;
+};
+
+const getReferralsData = async (username, idToken) => {
+  const response = await axios.get(
+    `${API}/v1/subscribers/referrals/${username}`,
+    {
+      headers: {
+        Authorization: idToken
+      }
+    }
+  );
+  return response && response.data && response.data.data;
+};
+
+const getReferralsDataDetails = async (username, idToken) => {
+  const response = await axios.get(
+    `${API}/v1/subscribers/referrals/details/${username}`,
+    {
+      headers: {
+        Authorization: idToken
+      }
+    }
+  );
+
+  return (
+    response &&
+    response.data &&
+    response.data.data &&
+    response.data.data[0].leads
+  );
+};
+
 export default function Referrals() {
-  const [userData, setUserdata] = useState({});
+  const [userData, setUserData] = useState({});
   const [referralsData, setReferralsData] = useState({});
   const [referralsDetails, setReferralsDetails] = useState({});
+  const [{ selectedAccount }, dispatch] = useStateValue();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -58,50 +98,24 @@ export default function Referrals() {
       if (user) {
         global.analytics.page("Referrals");
 
-        user.getIdToken(true).then(idToken => {
-          axios
-            .get(`${API}/v1/subscribers/${user.uid}`, {
-              headers: {
-                Authorization: idToken
-              }
-            })
-            .then(subscribersResponse => {
-              setUserdata(subscribersResponse.data.data);
+        user.getIdToken(true).then(async idToken => {
+          const userInfo = await getUserData(user.uid, idToken);
+          setUserData(userInfo);
 
-              axios
-                .get(
-                  `${API}/v1/subscribers/referrals/${subscribersResponse.data.data.username}`,
-                  {
-                    headers: {
-                      Authorization: idToken
-                    }
-                  }
-                )
-                .then(referralsResponse => {
-                  setReferralsData(referralsResponse.data.data[0]);
-                });
+          const referralsInfo = await getReferralsData(
+            userInfo.username,
+            idToken
+          );
+          setReferralsData(referralsInfo[0]);
 
-              axios
-                .get(
-                  `${API}/v1/subscribers/referrals/details/${subscribersResponse.data.data.username}`,
-                  {
-                    headers: {
-                      Authorization: idToken
-                    }
-                  }
-                )
-                .then(referralsDetailsResponse => {
-                  setReferralsDetails(
-                    getReferralsDetails(
-                      referralsDetailsResponse.data.data[0].contacts
-                    )
-                  );
-                  setIsLoading(false);
-                });
-            })
-            .catch(error => {
-              console.error(error);
-            });
+          const referralsInfoDetails = await getReferralsDataDetails(
+            userInfo.username,
+            idToken
+          );
+
+          setReferralsDetails(getReferralsDetails(referralsInfoDetails));
+
+          setIsLoading(false);
         });
       } else {
         Router.push({

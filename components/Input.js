@@ -49,6 +49,7 @@ export default class Input extends React.PureComponent {
   render() {
     const {
       fullWidth,
+      noMargin,
       type,
       fieldname,
       validator,
@@ -56,8 +57,8 @@ export default class Input extends React.PureComponent {
       label,
       style,
       value,
-      autoFocus,
       readOnly,
+      className,
       outerLabel
     } = this.props;
     const { displayLabel } = this.state;
@@ -80,6 +81,7 @@ export default class Input extends React.PureComponent {
           readOnly={readOnly}
           value={this.props.value}
           style={this.props.style}
+          className={className}
         />
         <label
           htmlFor={fieldname}
@@ -94,16 +96,15 @@ export default class Input extends React.PureComponent {
 
           .input__wrapper {
             position: relative;
-            height: 3.75rem;
             width: 100%;
-            max-width: ${fullWidth ? "100%" : "350px"};
+            max-width: ${fullWidth ? "100%;" : "350px;"};
             margin: 0 auto;
-            margin-bottom: 0.5rem;
-            ${readOnly && "pointer-events: none;"}
+            margin-bottom: ${noMargin ? "0;" : "0.5rem;"};
+            ${readOnly ? "pointer-events: none;" : ""};
           }
 
           .input__wrapper:last-of-type {
-            margin-bottom: 0.5rem;
+            margin-bottom: ${noMargin ? "0;" : "0.5rem;"};
           }
 
           .input__wrapper.outer-label {
