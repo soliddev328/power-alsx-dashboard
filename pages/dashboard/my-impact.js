@@ -8,7 +8,7 @@ import Separator from "../../components/Separator";
 import Panel from "../../components/Panel";
 import Text from "../../components/Text";
 import Icon from "../../components/Icon";
-import Table from "../../components/Table";
+import InvoicesTable from "../../components/InvoicesTable";
 import CONSTANTS from "../../globals";
 
 const { API } =
@@ -226,14 +226,13 @@ export default function MyImpact() {
         <Panel>
           <Text h3>Utility Invoices</Text>
           {billingData && billingData.length > 0 ? (
-            <Table
+            <InvoicesTable
               hasDownloads
               headers={[
                 "Date",
                 "Clean Energy Generated (kWh)",
                 "Pounds of CO2 Avoided",
-                "Savings with Common Energy",
-                "Invoice"
+                "Savings with Common Energy"
               ]}
               data={billingData}
             />
