@@ -54,7 +54,7 @@ export default function MainMenu() {
   return (
     <ul>
       <li>
-        <MenuItem to="/dashboard">My energy</MenuItem>
+        <MenuItem to="/dashboard">My Energy</MenuItem>
       </li>
       <li>
         <MenuItem>My Source</MenuItem>
