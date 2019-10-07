@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useStateValue } from "../../state";
+import NumberFormat from "react-number-format";
 import Main from "../../components/Main";
 import Container from "../../components/Container";
 import Section from "../../components/Section";
@@ -69,15 +70,6 @@ export default function MyImpact() {
 
           billings.forEach(async item => {
             const tableItem = [];
-            // const base64 = await getInvoiceData(item.id, idToken);
-            // let base64Encoded;
-
-            // if (base64 !== "No invoice found.") {
-            //   base64Encoded = `data:application/octet-stream;base64,${base64}`;
-            // } else {
-            //   base64Encoded = base64;
-            // }
-
             tableItem.push(item.invoiceDate);
             tableItem.push(item.totalCleanEnergy);
             tableItem.push(item.totalAvoidedC02);
@@ -126,12 +118,18 @@ export default function MyImpact() {
               }
             />
             <Text h2 bold style={{ margin: "5px 0 0 20px" }}>
-              {(userData &&
-                userData.accounts &&
-                userData.accounts[selectedAccount.value]
-                  .totalCleanEnergyGenerated) ||
-                "0"}{" "}
-              kWh
+              {(userData && userData.accounts && (
+                <NumberFormat
+                  value={
+                    userData.accounts[selectedAccount.value]
+                      .totalCleanEnergyGenerated
+                  }
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  suffix={" kWh"}
+                />
+              )) ||
+                "0 kWh"}{" "}
             </Text>
           </Container>
         </Panel>
@@ -155,11 +153,17 @@ export default function MyImpact() {
               }
             />
             <Text h2 bold style={{ margin: "5px 0 0 20px" }}>
-              {(userData &&
-                userData.accounts &&
-                userData.accounts[selectedAccount.value].totalC02Avoided) ||
-                "0"}{" "}
-              lbs
+              {(userData && userData.accounts && (
+                <NumberFormat
+                  value={
+                    userData.accounts[selectedAccount.value].totalC02Avoided
+                  }
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  suffix={" lbs"}
+                />
+              )) ||
+                "0 lbs"}{" "}
             </Text>
           </Container>
         </Panel>
@@ -185,7 +189,17 @@ export default function MyImpact() {
             <Text h2 bold style={{ margin: "5px 0 0 20px" }}>
               {(userData &&
                 userData.accounts &&
-                userData.accounts[selectedAccount.value].totalTreesPlanted) ||
+                userData.accounts[selectedAccount.value].totalTreesPlanted >
+                  0 && (
+                  <NumberFormat
+                    value={
+                      userData.accounts[selectedAccount.value].totalTreesPlanted
+                    }
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    suffix={" lbs"}
+                  />
+                )) ||
                 "0"}
             </Text>
           </Container>
@@ -211,12 +225,21 @@ export default function MyImpact() {
               }
             />
             <Text h2 bold style={{ margin: "5px 0 0 20px" }}>
-              $
               {(userData &&
                 userData.accounts &&
                 userData.accounts[selectedAccount.value]
-                  .lifetimeEstimatedSavings) ||
-                "0"}
+                  .lifetimeEstimatedSavings > 0 && (
+                  <NumberFormat
+                    value={
+                      userData.accounts[selectedAccount.value]
+                        .lifetimeEstimatedSavings
+                    }
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    prefix={"$"}
+                  />
+                )) ||
+                "$0"}
             </Text>
           </Container>
         </Panel>

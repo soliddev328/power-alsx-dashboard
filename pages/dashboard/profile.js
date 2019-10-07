@@ -6,6 +6,7 @@ import Main from "../../components/Main";
 import Section from "../../components/Section";
 import Panel from "../../components/Panel";
 import Text from "../../components/Text";
+import Phoneinput from "../../components/Phoneinput";
 import Input from "../../components/Input";
 import Table from "../../components/Table";
 import CONSTANTS from "../../globals";
@@ -108,13 +109,15 @@ export default function Profile() {
                     : ""
                 }
               />
-              <Input
+              <Phoneinput
                 readOnly
                 outerLabel
                 fullWidth
+                value={(userData && userData.phone) || ""}
+                onChangeEvent={props.setFieldValue}
+                onBlurEvent={props.setFieldTouched}
                 label="Phone Number"
                 fieldname="phone-number"
-                value={(userData && userData.phone) || ""}
               />
             </Section>
             <Section>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Router from "next/router";
+import NumberFormat from "react-number-format";
 import { useStateValue } from "../../state";
 import Main from "../../components/Main";
 import Container from "../../components/Container";
@@ -95,13 +96,22 @@ const Dashboard = () => {
               {(userData &&
                 userData.accounts &&
                 userData.accounts[selectedAccount.value]
-                  .totalCleanEnergyGenerated) ||
-                "0"}{" "}
-              kWh
+                  .totalCleanEnergyGenerated > 0 && (
+                  <NumberFormat
+                    value={
+                      userData.accounts[selectedAccount.value]
+                        .totalCleanEnergyGenerated
+                    }
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    suffix={" kWh"}
+                  />
+                )) ||
+                "0 kWh"}{" "}
             </Text>
           </Container>
           <Separator margin="10px auto 25px auto" small />
-          <Text noMargin>My energy</Text>
+          <Text noMargin>My Energy</Text>
         </Panel>
         <Panel small specialShadow center>
           <Container column>
@@ -128,9 +138,18 @@ const Dashboard = () => {
               {(userData &&
                 userData.accounts &&
                 userData.accounts[selectedAccount.value]
-                  .totalCleanEnergyGenerated) ||
-                "0"}{" "}
-              kWh
+                  .totalCleanEnergyGenerated > 0 && (
+                  <NumberFormat
+                    value={
+                      userData.accounts[selectedAccount.value]
+                        .totalCleanEnergyGenerated
+                    }
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    suffix={" kWh"}
+                  />
+                )) ||
+                "0 kWh"}{" "}
             </Text>
           </Container>
           <Separator margin="10px auto 25px auto" small />
@@ -157,9 +176,18 @@ const Dashboard = () => {
             <Text h2 bold style={{ marginTop: "20px" }}>
               {(userData &&
                 userData.accounts &&
-                userData.accounts[selectedAccount.value].totalC02Avoided) ||
-                "0"}{" "}
-              lbs
+                userData.accounts[selectedAccount.value].totalC02Avoided >
+                  0 && (
+                  <NumberFormat
+                    value={
+                      userData.accounts[selectedAccount.value].totalC02Avoided
+                    }
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    suffix={" lbs"}
+                  />
+                )) ||
+                "0 lbs"}{" "}
             </Text>
           </Container>
           <Separator margin="10px auto 25px auto" small />
@@ -191,12 +219,21 @@ const Dashboard = () => {
               }
             />
             <Text h2 bold style={{ marginTop: "20px" }}>
-              $
               {(userData &&
                 userData.accounts &&
                 userData.accounts[selectedAccount.value]
-                  .lifetimeEstimatedSavings) ||
-                "0"}{" "}
+                  .lifetimeEstimatedSavings > 0 && (
+                  <NumberFormat
+                    value={
+                      userData.accounts[selectedAccount.value]
+                        .lifetimeEstimatedSavings
+                    }
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    prefix={"$"}
+                  />
+                )) ||
+                "$0"}{" "}
             </Text>
           </Container>
           <Separator margin="10px auto 25px auto" small />
@@ -221,33 +258,34 @@ const Dashboard = () => {
               }
             />
             <Text h2 bold style={{ marginTop: "20px" }}>
-              $
               {(userData &&
                 userData.accounts &&
-                userData.accounts[selectedAccount.value].totalSavingsToDate) ||
-                "0"}{" "}
+                userData.accounts[selectedAccount.value].totalSavingsToDate >
+                  0 && (
+                  <NumberFormat
+                    value={
+                      userData.accounts[selectedAccount.value]
+                        .totalSavingsToDate
+                    }
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    prefix={"$"}
+                  />
+                )) ||
+                "$0"}{" "}
             </Text>
           </Container>
           <Separator margin="10px auto 25px auto" small />
           <Text noMargin>Total Savings to Date</Text>
         </Panel>
       </Section>
-      <Section>
-        <Panel>
-          <Container>
-            <Text h3 style={{ marginBottom: "20px" }}>
-              Production chart
-            </Text>
-          </Container>
-          <ProductionChart
-            projectName={
-              userData &&
-              userData.accounts &&
-              userData.accounts[selectedAccount.value].project
-            }
-          />
-        </Panel>
-      </Section>
+      <ProductionChart
+        projectName={
+          userData &&
+          userData.accounts &&
+          userData.accounts[selectedAccount.value].project
+        }
+      />
       <Section>
         <Panel>
           <Container column alignLeft>

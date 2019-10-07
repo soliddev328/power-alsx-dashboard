@@ -97,6 +97,9 @@ export default function Table({ headers = [], data = [] }) {
         {data.map((row, index) => (
           <tr key={`row-content-${index}`}>
             {row.map((item, index) => {
+              if (row.length === index + 2) {
+                return <td key={`column-content-${index}`}>${item}</td>;
+              }
               if (row.length === index + 1) {
                 return renderDownloadButton(item);
               }

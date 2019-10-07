@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import NumberFormat from "react-number-format";
 import { useStateValue } from "../../state";
 import Main from "../../components/Main";
 import Section from "../../components/Section";
@@ -116,26 +117,100 @@ export default function MySource() {
       <Section disabled={!projectInfo}>
         <Panel>
           <Text h3>Project Summary</Text>
-          <Text>
-            Project Address: {projectInfo ? `${projectInfo.name}` : ""}
-          </Text>
-          <Text>
-            Project Size: {projectInfo ? `${projectInfo.sizeDC} MW DC` : ""}{" "}
-          </Text>
-          <Text>
-            Annual generation:{" "}
-            {projectInfo ? `${projectInfo.annualGeneration} kWh` : ""}{" "}
-          </Text>
-          <Text>
-            Annual avoided CO2:{" "}
-            {projectInfo ? `${projectInfo.annualAvoidedC02} pounds` : ""}{" "}
-          </Text>
-          <Text>
-            Equivalent trees planted:{" "}
-            {projectInfo ? `${projectInfo.annualTreesPlanted} ` : ""}
-          </Text>
+          <div className="item">
+            <Text noMargin bold>
+              Project Name:
+            </Text>
+            <Text noMargin>{projectInfo ? `${projectInfo.name}` : ""}</Text>
+          </div>
+
+          <div className="item">
+            <Text noMargin bold>
+              Project Address:
+            </Text>
+            <Text noMargin>
+              {projectInfo ? `${projectInfo.town}, ${projectInfo.state}` : ""}
+            </Text>
+          </div>
+          <div className="item">
+            <Text noMargin bold>
+              Project Size:
+            </Text>
+            <Text noMargin>
+              {projectInfo ? (
+                <NumberFormat
+                  value={projectInfo.sizeDC}
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  suffix={" kW DC"}
+                />
+              ) : (
+                ""
+              )}{" "}
+            </Text>
+          </div>
+          <div className="item">
+            <Text noMargin bold>
+              Annual generation:
+            </Text>
+            <Text noMargin>
+              {projectInfo ? (
+                <NumberFormat
+                  value={projectInfo.annualGeneration}
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  suffix={" kWh"}
+                />
+              ) : (
+                ""
+              )}{" "}
+            </Text>
+          </div>
+          <div className="item">
+            <Text noMargin bold>
+              Annual avoided CO2:
+            </Text>
+            <Text noMargin>
+              {projectInfo ? (
+                <NumberFormat
+                  value={projectInfo.annualAvoidedC02}
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  suffix={" pounds"}
+                />
+              ) : (
+                ""
+              )}{" "}
+            </Text>
+          </div>
+          <div className="item">
+            <Text noMargin bold>
+              Equivalent trees planted:
+            </Text>
+            <Text noMargin>
+              {projectInfo ? (
+                <NumberFormat
+                  value={projectInfo.annualTreesPlanted}
+                  displayType={"text"}
+                  thousandSeparator={true}
+                />
+              ) : (
+                ""
+              )}
+            </Text>
+          </div>
         </Panel>
       </Section>
+      <style jsx>{`
+        .item {
+          display: flex;
+          align-items: center;
+          margin: 1em 0;
+        }
+        .item :global(p:first-child) {
+          margin-right: 5px;
+        }
+      `}</style>
     </Main>
   );
 }
