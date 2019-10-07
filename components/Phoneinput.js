@@ -1,5 +1,6 @@
 import React from "react";
 import NumberFormat from "react-number-format";
+import cn from "classnames";
 
 export default class Phoneinput extends React.PureComponent {
   constructor(props) {
@@ -8,11 +9,18 @@ export default class Phoneinput extends React.PureComponent {
     this.handleChange = this.handleChange.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
 
-    this.state = {};
+    this.state = {
+      displayLabel: true
+    };
   }
 
   handleChange(e) {
     const { onChangeEvent, fieldname } = this.props;
+    if (!outerLabel) {
+      e.target.value !== ""
+        ? this.setState({ displayLabel: false })
+        : this.setState({ displayLabel: true });
+    }
     onChangeEvent(fieldname, e.target.value);
   }
 
@@ -22,19 +30,26 @@ export default class Phoneinput extends React.PureComponent {
   }
 
   render() {
-    const { fieldname, label, secondary } = this.props;
+    const { displayLabel } = this.state;
+    const { fieldname, label, secondary, outerLabel, value } = this.props;
 
     return (
-      <div className="input__wrapper">
+      <div className={cn("input__wrapper", { "outer-label": outerLabel })}>
         <NumberFormat
           onChange={this.handleChange}
           onBlur={this.handleBlur}
           format="(###) ###-####"
+          value={value}
           name={fieldname}
           id={fieldname}
         />
-        <label htmlFor={fieldname}>{label}</label>
-        <style jsx global>{`
+        <label
+          htmlFor={fieldname}
+          style={{ opacity: displayLabel ? "1" : "0" }}
+        >
+          {label}
+        </label>
+        <style jsx>{`
           input {
             appearance: none;
             border: 1px solid transparent;
@@ -87,6 +102,16 @@ export default class Phoneinput extends React.PureComponent {
 
           .input__wrapper:last-of-type {
             margin-bottom: 0.5rem;
+          }
+
+          .input__wrapper.outer-label {
+            margin-bottom: 0;
+            margin-top: 2em;
+          }
+
+          .input__wrapper.outer-label label {
+            position: absolute;
+            top: -25%;
           }
         `}</style>
       </div>
