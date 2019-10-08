@@ -54,13 +54,13 @@ export default function MainMenu() {
   return (
     <ul>
       <li>
-        <MenuItem to="/dashboard">My Energy</MenuItem>
+        <MenuItem to="/dashboard">Your snapshot</MenuItem>
       </li>
       <li>
-        <MenuItem>My Source</MenuItem>
+        <MenuItem>Your project</MenuItem>
       </li>
       <li>
-        <MenuItem>My Impact</MenuItem>
+        <MenuItem>Your impact</MenuItem>
       </li>
       <li>
         <MenuItem>Referrals</MenuItem>
@@ -68,7 +68,7 @@ export default function MainMenu() {
       <li>
         <MenuItem>Profile</MenuItem>
       </li>
-      {accounts.length > 1 && (
+      {accounts.length >= 1 && (
         <li>
           <Select
             className="select__wrapper"
