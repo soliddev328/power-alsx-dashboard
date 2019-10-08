@@ -55,7 +55,7 @@ export default function MyImpact() {
     setIsLoading(true);
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        global.analytics.page("My Impact");
+        global.analytics.page("Your impact");
 
         user.getIdToken(true).then(async idToken => {
           const userData = await getUserData(user.uid, idToken);

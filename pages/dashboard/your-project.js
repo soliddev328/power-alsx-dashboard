@@ -40,7 +40,7 @@ export default function MySource() {
     setIsLoading(true);
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        global.analytics.page("My Source");
+        global.analytics.page("Your project");
         user.getIdToken(true).then(async idToken => {
           const userInfo = await getUserData(user.uid, idToken);
           const projectData = await getProjectInfo(

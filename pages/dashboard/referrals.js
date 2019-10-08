@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import Router from "next/router";
 import axios from "axios";
-import { useStateValue } from "../../state";
 import Main from "../../components/Main";
 import Container from "../../components/Container";
 import Section from "../../components/Section";
+import Panel from "../../components/Panel";
 import Button from "../../components/Button";
 import Separator from "../../components/Separator";
-import Panel from "../../components/Panel";
 import Text from "../../components/Text";
 import Image from "../../components/Image";
 import Icon from "../../components/Icon";
+import ReferralsTable from "../../components/Dashboard/ReferralsTable";
 import SegmentedInput from "../../components/SegmentedInput";
 import Table from "../../components/Table";
 import UsersInAreaMap from "../../components/Dashboard/UsersInAreaMap";
@@ -79,10 +79,7 @@ const getReferralsDataDetails = async (username, idToken) => {
   );
 
   return (
-    response &&
-    response.data &&
-    response.data.data &&
-    response.data.data[0].leads
+    response && response.data && response.data.data && response.data.data[0]
   );
 };
 
@@ -90,7 +87,6 @@ export default function Referrals() {
   const [userData, setUserData] = useState({});
   const [referralsData, setReferralsData] = useState({});
   const [referralsDetails, setReferralsDetails] = useState({});
-  const [{ selectedAccount }, dispatch] = useStateValue();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -113,7 +109,7 @@ export default function Referrals() {
             idToken
           );
 
-          setReferralsDetails(getReferralsDetails(referralsInfoDetails));
+          setReferralsDetails(referralsInfoDetails);
 
           setIsLoading(false);
         });
@@ -149,12 +145,16 @@ export default function Referrals() {
                 </svg>
               }
             />
+
             <Text h2 bold style={{ marginTop: "20px" }}>
-              {(referralsData.leads && referralsData.leads.allTime) || 0}
+              {(referralsData &&
+                referralsData.leads &&
+                referralsData.leads.allTime) ||
+                0}
             </Text>
           </Container>
           <Separator margin="10px auto" small />
-          <Text noMargin>Friends Referred</Text>
+          <Text noMargin>Friends in Progress</Text>
         </Panel>
         <Panel small specialShadow center>
           <Container column>
@@ -209,7 +209,7 @@ export default function Referrals() {
               }
             />
             <Text h2 bold style={{ marginTop: "20px" }}>
-              {referralsData.totalEarned || 0}
+              {(referralsData && referralsData.totalEarned) || 0}
             </Text>
           </Container>
           <Separator margin="10px auto" small />
@@ -284,19 +284,9 @@ export default function Referrals() {
           ></SegmentedInput>
         </Panel>
       </Section>
-      <Section>
-        <Panel>
-          <Text h3>Your referrals</Text>
-          {referralsDetails && referralsDetails.length > 0 ? (
-            <Table
-              headers={["Name", "Status", "Date"]}
-              data={referralsDetails}
-            />
-          ) : (
-            <Text>You have no referrals yet</Text>
-          )}
-        </Panel>
-      </Section>
+      {referralsDetails && (
+        <ReferralsTable data={referralsDetails}></ReferralsTable>
+      )}
     </Main>
   );
 }
