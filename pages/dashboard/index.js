@@ -279,13 +279,6 @@ const Dashboard = () => {
           <Text noMargin>Total Savings to Date</Text>
         </Panel>
       </Section>
-      <ProductionChart
-        projectName={
-          userData &&
-          userData.accounts &&
-          userData.accounts[selectedAccount.value].project
-        }
-      />
       <Section>
         <Panel>
           <Container column alignLeft>
@@ -293,7 +286,7 @@ const Dashboard = () => {
               Help us bring clean energy to your community
             </Text>
             <Text style={{ marginBottom: "20px" }}>
-              Share the link below and earn $25 per referral!
+              Share the link below and earn $50 per referral!
             </Text>
           </Container>
           <UsersInAreaMap />
