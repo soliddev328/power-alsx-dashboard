@@ -26,7 +26,7 @@
     "formik": "^1.5.8",
     "google-map-react": "^1.1.5",
     "js-cookie": "^2.2.1",
-    "next": "^9.1.0",
+    "next": "^9.1.1",
     "query-string": "^6.8.3",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
@@ -41,7 +41,7 @@
     "zippo": "^1.0.1"
   },
   "devDependencies": {
-    "lint-staged": "^9.4.1",
+    "lint-staged": "^9.4.2",
     "pre-commit": "1.2.2",
     "prettier": "^1.18.2"
   },

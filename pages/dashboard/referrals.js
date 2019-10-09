@@ -186,7 +186,7 @@ export default function Referrals() {
             </Text>
           </Container>
           <Separator margin="10px auto" small />
-          <Text noMargin>Friends Signed Up</Text>
+          <Text noMargin>Friends Connected</Text>
         </Panel>
         <Panel small specialShadow center>
           <Container column>
@@ -221,7 +221,7 @@ export default function Referrals() {
           Share Your Referral Link
         </Text>
         <Text noMargin>
-          Let's make this city green, share your unique link and earn $25 per
+          Let's make this city green, share your unique link and earn $50 per
           referral!
         </Text>
       </Section>
@@ -273,7 +273,7 @@ export default function Referrals() {
               Help us bring clean energy to your community
             </Text>
             <Text style={{ marginBottom: "20px" }}>
-              Share the link below and earn $25 per referral!
+              Share the link below and earn $50 per referral!
             </Text>
           </Container>
           <UsersInAreaMap />

@@ -80,6 +80,7 @@ export default function SegmentedInput({
           <input
             type="text"
             htmlFor="segmented-field"
+            autoFocus="negative"
             value={
               referral
                 ? `https://www.commonenergy.us/referrals?advocate=${userName}`
