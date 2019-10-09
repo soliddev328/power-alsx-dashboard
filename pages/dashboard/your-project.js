@@ -62,7 +62,7 @@ export default function MySource() {
   return (
     <Main isLoading={isLoading}>
       <Text h2 hasDecoration>
-        My Source
+        Your project
       </Text>
       <Section>
         {projectInfo ? (

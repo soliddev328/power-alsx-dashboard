@@ -92,7 +92,7 @@ export default function MyImpact() {
   return (
     <Main isLoading={isLoading}>
       <Text h2 hasDecoration>
-        My Impact
+        Your impact
       </Text>
       <Text h2 style={{ marginTop: "40px" }}>
         Cumulative Impact and Savings
