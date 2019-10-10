@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Router from "next/router";
+import Head from "next/head";
 import axios from "axios";
 import Main from "../../components/Main";
 import Container from "../../components/Container";
@@ -123,6 +124,9 @@ export default function Referrals() {
 
   return (
     <Main isLoading={isLoading}>
+      <Head>
+        <title>Common Energy - Referrals</title>
+      </Head>
       <Text h2 hasDecoration>
         Your Referrals
       </Text>

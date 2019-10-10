@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Head from "next/head";
 import axios from "axios";
 import NumberFormat from "react-number-format";
 import { useStateValue } from "../../state";
@@ -61,6 +62,9 @@ export default function MySource() {
 
   return (
     <Main isLoading={isLoading}>
+      <Head>
+        <title>Common Energy - Your project</title>
+      </Head>
       <Text h2 hasDecoration>
         Your project
       </Text>
