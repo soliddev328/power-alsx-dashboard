@@ -1,6 +1,7 @@
 import { Formik } from "formik";
 import { useEffect, useState } from "react";
 import Router from "next/router";
+import Head from "next/head";
 import axios from "axios";
 import Main from "../../components/Main";
 import Section from "../../components/Section";
@@ -62,6 +63,9 @@ export default function Profile() {
 
   return (
     <Main isLoading={isLoading}>
+      <Head>
+        <title>Common Energy - Profile</title>
+      </Head>
       <Text h2 hasDecoration>
         Profile
       </Text>

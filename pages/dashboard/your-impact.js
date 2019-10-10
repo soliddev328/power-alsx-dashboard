@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Head from "next/head";
 import { useStateValue } from "../../state";
 import NumberFormat from "react-number-format";
 import Main from "../../components/Main";
@@ -91,6 +92,9 @@ export default function MyImpact() {
 
   return (
     <Main isLoading={isLoading}>
+      <Head>
+        <title>Common Energy - Your impact</title>
+      </Head>
       <Text h2 hasDecoration>
         Your impact
       </Text>
