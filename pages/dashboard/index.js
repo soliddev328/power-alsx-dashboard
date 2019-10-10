@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Router from "next/router";
+import Head from "next/head";
 import NumberFormat from "react-number-format";
 import { useStateValue } from "../../state";
 import Main from "../../components/Main";
@@ -32,6 +33,7 @@ const getUserData = async (userUid, idToken) => {
 const Dashboard = () => {
   const [{ selectedAccount }, dispatch] = useStateValue();
   const [userData, setUserData] = useState({});
+  const [overlayDescription, setOverlayDescription] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -39,7 +41,44 @@ const Dashboard = () => {
       if (user) {
         global.analytics.page("Dashboard");
         user.getIdToken(true).then(async idToken => {
-          setUserData(await getUserData(user.uid, idToken));
+          const userInfo = await getUserData(user.uid, idToken);
+
+          if (
+            userInfo.accounts[selectedAccount.value].onboardingStatus ===
+            "Unassigned"
+          ) {
+            setOverlayDescription(
+              "Please stay tuned to learn more about the status of your project and your connection timeline! We will provide more details shortly, both here and by email -- and please feel free to always reach out with any questions at"
+            );
+          } else if (
+            userInfo.accounts[selectedAccount.value].onboardingStatus ===
+            "Project Live"
+          ) {
+            setOverlayDescription(
+              "Common Energy can connect you to our available project in your community in as little as 2-5 weeks. We’ll keep you posted on our progress along the way -- and please feel free to always reach out with any questions at"
+            );
+          } else if (
+            userInfo.accounts[selectedAccount.value].onboardingStatus ===
+            "No Project"
+          ) {
+            setOverlayDescription(
+              "Currently, all our projects in your area are filled. However, because of your interest, we’re able to work with a developer on a new project to bring more clean energy and savings to your community! Please stand-by for an update on new projects in a few weeks -- and feel free to reach out with any questions at"
+            );
+          } else if (
+            userInfo.accounts[selectedAccount.value].onboardingStatus ===
+            "Project Not Live"
+          ) {
+            setOverlayDescription(
+              "We’re excited to let you know that we have an available project in your area, but it is not yet ready and active. However, we will make sure we update you as we take the project through to completion. Please know that as an early subscriber, you’ve taken an important step in making this project a success! Feel free to reach out with any questions at"
+            );
+          } else if (
+            userInfo.accounts[selectedAccount.value].onboardingStatus ===
+            "Meter Live"
+          ) {
+            setOverlayDescription(false);
+          }
+
+          setUserData(userInfo);
           setIsLoading(false);
         });
       } else {
@@ -52,10 +91,17 @@ const Dashboard = () => {
 
   return (
     <Main isLoading={isLoading}>
+      <Head>
+        <title>Common Energy - Your snapshot</title>
+      </Head>
       <Text h2 hasDecoration>
         Welcome {userData && userData.firstName}
       </Text>
-      <Section columns="5">
+      <Section
+        columns="5"
+        disabled={overlayDescription}
+        overlayDescription={overlayDescription}
+      >
         <span style={{ gridColumn: "1 / 4" }} className="desktop-only">
           <Text bold noMargin style={{ textAlign: "center", color: "#a8a8ba" }}>
             Your Impact

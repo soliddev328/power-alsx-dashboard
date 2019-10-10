@@ -70,7 +70,7 @@ export default function UsersInAreaMap() {
         {mapLocation.length > 0 && (
           <GoogleMapReact
             center={mapLocation}
-            zoom={30}
+            zoom={13}
             options={{
               disableDefaultUI: true,
               gestureHandling: "none",
