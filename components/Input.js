@@ -94,6 +94,11 @@ export default class Input extends React.PureComponent {
             background-color: ${secondary ? "#F6F9FF" : "#fff"};
           }
 
+          input:not([type="checkbox"]):active,
+          input:not([type="checkbox"]):focus {
+            ${readOnly ? "border-color: none !important;" : ""};
+          }
+
           .input__wrapper {
             position: relative;
             width: 100%;
