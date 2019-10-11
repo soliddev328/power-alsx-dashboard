@@ -167,6 +167,14 @@ export default function SegmentedInput({
           position: absolute;
           top: -25%;
         }
+
+        @media (max-width: 1050px) {
+          :global(.segmented-input-wrapper .input__wrapper.outer-label label) {
+            position: absolute;
+            top: -35%;
+            width: 150%;
+          }
+        }
       `}</style>
     </div>
   );
