@@ -141,6 +141,9 @@ export default function Table({ headers = [], data = [] }) {
           th,
           td {
             padding: 7px 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
           }
         }
       `}</style>

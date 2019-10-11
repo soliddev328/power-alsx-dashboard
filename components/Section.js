@@ -100,6 +100,10 @@ export default function Section({
           .section {
             grid-template-columns: 1fr;
           }
+          .overlay {
+            justify-content: flex-start;
+            padding: 20px;
+          }
         }
       `}</style>
     </>
