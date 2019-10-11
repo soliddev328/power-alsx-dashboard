@@ -53,7 +53,6 @@ export default function Table({ headers = [], data = [] }) {
 
         tbody tr {
           text-align: center;
-          text-transform: lowercase;
         }
 
         @media (max-width: 1050px) {
