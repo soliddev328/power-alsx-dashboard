@@ -44,8 +44,6 @@ export default function Panel({
         .panel {
           background-color: #fff;
           border-radius: 5px;
-          overflow-x: auto;
-          overflow-y: hidden;
           padding: ${small ? "15px" : "30px"};
           box-shadow: 0 2px 40px 0 rgba(73, 80, 91, 0.08);
           ${center ? "text-align: center;" : ""};

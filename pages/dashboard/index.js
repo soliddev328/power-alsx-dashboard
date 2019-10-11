@@ -98,7 +98,7 @@ const Dashboard = () => {
         Welcome {userData && userData.firstName}
       </Text>
       <Section
-        columns="5"
+        columns="4"
         disabled={overlayDescription}
         overlayDescription={overlayDescription}
       >
@@ -117,48 +117,6 @@ const Dashboard = () => {
             Your Impact
           </Text>
         </span>
-        <Panel small specialShadow center>
-          <Container column>
-            <Icon
-              icon={
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="29"
-                  height="29"
-                  viewBox="0 0 29 29"
-                >
-                  <g
-                    fill="#2479FF"
-                    fillRule="nonzero"
-                    stroke="#2479FF"
-                    strokeWidth=".638"
-                  >
-                    <path d="M14.5 8.825A5.663 5.663 0 0 0 8.825 14.5a5.663 5.663 0 0 0 5.675 5.675 5.663 5.663 0 0 0 5.675-5.675A5.663 5.663 0 0 0 14.5 8.825zM13.852.512h1.296v5.549h-1.296zM13.852 22.939h1.296v5.549h-1.296zM22.939 13.852h5.549v1.296h-5.549zM.512 13.852h5.549v1.296H.512zM24.847 23.93l-3.924-3.923-.916.916 3.924 3.924.916-.917zM9.005 8.072L5.081 4.148l-.916.917 3.924 3.924.916-.917zM8.997 20.915l-.916-.916-3.924 3.923.916.917 3.924-3.924zM24.855 5.073l-.916-.917-3.924 3.924.916.917 3.924-3.924z" />
-                  </g>
-                </svg>
-              }
-            />
-            <Text h2 bold style={{ marginTop: "20px" }}>
-              {(userData &&
-                userData.accounts &&
-                userData.accounts[selectedAccount.value]
-                  .totalCleanEnergyGenerated > 0 && (
-                  <NumberFormat
-                    value={
-                      userData.accounts[selectedAccount.value]
-                        .totalCleanEnergyGenerated
-                    }
-                    displayType={"text"}
-                    thousandSeparator={true}
-                    suffix={" kWh"}
-                  />
-                )) ||
-                "0 kWh"}{" "}
-            </Text>
-          </Container>
-          <Separator margin="10px auto 25px auto" small />
-          <Text noMargin>My Energy</Text>
-        </Panel>
         <Panel small specialShadow center>
           <Container column>
             <Icon
@@ -285,7 +243,7 @@ const Dashboard = () => {
           <Separator margin="10px auto 25px auto" small />
           <Text noMargin>Estimated Lifetime Savings</Text>
         </Panel>
-        <Panel small specialShadow center hasDecoration>
+        <Panel small specialShadow center hasDecoration={!overlayDescription}>
           <Container column>
             <Icon
               icon={
