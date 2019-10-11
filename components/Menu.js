@@ -54,13 +54,13 @@ export default function MainMenu() {
   return (
     <ul>
       <li>
-        <MenuItem to="/dashboard">Your snapshot</MenuItem>
+        <MenuItem to="/dashboard">Your Snapshot</MenuItem>
       </li>
       <li>
-        <MenuItem>Your project</MenuItem>
+        <MenuItem>Your Project</MenuItem>
       </li>
       <li>
-        <MenuItem>Your impact</MenuItem>
+        <MenuItem>Your Impact</MenuItem>
       </li>
       <li>
         <MenuItem>Referrals</MenuItem>
