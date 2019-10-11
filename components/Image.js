@@ -18,8 +18,8 @@ export default function Image({
           border-radius: 5px;
           overflow: hidden;
           max-height: 450px;
-          ${height && `height: ${height};`}
-          ${width && `width: ${width};`}
+          ${height && `height: ${height};`};
+          ${width && `width: ${width};`};
         }
 
         figure.has-border {
@@ -31,12 +31,15 @@ export default function Image({
           width: 100%;
           object-fit: cover;
           object-position: center;
-          ${bgColor && `background-color: ${bgColor};`}
+          ${bgColor && `background-color: ${bgColor};`};
         }
 
         @media (max-width: 1050px) {
+          figure {
+            max-height: 225px;
+          }
           img {
-            object-fit: contain;
+            object-fit: cover;
             object-position: top;
           }
         }
