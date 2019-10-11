@@ -51,7 +51,7 @@ export default function ReferralsTable({ data }) {
             }}
           >
             <Text bold style={{ color: "#000" }}>
-              In process
+              In Process
             </Text>
           </button>
         </div>
