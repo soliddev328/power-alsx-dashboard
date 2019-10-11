@@ -69,7 +69,7 @@ const Dashboard = () => {
             "Project Not Live"
           ) {
             setOverlayDescription(
-              "We’re excited to let you know that we have an available project in your area, but it is not yet ready and active. However, we will make sure we update you as we take the project through to completion. Please know that as an early subscriber, you’ve taken an important step in making this project a success! Feel free to reach out with any questions at"
+              "We’re excited to let you know that we have an available project in your area, but we are not ready to connect you, as it is not yet ready and active. However, we will make sure we update you as we take the project through to completion. Please know that as an early subscriber, you’ve taken an important step in making this project a success! Feel free to reach out with any questions at"
             );
           } else if (
             userInfo.accounts[selectedAccount.value].onboardingStatus ===
