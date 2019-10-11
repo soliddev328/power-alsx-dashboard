@@ -216,6 +216,13 @@ export default function MySource() {
         .item :global(p:first-child) {
           margin-right: 5px;
         }
+
+        @media (max-width: 1050px) {
+          .item {
+            align-items: flex-start;
+            flex-direction: column;
+          }
+        }
       `}</style>
     </Main>
   );
