@@ -12,7 +12,9 @@ const mapDetails = data => {
     const singleItem = [];
     singleItem.push(element.name);
     singleItem.push(element.status);
-    singleItem.push(element.createdDate);
+    singleItem.push(
+      element.createdDate ? element.createdDate : element.convertedDate
+    );
     allItems.push(singleItem);
   });
 
