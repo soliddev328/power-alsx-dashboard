@@ -20,19 +20,32 @@ import CONSTANTS from "../../globals";
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
-const FacebookShare = () => {
-  FB.ui({
-    method: "share",
-    href: "https://www.commonenergy.us"
-  });
+const FacebookShare = username => {
+  // FB.ui({
+  //   method: "share",
+  //   href: "https://www.commonenergy.us"
+  // });
+  window.open(
+    `https://www.facebook.com/sharer/sharer.php?u=https%3A//www.commonenergy.us/referrals?advocate=${username}`,
+    "_blank",
+    "toolbar=yes,scrollbars=yes,resizable=yes,width=800,height=600"
+  );
 };
 
-const TwitterShare = () => {
-  console.log("Twitter share");
+const TwitterShare = username => {
+  window.open(
+    `https://twitter.com/intent/tweet?url=https%3A%2F%2Fwww.commonenergy.us%2Freferrals%3Fadvocate%3D${username}`,
+    "_blank",
+    "toolbar=yes,scrollbars=yes,resizable=yes,width=800,height=600"
+  );
 };
 
-const LinkedinShare = () => {
-  console.log("Linkedin share");
+const LinkedinShare = username => {
+  window.open(
+    `https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fwww.commonenergy.us%2Freferrals%3Fadvocate`,
+    "_blank",
+    "toolbar=yes,scrollbars=yes,resizable=yes,width=800,height=600"
+  );
 };
 
 const getReferralsDetails = referralsDetails => {
@@ -241,7 +254,7 @@ export default function Referrals() {
             secondary
             transparent
             share="facebook"
-            onClick={() => FacebookShare()}
+            onClick={() => FacebookShare(userData.username)}
           >
             Share on Facebook
           </Button>
@@ -249,7 +262,7 @@ export default function Referrals() {
             secondary
             transparent
             share="twitter"
-            onClick={() => TwitterShare()}
+            onClick={() => TwitterShare(userData.username)}
           >
             Share on Twitter
           </Button>
@@ -257,7 +270,7 @@ export default function Referrals() {
             secondary
             transparent
             share="linkedin"
-            onClick={() => LinkedinShare()}
+            onClick={() => LinkedinShare(userData.username)}
           >
             Share on LinkedIn
           </Button>
