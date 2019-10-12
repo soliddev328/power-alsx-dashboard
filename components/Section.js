@@ -96,7 +96,7 @@ export default function Section({
           margin: 0 auto;
         }
 
-        @media (max-width: 1050px) {
+        @media (max-width: 1200px) {
           .section {
             grid-template-columns: 1fr;
           }

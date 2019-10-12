@@ -217,7 +217,7 @@ export default function MySource() {
           margin-right: 5px;
         }
 
-        @media (max-width: 1050px) {
+        @media (max-width: 1200px) {
           .item {
             align-items: flex-start;
             flex-direction: column;
