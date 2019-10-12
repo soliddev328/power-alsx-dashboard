@@ -76,7 +76,6 @@ export default class Input extends React.PureComponent {
           validate={validator ? validator : false}
           onInvalid={this.applyValidation}
           onInput={this.customSetCustomValidity}
-          autoFocus="negative"
           ref={this.inputRef}
           readOnly={readOnly}
           value={this.props.value}

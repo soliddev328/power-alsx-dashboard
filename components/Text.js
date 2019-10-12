@@ -135,7 +135,7 @@ const getComponent = defaultElement => {
               transform: translate(50%, -40%);
             }
 
-            @media (max-width: 1050px) {
+            @media (max-width: 1200px) {
               ${Component} {
                 ${xlarge ? "font-size: 2rem;" : ""};
                 ${xlarge ? "line-height: 1.31em;" : ""};

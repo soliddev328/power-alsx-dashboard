@@ -96,7 +96,7 @@ export default function Panel({
           transform: translate(50%, -60%);
         }
 
-        @media (max-width: 1050px) {
+        @media (max-width: 1200px) {
           .decoration {
             display: none;
           }

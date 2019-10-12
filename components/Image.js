@@ -34,7 +34,7 @@ export default function Image({
           ${bgColor && `background-color: ${bgColor};`};
         }
 
-        @media (max-width: 1050px) {
+        @media (max-width: 1200px) {
           figure {
             max-height: 225px;
           }

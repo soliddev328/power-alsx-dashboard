@@ -80,14 +80,14 @@ export default function SegmentedInput({
           <input
             type="text"
             htmlFor="segmented-field"
-            autoFocus="negative"
             value={
               referral
                 ? `https://www.commonenergy.us/referrals?advocate=${userName}`
                 : ""
             }
             readOnly
-            className={cn({ "has-border": hasBorder })}
+            disabled
+            className={cn({ "referral has-border": hasBorder })}
           />
           <label htmlFor="segmented-field">{inputLabel}</label>
           <Button
@@ -153,6 +153,7 @@ export default function SegmentedInput({
           border-bottom-right-radius: 0;
           border-right: none;
         }
+
         .segmented-input-wrapper input.has-border {
           border: 1px solid #2479ff;
         }
@@ -168,7 +169,7 @@ export default function SegmentedInput({
           top: -25%;
         }
 
-        @media (max-width: 1050px) {
+        @media (max-width: 1200px) {
           :global(.segmented-input-wrapper .input__wrapper.outer-label label) {
             position: absolute;
             top: -35%;
