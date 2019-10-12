@@ -87,7 +87,7 @@ export default function Button({
             0 10px 10px rgba(0, 0, 0, 0.22);
         }
 
-        @media (max-width: 1050px) {
+        @media (max-width: 1200px) {
           button.share {
             margin: 1em auto;
           }

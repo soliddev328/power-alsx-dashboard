@@ -112,7 +112,7 @@ export default function MenuBar() {
           transform: translate(0, 75px);
         }
 
-        @media (max-width: 1050px) {
+        @media (max-width: 1200px) {
           .wrapper {
             min-height: auto;
             height: 75px;

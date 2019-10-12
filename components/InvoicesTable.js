@@ -133,7 +133,7 @@ export default function Table({ headers = [], data = [] }) {
           text-align: center;
         }
 
-        @media (max-width: 1050px) {
+        @media (max-width: 1200px) {
           th {
             width: 80px;
           }

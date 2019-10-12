@@ -65,7 +65,7 @@ export default function Main({ isLoading = true, children }) {
           }
         }
 
-        @media (max-width: 1050px) {
+        @media (max-width: 1200px) {
           main {
             grid-template-columns: 1fr;
             overflow-x: hidden;
