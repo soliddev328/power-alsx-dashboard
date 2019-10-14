@@ -201,7 +201,6 @@ export default function MyImpact() {
                     }
                     displayType={"text"}
                     thousandSeparator={true}
-                    suffix={" lbs"}
                   />
                 )) ||
                 "0"}
