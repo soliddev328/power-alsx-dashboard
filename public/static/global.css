@@ -334,7 +334,7 @@ hr {
   display: block;
 }
 
-@media (min-width: 1050px) {
+@media (min-width: 1400px) {
   .two-columns--responsive {
     grid-template-columns: repeat(2, 1fr);
   }

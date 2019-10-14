@@ -95,7 +95,6 @@ export default class Phoneinput extends React.PureComponent {
             position: relative;
             height: 3.75rem;
             width: 100%;
-            max-width: 350px;
             margin: 0 auto;
             margin-bottom: 0.5rem;
           }
