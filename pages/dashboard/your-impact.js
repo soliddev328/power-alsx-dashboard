@@ -93,7 +93,7 @@ export default function MyImpact() {
   return (
     <Main isLoading={isLoading}>
       <Head>
-        <title>Common Energy - Your impact</title>
+        <title>Common Energy - Your Impact</title>
       </Head>
       <Text h2 hasDecoration>
         Your impact

@@ -63,7 +63,7 @@ export default function MySource() {
   return (
     <Main isLoading={isLoading}>
       <Head>
-        <title>Common Energy - Your project</title>
+        <title>Common Energy - Your Project</title>
       </Head>
       <Text h2 hasDecoration>
         Your project

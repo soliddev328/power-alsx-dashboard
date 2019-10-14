@@ -11,7 +11,12 @@ export default function MenuItem({ children, active, to = false }) {
   return (
     <div className={cn("menu-item", { active: router.pathname === url })}>
       <div className="icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 18">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="23"
+          height="23"
+          viewBox="0 0 23 23"
+        >
           <g
             fill="none"
             fillRule="evenodd"
@@ -19,7 +24,10 @@ export default function MenuItem({ children, active, to = false }) {
             strokeLinecap="square"
             strokeWidth="2"
           >
-            <path d="M14.836 3.976l-2.701 3.857M7.817 2.048l.68 4.43M18.546 10.404l-4.395.876M13.619 14.404l3.167 2.218M1.44 6.122L4.605 8.34" />
+            <path d="M17.836 3.976l-2.701 3.857M10.817 2.048l.68 4.43M21.546 10.404l-4.395.876M16.303 14.961l3.167 2.218M4.44 6.122L7.605 8.34" />
+            <g>
+              <path d="M6.552 20.121l2.564-3.948M14.446 21.443l-.835-4.404M2.001 13.562L6.5 12.5" />
+            </g>
           </g>
         </svg>
       </div>

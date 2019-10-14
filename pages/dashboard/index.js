@@ -102,12 +102,12 @@ const Dashboard = () => {
         disabled={overlayDescription}
         overlayDescription={overlayDescription}
       >
-        <span style={{ gridColumn: "1 / 4" }} className="desktop-only">
+        <span style={{ gridColumn: "1 / 3" }} className="desktop-only">
           <Text bold noMargin style={{ textAlign: "center", color: "#a8a8ba" }}>
             Your Impact
           </Text>
         </span>
-        <span style={{ gridColumn: "4 / -1" }} className="desktop-only">
+        <span style={{ gridColumn: "3 / -1" }} className="desktop-only">
           <Text bold noMargin style={{ textAlign: "center", color: "#a8a8ba" }}>
             Your Savings
           </Text>
