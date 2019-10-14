@@ -6,10 +6,11 @@ export default function Image({
   hasBorder,
   height,
   width,
+  style = {},
   bgColor = false
 }) {
   return (
-    <figure className={cn({ "has-border": hasBorder })}>
+    <figure className={cn({ "has-border": hasBorder })} style={style}>
       <img src={src} alt={alt} />
       <style jsx>{`
         figure {
@@ -36,7 +37,7 @@ export default function Image({
 
         @media (max-width: 1200px) {
           figure {
-            max-height: 225px;
+            max-height: 100%;
           }
           img {
             object-fit: cover;

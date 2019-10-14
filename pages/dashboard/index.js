@@ -102,19 +102,14 @@ const Dashboard = () => {
         disabled={overlayDescription}
         overlayDescription={overlayDescription}
       >
-        <span style={{ gridColumn: "1 / 3" }} className="desktop-only">
+        <span className="label">
           <Text bold noMargin style={{ textAlign: "center", color: "#a8a8ba" }}>
             Your Impact
           </Text>
         </span>
-        <span style={{ gridColumn: "3 / -1" }} className="desktop-only">
+        <span className="label desktop-only">
           <Text bold noMargin style={{ textAlign: "center", color: "#a8a8ba" }}>
             Your Savings
-          </Text>
-        </span>
-        <span className="mobile-only">
-          <Text bold noMargin style={{ textAlign: "center", color: "#a8a8ba" }}>
-            Your Impact
           </Text>
         </span>
         <Panel small specialShadow center>
@@ -197,7 +192,7 @@ const Dashboard = () => {
           <Separator margin="10px auto 25px auto" small />
           <Text noMargin>CO2 Emissions Prevented</Text>
         </Panel>
-        <span className="mobile-only">
+        <span className="label mobile-only">
           <Text bold noMargin style={{ textAlign: "center", color: "#a8a8ba" }}>
             Your Savings
           </Text>
@@ -301,6 +296,17 @@ const Dashboard = () => {
           ></SegmentedInput>
         </Panel>
       </Section>
+      <style jsx>{`
+        .label {
+          grid-column: span 2;
+        }
+
+        @media (max-width: 700px) {
+          .label {
+            grid-column: 1 / -1;
+          }
+        }
+      `}</style>
     </Main>
   );
 };

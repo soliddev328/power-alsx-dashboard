@@ -3,6 +3,7 @@ export default function Container({
   column,
   centered,
   height,
+  style,
   alignLeft = false
 }) {
   return (
