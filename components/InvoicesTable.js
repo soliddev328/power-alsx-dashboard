@@ -84,40 +84,75 @@ const renderDownloadButton = id => {
 
 export default function Table({ headers = [], data = [] }) {
   return (
-    <table>
-      <thead>
-        <tr>
-          {headers.map((item, index) => (
-            <th key={`column-title-${index}`}>{item}</th>
-          ))}
-          <th>Invoice</th>
-        </tr>
-      </thead>
-      <tbody>
-        {data.map((row, index) => (
-          <tr key={`row-content-${index}`}>
-            {row.map((item, index) => {
-              if (row.length === index + 2) {
-                return <td key={`column-content-${index}`}>${item}</td>;
-              }
-              if (row.length === index + 1) {
-                return renderDownloadButton(item);
-              }
-              return <td key={`column-content-${index}`}>{item}</td>;
-            })}
-          </tr>
-        ))}
-      </tbody>
+    <div className="table-wrapper">
+      <div className="table-scroller">
+        <table>
+          <thead>
+            <tr>
+              {headers.map((item, index) => (
+                <th
+                  key={`column-title-${index}`}
+                  className={`${index === 0 && "table-sticky-column"}`}
+                >
+                  {item}
+                </th>
+              ))}
+              <th>Invoice</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((row, index) => (
+              <tr key={`row-content-${index}`}>
+                {row.map((item, index) => {
+                  if (row.length === index + 2) {
+                    return <td key={`column-content-${index}`}>${item}</td>;
+                  }
+                  if (row.length === index + 1) {
+                    return renderDownloadButton(item);
+                  }
+                  return (
+                    <td
+                      key={`column-content-${index}`}
+                      className={`${index === 0 && "table-sticky-column"}`}
+                    >
+                      {item}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <style jsx>{`
+        .table-wrapper {
+          position: relative;
+        }
+
+        .table-scroller {
+          margin-left: 120px;
+          overflow-x: auto;
+          overflow-y: visible;
+          padding-bottom: 5px;
+          width: calc(100% - 120px);
+        }
+
+        table .table-sticky-column {
+          left: 0;
+          position: absolute;
+          top: auto;
+          width: 120px;
+          min-width: auto;
+        }
+
         table {
-          table-layout: fixed;
           width: 100%;
-          border-collapse: collapse;
-          background-color: #fff;
+          border-collapse: separate;
+          border-spacing: 0;
         }
 
         th {
-          width: 180px;
+          min-width: 180px;
         }
 
         th,
@@ -125,6 +160,12 @@ export default function Table({ headers = [], data = [] }) {
           padding: 15px 20px;
         }
 
+        th:first-child,
+        td:first-child {
+          white-space: nowrap;
+        }
+
+        tbody tr:nth-child(odd) .table-sticky-column,
         tbody tr:nth-child(odd) {
           background-color: #f6f9ff;
         }
@@ -132,21 +173,7 @@ export default function Table({ headers = [], data = [] }) {
         tbody tr {
           text-align: center;
         }
-
-        @media (max-width: 1200px) {
-          th {
-            width: 80px;
-          }
-
-          th,
-          td {
-            padding: 7px 10px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-          }
-        }
       `}</style>
-    </table>
+    </div>
   );
 }
