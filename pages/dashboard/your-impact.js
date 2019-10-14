@@ -248,7 +248,7 @@ export default function MyImpact() {
         </Panel>
       </Section>
       <Text h2>Monthly Impact and Savings</Text>
-      <Section>
+      <Section tableSection>
         <Panel>
           <Text h3>Utility Invoices</Text>
           {billingData && billingData.length > 0 ? (
