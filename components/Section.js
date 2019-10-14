@@ -7,7 +7,12 @@ export default function Section({
   noMargin,
   overlayDescription = false
 }) {
+  let singleColumn = false;
   const columnsInt = parseInt(columns, 10);
+
+  if (columnsInt === 1) {
+    singleColumn = true;
+  }
 
   return (
     <>
@@ -96,7 +101,13 @@ export default function Section({
           margin: 0 auto;
         }
 
-        @media (max-width: 1200px) {
+        @media (max-width: 1400px) {
+          .section {
+            ${!singleColumn &&
+              "grid-template-columns: repeat(auto-fill, minmax(calc(50% - 40px), 1fr));"};
+          }
+        }
+        @media (max-width: 700px) {
           .section {
             grid-template-columns: 1fr;
           }
