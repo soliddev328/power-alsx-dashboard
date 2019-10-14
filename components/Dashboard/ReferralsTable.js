@@ -32,7 +32,7 @@ export default function ReferralsTable({ data }) {
   }, []);
 
   return (
-    <Section>
+    <Section tableSection>
       <Panel>
         <Text h3>Your referrals</Text>
         <div className="toggle-wrapper">

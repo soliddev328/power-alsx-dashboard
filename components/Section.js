@@ -5,6 +5,7 @@ export default function Section({
   disabled,
   columns = 1,
   noMargin,
+  tableSection = false,
   overlayDescription = false
 }) {
   let singleColumn = false;
@@ -103,13 +104,14 @@ export default function Section({
 
         @media (max-width: 1400px) {
           .section {
-            ${!singleColumn &&
-              "grid-template-columns: repeat(auto-fill, minmax(calc(50% - 40px), 1fr));"};
+            ${!singleColumn
+              ? "grid-template-columns: repeat(auto-fill, minmax(calc(50% - 40px), 1fr));"
+              : ""};
           }
         }
         @media (max-width: 700px) {
           .section {
-            grid-template-columns: 1fr;
+            ${!tableSection ? "grid-template-columns: 1fr;" : ""};
           }
           .overlay {
             justify-content: flex-start;
