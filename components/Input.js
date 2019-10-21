@@ -59,13 +59,14 @@ export default class Input extends React.PureComponent {
       value,
       readOnly,
       className,
+      scrollOnFocus = true,
       outerLabel
     } = this.props;
     const { displayLabel } = this.state;
     return (
       <div
         ref={this.inputField}
-        onClick={this.scrollOnFocus}
+        onClick={scrollOnFocus ? this.scrollOnFocus : null}
         className={cn("input__wrapper", { "outer-label": outerLabel })}
       >
         <Field
