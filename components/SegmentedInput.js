@@ -110,6 +110,7 @@ export default function SegmentedInput({
                 fullWidth
                 noMargin
                 outerLabel
+                scrollOnFocus={false}
                 type="email"
                 fieldname="emailAddress"
                 label={inputLabel}
