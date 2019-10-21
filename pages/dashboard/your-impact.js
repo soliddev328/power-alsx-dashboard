@@ -71,10 +71,10 @@ export default function MyImpact() {
 
           billings.forEach(async item => {
             const tableItem = [];
-            tableItem.push(item.invoiceDate);
-            tableItem.push(item.totalCleanEnergy);
-            tableItem.push(item.totalAvoidedC02);
-            tableItem.push(item.totalSavings);
+            tableItem.push(item.endDate);
+            tableItem.push(item.cleanEnergy);
+            tableItem.push(item.avoidedc02);
+            tableItem.push(item.savings);
             tableItem.push(item.id);
             finalData.push(tableItem);
           });
