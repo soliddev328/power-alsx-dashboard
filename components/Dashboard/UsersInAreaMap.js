@@ -88,11 +88,11 @@ export default function UsersInAreaMap() {
           <Text h4 bold noMargin>
             {nearbyUsers.length}
           </Text>
-          <Text>users in this area</Text>
+          <Text>subscribers in this area</Text>
         </div>
       ) : (
         <div className="users-orb">
-          <Text>There are users nearby</Text>
+          <Text>There are subscribers nearby</Text>
         </div>
       )}
       <style jsx>{`
@@ -115,6 +115,7 @@ export default function UsersInAreaMap() {
           justify-content: center;
           text-align: center;
           flex-direction: column;
+          padding: 0 20px;
           border: 2px solid #41ef8b;
           transform: translate(-50%, -50%);
         }
