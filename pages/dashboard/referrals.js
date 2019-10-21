@@ -34,7 +34,7 @@ const FacebookShare = username => {
 
 const TwitterShare = username => {
   window.open(
-    `https://twitter.com/intent/tweet?url=https%3A%2F%2Fwww.commonenergy.us%2Freferrals%3Fadvocate%3D${username}`,
+    `https://twitter.com/intent/tweet?url=https%3A%2F%2Fwww.commonenergy.us%2Freferrals?advocate=${username}`,
     "_blank",
     "toolbar=yes,scrollbars=yes,resizable=yes,width=800,height=600"
   );
@@ -42,7 +42,7 @@ const TwitterShare = username => {
 
 const LinkedinShare = username => {
   window.open(
-    `https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fwww.commonenergy.us%2Freferrals%3Fadvocate`,
+    `https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fwww.commonenergy.us%2Freferrals?advocate=${username}`,
     "_blank",
     "toolbar=yes,scrollbars=yes,resizable=yes,width=800,height=600"
   );
