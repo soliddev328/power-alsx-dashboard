@@ -244,6 +244,7 @@ export default function Referrals() {
       </Section>
       <Section columns="2">
         <Image
+          contain
           src="/static/images/share/share.png"
           alt=""
           bgColor="#fff"

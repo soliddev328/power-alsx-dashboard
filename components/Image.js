@@ -6,6 +6,7 @@ export default function Image({
   hasBorder,
   height,
   width,
+  contain = false,
   style = {},
   bgColor = false
 }) {
@@ -30,6 +31,7 @@ export default function Image({
         img {
           display: flex;
           width: 100%;
+          max-width: 100%;
           object-fit: cover;
           object-position: center;
           ${bgColor && `background-color: ${bgColor};`};
@@ -37,11 +39,11 @@ export default function Image({
 
         @media (max-width: 1200px) {
           figure {
-            max-height: 100%;
+            max-height: 300px;
+            height: auto;
           }
           img {
-            object-fit: cover;
-            object-position: top;
+            object-fit: ${contain ? "contain" : "cover"};
           }
         }
       `}</style>
