@@ -371,15 +371,11 @@ class Step4 extends React.Component {
       ? "Ok great. Let's connect your account and get you saving!"
       : "No problem! We can use your account number to get you connected and saving.";
 
-    if (this.state.currentUtility && this.state.currentUtility.paperOnly)
-      text = "We can use your account number to get you connected and saving.";
-
     return this.state.isLoading ? "" : text;
   }
 
   render() {
     const canLinkAccount =
-      !this.state.currentUtility.paperOnly &&
       this.state.billingMethod &&
       this.state.billingMethod.billingMethod.indexOf("paper") !== 0;
     return (
