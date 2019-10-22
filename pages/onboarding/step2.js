@@ -16,20 +16,30 @@ const { API } =
 const formikEnhancer = withFormik({
   mapValuesToPayload: x => x,
   handleSubmit: payload => {
-    Router.push({
-      pathname: "/onboarding/step3"
-    });
+    if (
+      payload.data.billingMethod &&
+      payload.data.billingMethod.billingMethod.indexOf("paper") == 0
+    ) {
+      Router.push({
+        pathname: "/onboarding/step4"
+      });
+    } else {
+      Router.push({
+        pathname: "/onboarding/step3"
+      });
+    }
   },
   displayName: "CustomForm"
 });
 
 class CustomForm extends React.Component {
   render() {
-    const imageUrl = this.props.project && this.props.project.imageUrl;
+    const imageUrl =
+      this.props.data.project && this.props.data.project.imageUrl;
 
     const completion =
-      this.props.project && this.props.project.completion
-        ? this.props.project.completion
+      this.props.data.project && this.props.data.project.completion
+        ? this.props.data.project.completion
         : false;
 
     return (
@@ -113,7 +123,8 @@ class Step2 extends React.Component {
           imageUrl: "/static/images/illustrations/t&c.png",
           name: "",
           completion: ""
-        }
+        },
+        billingMethod: ""
       }
     };
 
@@ -129,6 +140,7 @@ class Step2 extends React.Component {
   getData() {
     let utility = "";
     let state = "";
+    let storedBillingMethod = "";
 
     if (localStorage.getItem("utility")) {
       utility = JSON.parse(localStorage.getItem("utility"));
@@ -136,6 +148,10 @@ class Step2 extends React.Component {
 
     if (localStorage.getItem("state")) {
       state = localStorage.getItem("state");
+    }
+
+    if (localStorage.getItem("billingMethod")) {
+      storedBillingMethod = JSON.parse(localStorage.getItem("billingMethod"));
     }
 
     const rawParams = {
@@ -161,7 +177,8 @@ class Step2 extends React.Component {
                     : "/static/images/illustrations/t&c.png",
                 name: data.projects[0].displayName || false,
                 completion: data.projects[0].completion || false
-              }
+              },
+              billingMethod: storedBillingMethod
             }
           });
         }
@@ -181,7 +198,7 @@ class Step2 extends React.Component {
               : ""
           }
         >
-          <EnhancedCustomForm project={this.state.utility.project} />
+          <EnhancedCustomForm data={this.state.utility} />
         </SingleStep>
         <style jsx>{`
           main {
