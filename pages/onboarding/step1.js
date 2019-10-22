@@ -146,6 +146,14 @@ class Step1 extends React.Component {
 
     if (options !== null && utility !== "") {
       localStorage.setItem("utility", JSON.stringify(utility));
+
+      if (utility.paperOnly) {
+        localStorage.setItem(
+          "billingMethod",
+          JSON.stringify({ billingMethod: "paper" })
+        );
+      }
+
       window.firebase
         .auth()
         .createUserWithEmailAndPassword(values.emailAddress, values.password)
