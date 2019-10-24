@@ -110,7 +110,7 @@ export default function MyImpact() {
             tableItem.push(item.endDate);
             tableItem.push(item.cleanEnergy);
             tableItem.push(item.avoidedC02);
-            tableItem.push(item.savings);
+            tableItem.push(item.totalSavings);
             tableItem.push(item.id);
             finalData.push(tableItem);
           });
