@@ -19,7 +19,7 @@ export default function Section({
     <>
       <section className="section">
         {children}
-        {disabled && (
+        {disabled && overlayDescription && (
           <div className="overlay">
             <div className="inner">
               <Text
@@ -52,7 +52,7 @@ export default function Section({
                 Account not connected yet.
               </Text>
               <Text h3 style={{ color: "var(--color-primary)" }}>
-                We’re delighted to have you as a customer and to provide you
+                We're delighted to have you as a customer and to provide you
                 with 100% clean, lower cost electricity!
               </Text>
               <Text>
@@ -76,6 +76,7 @@ export default function Section({
           grid-row-gap: 40px;
           margin: ${noMargin ? "0" : "40px 0"};
           margin-bottom: ${noMargin ? "0" : "80px"};
+          ${disabled && overlayDescription ? "min-height: 300px;" : ""};
         }
 
         .section + .section {
@@ -92,6 +93,7 @@ export default function Section({
           top: 0;
           width: 100%;
           height: 100%;
+          min-height: 300px;
           background-color: rgba(255, 255, 255, 0.95);
           border-radius: 5px;
           text-align: center;

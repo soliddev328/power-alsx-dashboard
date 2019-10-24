@@ -88,11 +88,11 @@ export default function UsersInAreaMap() {
           <Text h4 bold noMargin>
             {nearbyUsers.length}
           </Text>
-          <Text>subscribers in this area</Text>
+          <Text>subscribers in your area</Text>
         </div>
       ) : (
         <div className="users-orb">
-          <Text>There are subscribers nearby</Text>
+          <Text>There are no subscribers nearby</Text>
         </div>
       )}
       <style jsx>{`
