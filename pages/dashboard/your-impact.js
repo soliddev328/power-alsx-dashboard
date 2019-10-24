@@ -109,7 +109,7 @@ export default function MyImpact() {
             const tableItem = [];
             tableItem.push(item.endDate);
             tableItem.push(item.cleanEnergy);
-            tableItem.push(item.avoidedc02);
+            tableItem.push(item.avoidedC02);
             tableItem.push(item.savings);
             tableItem.push(item.id);
             finalData.push(tableItem);
