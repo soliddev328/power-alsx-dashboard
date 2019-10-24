@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Router from "next/router";
 import axios from "axios";
+import { Formik, Form, Field } from "formik";
 import Select from "react-select";
 import MenuItem from "./MenuItem";
 import CONSTANTS from "../globals";
@@ -70,18 +71,23 @@ export default function MainMenu() {
       </li>
       {accounts.length >= 1 && (
         <li>
-          <Select
-            className="select__wrapper"
-            classNamePrefix="select"
+          <select
+            name="account"
+            className="custom-select"
             placeholder={accounts[selectedAccount.value].label}
-            options={accounts}
             onChange={item => {
               dispatch({
                 type: "changeSelectedAccount",
-                newValue: { value: item.value }
+                newValue: { value: item.target.value }
               });
             }}
-          />
+          >
+            {accounts.map((account, index) => (
+              <option value={index} key={`account-${index}`}>
+                {account.label}
+              </option>
+            ))}
+          </select>
         </li>
       )}
 
