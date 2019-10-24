@@ -110,7 +110,7 @@ export default function MyImpact() {
             tableItem.push(item.endDate);
             tableItem.push(item.cleanEnergy);
             tableItem.push(item.avoidedC02);
-            tableItem.push(item.totalSavings);
+            tableItem.push(item.savings);
             tableItem.push(item.id);
             finalData.push(tableItem);
           });
@@ -270,12 +270,12 @@ export default function MyImpact() {
             <Text h2 bold style={{ margin: "5px 0 0 20px" }}>
               {(userData &&
                 userData.accounts &&
-                userData.accounts[selectedAccount.value]
-                  .lifetimeEstimatedSavings > 0 && (
+                userData.accounts[selectedAccount.value].totalSavingsToDate >
+                  0 && (
                   <NumberFormat
                     value={
                       userData.accounts[selectedAccount.value]
-                        .lifetimeEstimatedSavings
+                        .totalSavingsToDate
                     }
                     displayType={"text"}
                     thousandSeparator={true}
