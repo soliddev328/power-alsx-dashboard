@@ -104,7 +104,7 @@ export default function MySource() {
         <title>Common Energy - Your Project</title>
       </Head>
       <Text h2 hasDecoration>
-        Your project
+        Your Project
       </Text>
       <div className="inner">
         <Section

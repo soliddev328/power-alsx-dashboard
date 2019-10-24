@@ -132,7 +132,7 @@ export default function MyImpact() {
         <title>Common Energy - Your Impact</title>
       </Head>
       <Text h2 hasDecoration>
-        Your impact
+        Your Impact
       </Text>
       <Text h2 style={{ marginTop: "40px" }}>
         Cumulative Impact and Savings
