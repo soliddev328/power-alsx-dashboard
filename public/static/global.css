@@ -334,6 +334,41 @@ hr {
   display: block;
 }
 
+.custom-select {
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background-color: #fff;
+  box-shadow: none;
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0.8em 2em 0.8em 1em;
+  width: 100%;
+  z-index: 10;
+  transition: border-color 200ms ease-in;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='none' fill-rule='evenodd' stroke='%232479FF' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.7' d='M9 1L5 5 1 1'/%3E%3C/svg%3E%0A");
+  background-repeat: no-repeat, repeat;
+  background-position: right .7em top 50%, 0 0;
+  background-size: .65em auto, 100%;
+}
+.custom-select::-ms-expand {
+  display: none;
+}
+.custom-select:hover {
+  border-color: var(--color-primary);
+}
+.custom-select:focus {
+  color: #222;
+  outline: none;
+}
+.custom-select option {
+  font-weight:normal;
+}
+
 @media (min-width: 1400px) {
   .two-columns--responsive {
     grid-template-columns: repeat(2, 1fr);
