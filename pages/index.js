@@ -157,8 +157,9 @@ class Index extends React.Component {
             onSubmit={values => {
               this.autenticate(values);
             }}
-            render={props => (
-              <React.Fragment>
+          >
+            {props => (
+              <>
                 <Form>
                   <Input
                     label="Email"
@@ -192,9 +193,9 @@ class Index extends React.Component {
                     Sign in
                   </Button>
                 </Form>
-              </React.Fragment>
+              </>
             )}
-          />
+          </Formik>
           <div className="link">
             <a href="/forgot-password" className="cta">
               Forgot password?

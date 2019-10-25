@@ -144,7 +144,8 @@ class Step42 extends React.Component {
               //   })
               // }
             }}
-            render={props => (
+          >
+            {props => (
               <Form>
                 <GeoSuggest
                   label="Address"
@@ -169,7 +170,7 @@ class Step42 extends React.Component {
                 </Button>
               </Form>
             )}
-          />
+          </Formik>
           <Stepper>
             <li className="steplist__step steplist__step-done">1</li>
             <li className="steplist__step steplist__step-done">2</li>
