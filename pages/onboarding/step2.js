@@ -1,6 +1,6 @@
 import React from "react";
 import Router from "next/router";
-import { Form, withFormik } from "formik";
+import { Form, Formik } from "formik";
 import axios from "axios";
 import Header from "../../components/Header";
 import Checkbox from "../../components/Checkbox";
@@ -12,106 +12,6 @@ import CONSTANTS from "../../globals";
 
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
-
-const formikEnhancer = withFormik({
-  mapValuesToPayload: x => x,
-  handleSubmit: payload => {
-    if (
-      payload.data.billingMethod &&
-      payload.data.billingMethod.billingMethod.indexOf("paper") == 0
-    ) {
-      Router.push({
-        pathname: "/onboarding/step4"
-      });
-    } else {
-      Router.push({
-        pathname: "/onboarding/step3"
-      });
-    }
-  },
-  displayName: "CustomForm"
-});
-
-class CustomForm extends React.Component {
-  render() {
-    const imageUrl =
-      this.props.data.project && this.props.data.project.imageUrl;
-
-    const completion =
-      this.props.data.project && this.props.data.project.completion
-        ? this.props.data.project.completion
-        : false;
-
-    return (
-      <Form>
-        <div className="content">
-          <figure>
-            <img src={imageUrl} alt="" />
-          </figure>
-          {completion && <Progressbar completion={completion} />}
-          <p>
-            Just answer a few quick questions about your utility account and
-            address to:
-          </p>
-          <div className="items">
-            <BulletItem
-              content="Save $10-20 per month on your electricity bill"
-              bulletIcon="dollar"
-            />
-            <BulletItem
-              content="Lower emissions and pollution in your community"
-              bulletIcon="co2"
-            />
-          </div>
-        </div>
-        <Button primary>Next</Button>
-        <style jsx>{`
-          .content {
-            margin-bottom: 2rem;
-            min-height: 370px;
-          }
-
-          .disclaimer {
-            text-align: center;
-          }
-
-          figure {
-            max-width: 100vw;
-            height: 190px;
-            margin: 1.5rem -7% 0 -7%;
-            background-color: transparent;
-            overflow: hidden;
-            display: flex;
-          }
-
-          img {
-            max-width: 100%;
-            object-fit: cover;
-            object-position: top;
-            opacity: 0;
-            animation: fadeIn 400ms ease-in-out forwards;
-            animation-delay: 0.4s;
-          }
-
-          .items {
-            margin-top: 20px;
-            opacity: 0;
-            animation: fadeIn 400ms ease-in-out forwards;
-            animation-delay: 0.6s;
-          }
-
-          @keyframes fadeIn {
-            to {
-              opacity: 1;
-            }
-          }
-        `}</style>
-      </Form>
-    );
-  }
-}
-
-const EnhancedCustomForm = formikEnhancer(CustomForm);
 
 class Step2 extends React.Component {
   constructor(props) {
@@ -163,20 +63,22 @@ class Step2 extends React.Component {
       .map(([key, val]) => `${key}=${val}`)
       .join("&");
 
-    axios(`${API}/v1/utilities?${generatedParams}`)
+    return axios(`${API}/v1/utilities?${generatedParams}`)
       .then(response => {
         if (response.data.data) {
           const data = response.data.data[0];
-
           this.setState({
             utility: {
               project: {
                 imageUrl:
+                  data.projects &&
+                  data.projects.length > 0 &&
                   data.projects[0].imageUrl !== null
                     ? data.projects[0].imageUrl
                     : "/static/images/illustrations/t&c.png",
-                name: data.projects[0].displayName || false,
-                completion: data.projects[0].completion || false
+                name: (data.projects && data.projects[0].displayName) || false,
+                completion:
+                  (data.projects && data.projects[0].completion) || false
               },
               billingMethod: storedBillingMethod
             }
@@ -187,18 +89,58 @@ class Step2 extends React.Component {
   }
 
   render() {
+    const { utility } = this.state;
+    const imageUrl = utility.project && utility.project.imageUrl;
+    const completion =
+      utility.project && utility.project.completion
+        ? utility.project.completion
+        : false;
+
     return (
       <main>
         <Header />
         <SingleStep
-          prefix="Great news, we’ve got a clean energy project in your area! By signing up you will start receiving energy credits that lower your electricity cost."
+          prefix="Great news, we've got a clean energy project in your area! By signing up you will start receiving energy credits that lower your electricity cost."
           title={
-            this.state.utility.project && this.state.utility.project.name
-              ? this.state.utility.project.name
-              : ""
+            utility.project && utility.project.name ? utility.project.name : ""
           }
         >
-          <EnhancedCustomForm data={this.state.utility} />
+          <div className="content">
+            <figure>
+              <img src={imageUrl} alt="" />
+            </figure>
+            {completion && <Progressbar completion={completion} />}
+            <p>
+              Just answer a few quick questions about your utility account and
+              address to:
+            </p>
+            <div className="items">
+              <BulletItem
+                content="Save $10-20 per month on your electricity bill"
+                bulletIcon="dollar"
+              />
+              <BulletItem
+                content="Lower emissions and pollution in your community"
+                bulletIcon="co2"
+              />
+            </div>
+          </div>
+          <Button
+            primary
+            onClick={() => {
+              if (utility.billingMethod.indexOf("paper") >= 0) {
+                Router.push({
+                  pathname: "/onboarding/step4"
+                });
+              } else {
+                Router.push({
+                  pathname: "/onboarding/step3"
+                });
+              }
+            }}
+          >
+            Next
+          </Button>
         </SingleStep>
         <style jsx>{`
           main {
@@ -215,8 +157,49 @@ class Step2 extends React.Component {
             font-size: 0.8rem;
             margin-top: 0;
           }
+
           :global(.checkbox__label) {
             margin-top: 0;
+          }
+
+          .content {
+            margin-bottom: 2rem;
+            min-height: 370px;
+          }
+
+          .disclaimer {
+            text-align: center;
+          }
+
+          figure {
+            max-width: 100vw;
+            height: 190px;
+            margin: 1.5rem -7% 0 -7%;
+            background-color: transparent;
+            overflow: hidden;
+            display: flex;
+          }
+
+          img {
+            max-width: 100%;
+            object-fit: cover;
+            object-position: top;
+            opacity: 0;
+            animation: fadeIn 400ms ease-in-out forwards;
+            animation-delay: 0.4s;
+          }
+
+          .items {
+            margin-top: 20px;
+            opacity: 0;
+            animation: fadeIn 400ms ease-in-out forwards;
+            animation-delay: 0.6s;
+          }
+
+          @keyframes fadeIn {
+            to {
+              opacity: 1;
+            }
           }
         `}</style>
       </main>

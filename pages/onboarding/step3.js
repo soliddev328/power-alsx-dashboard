@@ -22,37 +22,39 @@ class Step3 extends React.Component {
         <Header />
         <SingleStep title="Do you have an online account with your electric utility?">
           <Formik
-            initialValues={{
-              billingMethod: ""
-            }}
+            initialValues={{ isPaperOnly: "" }}
             onSubmit={values => {
-              localStorage.setItem("billingMethod", JSON.stringify(values));
+              localStorage.setItem(
+                "billingMethod",
+                JSON.stringify(values.isPaperOnly)
+              );
               Router.push({
                 pathname: "/onboarding/step4"
               });
             }}
-            render={props => (
-              <React.Fragment>
+          >
+            {props => (
+              <>
                 <Form>
                   <RadioCard
                     number="1"
-                    name="billingMethod"
+                    name="isPaperOnly"
                     value="electronic"
                     heading="Yes"
                   />
                   <RadioCard
                     number="2"
-                    name="billingMethod"
+                    name="isPaperOnly"
                     value="paper"
                     heading="No"
                   />
-                  <Button primary disabled={!props.values.billingMethod != ""}>
+                  <Button primary disabled={!props.values.isPaperOnly != ""}>
                     Next
                   </Button>
                 </Form>
-              </React.Fragment>
+              </>
             )}
-          />
+          </Formik>
           <Stepper>
             <li className="steplist__step steplist__step-doing">1</li>
             <li className="steplist__step">2</li>

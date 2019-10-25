@@ -38,8 +38,9 @@ class Step6 extends React.Component {
                 pathname: "/onboarding/step7"
               });
             }}
-            render={props => (
-              <React.Fragment>
+          >
+            {props => (
+              <>
                 <Form>
                   <RadioCard
                     number="3"
@@ -87,9 +88,9 @@ class Step6 extends React.Component {
                     All your information is 128 bit encrypted
                   </p>
                 </Form>
-              </React.Fragment>
+              </>
             )}
-          />
+          </Formik>
           <Stepper>
             <li className="steplist__step steplist__step-done">1</li>
             <li className="steplist__step steplist__step-done">2</li>

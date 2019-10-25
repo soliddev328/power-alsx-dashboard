@@ -118,7 +118,7 @@ class Step4 extends React.Component {
   renderUtilityLogin() {
     const { query } = this.props;
     return (
-      <React.Fragment>
+      <>
         {query && query.error && (
           <p className="error">
             There was a problem connecting, could you please verify your login.
@@ -183,8 +183,9 @@ class Step4 extends React.Component {
                   });
               });
           }}
-          render={props => (
-            <React.Fragment>
+        >
+          {props => (
+            <>
               <Form>
                 <Input label="User name" fieldname="utilityUser" />
                 <Input
@@ -226,16 +227,16 @@ class Step4 extends React.Component {
                   Next
                 </Button>
               </Form>
-            </React.Fragment>
+            </>
           )}
-        />
+        </Formik>
         <style jsx>{`
           .error {
             text-align: center;
             color: red;
           }
         `}</style>
-      </React.Fragment>
+      </>
     );
   }
 
@@ -276,8 +277,9 @@ class Step4 extends React.Component {
                 });
             });
         }}
-        render={props => (
-          <React.Fragment>
+      >
+        {props => (
+          <>
             <Form>
               <Input label="Account Number" fieldname="utilityAccountNumber" />
               <Checkbox fieldname="acceptedTermsAndConditions">
@@ -312,16 +314,16 @@ class Step4 extends React.Component {
                 Next
               </Button>
             </Form>
-          </React.Fragment>
+          </>
         )}
-      />
+      </Formik>
     );
   }
 
   renderForms() {
     const canLinkAccount =
       this.state.billingMethod &&
-      this.state.billingMethod.billingMethod.indexOf("paper") !== 0;
+      this.state.billingMethod.indexOf("paper") !== 0;
 
     return canLinkAccount
       ? this.renderUtilityLogin()
@@ -330,7 +332,7 @@ class Step4 extends React.Component {
 
   renderLoader() {
     return (
-      <React.Fragment>
+      <>
         <div className="loading">
           <FadeLoader
             className="spinner"
@@ -359,14 +361,15 @@ class Step4 extends React.Component {
             font-size: 0.8rem;
           }
         `}</style>
-      </React.Fragment>
+      </>
     );
   }
 
   renderText() {
     const canLinkAccount =
       this.state.billingMethod &&
-      this.state.billingMethod.billingMethod.indexOf("paper") !== 0;
+      this.state.billingMethod.indexOf("paper") !== 0;
+
     let text = canLinkAccount
       ? "Ok great. Let's connect your account and get you saving!"
       : "No problem! We can use your account number to get you connected and saving.";
@@ -377,7 +380,7 @@ class Step4 extends React.Component {
   render() {
     const canLinkAccount =
       this.state.billingMethod &&
-      this.state.billingMethod.billingMethod.indexOf("paper") !== 0;
+      this.state.billingMethod.indexOf("paper") !== 0;
     return (
       <main>
         <Header />
