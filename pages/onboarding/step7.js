@@ -190,7 +190,8 @@ class Step7 extends React.Component {
           onSubmit={values => {
             this.updateInfo(values);
           }}
-          render={props => (
+        >
+          {props => (
             <Form>
               <Input type="text" label="Bank Name" fieldname="bankName" />
               <Input
@@ -224,7 +225,7 @@ class Step7 extends React.Component {
               </Button>
             </Form>
           )}
-        />
+        </Formik>
         <style jsx>{`
           .error {
             height: 23px;

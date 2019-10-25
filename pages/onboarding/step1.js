@@ -148,10 +148,9 @@ class Step1 extends React.Component {
       localStorage.setItem("utility", JSON.stringify(utility));
 
       if (utility.paperOnly) {
-        localStorage.setItem(
-          "billingMethod",
-          JSON.stringify({ billingMethod: "paper" })
-        );
+        localStorage.setItem("billingMethod", JSON.stringify("paper"));
+      } else {
+        localStorage.setItem("billingMethod", JSON.stringify(""));
       }
 
       window.firebase
@@ -267,7 +266,8 @@ class Step1 extends React.Component {
             onSubmit={values => {
               this.autenticate(values);
             }}
-            render={props => (
+          >
+            {props => (
               <>
                 <Form>
                   <ZipCodeInput
@@ -324,7 +324,7 @@ class Step1 extends React.Component {
                 </Form>
               </>
             )}
-          />
+          </Formik>
         </SingleStep>
         <style jsx>{`
           main {

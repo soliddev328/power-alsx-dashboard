@@ -37,8 +37,9 @@ export default class forgotPassword extends React.Component {
         onSubmit={values => {
           this.sendEmail(values);
         }}
-        render={props => (
-          <React.Fragment>
+      >
+        {props => (
+          <>
             <Form>
               <Input
                 label="Email"
@@ -60,9 +61,9 @@ export default class forgotPassword extends React.Component {
                 text-align: center;
               }
             `}</style>
-          </React.Fragment>
+          </>
         )}
-      />
+      </Formik>
     );
   }
 
