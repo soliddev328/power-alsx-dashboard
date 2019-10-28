@@ -15,7 +15,7 @@ export default class Phoneinput extends React.PureComponent {
   }
 
   handleChange(e) {
-    const { onChangeEvent, fieldname } = this.props;
+    const { onChangeEvent, fieldname, outerLabel } = this.props;
     if (!outerLabel) {
       e.target.value !== ""
         ? this.setState({ displayLabel: false })
