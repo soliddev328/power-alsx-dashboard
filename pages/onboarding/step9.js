@@ -173,7 +173,7 @@ class Step9 extends React.Component {
               global.analytics.track("Sign-Up Completed", {});
               localStorage.setItem("usercreated", true);
               Router.push({
-                pathname: "/dashboard"
+                pathname: "/"
               });
             })
             .catch(() => {});

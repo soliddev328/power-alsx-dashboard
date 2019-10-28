@@ -71,7 +71,7 @@ class CheckoutForm extends Component {
                   global.analytics.track("Sign-Up Completed", {});
                   localStorage.setItem("usercreated", true);
                   Router.push({
-                    pathname: "/dashboard"
+                    pathname: "/"
                   });
                 });
             }

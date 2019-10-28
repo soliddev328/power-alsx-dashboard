@@ -24,17 +24,18 @@ class Step1 extends React.Component {
   }
 
   componentDidMount() {
-    window.firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        Router.push({
-          pathname: "/dashboard"
-        });
-      }
-    });
+    // window.firebase.auth().onAuthStateChanged(user => {
+    //   if (user) {
+    //     Router.push({
+    //       pathname: "/dashboard"
+    //     });
+    //   }
+    // });
   }
 
   autenticate(values) {
     const { error } = this.state;
+
     window.firebase
       .auth()
       .signInWithEmailAndPassword(values.emailAddress, values.password)
