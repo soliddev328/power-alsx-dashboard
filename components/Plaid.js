@@ -51,7 +51,7 @@ export default class Plaid extends React.Component {
               global.analytics.track("Sign-Up Completed", {});
               localStorage.setItem("usercreated", true);
               Router.push({
-                pathname: "/dashboard"
+                pathname: "/"
               });
             });
         }}
@@ -66,7 +66,7 @@ export default class Plaid extends React.Component {
             });
           }
           Router.push({
-            pathname: "/dashboard"
+            pathname: "/"
           });
         }}
       />
