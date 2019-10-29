@@ -50,8 +50,9 @@ export default class forgotPassword extends React.Component {
         onSubmit={values => {
           this.saveNewPassword(values);
         }}
-        render={props => (
-          <React.Fragment>
+      >
+        {props => (
+          <>
             <Form>
               <Input
                 type="password"
@@ -85,9 +86,9 @@ export default class forgotPassword extends React.Component {
                 text-align: center;
               }
             `}</style>
-          </React.Fragment>
+          </>
         )}
-      />
+      </Formik>
     );
   }
 
