@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function DollarIcon() {
   return (
     <span className="wrapper">

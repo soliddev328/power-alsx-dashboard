@@ -44,15 +44,18 @@ class Step1 extends React.Component {
     localStorage.removeItem("username");
 
     const { query } = this.props;
-    const storedCustomerReferral = Cookie.get("customer_referral");
-    const storedPartnerReferral = Cookie.get("partner_referral");
-    const storedSalesRep = Cookie.get("ce_rep_referral");
-    const storedUtmCampaign = Cookie.get("_ce_campaign");
-    const storedUtmSource = Cookie.get("_ce_source");
-    const storedUtmMedium = Cookie.get("_ce_medium");
-    const storedAffiliate = "";
-    const storedReferrerPage = "";
+    let storedReferrerPage = Cookie.get("ce_aff_slug");
+    let storedCustomerReferral = Cookie.get("customer_referral");
+    let storedPartnerReferral = Cookie.get("partner_referral");
+    let storedSalesRep = Cookie.get("ce_rep_referral");
+    let storedUtmCampaign = Cookie.get("_ce_campaign");
+    let storedUtmSource = Cookie.get("_ce_source");
+    let storedUtmMedium = Cookie.get("_ce_medium");
+    let storedAffiliate = Cookie.get("ce_aff");
 
+    if (document.referrer) {
+      storedReferrerPage = document.referrer;
+    }
     if (storedPartnerReferral) {
       localStorage.setItem("Partner", storedPartnerReferral);
     }
@@ -103,10 +106,6 @@ class Step1 extends React.Component {
     // some partners pass that information to us
     if (query.utility) {
       localStorage.setItem("utility", query.utility);
-    }
-
-    if (document.referrer) {
-      storedReferrerPage = document.referrer;
     }
 
     this.setState({
@@ -258,7 +257,7 @@ class Step1 extends React.Component {
     return (
       <main>
         <Header />
-        <SingleStep title="Hi, I'm Martin.  If you provide a little information I can see your savings opportunities.">
+        <SingleStep title="Hi, I’m Martin. If you provide a little information, I can check to see your savings opportunities.">
           <Formik
             initialValues={{
               postalCode: query.zipcode,
@@ -272,7 +271,7 @@ class Step1 extends React.Component {
               this.autenticate(values);
             }}
             render={props => (
-              <React.Fragment>
+              <>
                 <Form>
                   <ZipCodeInput
                     value={props.values.postalCode}
@@ -303,10 +302,13 @@ class Step1 extends React.Component {
                   />
                   <Input
                     type="password"
-                    label="Password"
+                    label="Create a Password"
                     fieldname="password"
                     required
                   />
+                  <p className="password-explanation">
+                    * This password will let you log back in later
+                  </p>
                   <p className="error">
                     {error.message} {error.link && error.link}
                   </p>
@@ -323,7 +325,7 @@ class Step1 extends React.Component {
                     Next
                   </Button>
                 </Form>
-              </React.Fragment>
+              </>
             )}
           />
         </SingleStep>
@@ -339,6 +341,11 @@ class Step1 extends React.Component {
             margin: 0;
             padding: 1em 0;
             text-align: center;
+          }
+          .password-explanation {
+            max-width: 350px;
+            margin: 0 auto;
+            font-size: 12px;
           }
         `}</style>
       </main>
