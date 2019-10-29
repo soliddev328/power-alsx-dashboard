@@ -5,7 +5,6 @@ import Header from "../../components/Header";
 import RadioCard from "../../components/RadioCard";
 import SingleStep from "../../components/SingleStep";
 import Button from "../../components/Button";
-import Stepper from "../../components/Stepper";
 
 class Step5 extends React.Component {
   constructor(props) {

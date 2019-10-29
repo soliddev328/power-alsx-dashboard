@@ -8,7 +8,6 @@ import Input from "../../components/Input";
 import Checkbox from "../../components/Checkbox";
 import SingleStep from "../../components/SingleStep";
 import Button from "../../components/Button";
-import Stepper from "../../components/Stepper";
 import CONSTANTS from "../../globals";
 
 const { API } =
@@ -427,15 +426,6 @@ class Step4 extends React.Component {
                 </a>
               )}
             </div>
-          )}
-          {!isLoading && (
-            <Stepper>
-              <li className="steplist__step steplist__step-done">1</li>
-              <li className="steplist__step steplist__step-doing">2</li>
-              <li className="steplist__step">3</li>
-              <li className="steplist__step">4</li>
-              <li className="steplist__step">5</li>
-            </Stepper>
           )}
         </SingleStep>
         <style jsx>{`

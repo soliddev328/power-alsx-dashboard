@@ -5,7 +5,6 @@ import Header from "../../components/Header";
 import RadioCard from "../../components/RadioCard";
 import SingleStep from "../../components/SingleStep";
 import Button from "../../components/Button";
-import Stepper from "../../components/Stepper";
 
 class Step3 extends React.Component {
   constructor(props) {
@@ -34,7 +33,7 @@ class Step3 extends React.Component {
               });
             }}
             render={props => (
-              <React.Fragment>
+              <>
                 <Form>
                   <RadioCard
                     number="1"
@@ -52,16 +51,9 @@ class Step3 extends React.Component {
                     Next
                   </Button>
                 </Form>
-              </React.Fragment>
+              </>
             )}
           />
-          <Stepper>
-            <li className="steplist__step steplist__step-doing">1</li>
-            <li className="steplist__step">2</li>
-            <li className="steplist__step">3</li>
-            <li className="steplist__step">4</li>
-            <li className="steplist__step">5</li>
-          </Stepper>
         </SingleStep>
         <style jsx>{`
           main {
