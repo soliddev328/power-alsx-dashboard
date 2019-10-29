@@ -20,7 +20,7 @@
     "@babel/polyfill": "^7.6.0",
     "@segment/snippet": "^4.4.0",
     "axios": "^0.19.0",
-    "babel-plugin-emotion": "^10.0.22",
+    "babel-plugin-emotion": "^10.0.23",
     "classnames": "^2.2.6",
     "copy-to-clipboard": "^3.2.0",
     "formik": "^2.0.3",
