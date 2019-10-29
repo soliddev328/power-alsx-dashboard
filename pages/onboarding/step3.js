@@ -9,6 +9,7 @@ import Button from "../../components/Button";
 class Step3 extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {};
   }
 
   componentDidMount() {
