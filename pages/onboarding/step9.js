@@ -8,7 +8,6 @@ import Button from "../../components/Button";
 import SingleStep from "../../components/SingleStep";
 import Plaid from "../../components/Plaid";
 import Checkout from "../../components/Checkout";
-import Stepper from "../../components/Stepper";
 import CONSTANTS from "../../globals";
 import Router from "next/router";
 
@@ -123,14 +122,6 @@ class Step9 extends React.Component {
             transform: translate(50%, 30%);
           }
         `}</style>
-        <Stepper>
-          <li className="steplist__step steplist__step-done">1</li>
-          <li className="steplist__step steplist__step-done">2</li>
-          <li className="steplist__step steplist__step-done">3</li>
-          <li className="steplist__step steplist__step-done">4</li>
-          <li className="steplist__step steplist__step-done">5</li>
-          <li className="steplist__step steplist__step-doing">6</li>
-        </Stepper>
       </SingleStep>
     );
   }
@@ -237,14 +228,6 @@ class Step9 extends React.Component {
             text-align: center;
           }
         `}</style>
-        <Stepper>
-          <li className="steplist__step steplist__step-done">1</li>
-          <li className="steplist__step steplist__step-done">2</li>
-          <li className="steplist__step steplist__step-done">3</li>
-          <li className="steplist__step steplist__step-done">4</li>
-          <li className="steplist__step steplist__step-done">5</li>
-          <li className="steplist__step steplist__step-doing">6</li>
-        </Stepper>
       </SingleStep>
     );
   }
