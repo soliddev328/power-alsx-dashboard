@@ -5,7 +5,6 @@ import Header from "../../components/Header";
 import RadioCard from "../../components/RadioCard";
 import SingleStep from "../../components/SingleStep";
 import Button from "../../components/Button";
-import Stepper from "../../components/Stepper";
 
 class Step6 extends React.Component {
   componentDidMount() {
@@ -90,13 +89,6 @@ class Step6 extends React.Component {
               </>
             )}
           />
-          <Stepper>
-            <li className="steplist__step steplist__step-done">1</li>
-            <li className="steplist__step steplist__step-done">2</li>
-            <li className="steplist__step steplist__step-done">3</li>
-            <li className="steplist__step steplist__step-doing">4</li>
-            <li className="steplist__step">5</li>
-          </Stepper>
         </SingleStep>
         <style jsx>{`
           main {
