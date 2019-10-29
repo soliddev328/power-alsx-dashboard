@@ -37,19 +37,22 @@ class CustomForm extends React.Component {
             <img src={imageUrl} alt="" />
           </figure>
           {completion && <Progressbar completion={completion} />}
+          <p>
+            Just answer a few quick questions about your utility account and
+            address to:
+          </p>
           <div className="items">
             <BulletItem
-              content="Save $10-20 per month on your electricity (estimated)"
+              content="Save $10-20 per month on your electricity bill"
               bulletIcon="dollar"
             />
             <BulletItem
               content="Lower emissions and pollution in your community"
               bulletIcon="co2"
             />
-            <BulletItem content="No cancellation fees" bulletIcon="cross" />
           </div>
         </div>
-        <Button primary>Let's do this!</Button>
+        <Button primary>Next</Button>
         <style jsx>{`
           .content {
             margin-bottom: 2rem;
@@ -170,9 +173,8 @@ class Step2 extends React.Component {
       <main>
         <Header />
         <SingleStep
-          prefix="Great news!"
-          title="We've got a project in your area."
-          suffix={
+          prefix="Great news, we’ve got a clean energy project in your area! By signing up you will start receiving energy credits that lower your electricity cost."
+          title={
             utility.project && utility.project.name ? utility.project.name : ""
           }
         >
