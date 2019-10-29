@@ -6,9 +6,7 @@
       "NODE_ENV": "development"
     }
   },
-  "alias": [
-    "my.commonenergy.us"
-  ],
+  "alias": ["my.commonenergy.us"],
   "routes": [
     {
       "src": "/sitemap.xml",

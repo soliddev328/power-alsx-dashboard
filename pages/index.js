@@ -12,7 +12,7 @@ import CONSTANTS from "../globals";
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
-class Step1 extends React.Component {
+class Index extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -62,55 +62,74 @@ class Step1 extends React.Component {
                   });
                   global.analytics.track("User Signed In", {});
 
+                  // retrieve utility information
+                  const utility = user.milestones.utility;
+                  const imageName = utility.replace(/\s/g, "");
+                  const utilityInfo = {
+                    image: {
+                      src: imageName
+                        ? `/static/images/utilities/${imageName}.png`
+                        : "/static/images/utilities/placeholder.png",
+                      altText: "Utility logo"
+                    },
+                    label: utility
+                  };
+                  localStorage.setItem("utility", JSON.stringify(utilityInfo));
+
+                  // retrieve postalcode
+                  if (
+                    user.milestones.address &&
+                    user.milestones.address.postalCode
+                  ) {
+                    const postalCode = user.milestones.address.postalCode;
+                    localStorage.setItem(
+                      "postalCode",
+                      JSON.stringify(postalCode)
+                    );
+                  }
+
+                  if (user.milestones.utilityPaperOnly) {
+                    localStorage.setItem(
+                      "billingMethod",
+                      JSON.stringify({ billingMethod: "paper" })
+                    );
+                  }
+
+                  // forward to the right page
                   if (user.signupCompleted) {
                     Router.push({
                       pathname: "/dashboard"
                     });
-                  } else if (!user.phone) {
+                  } else if (!user.milestones.utilityInfoCompleted) {
                     Router.push({
                       pathname: "/onboarding/step2",
                       query: {
                         onboardingNotFinished: true
                       }
                     });
-                  } else if (!user.milestones.utilityInfoCompleted) {
-                    const utility = user.milestones.utility;
-                    const imageName = utility.replace(/\s/g, "");
-                    const utilityInfo = {
-                      image: {
-                        src: imageName
-                          ? `/static/images/utilities/${imageName}.png`
-                          : "/static/images/utilities/placeholder.png",
-                        altText: "Utility logo"
-                      },
-                      label: utility
-                    };
-                    localStorage.setItem(
-                      "utility",
-                      JSON.stringify(utilityInfo)
-                    );
-                    if (user.milestones.utilityPaperOnly) {
-                      localStorage.setItem(
-                        "billingMethod",
-                        JSON.stringify({
-                          billingMethod: "paper"
-                        })
-                      );
-
-                      Router.push({
-                        pathname: "/onboarding/step8"
-                      });
-                    } else {
-                      Router.push({
-                        pathname: "/onboarding/step5",
-                        query: {
-                          onboardingNotFinished: true
-                        }
-                      });
-                    }
+                  } else if (
+                    user.milestones.utilityInfoCompleted &&
+                    user.milestones.utilityLoginSuccessful
+                  ) {
+                    Router.push({
+                      pathname: "/onboarding/step6",
+                      query: {
+                        onboardingNotFinished: true
+                      }
+                    });
+                  } else if (
+                    user.milestones.utilityInfoCompleted &&
+                    !user.milestones.addressInfoCompleted
+                  ) {
+                    Router.push({
+                      pathname: "/onboarding/step4.2",
+                      query: {
+                        onboardingNotFinished: true
+                      }
+                    });
                   } else if (!user.milestones.bankInfoCompleted) {
                     Router.push({
-                      pathname: "/onboarding/step8",
+                      pathname: "/onboarding/step6",
                       query: {
                         onboardingNotFinished: true
                       }
@@ -220,4 +239,4 @@ class Step1 extends React.Component {
   }
 }
 
-export default Step1;
+export default Index;

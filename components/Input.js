@@ -121,6 +121,16 @@ export default class Input extends React.PureComponent {
             position: absolute;
             top: -25%;
           }
+
+          .input__wrapper.outer-label {
+            margin-bottom: 0;
+            margin-top: 2em;
+          }
+
+          .input__wrapper.outer-label label {
+            position: absolute;
+            top: -25%;
+          }
         `}</style>
       </div>
     );
