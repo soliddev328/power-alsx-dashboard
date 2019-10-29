@@ -143,7 +143,8 @@ class Step42 extends React.Component {
               //   })
               // }
             }}
-            render={props => (
+          >
+            {props => (
               <Form>
                 <GeoSuggest
                   label="Address"
@@ -168,7 +169,7 @@ class Step42 extends React.Component {
                 </Button>
               </Form>
             )}
-          />
+          </Formik>
         </SingleStep>
         <style jsx>{`
           main {
