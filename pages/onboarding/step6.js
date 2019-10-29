@@ -37,7 +37,8 @@ class Step6 extends React.Component {
                 pathname: "/onboarding/step7"
               });
             }}
-            render={props => (
+          >
+            {props => (
               <>
                 <Form>
                   <RadioCard
@@ -88,7 +89,7 @@ class Step6 extends React.Component {
                 </Form>
               </>
             )}
-          />
+          </Formik>
         </SingleStep>
         <style jsx>{`
           main {

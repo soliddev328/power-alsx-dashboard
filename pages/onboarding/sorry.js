@@ -112,17 +112,18 @@ class Sorry extends React.Component {
                 })
                 .catch(() => {});
             }}
-            render={props => (
-              <React.Fragment>
+          >
+            {props => (
+              <>
                 <Form>
                   <Input label="email" fieldname="email" />
                   <Button primary disabled={!!props.values.email === false}>
                     Next
                   </Button>
                 </Form>
-              </React.Fragment>
+              </>
             )}
-          />
+          </Formik>
         </SingleStep>
         <style jsx>{`
           main {

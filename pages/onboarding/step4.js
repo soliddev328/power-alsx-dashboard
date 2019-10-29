@@ -184,7 +184,8 @@ class Step4 extends React.Component {
                   });
               });
           }}
-          render={props => (
+        >
+          {props => (
             <>
               <Form>
                 <Input label="User name" fieldname="utilityUser" />
@@ -229,7 +230,7 @@ class Step4 extends React.Component {
               </Form>
             </>
           )}
-        />
+        </Formik>
         <style jsx>{`
           .error {
             text-align: center;
@@ -279,7 +280,8 @@ class Step4 extends React.Component {
                 });
             });
         }}
-        render={props => (
+      >
+        {props => (
           <>
             <Form>
               <Input label="Account Number" fieldname="utilityAccountNumber" />
@@ -317,7 +319,7 @@ class Step4 extends React.Component {
             </Form>
           </>
         )}
-      />
+      </Formik>
     );
   }
 
@@ -325,7 +327,8 @@ class Step4 extends React.Component {
     const { billingMethod } = this.state;
 
     const canLinkAccount =
-      billingMethod && billingMethod.billingMethod.indexOf("paper") !== 0;
+      this.state.billingMethod &&
+      this.state.billingMethod.indexOf("paper") !== 0;
 
     return canLinkAccount
       ? this.renderUtilityLogin()
@@ -370,13 +373,11 @@ class Step4 extends React.Component {
   renderText() {
     const canLinkAccount =
       this.state.billingMethod &&
-      this.state.billingMethod.billingMethod.indexOf("paper") !== 0;
+      this.state.billingMethod.indexOf("paper") !== 0;
+
     let text = canLinkAccount
       ? "Ok great. Let's connect your account and get you saving!"
       : "No problem! We can use your account number to get you connected and saving.";
-
-    if (this.state.currentUtility && this.state.currentUtility.paperOnly)
-      text = "We can use your account number to get you connected and saving.";
 
     return this.state.isLoading ? "" : text;
   }
@@ -392,9 +393,8 @@ class Step4 extends React.Component {
     } = this.state;
 
     const canLinkAccount =
-      !currentUtility.paperOnly &&
-      billingMethod &&
-      billingMethod.indexOf("paper") !== 0;
+      this.state.billingMethod &&
+      this.state.billingMethod.indexOf("paper") !== 0;
     return (
       <main>
         <Header />
