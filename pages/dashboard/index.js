@@ -37,6 +37,7 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         global.analytics.page("Dashboard");
@@ -87,7 +88,7 @@ const Dashboard = () => {
         });
       }
     });
-  }, []);
+  }, [selectedAccount.value]);
 
   return (
     <Main isLoading={isLoading}>
