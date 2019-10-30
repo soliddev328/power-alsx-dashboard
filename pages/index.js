@@ -36,14 +36,6 @@ class Index extends React.Component {
   autenticate(values) {
     const { error } = this.state;
 
-    window.firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        Router.push({
-          pathname: "/dashboard"
-        });
-      }
-    });
-
     window.firebase
       .auth()
       .signInWithEmailAndPassword(values.emailAddress, values.password)
@@ -64,15 +56,23 @@ class Index extends React.Component {
                 })
                 .then(response => {
                   const user = response.data.data;
+
                   window.localStorage.setItem("leadId", user.leadId);
+
                   global.analytics.identify(user.leadId, {
                     email: user.email
                   });
+
                   global.analytics.track("User Signed In", {});
 
                   // retrieve utility information
-                  const utility = user.milestones.utility;
-                  const imageName = utility.replace(/\s/g, "");
+                  const utility =
+                    user && user.milestones ? user.milestones.utility : false;
+
+                  const imageName = utility
+                    ? utility.replace(/\s/g, "")
+                    : false;
+
                   const utilityInfo = {
                     image: {
                       src: imageName
@@ -82,10 +82,13 @@ class Index extends React.Component {
                     },
                     label: utility
                   };
+
                   localStorage.setItem("utility", JSON.stringify(utilityInfo));
 
                   // retrieve postalcode
                   if (
+                    user &&
+                    user.milestones &&
                     user.milestones.address &&
                     user.milestones.address.postalCode
                   ) {
@@ -96,15 +99,20 @@ class Index extends React.Component {
                     );
                   }
 
-                  if (user.milestones.utilityPaperOnly) {
+                  if (
+                    user &&
+                    user.milestones &&
+                    user.milestones.utilityPaperOnly
+                  ) {
                     localStorage.setItem(
                       "billingMethod",
                       JSON.stringify({ billingMethod: "paper" })
                     );
                   }
-                  console.log(user);
+
                   // forward to the right page
                   if (user.signupCompleted) {
+                    console.log("login");
                     Router.push({
                       pathname: "/dashboard"
                     });
@@ -116,8 +124,9 @@ class Index extends React.Component {
                       }
                     });
                   } else if (
-                    user.milestones.utilityInfoCompleted &&
-                    user.milestones.utilityLoginSuccessful
+                    (user.milestones.utilityInfoCompleted &&
+                      user.milestones.utilityLoginSuccessful) ||
+                    !user.milestones.bankInfoCompleted
                   ) {
                     Router.push({
                       pathname: "/onboarding/step6",
@@ -135,16 +144,11 @@ class Index extends React.Component {
                         onboardingNotFinished: true
                       }
                     });
-                  } else if (!user.milestones.bankInfoCompleted) {
-                    Router.push({
-                      pathname: "/onboarding/step6",
-                      query: {
-                        onboardingNotFinished: true
-                      }
-                    });
                   }
                 })
-                .catch(() => {});
+                .catch(err => {
+                  console.log(err);
+                });
             });
         }
       });
