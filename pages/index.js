@@ -112,7 +112,6 @@ class Index extends React.Component {
 
                   // forward to the right page
                   if (user.signupCompleted) {
-                    console.log("login");
                     Router.push({
                       pathname: "/dashboard"
                     });
