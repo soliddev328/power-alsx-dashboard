@@ -36,6 +36,14 @@ class Index extends React.Component {
   autenticate(values) {
     const { error } = this.state;
 
+    window.firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        Router.push({
+          pathname: "/dashboard"
+        });
+      }
+    });
+
     window.firebase
       .auth()
       .signInWithEmailAndPassword(values.emailAddress, values.password)
@@ -94,7 +102,7 @@ class Index extends React.Component {
                       JSON.stringify({ billingMethod: "paper" })
                     );
                   }
-
+                  console.log(user);
                   // forward to the right page
                   if (user.signupCompleted) {
                     Router.push({
@@ -148,6 +156,7 @@ class Index extends React.Component {
 
   render() {
     const { error } = this.state;
+
     return (
       <main>
         <Header first />
