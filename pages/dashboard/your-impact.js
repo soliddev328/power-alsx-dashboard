@@ -124,7 +124,7 @@ export default function MyImpact() {
         });
       }
     });
-  }, [selectedAccount]);
+  }, [selectedAccount.value]);
 
   return (
     <Main isLoading={isLoading}>
