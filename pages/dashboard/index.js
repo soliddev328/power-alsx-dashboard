@@ -28,7 +28,7 @@ const getUserData = async (userUid, idToken) => {
 };
 
 const Dashboard = () => {
-  const [{ selectedAccount }, dispatch] = useStateValue();
+  const [{ selectedAccount }] = useStateValue();
   const [userData, setUserData] = useState({});
   const [overlayDescription, setOverlayDescription] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -43,6 +43,7 @@ const Dashboard = () => {
 
           if (
             userInfo &&
+            userInfo.accounts &&
             userInfo.accounts[selectedAccount.value].onboardingStatus ===
               "Unassigned"
           ) {
@@ -51,6 +52,7 @@ const Dashboard = () => {
             );
           } else if (
             userInfo &&
+            userInfo.accounts &&
             userInfo.accounts[selectedAccount.value].onboardingStatus ===
               "Project Live"
           ) {
@@ -59,6 +61,7 @@ const Dashboard = () => {
             );
           } else if (
             userInfo &&
+            userInfo.accounts &&
             userInfo.accounts[selectedAccount.value].onboardingStatus ===
               "No Project"
           ) {
@@ -67,6 +70,7 @@ const Dashboard = () => {
             );
           } else if (
             userInfo &&
+            userInfo.accounts &&
             userInfo.accounts[selectedAccount.value].onboardingStatus ===
               "Project Not Live"
           ) {
@@ -75,6 +79,7 @@ const Dashboard = () => {
             );
           } else if (
             userInfo &&
+            userInfo.accounts &&
             userInfo.accounts[selectedAccount.value].onboardingStatus ===
               "Meter Live"
           ) {
@@ -95,11 +100,12 @@ const Dashboard = () => {
   return (
     <Main isLoading={isLoading}>
       <Head>
-        <title>Common Energy - Your snapshot</title>
+        <title>Common Energy - Home</title>
       </Head>
       <Text h2 hasDecoration>
         Welcome {userData && userData.firstName}
       </Text>
+      <Text noMargin>This is your impact and savings dashboard!</Text>
       <Section
         columns="4"
         disabled={overlayDescription}
@@ -155,7 +161,9 @@ const Dashboard = () => {
             </Text>
           </Container>
           <Separator margin="10px auto 25px auto" small />
-          <Text noMargin>Clean Energy Generated</Text>
+          <Text noMargin small>
+            Clean Energy Generated
+          </Text>
         </Panel>
         <Panel small specialShadow center>
           <Container column>
@@ -181,9 +189,9 @@ const Dashboard = () => {
                 userData.accounts[selectedAccount.value].totalC02Avoided >
                   0 && (
                   <NumberFormat
-                    value={
+                    value={Math.round(
                       userData.accounts[selectedAccount.value].totalC02Avoided
-                    }
+                    )}
                     displayType={"text"}
                     thousandSeparator={true}
                     suffix={" lbs"}
@@ -193,7 +201,9 @@ const Dashboard = () => {
             </Text>
           </Container>
           <Separator margin="10px auto 25px auto" small />
-          <Text noMargin>CO2 Emissions Prevented</Text>
+          <Text noMargin small>
+            CO2 Emissions Prevented
+          </Text>
         </Panel>
         <span className="label mobile-only">
           <Text bold noMargin style={{ textAlign: "center", color: "#a8a8ba" }}>
@@ -201,47 +211,6 @@ const Dashboard = () => {
           </Text>
         </span>
         <Panel small specialShadow center>
-          <Container column>
-            <Icon
-              icon={
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="28"
-                  viewBox="0 0 16 28"
-                >
-                  <path
-                    fill="#2479FF"
-                    fillRule="nonzero"
-                    stroke="#2479FF"
-                    strokeWidth=".638"
-                    d="M5.558.319L.438 16.126h4.594L2.11 26.11l12.982-14.83H9.337L15.26.32H5.558z"
-                  />
-                </svg>
-              }
-            />
-            <Text h2 bold style={{ marginTop: "20px" }}>
-              {(userData &&
-                userData.accounts &&
-                userData.accounts[selectedAccount.value]
-                  .lifetimeEstimatedSavings > 0 && (
-                  <NumberFormat
-                    value={
-                      userData.accounts[selectedAccount.value]
-                        .lifetimeEstimatedSavings
-                    }
-                    displayType={"text"}
-                    thousandSeparator={true}
-                    prefix={"$"}
-                  />
-                )) ||
-                "$0"}{" "}
-            </Text>
-          </Container>
-          <Separator margin="10px auto 25px auto" small />
-          <Text noMargin>Estimated Lifetime Savings</Text>
-        </Panel>
-        <Panel small specialShadow center hasDecoration={!overlayDescription}>
           <Container column>
             <Icon
               icon={
@@ -265,10 +234,10 @@ const Dashboard = () => {
                 userData.accounts[selectedAccount.value].totalSavingsToDate >
                   0 && (
                   <NumberFormat
-                    value={
+                    value={Math.round(
                       userData.accounts[selectedAccount.value]
                         .totalSavingsToDate
-                    }
+                    )}
                     displayType={"text"}
                     thousandSeparator={true}
                     prefix={"$"}
@@ -278,7 +247,76 @@ const Dashboard = () => {
             </Text>
           </Container>
           <Separator margin="10px auto 25px auto" small />
-          <Text noMargin>Total Savings to Date</Text>
+          <Text noMargin small>
+            Savings to Date
+          </Text>
+        </Panel>
+        <Panel small specialShadow center hasDecoration={!overlayDescription}>
+          <Container column>
+            <Icon
+              icon={
+                <>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="25"
+                    height="32"
+                    viewBox="0 0 25 32"
+                  >
+                    <path
+                      fill="#2479FF"
+                      fillRule="evenodd"
+                      d="M17.148 8.246a37.44 37.44 0 0 1-4.847.296c-1.682 0-3.331-.1-4.847-.296C3.925 11.247 0 16.26 0 20.81c0 7.156 5.507 10.52 12.301 10.52 6.794 0 12.301-3.364 12.301-10.52 0-4.585-3.925-9.564-7.454-12.565zm-3.923 16.818v1.353a.26.26 0 0 1-.264.264h-1.32a.26.26 0 0 1-.264-.264v-1.32c-1.319-.098-2.407-1.12-2.539-2.439 0-.131.132-.264.265-.264h1.319c.131 0 .23.066.264.198.065.396.46.693.858.693h1.154c.693 0 1.319-.494 1.385-1.154.099-.79-.529-1.45-1.286-1.45h-.858c-1.615 0-3.067-1.188-3.232-2.837-.165-1.714 1.055-3.166 2.704-3.397v-1.319c0-.131.131-.264.264-.264h1.32c.13 0 .263.1.263.264v1.32c1.32.098 2.408 1.12 2.54 2.439a.26.26 0 0 1-.265.264h-1.319c-.1 0-.23-.066-.264-.198a.92.92 0 0 0-.89-.693h-1.154c-.693 0-1.286.494-1.385 1.154-.066.79.528 1.45 1.285 1.45h.99c1.847 0 3.297 1.55 3.1 3.43-.132 1.451-1.287 2.54-2.671 2.77zM12.3 6.597c1.583 0 3.1-.1 4.486-.264.923-1.979 1.748-3.991 1.748-4.881 0-1.32-1.683-2.012-2.672-.594C14.543 2.705 13.95 0 12.434 0c-1.517 0-2.308 2.507-3.496.824C7.849-.692 6.035.232 6.035 1.42c0 1.154.76 3.099 1.616 4.913a40.68 40.68 0 0 0 4.65.264z"
+                    />
+                  </svg>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="25"
+                    height="32"
+                    viewBox="0 0 25 32"
+                  >
+                    <path
+                      fill="#2479FF"
+                      fillRule="evenodd"
+                      d="M17.148 8.246a37.44 37.44 0 0 1-4.847.296c-1.682 0-3.331-.1-4.847-.296C3.925 11.247 0 16.26 0 20.81c0 7.156 5.507 10.52 12.301 10.52 6.794 0 12.301-3.364 12.301-10.52 0-4.585-3.925-9.564-7.454-12.565zm-3.923 16.818v1.353a.26.26 0 0 1-.264.264h-1.32a.26.26 0 0 1-.264-.264v-1.32c-1.319-.098-2.407-1.12-2.539-2.439 0-.131.132-.264.265-.264h1.319c.131 0 .23.066.264.198.065.396.46.693.858.693h1.154c.693 0 1.319-.494 1.385-1.154.099-.79-.529-1.45-1.286-1.45h-.858c-1.615 0-3.067-1.188-3.232-2.837-.165-1.714 1.055-3.166 2.704-3.397v-1.319c0-.131.131-.264.264-.264h1.32c.13 0 .263.1.263.264v1.32c1.32.098 2.408 1.12 2.54 2.439a.26.26 0 0 1-.265.264h-1.319c-.1 0-.23-.066-.264-.198a.92.92 0 0 0-.89-.693h-1.154c-.693 0-1.286.494-1.385 1.154-.066.79.528 1.45 1.285 1.45h.99c1.847 0 3.297 1.55 3.1 3.43-.132 1.451-1.287 2.54-2.671 2.77zM12.3 6.597c1.583 0 3.1-.1 4.486-.264.923-1.979 1.748-3.991 1.748-4.881 0-1.32-1.683-2.012-2.672-.594C14.543 2.705 13.95 0 12.434 0c-1.517 0-2.308 2.507-3.496.824C7.849-.692 6.035.232 6.035 1.42c0 1.154.76 3.099 1.616 4.913a40.68 40.68 0 0 0 4.65.264z"
+                    />
+                  </svg>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="25"
+                    height="32"
+                    viewBox="0 0 25 32"
+                  >
+                    <path
+                      fill="#2479FF"
+                      fillRule="evenodd"
+                      d="M17.148 8.246a37.44 37.44 0 0 1-4.847.296c-1.682 0-3.331-.1-4.847-.296C3.925 11.247 0 16.26 0 20.81c0 7.156 5.507 10.52 12.301 10.52 6.794 0 12.301-3.364 12.301-10.52 0-4.585-3.925-9.564-7.454-12.565zm-3.923 16.818v1.353a.26.26 0 0 1-.264.264h-1.32a.26.26 0 0 1-.264-.264v-1.32c-1.319-.098-2.407-1.12-2.539-2.439 0-.131.132-.264.265-.264h1.319c.131 0 .23.066.264.198.065.396.46.693.858.693h1.154c.693 0 1.319-.494 1.385-1.154.099-.79-.529-1.45-1.286-1.45h-.858c-1.615 0-3.067-1.188-3.232-2.837-.165-1.714 1.055-3.166 2.704-3.397v-1.319c0-.131.131-.264.264-.264h1.32c.13 0 .263.1.263.264v1.32c1.32.098 2.408 1.12 2.54 2.439a.26.26 0 0 1-.265.264h-1.319c-.1 0-.23-.066-.264-.198a.92.92 0 0 0-.89-.693h-1.154c-.693 0-1.286.494-1.385 1.154-.066.79.528 1.45 1.285 1.45h.99c1.847 0 3.297 1.55 3.1 3.43-.132 1.451-1.287 2.54-2.671 2.77zM12.3 6.597c1.583 0 3.1-.1 4.486-.264.923-1.979 1.748-3.991 1.748-4.881 0-1.32-1.683-2.012-2.672-.594C14.543 2.705 13.95 0 12.434 0c-1.517 0-2.308 2.507-3.496.824C7.849-.692 6.035.232 6.035 1.42c0 1.154.76 3.099 1.616 4.913a40.68 40.68 0 0 0 4.65.264z"
+                    />
+                  </svg>
+                </>
+              }
+            />
+            <Text h2 bold style={{ marginTop: "20px" }}>
+              {(userData &&
+                userData.accounts &&
+                userData.accounts[selectedAccount.value]
+                  .lifetimeEstimatedSavings > 0 && (
+                  <NumberFormat
+                    value={Math.round(
+                      userData.accounts[selectedAccount.value]
+                        .lifetimeEstimatedSavings
+                    )}
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    prefix={"$"}
+                  />
+                )) ||
+                "$0"}{" "}
+            </Text>
+          </Container>
+          <Separator margin="10px auto 25px auto" small />
+          <Text noMargin small>
+            Forecasted Lifetime Savings
+          </Text>
         </Panel>
       </Section>
       <Section>
@@ -288,7 +326,8 @@ const Dashboard = () => {
               Help us bring clean energy to your community
             </Text>
             <Text style={{ marginBottom: "20px" }}>
-              Share the link below and earn $50 per referral!
+              Help your friends save with Common Energy and receive $50 for each
+              referral!
             </Text>
           </Container>
           <UsersInAreaMap />

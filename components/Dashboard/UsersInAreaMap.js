@@ -32,31 +32,33 @@ const getNearbyUsers = async (lat, lon, idToken) => {
 
 export default function UsersInAreaMap() {
   const [empty, setEmpty] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [mapLocation, setMapLocation] = useState([]);
   const [nearbyUsers, setNearbyUsers] = useState([]);
-  const [{ selectedAccount }, dispatch] = useStateValue();
+  const [{ selectedAccount }] = useStateValue();
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         user.getIdToken(true).then(async idToken => {
           const userInfo = await getUserData(user.uid, idToken);
-          const nearbyUsersInfo = await getNearbyUsers(
-            userInfo.accounts[selectedAccount.value].address.lat,
-            userInfo.accounts[selectedAccount.value].address.lon,
-            idToken
-          );
 
-          setMapLocation([
-            parseFloat(userInfo.accounts[selectedAccount.value].address.lat),
-            parseFloat(userInfo.accounts[selectedAccount.value].address.lon)
-          ]);
+          if (userInfo && userInfo.accounts) {
+            const nearbyUsersInfo = await getNearbyUsers(
+              userInfo.accounts[selectedAccount.value].address.lat,
+              userInfo.accounts[selectedAccount.value].address.lon,
+              idToken
+            );
 
-          if (nearbyUsersInfo) {
-            setNearbyUsers(nearbyUsersInfo);
-          } else {
-            setEmpty(true);
+            setMapLocation([
+              parseFloat(userInfo.accounts[selectedAccount.value].address.lat),
+              parseFloat(userInfo.accounts[selectedAccount.value].address.lon)
+            ]);
+
+            if (nearbyUsersInfo) {
+              setNearbyUsers(nearbyUsersInfo);
+            } else {
+              setEmpty(true);
+            }
           }
         });
       }
@@ -87,7 +89,9 @@ export default function UsersInAreaMap() {
           <Text h4 bold noMargin>
             {nearbyUsers.length}
           </Text>
-          <Text>subscribers in your area</Text>
+          <Text small style={{ marginTop: "10px" }}>
+            Common Energy subscribers in your area
+          </Text>
         </div>
       ) : (
         <div className="users-orb">
