@@ -62,7 +62,9 @@ export default function SegmentedInput({
         user.getIdToken(true).then(async idToken => {
           setToken(idToken);
           const userInfo = await getUserData(user.uid, idToken);
-          setUserName(userInfo.username);
+          if (userInfo) {
+            setUserName(userInfo.username);
+          }
         });
       } else {
         Router.push({
