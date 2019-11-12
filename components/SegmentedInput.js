@@ -26,7 +26,6 @@ export default function SegmentedInput({
   hasBorder,
   onClick
 }) {
-  const [value, setValue] = useState("");
   const [userName, setUserName] = useState("");
   const [token, setToken] = useState();
   const [copied, setCopied] = useState(false);

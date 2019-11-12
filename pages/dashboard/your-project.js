@@ -9,7 +9,6 @@ import Panel from "../../components/Panel";
 import Image from "../../components/Image";
 import Text from "../../components/Text";
 import CONSTANTS from "../../globals";
-import { privateEncrypt } from "crypto";
 
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
@@ -33,11 +32,10 @@ const getProjectInfo = async (projectId, idToken) => {
 };
 
 export default function MySource() {
-  const [userData, setUserdata] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [overlayDescription, setOverlayDescription] = useState(false);
   const [projectInfo, setProjectInfo] = useState({});
-  const [{ selectedAccount }, dispatch] = useStateValue();
+  const [{ selectedAccount }] = useStateValue();
 
   useEffect(() => {
     setIsLoading(true);
@@ -86,7 +84,6 @@ export default function MySource() {
             userInfo.accounts[selectedAccount.value].projectId,
             idToken
           );
-          setUserdata(userInfo);
           setProjectInfo(projectData);
           setIsLoading(false);
         });

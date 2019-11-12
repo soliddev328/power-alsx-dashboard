@@ -17,8 +17,6 @@ class Step3 extends React.Component {
   }
 
   render() {
-    const { name, leadId, postalCode, errorMessage } = this.state;
-
     return (
       <main>
         <Header />

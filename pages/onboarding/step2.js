@@ -1,9 +1,7 @@
 import React from "react";
 import Router from "next/router";
-import { Form, Formik } from "formik";
 import axios from "axios";
 import Header from "../../components/Header";
-import Checkbox from "../../components/Checkbox";
 import BulletItem from "../../components/BulletItem";
 import Progressbar from "../../components/Progressbar";
 import SingleStep from "../../components/SingleStep";
