@@ -63,7 +63,7 @@ export default function UsersInAreaMap() {
         });
       }
     });
-  }, [selectedAccount]);
+  }, [selectedAccount.value]);
 
   return (
     <div className="wrapper">

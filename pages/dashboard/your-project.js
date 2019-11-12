@@ -44,48 +44,49 @@ export default function MySource() {
         global.analytics.page("Your project");
         user.getIdToken(true).then(async idToken => {
           const userInfo = await getUserData(user.uid, idToken);
+          if (userInfo && userInfo.accounts) {
+            if (
+              userInfo.accounts[selectedAccount.value].onboardingStatus ===
+              "Unassigned"
+            ) {
+              setOverlayDescription(
+                "Please stay tuned to learn more about the status of your project and your connection timeline! We will provide more details shortly, both here and by email -- and please feel free to always reach out with any questions at"
+              );
+            } else if (
+              userInfo.accounts[selectedAccount.value].onboardingStatus ===
+              "Project Live"
+            ) {
+              setOverlayDescription(
+                "Common Energy can connect you to our available project in your community in as little as 2-5 weeks. We'll keep you posted on our progress along the way -- and please feel free to always reach out with any questions at"
+              );
+            } else if (
+              userInfo.accounts[selectedAccount.value].onboardingStatus ===
+              "No Project"
+            ) {
+              setOverlayDescription(
+                "Currently, all our projects in your area are filled. However, because of your interest, we're able to work with a developer on a new project to bring more clean energy and savings to your community! Please stand-by for an update on new projects in a few weeks -- and feel free to reach out with any questions at"
+              );
+            } else if (
+              userInfo.accounts[selectedAccount.value].onboardingStatus ===
+              "Project Not Live"
+            ) {
+              setOverlayDescription(
+                "We're excited to let you know that we have an available project in your area, but we are not ready to connect you, as it is not yet ready and active. However, we will make sure we update you as we take the project through to completion. Please know that as an early subscriber, you've taken an important step in making this project a success! Feel free to reach out with any questions at"
+              );
+            } else if (
+              userInfo.accounts[selectedAccount.value].onboardingStatus ===
+              "Meter Live"
+            ) {
+              setOverlayDescription(false);
+            }
 
-          if (
-            userInfo.accounts[selectedAccount.value].onboardingStatus ===
-            "Unassigned"
-          ) {
-            setOverlayDescription(
-              "Please stay tuned to learn more about the status of your project and your connection timeline! We will provide more details shortly, both here and by email -- and please feel free to always reach out with any questions at"
+            const projectData = await getProjectInfo(
+              userInfo.accounts[selectedAccount.value].projectId,
+              idToken
             );
-          } else if (
-            userInfo.accounts[selectedAccount.value].onboardingStatus ===
-            "Project Live"
-          ) {
-            setOverlayDescription(
-              "Common Energy can connect you to our available project in your community in as little as 2-5 weeks. We'll keep you posted on our progress along the way -- and please feel free to always reach out with any questions at"
-            );
-          } else if (
-            userInfo.accounts[selectedAccount.value].onboardingStatus ===
-            "No Project"
-          ) {
-            setOverlayDescription(
-              "Currently, all our projects in your area are filled. However, because of your interest, we're able to work with a developer on a new project to bring more clean energy and savings to your community! Please stand-by for an update on new projects in a few weeks -- and feel free to reach out with any questions at"
-            );
-          } else if (
-            userInfo.accounts[selectedAccount.value].onboardingStatus ===
-            "Project Not Live"
-          ) {
-            setOverlayDescription(
-              "We're excited to let you know that we have an available project in your area, but we are not ready to connect you, as it is not yet ready and active. However, we will make sure we update you as we take the project through to completion. Please know that as an early subscriber, you've taken an important step in making this project a success! Feel free to reach out with any questions at"
-            );
-          } else if (
-            userInfo.accounts[selectedAccount.value].onboardingStatus ===
-            "Meter Live"
-          ) {
-            setOverlayDescription(false);
+            setProjectInfo(projectData);
+            setIsLoading(false);
           }
-
-          const projectData = await getProjectInfo(
-            userInfo.accounts[selectedAccount.value].projectId,
-            idToken
-          );
-          setProjectInfo(projectData);
-          setIsLoading(false);
         });
       } else {
         Router.push({
@@ -102,6 +103,10 @@ export default function MySource() {
       </Head>
       <Text h2 hasDecoration>
         Your Project
+      </Text>
+      <Text noMargin>
+        Congratulations! This is the new clean energy project you've helped
+        connect to the grid!
       </Text>
       <div className="inner">
         <Section
@@ -161,90 +166,93 @@ export default function MySource() {
           <Section disabled={!projectInfo}>
             <Panel>
               <Text h3>Project Summary</Text>
-              <div className="item">
-                <Text noMargin bold>
-                  Project Name:
-                </Text>
-                <Text noMargin>{projectInfo ? `${projectInfo.name}` : ""}</Text>
-              </div>
-
-              <div className="item">
-                <Text noMargin bold>
-                  Project Address:
-                </Text>
-                <Text noMargin>
-                  {projectInfo
-                    ? `${projectInfo.town}, ${projectInfo.state}`
-                    : ""}
-                </Text>
-              </div>
-              <div className="item">
-                <Text noMargin bold>
-                  Project Size:
-                </Text>
-                <Text noMargin>
-                  {projectInfo ? (
-                    <NumberFormat
-                      value={projectInfo.sizeDC}
-                      displayType={"text"}
-                      thousandSeparator={true}
-                      suffix={" kW DC"}
-                    />
-                  ) : (
-                    ""
-                  )}{" "}
-                </Text>
-              </div>
-              <div className="item">
-                <Text noMargin bold>
-                  Annual generation:
-                </Text>
-                <Text noMargin>
-                  {projectInfo ? (
-                    <NumberFormat
-                      value={projectInfo.annualGeneration}
-                      displayType={"text"}
-                      thousandSeparator={true}
-                      suffix={" kWh"}
-                    />
-                  ) : (
-                    ""
-                  )}{" "}
-                </Text>
-              </div>
-              <div className="item">
-                <Text noMargin bold>
-                  Annual avoided CO2:
-                </Text>
-                <Text noMargin>
-                  {projectInfo ? (
-                    <NumberFormat
-                      value={projectInfo.annualAvoidedC02}
-                      displayType={"text"}
-                      thousandSeparator={true}
-                      suffix={" pounds"}
-                    />
-                  ) : (
-                    ""
-                  )}{" "}
-                </Text>
-              </div>
-              <div className="item">
-                <Text noMargin bold>
-                  Equivalent trees planted:
-                </Text>
-                <Text noMargin>
-                  {projectInfo ? (
-                    <NumberFormat
-                      value={projectInfo.annualTreesPlanted}
-                      displayType={"text"}
-                      thousandSeparator={true}
-                    />
-                  ) : (
-                    ""
-                  )}
-                </Text>
-              </div>
+              <Section columns="2" noGap noMargin>
+                <div className="item">
+                  <Text noMargin bold>
+                    Project Name:
+                  </Text>
+                  <Text noMargin>
+                    {projectInfo ? `${projectInfo.name}` : ""}
+                  </Text>
+                </div>
+                <div className="item">
+                  <Text noMargin bold>
+                    Project Address:
+                  </Text>
+                  <Text noMargin>
+                    {projectInfo
+                      ? `${projectInfo.town}, ${projectInfo.state}`
+                      : ""}
+                  </Text>
+                </div>
+                <div className="item">
+                  <Text noMargin bold>
+                    Project Size:
+                  </Text>
+                  <Text noMargin>
+                    {projectInfo ? (
+                      <NumberFormat
+                        value={projectInfo.sizeDC}
+                        displayType={"text"}
+                        thousandSeparator={true}
+                        suffix={" kW DC"}
+                      />
+                    ) : (
+                      ""
+                    )}{" "}
+                  </Text>
+                </div>
+                <div className="item">
+                  <Text noMargin bold>
+                    Annual generation:
+                  </Text>
+                  <Text noMargin>
+                    {projectInfo ? (
+                      <NumberFormat
+                        value={projectInfo.annualGeneration}
+                        displayType={"text"}
+                        thousandSeparator={true}
+                        suffix={" kWh"}
+                      />
+                    ) : (
+                      ""
+                    )}{" "}
+                  </Text>
+                </div>
+                <div className="item">
+                  <Text noMargin bold>
+                    Annual avoided CO2:
+                  </Text>
+                  <Text noMargin>
+                    {projectInfo ? (
+                      <NumberFormat
+                        value={projectInfo.annualAvoidedC02}
+                        displayType={"text"}
+                        thousandSeparator={true}
+                        suffix={" pounds"}
+                      />
+                    ) : (
+                      ""
+                    )}{" "}
+                  </Text>
+                </div>
+                <div className="item">
+                  <Text noMargin bold>
+                    Equivalent trees planted:
+                  </Text>
+                  <Text noMargin>
+                    {projectInfo ? (
+                      <NumberFormat
+                        value={projectInfo.annualTreesPlanted}
+                        displayType={"text"}
+                        thousandSeparator={true}
+                      />
+                    ) : (
+                      ""
+                    )}
+                  </Text>
+                </div>
+              </Section>
             </Panel>
           </Section>
         )}
