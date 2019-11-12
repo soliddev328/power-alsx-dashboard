@@ -48,9 +48,11 @@ export default function Profile() {
         global.analytics.page("Profile");
         user.getIdToken(true).then(async idToken => {
           const userInfo = await getUserData(user.uid, idToken);
-          setUserdata(userInfo);
-          setPaymentMethods(getPaymentMethods(userInfo.accounts));
-          setIsLoading(false);
+          if (userInfo) {
+            setUserdata(userInfo);
+            setPaymentMethods(getPaymentMethods(userInfo.accounts));
+            setIsLoading(false);
+          }
         });
       } else {
         Router.push({
