@@ -13,7 +13,6 @@ import Image from "../../components/Image";
 import Icon from "../../components/Icon";
 import ReferralsTable from "../../components/Dashboard/ReferralsTable";
 import SegmentedInput from "../../components/SegmentedInput";
-import Table from "../../components/Table";
 import UsersInAreaMap from "../../components/Dashboard/UsersInAreaMap";
 import CONSTANTS from "../../globals";
 

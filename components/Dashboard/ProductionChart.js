@@ -5,11 +5,8 @@ import {
   XAxis,
   YAxis,
   Label,
-  CartesianGrid,
-  Tooltip,
-  Legend
+  Tooltip
 } from "recharts";
-import cn from "classnames";
 import Router from "next/router";
 import { useEffect, useState } from "react";
 import axios from "axios";

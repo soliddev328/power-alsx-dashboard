@@ -75,7 +75,7 @@ class Step42 extends React.Component {
   }
 
   render() {
-    const { name, leadId, postalCode, errorMessage } = this.state;
+    const { name, leadId, errorMessage } = this.state;
     return (
       <main>
         <Header />

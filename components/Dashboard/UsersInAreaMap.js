@@ -1,4 +1,3 @@
-import { FadeLoader } from "react-spinners";
 import { useEffect, useState } from "react";
 import GoogleMapReact from "google-map-react";
 import { useStateValue } from "../../state";

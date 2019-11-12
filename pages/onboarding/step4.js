@@ -327,8 +327,7 @@ class Step4 extends React.Component {
     const { billingMethod } = this.state;
 
     const canLinkAccount =
-      this.state.billingMethod &&
-      this.state.billingMethod.indexOf("paper") !== 0;
+      billingMethod && billingMethod.indexOf("paper") !== 0;
 
     return canLinkAccount
       ? this.renderUtilityLogin()
@@ -371,15 +370,16 @@ class Step4 extends React.Component {
   }
 
   renderText() {
+    const { billingMethod, isLoading } = this.state;
+
     const canLinkAccount =
-      this.state.billingMethod &&
-      this.state.billingMethod.indexOf("paper") !== 0;
+      billingMethod && billingMethod.indexOf("paper") !== 0;
 
     let text = canLinkAccount
       ? "Ok great. Let's connect your account and get you saving!"
       : "No problem! We can use your account number to get you connected and saving.";
 
-    return this.state.isLoading ? "" : text;
+    return isLoading ? "" : text;
   }
 
   render() {
@@ -393,8 +393,8 @@ class Step4 extends React.Component {
     } = this.state;
 
     const canLinkAccount =
-      this.state.billingMethod &&
-      this.state.billingMethod.indexOf("paper") !== 0;
+      billingMethod && billingMethod.indexOf("paper") !== 0;
+
     return (
       <main>
         <Header />
