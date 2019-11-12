@@ -21,7 +21,7 @@ export default function MyImpact() {
   const [billingData, setBillingData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [overlayDescription, setOverlayDescription] = useState(false);
-  const [{ selectedAccount }, dispatch] = useStateValue();
+  const [{ selectedAccount }] = useStateValue();
 
   const getUserData = async (userUid, idToken) => {
     const response = await axios.get(`${API}/v1/subscribers/${userUid}`, {
@@ -42,15 +42,6 @@ export default function MyImpact() {
       }
     );
     return response && response.data && response.data.data;
-  };
-
-  const getInvoiceData = async (id, idToken) => {
-    const response = await axios.get(`${API}/v1/subscribers/invoice/${id}`, {
-      headers: {
-        Authorization: idToken
-      }
-    });
-    return response && response.data;
   };
 
   useEffect(() => {

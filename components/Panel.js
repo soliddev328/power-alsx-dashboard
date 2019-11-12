@@ -2,7 +2,6 @@ import cn from "classnames";
 
 export default function Panel({
   children,
-  coloredShadow,
   center,
   disabled,
   noBg,

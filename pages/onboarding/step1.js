@@ -258,7 +258,7 @@ class Step1 extends React.Component {
   }
 
   render() {
-    const { email, error, firstName, lastName } = this.state;
+    const { error } = this.state;
     const { query } = this.props;
 
     return (

@@ -2,8 +2,6 @@ import React from "react";
 import cn from "classnames";
 import { FadeLoader } from "react-spinners";
 
-import LogoIcon from "./Icons/LogoIcon";
-import Menu from "../components/Menu";
 import Menubar from "./Menubar";
 
 export default function Main({ isLoading = true, children }) {

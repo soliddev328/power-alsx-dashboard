@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import cn from "classnames";
-import Container from "../Container";
 import Section from "../Section";
 import Panel from "../Panel";
 import Table from "../Table";

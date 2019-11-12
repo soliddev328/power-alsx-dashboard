@@ -1,8 +1,6 @@
 import React from "react";
 import Router from "next/router";
-import { Formik, Form } from "formik";
 import Header from "../../components/Header";
-import RadioCard from "../../components/RadioCard";
 import SingleStep from "../../components/SingleStep";
 import Button from "../../components/Button";
 

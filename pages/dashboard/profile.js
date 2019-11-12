@@ -5,7 +5,6 @@ import Head from "next/head";
 import axios from "axios";
 import Main from "../../components/Main";
 import Section from "../../components/Section";
-import Panel from "../../components/Panel";
 import Text from "../../components/Text";
 import Phoneinput from "../../components/Phoneinput";
 import Input from "../../components/Input";
