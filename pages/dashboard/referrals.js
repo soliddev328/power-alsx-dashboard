@@ -47,19 +47,6 @@ const LinkedinShare = username => {
   );
 };
 
-const getReferralsDetails = referralsDetails => {
-  const allItems = [];
-  referralsDetails.forEach(element => {
-    const singleItem = [];
-    singleItem.push(element.name);
-    singleItem.push(element.status);
-    singleItem.push(element.convertedDate);
-    allItems.push(singleItem);
-  });
-
-  return allItems;
-};
-
 const getUserData = async (userUid, idToken) => {
   const response = await axios.get(`${API}/v1/subscribers/${userUid}`, {
     headers: {
@@ -109,22 +96,24 @@ export default function Referrals() {
 
         user.getIdToken(true).then(async idToken => {
           const userInfo = await getUserData(user.uid, idToken);
-          setUserData(userInfo);
+          if (userInfo) {
+            setUserData(userInfo);
 
-          const referralsInfo = await getReferralsData(
-            userInfo.username,
-            idToken
-          );
-          setReferralsData(referralsInfo[0]);
+            const referralsInfo = await getReferralsData(
+              userInfo.username,
+              idToken
+            );
+            setReferralsData(referralsInfo[0]);
 
-          const referralsInfoDetails = await getReferralsDataDetails(
-            userInfo.username,
-            idToken
-          );
+            const referralsInfoDetails = await getReferralsDataDetails(
+              userInfo.username,
+              idToken
+            );
 
-          setReferralsDetails(referralsInfoDetails);
+            setReferralsDetails(referralsInfoDetails);
 
-          setIsLoading(false);
+            setIsLoading(false);
+          }
         });
       } else {
         Router.push({
