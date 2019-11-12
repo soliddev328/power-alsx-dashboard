@@ -142,6 +142,11 @@ export default function Referrals() {
       <Text h2 hasDecoration>
         Your Referrals
       </Text>
+      <Text noMargin>
+        Our referral program lets you spread the word about lower cost clean
+        energy, increase your savings, and receive a credit of $50 for each
+        referral!
+      </Text>
       <Section columns="5">
         <Panel small specialShadow center>
           <Container column>
