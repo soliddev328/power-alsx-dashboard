@@ -30,7 +30,7 @@ const getUserData = async (userUid, idToken) => {
 };
 
 export default function MainMenu() {
-  const [accounts, setAccounts] = useState([]);
+  const [accounts] = useState([]);
   const [{ selectedAccount }, dispatch] = useStateValue();
 
   useEffect(() => {
@@ -38,12 +38,14 @@ export default function MainMenu() {
       if (user) {
         user.getIdToken(true).then(async idToken => {
           const userData = await getUserData(user.uid, idToken);
-          userData.accounts.forEach((item, index) => {
-            accounts.push({
-              value: index,
-              label: item.name
+          if (userData && userData.accounts) {
+            userData.accounts.forEach((item, index) => {
+              accounts.push({
+                value: index,
+                label: item.name
+              });
             });
-          });
+          }
         });
       }
     });
@@ -52,7 +54,7 @@ export default function MainMenu() {
   return (
     <ul>
       <li>
-        <MenuItem to="/dashboard">Your Snapshot</MenuItem>
+        <MenuItem to="/dashboard">Home</MenuItem>
       </li>
       <li>
         <MenuItem>Your Project</MenuItem>
