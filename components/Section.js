@@ -2,9 +2,10 @@ import Text from "./Text";
 
 export default function Section({
   children,
-  disabled,
+  disabled = false,
   columns = 1,
-  noMargin,
+  noGap = false,
+  noMargin = false,
   tableSection = false,
   overlayDescription = false
 }) {
@@ -72,8 +73,8 @@ export default function Section({
             ${columnsInt},
             minmax(calc(1000px / ${columnsInt + 20}), 1fr)
           );
-          grid-column-gap: 20px;
-          grid-row-gap: 40px;
+          grid-column-gap: ${noGap ? "0;" : "20px;"};
+          grid-row-gap: ${noGap ? "0;" : "40px;"};
           margin: ${noMargin ? "0" : "40px 0"};
           margin-bottom: ${noMargin ? "0" : "80px"};
           ${disabled && overlayDescription ? "min-height: 300px;" : ""};
