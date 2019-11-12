@@ -50,7 +50,7 @@ const renderDownloadButton = id => {
         });
       }
     });
-  }, [selectedAccount]);
+  }, [selectedAccount.value]);
 
   return (
     <td key={`invoice-${id}`}>
