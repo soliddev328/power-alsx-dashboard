@@ -68,10 +68,8 @@ export default function Profile() {
       <Text h2 hasDecoration>
         Profile
       </Text>
-      <Formik
-        initialValues={{}}
-        onSubmit={values => {}}
-        render={props => (
+      <Formik initialValues={{}} onSubmit={values => {}}>
+        {props => (
           <>
             <Section columns="2">
               <Input
@@ -123,6 +121,45 @@ export default function Profile() {
                 fieldname="phone-number"
               />
             </Section>
+            <Section columns="3">
+              <Input
+                readOnly
+                outerLabel
+                fullWidth
+                label="City"
+                fieldname="city"
+                value={
+                  userData && userData.accounts
+                    ? userData.accounts[0].address.city
+                    : ""
+                }
+              />
+              {console.log(userData)}
+              <Input
+                readOnly
+                outerLabel
+                fullWidth
+                label="State"
+                fieldname="state"
+                value={
+                  userData && userData.accounts
+                    ? userData.accounts[0].address.state
+                    : ""
+                }
+              />
+              <Input
+                readOnly
+                outerLabel
+                fullWidth
+                label="Zip"
+                fieldname="zipcode"
+                value={
+                  userData && userData.accounts
+                    ? userData.accounts[0].address.postalCode
+                    : ""
+                }
+              />
+            </Section>
             <Section>
               <Table
                 headers={["Account Address", "Payment Method"]}
@@ -131,7 +168,7 @@ export default function Profile() {
             </Section>
           </>
         )}
-      />
+      </Formik>
     </Main>
   );
 }
