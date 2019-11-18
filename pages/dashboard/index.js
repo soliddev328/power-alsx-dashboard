@@ -40,7 +40,6 @@ const Dashboard = () => {
         global.analytics.page("Dashboard");
         user.getIdToken(true).then(async idToken => {
           const userInfo = await getUserData(user.uid, idToken);
-
           if (
             userInfo &&
             userInfo.accounts &&
