@@ -103,7 +103,7 @@ export default function MyImpact() {
               const tableItem = [];
               tableItem.push(item.endDate);
               tableItem.push(item.cleanEnergy);
-              tableItem.push(item.avoidedC02);
+              tableItem.push(Math.round(item.avoidedC02));
               tableItem.push(item.savings);
               tableItem.push(item.id);
               finalData.push(tableItem);
@@ -159,10 +159,10 @@ export default function MyImpact() {
             <Text h2 bold style={{ margin: "5px 0 0 20px" }}>
               {(userData && userData.accounts && (
                 <NumberFormat
-                  value={
+                  value={Math.round(
                     userData.accounts[selectedAccount.value]
                       .totalCleanEnergyGenerated
-                  }
+                  )}
                   displayType={"text"}
                   thousandSeparator={true}
                   suffix={" kWh"}
@@ -194,9 +194,9 @@ export default function MyImpact() {
             <Text h2 bold style={{ margin: "5px 0 0 20px" }}>
               {(userData && userData.accounts && (
                 <NumberFormat
-                  value={
+                  value={Math.round(
                     userData.accounts[selectedAccount.value].totalC02Avoided
-                  }
+                  )}
                   displayType={"text"}
                   thousandSeparator={true}
                   suffix={" lbs"}
@@ -231,9 +231,9 @@ export default function MyImpact() {
                 userData.accounts[selectedAccount.value].totalTreesPlanted >
                   0 && (
                   <NumberFormat
-                    value={
+                    value={Math.round(
                       userData.accounts[selectedAccount.value].totalTreesPlanted
-                    }
+                    )}
                     displayType={"text"}
                     thousandSeparator={true}
                   />
