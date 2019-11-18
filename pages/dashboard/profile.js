@@ -25,14 +25,17 @@ const getUserData = async (userUid, idToken) => {
 
 const getPaymentMethods = accounts => {
   const allMethods = [];
-  accounts.forEach(element => {
-    const singleMethod = [];
-    singleMethod.push(element.address.street);
-    element.hasACH
-      ? singleMethod.push("ACH")
-      : singleMethod.push("Credit Card");
-    allMethods.push(singleMethod);
-  });
+
+  if (accounts.length > 0) {
+    accounts.forEach(element => {
+      const singleMethod = [];
+      singleMethod.push(element.address.street);
+      element.hasACH
+        ? singleMethod.push("ACH")
+        : singleMethod.push("Credit Card");
+      allMethods.push(singleMethod);
+    });
+  }
 
   return allMethods;
 };
@@ -50,7 +53,7 @@ export default function Profile() {
           const userInfo = await getUserData(user.uid, idToken);
           if (userInfo) {
             setUserdata(userInfo);
-            setPaymentMethods(getPaymentMethods(userInfo.accounts));
+            setPaymentMethods(getPaymentMethods(userInfo.accounts || []));
             setIsLoading(false);
           }
         });
@@ -136,7 +139,6 @@ export default function Profile() {
                     : ""
                 }
               />
-              {console.log(userData)}
               <Input
                 readOnly
                 outerLabel
