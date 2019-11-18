@@ -103,7 +103,10 @@ export default function Referrals() {
               userInfo.username,
               idToken
             );
-            setReferralsData(referralsInfo[0]);
+
+            referralsInfo
+              ? setReferralsData(referralsInfo[0])
+              : setReferralsData({});
 
             const referralsInfoDetails = await getReferralsDataDetails(
               userInfo.username,
