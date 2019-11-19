@@ -14,21 +14,21 @@ const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 const getUserData = async (userUid, idToken) => {
-  const response = await axios.get(`${API}/v1/subscribers/${userUid}`, {
+  const { data } = await axios.get(`${API}/v1/subscribers/${userUid}`, {
     headers: {
       Authorization: idToken
     }
   });
-  return response && response.data && response.data.data;
+  return data && data.data;
 };
 
 const getProjectInfo = async (projectId, idToken) => {
-  const response = await axios.get(`${API}/v1/projects/${projectId}`, {
+  const { data } = await axios.get(`${API}/v1/projects/${projectId}`, {
     headers: {
       Authorization: idToken
     }
   });
-  return response && response.data && response.data.data[0];
+  return data && data.data ? data.data[0] : {};
 };
 
 export default function MySource() {

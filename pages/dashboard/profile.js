@@ -51,6 +51,7 @@ export default function Profile() {
         global.analytics.page("Profile");
         user.getIdToken(true).then(async idToken => {
           const userInfo = await getUserData(user.uid, idToken);
+          console.log(userInfo);
           if (userInfo) {
             setUserdata(userInfo);
             setPaymentMethods(getPaymentMethods(userInfo.accounts || []));
