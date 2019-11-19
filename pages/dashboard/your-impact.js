@@ -25,16 +25,16 @@ export default function MyImpact() {
   const [{ selectedAccount }] = useStateValue();
 
   const getUserData = async (userUid, idToken) => {
-    const response = await axios.get(`${API}/v1/subscribers/${userUid}`, {
+    const { data } = await axios.get(`${API}/v1/subscribers/${userUid}`, {
       headers: {
         Authorization: idToken
       }
     });
-    return response && response.data && response.data.data;
+    return data && data.data;
   };
 
   const getBillings = async (id, idToken) => {
-    const response = await axios.get(
+    const { data } = await axios.get(
       `${API}/v1/subscribers/accounts/${id}/billings`,
       {
         headers: {
@@ -42,7 +42,7 @@ export default function MyImpact() {
         }
       }
     );
-    return response && response.data && response.data.data;
+    return data && data.data;
   };
 
   useEffect(() => {
@@ -53,10 +53,9 @@ export default function MyImpact() {
 
         user.getIdToken(true).then(async idToken => {
           const userData = await getUserData(user.uid, idToken);
-
           if (userData && userData.accounts) {
+            setIsLoading(false);
             setUserdata(userData);
-
             if (
               userData.accounts[selectedAccount.value].onboardingStatus ===
               "Unassigned"
@@ -110,7 +109,6 @@ export default function MyImpact() {
             });
 
             setBillingData(finalData);
-            setIsLoading(false);
           }
         });
       } else {
