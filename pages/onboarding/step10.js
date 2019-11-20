@@ -14,7 +14,7 @@ import Router from "next/router";
 const { STRIPE_KEY, API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
-class Step8 extends React.Component {
+class Step10 extends React.Component {
   constructor(props) {
     super(props);
 
@@ -28,7 +28,7 @@ class Step8 extends React.Component {
   }
 
   componentDidMount() {
-    global.analytics.page("Step 8");
+    global.analytics.page("Step 10");
 
     let storedPaymentMethod = "";
     let storedLeadId = "";
@@ -66,13 +66,15 @@ class Step8 extends React.Component {
   }
 
   renderCreditCard() {
+    const { name } = this.props;
+    const { stripe } = this.state;
     return (
       <SingleStep title="Please enter your credit card information">
         <div className="container">
           <img className="cards" src="/static/images/banks/cards.png" alt="" />
-          <StripeProvider stripe={this.state.stripe}>
+          <StripeProvider stripe={stripe}>
             <Elements>
-              <Checkout stripe={this.state.stripe} name={this.props.name} />
+              <Checkout stripe={stripe} name={name} />
             </Elements>
           </StripeProvider>
         </div>
@@ -142,11 +144,12 @@ class Step8 extends React.Component {
         .auth()
         .currentUser.getIdToken(true)
         .then(idToken => {
+          const { leadId } = this.state;
           axios
             .put(
               `${API}/v1/subscribers`,
               {
-                leadId: this.state.leadId,
+                leadId: leadId,
                 bank: values.bankName,
                 bankRoutingNumber: values.bankRoutingNumber,
                 bankAccountNumber: values.bankAccountNumber
@@ -161,7 +164,7 @@ class Step8 extends React.Component {
               global.analytics.track("Sign-Up Completed", {});
               localStorage.setItem("usercreated", true);
               Router.push({
-                pathname: "/dashboard"
+                pathname: "/"
               });
             })
             .catch(() => {});
@@ -170,6 +173,7 @@ class Step8 extends React.Component {
   }
 
   renderManualDataInsert() {
+    const { errorMessage } = this.state;
     return (
       <SingleStep title="Please provide the following information.">
         <Formik
@@ -182,8 +186,7 @@ class Step8 extends React.Component {
           onSubmit={values => {
             this.updateInfo(values);
           }}
-        >
-          {props => (
+          render={props => (
             <Form>
               <Input type="text" label="Bank Name" fieldname="bankName" />
               <Input
@@ -202,7 +205,7 @@ class Step8 extends React.Component {
                 label="Bank Account Number Confirmation"
                 fieldname="bankAccountNumberConfirmation"
               />
-              <p className="error">{this.state.errorMessage}</p>
+              <p className="error">{errorMessage}</p>
 
               <Button
                 primary
@@ -217,7 +220,7 @@ class Step8 extends React.Component {
               </Button>
             </Form>
           )}
-        </Formik>
+        />
         <style jsx>{`
           .error {
             height: 23px;
@@ -260,4 +263,4 @@ class Step8 extends React.Component {
   }
 }
 
-export default Step8;
+export default Step10;
