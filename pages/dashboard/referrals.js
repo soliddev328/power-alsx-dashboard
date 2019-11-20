@@ -48,16 +48,16 @@ const LinkedinShare = username => {
 };
 
 const getUserData = async (userUid, idToken) => {
-  const response = await axios.get(`${API}/v1/subscribers/${userUid}`, {
+  const { data } = await axios.get(`${API}/v1/subscribers/${userUid}`, {
     headers: {
       Authorization: idToken
     }
   });
-  return response && response.data && response.data.data;
+  return data && data.data;
 };
 
 const getReferralsData = async (username, idToken) => {
-  const response = await axios.get(
+  const { data } = await axios.get(
     `${API}/v1/subscribers/referrals/${username}`,
     {
       headers: {
@@ -65,11 +65,11 @@ const getReferralsData = async (username, idToken) => {
       }
     }
   );
-  return response && response.data && response.data.data;
+  return data && data.data;
 };
 
 const getReferralsDataDetails = async (username, idToken) => {
-  const response = await axios.get(
+  const { data } = await axios.get(
     `${API}/v1/subscribers/referrals/details/${username}`,
     {
       headers: {
@@ -78,9 +78,7 @@ const getReferralsDataDetails = async (username, idToken) => {
     }
   );
 
-  return (
-    response && response.data && response.data.data && response.data.data[0]
-  );
+  return data && data.data && data.data[0];
 };
 
 export default function Referrals() {
@@ -135,9 +133,11 @@ export default function Referrals() {
         Your Referrals
       </Text>
       <Text noMargin>
-        Our referral program lets you spread the word about lower cost clean
-        energy, <br /> increase your savings, and receive a credit of $50 for
-        each referral!
+        Common Energy’s referral program enables you to help your friends and
+        family save, bring more clean energy to your community, and increase
+        your savings even further. You will receive a{" "}
+        <b>$50 credit for each referral</b> who signs up. Refer 10 people and
+        receive <b>free electricity for one year!</b>
       </Text>
       <Section columns="5">
         <Panel small specialShadow center>
@@ -230,60 +230,72 @@ export default function Referrals() {
         </Panel>
       </Section>
       <Section>
-        <Text noMargin h3>
-          Share Your Referral Link
+        <Text noMargin h2>
+          Referral Tools
         </Text>
         <Text noMargin>
-          Let's make this city green, share your unique link and earn $50 per
-          referral!
+          Spreading the word about Common Energy is easy! Use the links below to
+          share on social media and to email your friends and family.
         </Text>
-      </Section>
-      <Section columns="2">
-        <Image
-          contain
-          src="/static/images/share/share.png"
-          alt=""
-          bgColor="#fff"
-          hasBorder
-        />
-        <Container column>
-          <Button
-            secondary
-            transparent
-            share="facebook"
-            onClick={() => FacebookShare(userData.username)}
-          >
-            Share on Facebook
-          </Button>
-          <Button
-            secondary
-            transparent
-            share="twitter"
-            onClick={() => TwitterShare(userData.username)}
-          >
-            Share on Twitter
-          </Button>
-          <Button
-            secondary
-            transparent
-            share="linkedin"
-            onClick={() => LinkedinShare(userData.username)}
-          >
-            Share on LinkedIn
-          </Button>
-        </Container>
-      </Section>
-      <Section>
-        <SegmentedInput
-          hasBorder
-          inputLabel="Type your friends email here"
-          buttonText="send"
-        />
       </Section>
       <Section>
         <Panel>
+          <Text noMargin h3>
+            Share on Social Media
+          </Text>
+          <Section columns="2">
+            <Image
+              contain
+              src="/static/images/share/share.png"
+              alt=""
+              bgColor="#fff"
+              hasBorder
+            />
+
+            <Container column>
+              <Button
+                secondary
+                transparent
+                share="facebook"
+                onClick={() => FacebookShare(userData.username)}
+              >
+                Share on Facebook
+              </Button>
+              <Button
+                secondary
+                transparent
+                share="twitter"
+                onClick={() => TwitterShare(userData.username)}
+              >
+                Share on Twitter
+              </Button>
+              <Button
+                secondary
+                transparent
+                share="linkedin"
+                onClick={() => LinkedinShare(userData.username)}
+              >
+                Share on LinkedIn
+              </Button>
+            </Container>
+          </Section>
+        </Panel>
+      </Section>
+      <Section>
+        <Panel>
+          <Text h3>Send An Email Directly</Text>
+          <SegmentedInput
+            hasBorder
+            inputLabel="Enter Your Friends' Email Addresses Here"
+            buttonText="send"
+          />
+        </Panel>
+      </Section>
+      <Section>
+        <Panel>
+          <Text h3>Copy Your Referral Link And Email It Yourself</Text>
           <Container column alignLeft>
-            <Text h3 noMargin>
+            <Text h5 noMargin>
               Help us bring clean energy to your community
             </Text>
             <Text style={{ marginBottom: "20px" }}>

@@ -104,10 +104,12 @@ export default function MySource() {
       <Text h2 hasDecoration>
         Your Project
       </Text>
-      <Text noMargin>
-        Congratulations! This is the new clean energy project you've helped
-        connect to the grid!
-      </Text>
+      {!overlayDescription && (
+        <Text noMargin>
+          Congratulations! This is the new clean energy project you've helped
+          connect to the grid!
+        </Text>
+      )}
       <div className="inner">
         <Section
           disabled={overlayDescription}
