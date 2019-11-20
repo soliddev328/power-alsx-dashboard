@@ -38,26 +38,26 @@ const presets = {
     letter-spacing: -.049375rem;
     `,
   h3: `
-    font-size: calc(22px + (25 - 22) * (100vw - 320px) / (1920 - 320));
+    font-size: calc(24px + (27 - 24) * (100vw - 320px) / (1920 - 320));
     line-height: 1.2em;
     font-weight: 700;
     margin-top: 0;
     letter-spacing: -.029375rem;
   `,
   h4: `
-    font-size: calc(18px + (22 - 18) * (100vw - 320px) / (1920 - 320));
+    font-size: calc(20px + (24 - 20) * (100vw - 320px) / (1920 - 320));
     font-weight: normal;
     letter-spacing: -.020625rem;
   `,
   h5: `
-    font-size: calc(16px + (18 - 16) * (100vw - 320px) / (1920 - 320));
+    font-size: calc(18px + (20 - 18) * (100vw - 320px) / (1920 - 320));
     font-weight: 700;
     margin: 0;
     margin-bottom: 0.5em;
     letter-spacing: -.01125rem;
     `,
   p: `
-    font-size: 16px;
+    font-size: 18px;
     line-height: 1.5em;
   `,
   small: `
@@ -89,7 +89,7 @@ const getComponent = defaultElement => {
   }) => {
     return (
       <Component
-        className={cn(className, { "geist-text-no-margin": noMargin })}
+        className={cn(className, { "text-no-margin": noMargin })}
         {...props}
       >
         {children}

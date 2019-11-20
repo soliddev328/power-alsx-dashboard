@@ -60,12 +60,16 @@ export default function ReferralsTable({ data }) {
           contacts.length > 0 ? (
             <Table headers={["Name", "Status", "Date"]} data={contacts} />
           ) : (
-            <Text>There are no referrals enrolled yet.</Text>
+            <Text>
+              You have not made any referrals yet. Go ahead, give it a try! :)
+            </Text>
           )
         ) : leads.length > 0 ? (
           <Table headers={["Name", "Status", "Date"]} data={leads} />
         ) : (
-          <Text>There are no leads in progress yet.</Text>
+          <Text>
+            You have not made any referrals yet. Go ahead, give it a try! :)
+          </Text>
         )}
       </Panel>
       <style jsx>{`
