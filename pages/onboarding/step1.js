@@ -197,7 +197,6 @@ class Step1 extends React.Component {
                     `${API}/v1/subscribers`,
                     {
                       email: values.emailAddress,
-                      password: values.password,
                       firstName: name.firstName,
                       lastName: name.lastName,
                       utility: utility.label,
@@ -308,15 +307,6 @@ class Step1 extends React.Component {
                     fieldname="emailAddress"
                     required
                   />
-                  <Input
-                    type="password"
-                    label="Create a Password"
-                    fieldname="password"
-                    required
-                  />
-                  <p className="password-explanation">
-                    * This password will let you log back in later
-                  </p>
                   <p className="error">
                     {error.message} {error.link && error.link}
                   </p>
@@ -326,8 +316,7 @@ class Step1 extends React.Component {
                       !!props.values.firstName !== true ||
                       !!props.values.lastName !== true ||
                       !!props.values.postalCode !== true ||
-                      !!props.values.emailAddress !== true ||
-                      !!props.values.password !== true
+                      !!props.values.emailAddress !== true
                     }
                   >
                     Next
@@ -349,11 +338,6 @@ class Step1 extends React.Component {
             margin: 0;
             padding: 1em 0;
             text-align: center;
-          }
-          .password-explanation {
-            max-width: 350px;
-            margin: 0 auto;
-            font-size: 12px;
           }
         `}</style>
       </main>
