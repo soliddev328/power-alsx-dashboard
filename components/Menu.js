@@ -21,12 +21,12 @@ const signOut = () => {
 };
 
 const getUserData = async (userUid, idToken) => {
-  const response = await axios.get(`${API}/v1/subscribers/${userUid}`, {
+  const { data } = await axios.get(`${API}/v1/subscribers/${userUid}`, {
     headers: {
       Authorization: idToken
     }
   });
-  return response && response.data && response.data.data;
+  return data && data.data;
 };
 
 export default function MainMenu() {
@@ -68,7 +68,8 @@ export default function MainMenu() {
       <li>
         <MenuItem>Profile</MenuItem>
       </li>
-      {accounts.length >= 1 && (
+
+      {accounts.length >= 2 && (
         <li>
           <select
             name="account"

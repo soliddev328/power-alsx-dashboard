@@ -322,7 +322,7 @@ const Dashboard = () => {
         <Panel>
           <Container column alignLeft>
             <Text h3 noMargin>
-              Help us bring clean energy to your community
+              Help us bring clean energy to your community!
             </Text>
             <Text style={{ marginBottom: "20px" }}>
               Help your friends save with Common Energy and receive $50 for each

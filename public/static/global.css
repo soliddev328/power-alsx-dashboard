@@ -340,6 +340,10 @@ hr {
   display: block;
 }
 
+.text-no-margin {
+  margin: 0;
+}
+
 .custom-select {
   appearance: none;
   -moz-appearance: none;
