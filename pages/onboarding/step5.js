@@ -1,80 +1,94 @@
 import React from "react";
 import Router from "next/router";
+import { Formik, Form } from "formik";
 import Header from "../../components/Header";
+import Input from "../../components/Input";
 import SingleStep from "../../components/SingleStep";
 import Button from "../../components/Button";
+import axios from "axios";
+import CONSTANTS from "../../globals";
+
+const { API } =
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 class Step5 extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      error: {
+        code: false,
+        message: ""
+      }
+    };
   }
 
   componentDidMount() {
     global.analytics.page("Step 5");
-
-    let storedPartialConnection = false;
-
-    if (window.localStorage.getItem("partialConnection")) {
-      storedPartialConnection = JSON.parse(
-        window.localStorage.getItem("partialConnection")
-      );
-    }
-
-    this.setState({
-      partialConnection: storedPartialConnection
-    });
   }
 
-  renderContent() {
-    const { partialConnection } = this.state;
-    if (partialConnection) {
-      return (
-        <p className="message">
-          We are connecting your account and will contact you if we need more
-          information
-          <style jsx>{`
-            .message {
-              text-align: center;
+  submit(values) {
+    window.firebase
+      .auth()
+      .currentUser.getIdToken(true)
+      .then(idToken => {
+        axios
+          .put(
+            `${API}/v1/subscribers`,
+            {
+              leadId: leadId,
+              password: values.password
+            },
+            {
+              headers: {
+                Authorization: idToken
+              }
             }
-          `}</style>
-        </p>
-      );
-    } else {
-      return (
-        <>
-          <svg width="55" height="55" xmlns="http://www.w3.org/2000/svg">
-            <g fill="none" fillRule="evenodd">
-              <circle cx="27.5" cy="27.5" r="27.5" fill="#41EF8B" />
-              <path
-                d="M32.9977909 21.3976621c1.6389735-1.6389735 4.2050581.8556542 2.494699 2.494699l-10.262155 10.333588c-.712883.6414974-1.7817447.6414974-2.494699 0l-5.1310774-5.2025105c-1.6389731-1.6389736.8556542-4.1336251 2.4946989-2.494699l3.9195632 3.9195632 8.9789703-9.0506407z"
-                fill="#FFF"
-              />
-            </g>
-          </svg>
-          <p>Congratulations, you're connected!</p>
-        </>
-      );
-    }
+          )
+          .then(response => {
+            Router.push({
+              pathname: "/onboarding/step6"
+            });
+          });
+      });
   }
 
   render() {
+    const { error } = this.state;
     return (
       <main>
         <Header />
-        <SingleStep>
-          <div className="loading">{this.renderContent()}</div>
-          <Button
-            primary
-            onClick={() => {
-              Router.push({
-                pathname: "/onboarding/step6"
-              });
+        <SingleStep title="Please create a password for you account with us, so you can view your past bills, total emissions you've prevented, and your total savings">
+          <Formik
+            initialValues={{
+              password: ""
+            }}
+            onSubmit={values => {
+              this.submit(values);
             }}
           >
-            Next
-          </Button>
+            {props => (
+              <>
+                <Form>
+                  <Input
+                    type="password"
+                    label="Create a Password"
+                    fieldname="password"
+                    required
+                  />
+                  <p className="password-explanation">
+                    * This password will let you log back in later
+                  </p>
+                  <p className="error">
+                    {error.message} {error.link && error.link}
+                  </p>
+                  <Button primary disabled={!!props.values.password !== true}>
+                    Next
+                  </Button>
+                </Form>
+              </>
+            )}
+          </Formik>
         </SingleStep>
         <style jsx>{`
           main {
@@ -83,14 +97,16 @@ class Step5 extends React.Component {
             max-width: 700px;
             margin: 0 auto;
           }
-          .loading {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-          }
-          h3 {
+          .error {
+            height: 52px;
+            margin: 0;
+            padding: 1em 0;
             text-align: center;
+          }
+          .password-explanation {
+            max-width: 350px;
+            margin: 0 auto;
+            font-size: 12px;
           }
         `}</style>
       </main>
