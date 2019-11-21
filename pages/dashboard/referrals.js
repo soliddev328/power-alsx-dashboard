@@ -139,7 +139,7 @@ export default function Referrals() {
         <b>$50 credit for each referral</b> who signs up. Refer 10 people and
         receive <b>free electricity for one year!</b>
       </Text>
-      <Section columns="5">
+      <Section columns="4">
         <Panel small specialShadow center>
           <Container column>
             <Icon
