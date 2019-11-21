@@ -30,7 +30,7 @@ const getUserData = async (userUid, idToken) => {
 };
 
 export default function MainMenu() {
-  const [accounts] = useState([]);
+  const [accounts, setAccounts] = useState([]);
   const [{ selectedAccount }, dispatch] = useStateValue();
 
   useEffect(() => {
@@ -40,10 +40,13 @@ export default function MainMenu() {
           const userData = await getUserData(user.uid, idToken);
           if (userData && userData.accounts) {
             userData.accounts.forEach((item, index) => {
-              accounts.push({
-                value: index,
-                label: item.name
-              });
+              setAccounts(prevState => [
+                ...prevState,
+                {
+                  value: index,
+                  label: item.name
+                }
+              ]);
             });
           }
         });

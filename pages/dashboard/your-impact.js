@@ -136,7 +136,9 @@ export default function MyImpact() {
         overlayDescription={overlayDescription}
       >
         <Panel small specialShadow>
-          <Text noMargin>Clean Energy (kWh)</Text>
+          <Text small noMargin>
+            Clean Energy (kWh)
+          </Text>
           <Separator margin="10px 0" small />
           <Container>
             <Icon
@@ -171,7 +173,9 @@ export default function MyImpact() {
           </Container>
         </Panel>
         <Panel small specialShadow>
-          <Text noMargin>Avoided CO2</Text>
+          <Text small noMargin>
+            Avoided CO2
+          </Text>
           <Separator margin="10px 0" small />
           <Container>
             <Icon
@@ -205,7 +209,9 @@ export default function MyImpact() {
           </Container>
         </Panel>
         <Panel small specialShadow>
-          <Text noMargin>Equivalent Trees Planted</Text>
+          <Text small noMargin>
+            Equivalent Trees Planted
+          </Text>
           <Separator margin="10px 0" small />
           <Container>
             <Icon
@@ -241,7 +247,9 @@ export default function MyImpact() {
           </Container>
         </Panel>
         <Panel small specialShadow>
-          <Text noMargin>Total Savings</Text>
+          <Text small noMargin>
+            Total Savings
+          </Text>
           <Separator margin="10px 0" small />
           <Container>
             <Icon
