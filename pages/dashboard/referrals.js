@@ -222,22 +222,18 @@ export default function Referrals() {
               }
             />
             <Text h2 bold style={{ marginTop: "20px" }}>
-              {(referralsData && referralsData.totalEarned) || 0}
+              ${(referralsData && referralsData.totalEarned) || 0}
             </Text>
           </Container>
           <Separator margin="10px auto" small />
           <Text noMargin>Total Earnings</Text>
         </Panel>
       </Section>
-      <Section>
-        <Text noMargin h2>
-          Referral Tools
-        </Text>
-        <Text noMargin>
-          Spreading the word about Common Energy is easy! Use the links below to
-          share on social media and to email your friends and family.
-        </Text>
-      </Section>
+      <Text h2>Referral Tools</Text>
+      <Text noMargin>
+        Spreading the word about Common Energy is easy! Use the links below to
+        share on social media and to email your friends and family.
+      </Text>
       <Section>
         <Panel>
           <Text noMargin h3>
