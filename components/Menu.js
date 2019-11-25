@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Router from "next/router";
 import axios from "axios";
 import MenuItem from "./MenuItem";
+import Text from "./Text";
 import CONSTANTS from "../globals";
 import { useStateValue } from "../state";
 
@@ -73,7 +74,8 @@ export default function MainMenu() {
       </li>
 
       {accounts.length >= 2 && (
-        <li>
+        <li className="account-selector">
+          <Text noMargin>Your Accounts</Text>
           <select
             name="account"
             className="custom-select"
@@ -100,7 +102,6 @@ export default function MainMenu() {
 
       <style jsx>{`
         button {
-          appearance: none;
           border: none;
           background: none;
           padding: 0;
@@ -113,6 +114,9 @@ export default function MainMenu() {
           padding: 0;
           margin: 0;
           height: calc(100vh - 128px);
+        }
+        .account-selector {
+          margin-top: 50px;
         }
         .sign-out {
           display: flex;
