@@ -16,17 +16,13 @@ export default class Input extends React.PureComponent {
   }
 
   applyValidation(x) {
-    const { type, maxWidth } = this.props;
+    const { type } = this.props;
     let msg;
 
     if (type === "email") {
       msg = "Please enter a valid email address";
     } else if (type === "password") {
       msg = "Please complete password fields";
-    }
-
-    if (maxWidth) {
-      msg = `This field's max length is ${maxWidth}`;
     }
 
     x.target.setCustomValidity(msg);
@@ -60,6 +56,7 @@ export default class Input extends React.PureComponent {
       validator,
       secondary,
       label,
+      maxLength,
       style,
       value,
       readOnly,
@@ -87,6 +84,7 @@ export default class Input extends React.PureComponent {
           value={value}
           style={style}
           className={className}
+          maxlength={maxLength}
         />
         <label
           htmlFor={fieldname}
