@@ -131,7 +131,7 @@ class Step42 extends React.Component {
                     )
                     .then(() => {
                       Router.push({
-                        pathname: "/onboarding/step6"
+                        pathname: "/onboarding/step5"
                       });
                     })
                     .catch(() => {});

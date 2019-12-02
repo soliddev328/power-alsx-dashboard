@@ -29,8 +29,9 @@ export default function Progressbar({ completion }) {
         progress {
           -webkit-appearance: none;
           -moz-appearance: none;
-          appearance: none;
           border: none;
+          background: transparent;
+          border-radius: 12px;
           display: block;
           width: 100%;
           margin: 0;
@@ -40,6 +41,7 @@ export default function Progressbar({ completion }) {
 
         progress::-moz-progress-bar {
           border-radius: 12px;
+          background: #fff;
         }
 
         progress::-webkit-progress-bar {

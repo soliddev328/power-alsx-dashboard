@@ -75,7 +75,9 @@ export default function MainMenu() {
 
       {accounts.length >= 2 && (
         <li className="account-selector">
-          <Text noMargin>Your Accounts</Text>
+          <Text small noMargin>
+            Your Accounts
+          </Text>
           <select
             name="account"
             className="custom-select"
