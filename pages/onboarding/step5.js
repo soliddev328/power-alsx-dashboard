@@ -70,7 +70,7 @@ class Step5 extends React.Component {
     return (
       <main>
         <Header />
-        <SingleStep title="Please create a password for you account with us, so you can view your past bills, total emissions you've prevented, and your total savings">
+        <SingleStep title="Please create a password for your account with us, so you can view your past bills, total emissions you've prevented, and your total savings">
           <Formik
             initialValues={{
               password: ""
