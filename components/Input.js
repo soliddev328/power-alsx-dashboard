@@ -16,7 +16,7 @@ export default class Input extends React.PureComponent {
   }
 
   applyValidation(x) {
-    const { type } = this.props;
+    const { type, maxWidth } = this.props;
     let msg;
 
     if (type === "email") {
@@ -24,6 +24,11 @@ export default class Input extends React.PureComponent {
     } else if (type === "password") {
       msg = "Please complete password fields";
     }
+
+    if (maxWidth) {
+      msg = `This field's max length is ${maxWidth}`;
+    }
+
     x.target.setCustomValidity(msg);
   }
 
@@ -62,6 +67,7 @@ export default class Input extends React.PureComponent {
       scrollOnFocus = true,
       outerLabel
     } = this.props;
+
     const { displayLabel } = this.state;
     return (
       <div
@@ -71,7 +77,6 @@ export default class Input extends React.PureComponent {
       >
         <Field
           type={type ? type : "text"}
-          component="input"
           name={fieldname}
           id={fieldname}
           validate={validator ? validator : false}
@@ -79,8 +84,8 @@ export default class Input extends React.PureComponent {
           onInput={this.customSetCustomValidity}
           ref={this.inputRef}
           readOnly={readOnly}
-          value={this.props.value}
-          style={this.props.style}
+          value={value}
+          style={style}
           className={className}
         />
         <label
