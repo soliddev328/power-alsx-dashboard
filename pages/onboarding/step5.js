@@ -18,6 +18,7 @@ class Step5 extends React.Component {
     this.state = {
       error: {
         code: false,
+        leadId: "",
         message: ""
       }
     };
@@ -25,9 +26,20 @@ class Step5 extends React.Component {
 
   componentDidMount() {
     global.analytics.page("Step 5");
+    let storedLeadId = "";
+
+    if (localStorage.getItem("leadId")) {
+      storedLeadId = localStorage.getItem("leadId");
+    }
+
+    this.setState({
+      leadId: storedLeadId
+    });
   }
 
   submit(values) {
+    const { leadId } = this.state;
+
     window.firebase
       .auth()
       .currentUser.getIdToken(true)

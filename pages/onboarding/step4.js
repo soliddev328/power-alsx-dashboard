@@ -255,6 +255,7 @@ class Step4 extends React.Component {
             .auth()
             .currentUser.getIdToken(true)
             .then(idToken => {
+              console.log(leadId);
               axios
                 .put(
                   `${API}/v1/subscribers`,

@@ -155,7 +155,7 @@ class Step1 extends React.Component {
 
       window.firebase
         .auth()
-        .createUserWithEmailAndPassword(values.emailAddress, values.password)
+        .signInAnonymously()
         .catch(error => {
           if (error.code === "auth/email-already-in-use") {
             this.setState({
@@ -230,6 +230,7 @@ class Step1 extends React.Component {
                       lastName: values.lastName,
                       email: values.emailAddress
                     });
+
                     global.analytics.track("Lead Created", {});
 
                     Router.push({
