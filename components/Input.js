@@ -28,10 +28,13 @@ export default class Input extends React.PureComponent {
   }
 
   customSetCustomValidity(e) {
+    const { outerLabel } = this.props;
     e.target.setCustomValidity("");
-    e.target.value !== ""
-      ? this.setState({ displayLabel: false })
-      : this.setState({ displayLabel: true });
+    if (!outerLabel) {
+      e.target.value !== ""
+        ? this.setState({ displayLabel: false })
+        : this.setState({ displayLabel: true });
+    }
   }
 
   scrollOnFocus() {
@@ -46,19 +49,24 @@ export default class Input extends React.PureComponent {
   render() {
     const {
       fullWidth,
+      noMargin,
       type,
       fieldname,
       validator,
       secondary,
       label,
-      autoFocus,
+      style,
+      value,
+      readOnly,
+      className,
+      scrollOnFocus = true,
       outerLabel
     } = this.props;
     const { displayLabel } = this.state;
     return (
       <div
         ref={this.inputField}
-        onClick={this.scrollOnFocus}
+        onClick={scrollOnFocus ? this.scrollOnFocus : null}
         className={cn("input__wrapper", { "outer-label": outerLabel })}
       >
         <Field
@@ -69,9 +77,11 @@ export default class Input extends React.PureComponent {
           validate={validator ? validator : false}
           onInvalid={this.applyValidation}
           onInput={this.customSetCustomValidity}
-          autoFocus={false}
           ref={this.inputRef}
-          {...this.props}
+          readOnly={readOnly}
+          value={this.props.value}
+          style={this.props.style}
+          className={className}
         />
         <label
           htmlFor={fieldname}
@@ -84,17 +94,32 @@ export default class Input extends React.PureComponent {
             background-color: ${secondary ? "#F6F9FF" : "#fff"};
           }
 
+          input:not([type="checkbox"]):active,
+          input:not([type="checkbox"]):focus {
+            ${readOnly ? "border-color: none !important;" : ""};
+          }
+
           .input__wrapper {
             position: relative;
-            height: 3.75rem;
             width: 100%;
-            max-width: ${fullWidth ? "100%" : "350px"};
+            max-width: ${fullWidth ? "100%;" : "350px;"};
             margin: 0 auto;
-            margin-bottom: 0.5rem;
+            margin-bottom: ${noMargin ? "0;" : "0.5rem;"};
+            ${readOnly ? "pointer-events: none;" : ""};
           }
 
           .input__wrapper:last-of-type {
-            margin-bottom: 0.5rem;
+            margin-bottom: ${noMargin ? "0;" : "0.5rem;"};
+          }
+
+          .input__wrapper.outer-label {
+            margin-bottom: 0;
+            margin-top: 2em;
+          }
+
+          .input__wrapper.outer-label label {
+            position: absolute;
+            top: -25%;
           }
 
           .input__wrapper.outer-label {

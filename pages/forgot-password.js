@@ -29,6 +29,7 @@ export default class forgotPassword extends React.Component {
   }
 
   renderForm() {
+    const { error } = this.state;
     return (
       <Formik
         initialValues={{
@@ -37,8 +38,9 @@ export default class forgotPassword extends React.Component {
         onSubmit={values => {
           this.sendEmail(values);
         }}
-        render={props => (
-          <React.Fragment>
+      >
+        {props => (
+          <>
             <Form>
               <Input
                 label="Email"
@@ -47,7 +49,7 @@ export default class forgotPassword extends React.Component {
                 required
                 autoFocus
               />
-              <p className="error">{this.state.error}</p>
+              <p className="error">{error}</p>
               <Button primary disabled={!!props.values.emailAddress !== true}>
                 Send reset password email
               </Button>
@@ -60,9 +62,9 @@ export default class forgotPassword extends React.Component {
                 text-align: center;
               }
             `}</style>
-          </React.Fragment>
+          </>
         )}
-      />
+      </Formik>
     );
   }
 

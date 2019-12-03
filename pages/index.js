@@ -27,13 +27,25 @@ class Index extends React.Component {
     // window.firebase.auth().onAuthStateChanged(user => {
     //   if (user) {
     //     Router.push({
-    //       pathname: '/dashboard'
-    //     })
+    //       pathname: "/dashboard"
+    //     });
     //   }
-    // })
+    // });
+  }
+
+  componentDidUpdate() {
+    window.firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        Router.push({
+          pathname: "/dashboard"
+        });
+      }
+    });
   }
 
   autenticate(values) {
+    const { error } = this.state;
+
     window.firebase
       .auth()
       .signInWithEmailAndPassword(values.emailAddress, values.password)
@@ -41,7 +53,7 @@ class Index extends React.Component {
         this.setState({ error: { code: error.code, message: error.message } });
       })
       .then(firebaseData => {
-        if (!this.state.error.code) {
+        if (!error.code) {
           window.firebase
             .auth()
             .currentUser.getIdToken(true)
@@ -54,15 +66,23 @@ class Index extends React.Component {
                 })
                 .then(response => {
                   const user = response.data.data;
+
                   window.localStorage.setItem("leadId", user.leadId);
+
                   global.analytics.identify(user.leadId, {
                     email: user.email
                   });
+
                   global.analytics.track("User Signed In", {});
 
                   // retrieve utility information
-                  const utility = user.milestones.utility;
-                  const imageName = utility.replace(/\s/g, "");
+                  const utility =
+                    user && user.milestones ? user.milestones.utility : false;
+
+                  const imageName = utility
+                    ? utility.replace(/\s/g, "")
+                    : false;
+
                   const utilityInfo = {
                     image: {
                       src: imageName
@@ -72,10 +92,13 @@ class Index extends React.Component {
                     },
                     label: utility
                   };
+
                   localStorage.setItem("utility", JSON.stringify(utilityInfo));
 
                   // retrieve postalcode
                   if (
+                    user &&
+                    user.milestones &&
                     user.milestones.address &&
                     user.milestones.address.postalCode
                   ) {
@@ -86,7 +109,11 @@ class Index extends React.Component {
                     );
                   }
 
-                  if (user.milestones.utilityPaperOnly) {
+                  if (
+                    user &&
+                    user.milestones &&
+                    user.milestones.utilityPaperOnly
+                  ) {
                     localStorage.setItem(
                       "billingMethod",
                       JSON.stringify({ billingMethod: "paper" })
@@ -106,8 +133,9 @@ class Index extends React.Component {
                       }
                     });
                   } else if (
-                    user.milestones.utilityInfoCompleted &&
-                    user.milestones.utilityLoginSuccessful
+                    (user.milestones.utilityInfoCompleted &&
+                      user.milestones.utilityLoginSuccessful) ||
+                    !user.milestones.bankInfoCompleted
                   ) {
                     Router.push({
                       pathname: "/onboarding/step6",
@@ -125,16 +153,11 @@ class Index extends React.Component {
                         onboardingNotFinished: true
                       }
                     });
-                  } else if (!user.milestones.bankInfoCompleted) {
-                    Router.push({
-                      pathname: "/onboarding/step6",
-                      query: {
-                        onboardingNotFinished: true
-                      }
-                    });
                   }
                 })
-                .catch(() => {});
+                .catch(err => {
+                  console.log(err);
+                });
             });
         }
       });
@@ -145,6 +168,8 @@ class Index extends React.Component {
   }
 
   render() {
+    const { error } = this.state;
+
     return (
       <main>
         <Header first />
@@ -157,8 +182,9 @@ class Index extends React.Component {
             onSubmit={values => {
               this.autenticate(values);
             }}
-            render={props => (
-              <React.Fragment>
+          >
+            {props => (
+              <>
                 <Form>
                   <Input
                     label="Email"
@@ -173,7 +199,7 @@ class Index extends React.Component {
                     type="password"
                     required
                   />
-                  <p className="error">{this.state.error.message}</p>
+                  <p className="error">{error.message}</p>
                   <Button
                     primary
                     disabled={
@@ -192,9 +218,9 @@ class Index extends React.Component {
                     Sign in
                   </Button>
                 </Form>
-              </React.Fragment>
+              </>
             )}
-          />
+          </Formik>
           <div className="link">
             <a href="/forgot-password" className="cta">
               Forgot password?

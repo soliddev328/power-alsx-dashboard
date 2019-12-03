@@ -21,12 +21,14 @@ export default class CustomSelect extends React.Component {
   }
 
   componentDidMount() {
-    this.getOptions(this.props.zipCode);
+    const { zipCode } = this.props;
+    this.getOptions(zipCode);
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.zipCode !== prevProps.zipCode) {
-      this.getOptions(this.props.zipCode);
+    const { zipCode } = this.props;
+    if (zipCode !== prevProps.zipCode) {
+      this.getOptions(zipCode);
     }
   }
 
@@ -40,11 +42,13 @@ export default class CustomSelect extends React.Component {
   }
 
   handleChange = value => {
-    this.props.onChange(this.props.fieldname, value);
+    const { onChange, fieldname } = this.props;
+    onChange(fieldname, value);
   };
 
   handleBlur = () => {
-    this.props.onBlur(this.props.fieldname, true);
+    const { onBlur, fieldname } = this.props;
+    onBlur(fieldname, true);
   };
 
   getOptions(code) {
@@ -120,15 +124,16 @@ export default class CustomSelect extends React.Component {
     );
 
     const getOptionValue = option => option.code;
+    const { fieldname, label, disabled, value } = this.props;
     const { options = false } = this.state;
 
     return (
       <div ref={this.inputField} onClick={this.scrollOnFocus}>
-        <label className="select__label" htmlFor={this.props.fieldname}>
-          {this.props.label}
+        <label className="select__label" htmlFor={fieldname}>
+          {label}
         </label>
         <Select
-          isDisabled={!options || this.props.disabled}
+          isDisabled={!options || disabled}
           isSearchable={false}
           components={{
             SingleValue: CustomOption,
@@ -137,14 +142,12 @@ export default class CustomSelect extends React.Component {
           getOptionValue={getOptionValue}
           className="select__wrapper"
           classNamePrefix="select"
-          id={this.props.fieldname}
-          name={this.props.fieldname}
+          id={fieldname}
+          name={fieldname}
           options={options && options.length > 0 ? options : false}
           onChange={this.handleChange}
           onBlur={this.handleBlur}
-          value={
-            options && options.length === 1 ? options[0] : this.props.value
-          }
+          value={options && options.length === 1 ? options[0] : value}
           placeholder="Select your utility"
         />
         <style jsx global>{`

@@ -30,6 +30,7 @@ export default class Plaid extends React.Component {
   }
 
   render() {
+    const { leadId } = this.state;
     return (
       <ReactPlaid
         clientName="Common Energy"
@@ -44,13 +45,13 @@ export default class Plaid extends React.Component {
               accounts: metadata.accounts,
               institution: metadata.institution,
               link_session_id: metadata.link_session_id,
-              item: this.state.leadId
+              item: leadId
             })
             .then(() => {
               global.analytics.track("Sign-Up Completed", {});
               localStorage.setItem("usercreated", true);
               Router.push({
-                pathname: "/dashboard"
+                pathname: "/"
               });
             });
         }}
@@ -61,11 +62,11 @@ export default class Plaid extends React.Component {
               status: metadata.status,
               institution: metadata.institution,
               link_session_id: metadata.link_session_id,
-              item: this.state.leadId
+              item: leadId
             });
           }
           Router.push({
-            pathname: "/onboarding/step6"
+            pathname: "/"
           });
         }}
       />

@@ -1,19 +1,16 @@
-import React from "react";
 import Highlighter from "react-highlight-words";
 
-export default class Highlight extends React.Component {
-  render() {
-    return (
-      <Highlighter
-        autoEscape
-        className={this.props.className}
-        textToHighlight={this.props.content}
-        searchWords={[`${this.props.highlight}`]}
-        highlightStyle={{
-          backgroundColor: "transparent",
-          fontWeight: "700"
-        }}
-      />
-    );
-  }
+export default function Highlight({ className, content, highlight }) {
+  return (
+    <Highlighter
+      autoEscape
+      className={className}
+      textToHighlight={content}
+      searchWords={[`${highlight}`]}
+      highlightStyle={{
+        backgroundColor: "transparent",
+        fontWeight: "700"
+      }}
+    />
+  );
 }

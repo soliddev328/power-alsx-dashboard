@@ -12,18 +12,22 @@ const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 class Sorry extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
   componentDidMount() {
     global.analytics.page("Out of area");
 
-    let storedName = "";
-    let storedPostalCode = "";
-    let storedAddress = "";
-    let storedPartner = "";
-    let storedReferrer = "";
-    let storedSalesRep = "";
-    let storedUtmCampaign = "";
-    let storedUtmMedium = "";
-    let storedUtmSource = "";
+    const storedName = "";
+    const storedPostalCode = "";
+    const storedAddress = "";
+    const storedPartner = "";
+    const storedReferrer = "";
+    const storedSalesRep = "";
+    const storedUtmCampaign = "";
+    const storedUtmMedium = "";
+    const storedUtmSource = "";
 
     if (localStorage.getItem("username")) {
       storedName = JSON.parse(localStorage.getItem("username"));
@@ -67,6 +71,15 @@ class Sorry extends React.Component {
   }
 
   render() {
+    const {
+      postalCode,
+      referrer,
+      partner,
+      salesRep,
+      utmCampaign,
+      utmMedium,
+      utmSource
+    } = this.state;
     return (
       <main>
         <Header />
@@ -82,15 +95,15 @@ class Sorry extends React.Component {
               axios
                 .post(`${API}/v1/subscribers`, {
                   LastName: values.email,
-                  postalCode: this.state.postalCode,
+                  postalCode: postalCode,
                   Phone: "9999999999",
                   Email: values.email,
-                  Referrer: this.state.referrer,
-                  Partner: this.state.partner,
-                  SalesRep: this.state.salesRep,
-                  utmCampaign: this.state.utmCampaign,
-                  utmMedium: this.state.utmMedium,
-                  utmSource: this.state.utmSource
+                  Referrer: referrer,
+                  Partner: partner,
+                  SalesRep: salesRep,
+                  utmCampaign: utmCampaign,
+                  utmMedium: utmMedium,
+                  utmSource: utmSource
                 })
                 .then(() => {
                   Router.push({
@@ -99,17 +112,18 @@ class Sorry extends React.Component {
                 })
                 .catch(() => {});
             }}
-            render={props => (
-              <React.Fragment>
+          >
+            {props => (
+              <>
                 <Form>
                   <Input label="email" fieldname="email" />
                   <Button primary disabled={!!props.values.email === false}>
                     Next
                   </Button>
                 </Form>
-              </React.Fragment>
+              </>
             )}
-          />
+          </Formik>
         </SingleStep>
         <style jsx>{`
           main {
