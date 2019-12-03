@@ -8,7 +8,6 @@ import Input from "../../components/Input";
 import Header from "../../components/Header";
 import SingleStep from "../../components/SingleStep";
 import Button from "../../components/Button";
-import Stepper from "../../components/Stepper";
 import CONSTANTS from "../../globals";
 
 const { API } =
@@ -76,7 +75,7 @@ class Step42 extends React.Component {
   }
 
   render() {
-    const { name, leadId, postalCode, errorMessage } = this.state;
+    const { name, leadId, errorMessage } = this.state;
     return (
       <main>
         <Header />
@@ -144,7 +143,8 @@ class Step42 extends React.Component {
               //   })
               // }
             }}
-            render={props => (
+          >
+            {props => (
               <Form>
                 <GeoSuggest
                   label="Address"
@@ -169,14 +169,7 @@ class Step42 extends React.Component {
                 </Button>
               </Form>
             )}
-          />
-          <Stepper>
-            <li className="steplist__step steplist__step-done">1</li>
-            <li className="steplist__step steplist__step-done">2</li>
-            <li className="steplist__step steplist__step-doing">3</li>
-            <li className="steplist__step">4</li>
-            <li className="steplist__step">5</li>
-          </Stepper>
+          </Formik>
         </SingleStep>
         <style jsx>{`
           main {

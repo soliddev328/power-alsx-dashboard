@@ -19,14 +19,17 @@ export default class ZipCodeInput extends React.Component {
   };
 
   handleChange = e => {
-    this.props.onChangeEvent(this.props.fieldname, e.target.value);
+    const { onChangeEvent, fieldname } = this.props;
+    onChangeEvent(fieldname, e.target.value);
   };
 
   handleBlur = () => {
-    this.props.onBlurEvent(this.props.fieldname, true);
+    const { onBlurEvent, fieldname } = this.props;
+    onBlurEvent(fieldname, true);
   };
 
   render() {
+    const { value, fieldname, label, secondary } = this.props;
     return (
       <div className="input__wrapper">
         <input
@@ -34,16 +37,15 @@ export default class ZipCodeInput extends React.Component {
           pattern="[0-9]*"
           onChange={this.handleChange}
           onBlur={this.handleBlur}
-          value={this.props.value}
-          name={this.props.fieldname}
-          id={this.props.fieldname}
-          autoFocus
+          value={value}
+          name={fieldname}
+          id={fieldname}
         />
         <label
+          htmlFor={fieldname}
           style={{ opacity: this.props.value ? "0" : "1" }}
-          htmlFor={this.props.fieldname}
         >
-          {this.props.label}
+          {label}
         </label>
         <style jsx global>{`
           input {
@@ -51,7 +53,7 @@ export default class ZipCodeInput extends React.Component {
             border: 1px solid transparent;
             border-radius: 3px;
             background-image: none;
-            background-color: ${this.props.secondary ? "#F6F9FF" : "#fff"};
+            background-color: ${secondary ? "#F6F9FF" : "#fff"};
             box-shadow: none;
             font-family: "Poppins", -apple-system, BlinkMacSystemFont,
               "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",

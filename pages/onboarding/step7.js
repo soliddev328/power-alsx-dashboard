@@ -8,7 +8,6 @@ import Button from "../../components/Button";
 import SingleStep from "../../components/SingleStep";
 import Plaid from "../../components/Plaid";
 import Checkout from "../../components/Checkout";
-import Stepper from "../../components/Stepper";
 import CONSTANTS from "../../globals";
 import Router from "next/router";
 
@@ -121,13 +120,6 @@ class Step7 extends React.Component {
             transform: translate(50%, 30%);
           }
         `}</style>
-        <Stepper>
-          <li className="steplist__step steplist__step-done">1</li>
-          <li className="steplist__step steplist__step-done">2</li>
-          <li className="steplist__step steplist__step-done">3</li>
-          <li className="steplist__step steplist__step-done">4</li>
-          <li className="steplist__step steplist__step-doing">5</li>
-        </Stepper>
       </SingleStep>
     );
   }
@@ -190,7 +182,8 @@ class Step7 extends React.Component {
           onSubmit={values => {
             this.updateInfo(values);
           }}
-          render={props => (
+        >
+          {props => (
             <Form>
               <Input type="text" label="Bank Name" fieldname="bankName" />
               <Input
@@ -224,7 +217,7 @@ class Step7 extends React.Component {
               </Button>
             </Form>
           )}
-        />
+        </Formik>
         <style jsx>{`
           .error {
             height: 23px;
@@ -232,13 +225,6 @@ class Step7 extends React.Component {
             text-align: center;
           }
         `}</style>
-        <Stepper>
-          <li className="steplist__step steplist__step-done">1</li>
-          <li className="steplist__step steplist__step-done">2</li>
-          <li className="steplist__step steplist__step-done">3</li>
-          <li className="steplist__step steplist__step-done">4</li>
-          <li className="steplist__step steplist__step-doing">5</li>
-        </Stepper>
       </SingleStep>
     );
   }

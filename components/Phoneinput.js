@@ -1,39 +1,61 @@
 import React from "react";
 import NumberFormat from "react-number-format";
+import cn from "classnames";
 
-export default class Phoneinput extends React.Component {
+export default class Phoneinput extends React.PureComponent {
   constructor(props) {
     super(props);
 
     this.handleChange = this.handleChange.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
+
+    this.state = {
+      displayLabel: true
+    };
   }
+
   handleChange(e) {
-    this.props.onChangeEvent(this.props.fieldname, e.target.value);
+    const { onChangeEvent, fieldname, outerLabel } = this.props;
+    if (!outerLabel) {
+      e.target.value !== ""
+        ? this.setState({ displayLabel: false })
+        : this.setState({ displayLabel: true });
+    }
+    onChangeEvent(fieldname, e.target.value);
   }
 
   handleBlur() {
-    this.props.onBlurEvent(this.props.fieldname, true);
+    const { onBlurEvent, fieldname } = this.props;
+    onBlurEvent(fieldname, true);
   }
 
   render() {
+    const { displayLabel } = this.state;
+    const { fieldname, label, secondary, outerLabel, value } = this.props;
+
     return (
-      <div className="input__wrapper">
+      <div className={cn("input__wrapper", { "outer-label": outerLabel })}>
         <NumberFormat
           onChange={this.handleChange}
           onBlur={this.handleBlur}
           format="(###) ###-####"
-          name={this.props.fieldname}
-          id={this.props.fieldname}
+          value={value}
+          name={fieldname}
+          id={fieldname}
         />
-        <label htmlFor={this.props.fieldname}>{this.props.label}</label>
-        <style jsx global>{`
+        <label
+          htmlFor={fieldname}
+          style={{ opacity: displayLabel ? "1" : "0" }}
+        >
+          {label}
+        </label>
+        <style jsx>{`
           input {
             appearance: none;
             border: 1px solid transparent;
             border-radius: 3px;
             background-image: none;
-            background-color: ${this.props.secondary ? "#F6F9FF" : "#fff"};
+            background-color: ${secondary ? "#F6F9FF" : "#fff"};
             box-shadow: none;
             font-family: "Poppins", -apple-system, BlinkMacSystemFont,
               "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
@@ -73,13 +95,22 @@ export default class Phoneinput extends React.Component {
             position: relative;
             height: 3.75rem;
             width: 100%;
-            max-width: 350px;
             margin: 0 auto;
             margin-bottom: 0.5rem;
           }
 
           .input__wrapper:last-of-type {
             margin-bottom: 0.5rem;
+          }
+
+          .input__wrapper.outer-label {
+            margin-bottom: 0;
+            margin-top: 2em;
+          }
+
+          .input__wrapper.outer-label label {
+            position: absolute;
+            top: -25%;
           }
         `}</style>
       </div>
