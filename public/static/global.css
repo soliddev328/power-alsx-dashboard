@@ -64,10 +64,6 @@ body {
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
-main > *:not(header) {
-  animation: fadeIn 400ms forwards;
-}
-
 h1,
 h2,
 h4,
@@ -106,13 +102,35 @@ h4 {
 
 .paragraph,
 p {
-  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   font-size: 14px;
   font-weight: 400;
   letter-spacing: 0.5px;
   line-height: 1.7em;
   color: #555e80;
+}
+
+small {
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-weight: 400;
+  line-height: 1.7em;
+  color: #555e80;
+}
+
+h1:first-child,
+h2:first-child,
+h3:first-child,
+h4:first-child,
+p:first-child {
+  margin-top: 0;
+}
+
+h1:last-child,
+h2:last-child,
+h3:last-child,
+h4:last-child,
+p:last-child {
+  margin-bottom: 0;
 }
 
 *::-moz-selection {
@@ -131,29 +149,10 @@ input[type="number"]::-webkit-outer-spin-button {
   margin: 0;
 }
 
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus input:-webkit-autofill,
-textarea:-webkit-autofill,
-textarea:-webkit-autofill:hover textarea:-webkit-autofill:focus,
-select:-webkit-autofill,
-select:-webkit-autofill:hover,
-select:-webkit-autofill:focus {
-  -webkit-text-fill-color: --color-font;
-  -webkit-box-shadow: 0 0 0 1000px #fff inset;
-  box-shadow: 0 0 0 1000px #fff inset;
-  -webkit-transition: background-color 5000s ease-in-out 0s;
-  transition: background-color 5000s ease-in-out 0s;
-}
-
-input[value]:not([value=""]) + label {
-  opacity: 0;
-}
-
 input:not([type="checkbox"]) {
   appearance: none;
   border: 1px solid transparent;
-  border-radius: 3px;
+  border-radius: 5px;
   background-image: none;
   background-color: #fff;
   box-shadow: none;
@@ -182,19 +181,6 @@ input + label {
   transform: translateY(-50%);
   transition: opacity 400ms cubic-bezier(0.075, 0.82, 0.165, 1);
   pointer-events: none;
-}
-
-.input__wrapper {
-  position: relative;
-  height: 3.75rem;
-  width: 100%;
-  max-width: 350px;
-  margin: 0 auto;
-  margin-bottom: 0.5rem;
-}
-
-.input__wrapper:last-of-type {
-  margin-bottom: 0.5rem;
 }
 
 img {
@@ -304,7 +290,7 @@ hr {
 .select__control {
   height: 100%;
   border: none;
-  border-radius: 3px;
+  border-radius: 5px;
 }
 
 .select__placeholder {
@@ -346,9 +332,62 @@ hr {
   background-color: #fff;
 }
 
-@media (min-width: 800px) {
+.desktop-only {
+  display: none;
+}
+
+.mobile-only {
+  display: block;
+}
+
+.text-no-margin {
+  margin: 0;
+}
+
+.custom-select {
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background-color: #fff;
+  box-shadow: none;
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0.8em 2em 0.8em 1em;
+  width: 100%;
+  z-index: 10;
+  transition: border-color 200ms ease-in;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='none' fill-rule='evenodd' stroke='%232479FF' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.7' d='M9 1L5 5 1 1'/%3E%3C/svg%3E%0A");
+  background-repeat: no-repeat, repeat;
+  background-position: right .7em top 50%, 0 0;
+  background-size: .65em auto, 100%;
+}
+.custom-select::-ms-expand {
+  display: none;
+}
+.custom-select:hover {
+  border-color: var(--color-primary);
+}
+.custom-select:focus {
+  color: #222;
+  outline: none;
+}
+.custom-select option {
+  font-weight:normal;
+}
+
+@media (min-width: 1400px) {
   .two-columns--responsive {
     grid-template-columns: repeat(2, 1fr);
+  }
+  .desktop-only {
+    display: block;
+  }
+  .mobile-only {
+    display: none;
   }
 }
 

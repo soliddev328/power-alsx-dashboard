@@ -43,6 +43,8 @@ class Step1 extends React.Component {
     localStorage.removeItem("email");
     localStorage.removeItem("username");
 
+    const { query } = this.props;
+    let storedReferrerPage = Cookie.get("ce_aff_slug");
     let storedCustomerReferral = Cookie.get("customer_referral");
     let storedPartnerReferral = Cookie.get("partner_referral");
     let storedSalesRep = Cookie.get("ce_rep_referral");
@@ -51,6 +53,9 @@ class Step1 extends React.Component {
     let storedUtmMedium = Cookie.get("_ce_medium");
     let storedAffiliate = Cookie.get("ce_aff");
 
+    if (document.referrer) {
+      storedReferrerPage = document.referrer;
+    }
     if (storedPartnerReferral) {
       localStorage.setItem("Partner", storedPartnerReferral);
     }
@@ -70,43 +75,38 @@ class Step1 extends React.Component {
       localStorage.setItem("UtmMedium", storedUtmMedium);
     }
 
-    if (this.props) {
-      if (this.props.query.partner) {
-        storedPartnerReferral = this.props.query.partner;
-        localStorage.setItem("Partner", storedPartnerReferral);
-      }
-      if (this.props.query.advocate) {
-        storedCustomerReferral = this.props.query.advocate;
-        localStorage.setItem("Referrer", storedCustomerReferral);
-      }
-      if (this.props.query.rep) {
-        storedSalesRep = this.props.query.rep;
-        localStorage.setItem("SalesRep", storedSalesRep);
-      }
-      if (this.props.query.affiliate) {
-        storedAffiliate = this.props.query.affiliate;
-        localStorage.setItem("Affiliate", storedAffiliate);
-      }
-      if (this.props.query.utm_campaign) {
-        storedUtmCampaign = this.props.query.utm_campaign;
-        localStorage.setItem("UtmCampaign", storedUtmCampaign);
-      }
-      if (this.props.query.utm_source) {
-        storedUtmSource = this.props.query.utm_source;
-        localStorage.setItem("UtmSource", storedUtmSource);
-      }
-      if (this.props.query.utm_medium) {
-        storedUtmMedium = this.props.query.utm_medium;
-        localStorage.setItem("UtmMedium", storedUtmMedium);
-      }
-      // some partners pass that information to us
-      if (this.props.query.utility)
-        localStorage.setItem("utility", this.props.query.utility);
+    if (query.partner) {
+      storedPartnerReferral = query.partner;
+      localStorage.setItem("Partner", storedPartnerReferral);
     }
-    let storedReferrerPage = "";
-    if (document.referrer) storedReferrerPage = document.referrer;
-    if (Cookie.get("ce_aff_slug"))
-      storedReferrerPage = Cookie.get("ce_aff_slug");
+    if (query.advocate) {
+      storedCustomerReferral = query.advocate;
+      localStorage.setItem("Referrer", storedCustomerReferral);
+    }
+    if (query.rep) {
+      storedSalesRep = query.rep;
+      localStorage.setItem("SalesRep", storedSalesRep);
+    }
+    if (query.affiliate) {
+      storedAffiliate = query.affiliate;
+      localStorage.setItem("Affiliate", storedAffiliate);
+    }
+    if (query.utm_campaign) {
+      storedUtmCampaign = query.utm_campaign;
+      localStorage.setItem("UtmCampaign", storedUtmCampaign);
+    }
+    if (query.utm_source) {
+      storedUtmSource = query.utm_source;
+      localStorage.setItem("UtmSource", storedUtmSource);
+    }
+    if (query.utm_medium) {
+      storedUtmMedium = query.utm_medium;
+      localStorage.setItem("UtmMedium", storedUtmMedium);
+    }
+    // some partners pass that information to us
+    if (query.utility) {
+      localStorage.setItem("utility", query.utility);
+    }
 
     this.setState({
       referrer: storedCustomerReferral,
@@ -146,6 +146,13 @@ class Step1 extends React.Component {
 
     if (options !== null && utility !== "") {
       localStorage.setItem("utility", JSON.stringify(utility));
+
+      if (utility.paperOnly) {
+        localStorage.setItem("billingMethod", JSON.stringify("paper"));
+      } else {
+        localStorage.setItem("billingMethod", JSON.stringify(""));
+      }
+
       window.firebase
         .auth()
         .createUserWithEmailAndPassword(values.emailAddress, values.password)
@@ -165,6 +172,17 @@ class Step1 extends React.Component {
           }
         })
         .then(userCredential => {
+          const {
+            referrer,
+            partner,
+            salesRep,
+            affiliate,
+            utmCampaign,
+            utmMedium,
+            utmSource,
+            referrerPage
+          } = this.state;
+
           if (userCredential) {
             window.localStorage.setItem(
               "firebaseUserId",
@@ -185,14 +203,14 @@ class Step1 extends React.Component {
                       utility: utility.label,
                       postalCode: values.postalCode,
                       firebaseUserId: userCredential.user.uid,
-                      referrer: this.state.referrer,
-                      partner: this.state.partner,
-                      salesRep: this.state.salesRep,
-                      affiliate: this.state.affiliate,
-                      utmCampaign: this.state.utmCampaign,
-                      utmMedium: this.state.utmMedium,
-                      utmSource: this.state.utmSource,
-                      referrerPage: this.state.referrerPage
+                      referrer: referrer,
+                      partner: partner,
+                      salesRep: salesRep,
+                      affiliate: affiliate,
+                      utmCampaign: utmCampaign,
+                      utmMedium: utmMedium,
+                      utmSource: utmSource,
+                      referrerPage: referrerPage
                     },
                     {
                       headers: {
@@ -240,7 +258,7 @@ class Step1 extends React.Component {
   }
 
   render() {
-    const { email, error, firstName, lastName } = this.state;
+    const { error } = this.state;
     const { query } = this.props;
 
     return (
@@ -259,7 +277,8 @@ class Step1 extends React.Component {
             onSubmit={values => {
               this.autenticate(values);
             }}
-            render={props => (
+          >
+            {props => (
               <>
                 <Form>
                   <ZipCodeInput
@@ -316,7 +335,7 @@ class Step1 extends React.Component {
                 </Form>
               </>
             )}
-          />
+          </Formik>
         </SingleStep>
         <style jsx>{`
           main {

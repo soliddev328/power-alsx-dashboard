@@ -39,6 +39,8 @@ export default class forgotPassword extends React.Component {
   }
 
   renderForm() {
+    const { error } = this.state;
+
     return (
       <Formik
         initialValues={{
@@ -48,8 +50,9 @@ export default class forgotPassword extends React.Component {
         onSubmit={values => {
           this.saveNewPassword(values);
         }}
-        render={props => (
-          <React.Fragment>
+      >
+        {props => (
+          <>
             <Form>
               <Input
                 type="password"
@@ -63,7 +66,7 @@ export default class forgotPassword extends React.Component {
                 fieldname="passwordConfirmation"
                 required
               />
-              <p className="error">{this.state.error}</p>
+              <p className="error">{error}</p>
               <Button
                 primary
                 disabled={
@@ -83,9 +86,9 @@ export default class forgotPassword extends React.Component {
                 text-align: center;
               }
             `}</style>
-          </React.Fragment>
+          </>
         )}
-      />
+      </Formik>
     );
   }
 

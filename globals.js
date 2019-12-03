@@ -1,5 +1,5 @@
 module.exports = {
-  NODE_ENV: process.env.NODE_ENV,
+  NODE_ENV: "development",
   dev: {
     API: "https://comenergy-api-staging.herokuapp.com",
     // API: "http://localhost:5000",
@@ -31,4 +31,4 @@ module.exports = {
       SENDERID: "273326053550"
     }
   }
-}
+};

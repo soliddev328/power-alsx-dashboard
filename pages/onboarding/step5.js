@@ -28,7 +28,8 @@ class Step5 extends React.Component {
   }
 
   renderContent() {
-    if (this.state.partialConnection) {
+    const { partialConnection } = this.state;
+    if (partialConnection) {
       return (
         <p className="message">
           We are connecting your account and will contact you if we need more
@@ -42,7 +43,7 @@ class Step5 extends React.Component {
       );
     } else {
       return (
-        <React.Fragment>
+        <>
           <svg width="55" height="55" xmlns="http://www.w3.org/2000/svg">
             <g fill="none" fillRule="evenodd">
               <circle cx="27.5" cy="27.5" r="27.5" fill="#41EF8B" />
@@ -53,7 +54,7 @@ class Step5 extends React.Component {
             </g>
           </svg>
           <p>Congratulations, you're connected!</p>
-        </React.Fragment>
+        </>
       );
     }
   }

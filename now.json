@@ -3,13 +3,22 @@
   "version": 2,
   "build": {
     "env": {
-      "NODE_ENV": "production"
+      "NODE_ENV": "development"
     }
   },
   "alias": ["my.commonenergy.us"],
   "routes": [
-    { "src": "/sitemap.xml", "dest": "/static/sitemap.xml" },
-    { "src": "/robots.txt", "dest": "/static/robots.txt" },
-    { "src": "/favicon.ico", "dest": "/static/favicon.ico" }
+    {
+      "src": "/sitemap.xml",
+      "dest": "/static/sitemap.xml"
+    },
+    {
+      "src": "/robots.txt",
+      "dest": "/static/robots.txt"
+    },
+    {
+      "src": "/favicon.ico",
+      "dest": "/static/favicon.ico"
+    }
   ]
 }
