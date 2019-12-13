@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Router from "next/router";
 import Head from "next/head";
+import Link from "next/link";
 import NumberFormat from "react-number-format";
 import { useStateValue } from "../../state";
 import Main from "../../components/Main";
@@ -11,8 +12,8 @@ import Panel from "../../components/Panel";
 import Text from "../../components/Text";
 import Separator from "../../components/Separator";
 import Icon from "../../components/Icon";
+import Button from "../../components/Button";
 import UsersInAreaMap from "../../components/Dashboard/UsersInAreaMap";
-import SegmentedInput from "../../components/SegmentedInput";
 import CONSTANTS from "../../globals";
 
 const { API } =
@@ -303,24 +304,29 @@ const Dashboard = () => {
         <Panel>
           <Container column alignLeft>
             <Text h3 noMargin>
-              Help us bring clean energy to your community!
+              Help us bring more clean energy to your community!
             </Text>
             <Text style={{ marginBottom: "20px" }}>
-              Help your friends save with Common Energy and receive $50 for each
-              referral!
+              You can receive <strong>free electricity for a year</strong> by
+              helping spread the word about Common Energy. Find out how with the
+              link below.
             </Text>
           </Container>
           <UsersInAreaMap />
-          <SegmentedInput
-            buttonText="Copy Link"
-            referral
-            hasBorder
-          ></SegmentedInput>
+          <Link>
+            <a className="inner-link" href="/dashboard/referrals">
+              <Button primary>Common Energy Referral Center</Button>
+            </a>
+          </Link>
         </Panel>
       </Section>
       <style jsx>{`
         .label {
           grid-column: span 2;
+        }
+
+        .inner-link {
+          text-decoration: none;
         }
 
         @media (max-width: 700px) {
