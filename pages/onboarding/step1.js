@@ -146,31 +146,14 @@ class Step1 extends React.Component {
 
     if (options !== null && utility !== "") {
       localStorage.setItem("utility", JSON.stringify(utility));
-
       if (utility.paperOnly) {
         localStorage.setItem("billingMethod", JSON.stringify("paper"));
       } else {
         localStorage.setItem("billingMethod", JSON.stringify(""));
       }
-
       window.firebase
         .auth()
         .signInAnonymously()
-        .catch(error => {
-          if (error.code === "auth/email-already-in-use") {
-            this.setState({
-              error: {
-                code: error.code,
-                message: "Already have a login and password?",
-                link: <a href="/">Go here</a>
-              }
-            });
-          } else {
-            this.setState({
-              error: { code: error.code, message: error.message }
-            });
-          }
-        })
         .then(userCredential => {
           const {
             referrer,
@@ -188,6 +171,7 @@ class Step1 extends React.Component {
               "firebaseUserId",
               userCredential.user.uid
             );
+            window.localStorage.setItem("emailAddress", values.emailAddress);
             window.firebase
               .auth()
               .currentUser.getIdToken(true)
@@ -222,7 +206,6 @@ class Step1 extends React.Component {
                       "leadId",
                       response.data.data.leadId
                     );
-
                     // Call Segement events
                     global.analytics.alias(response.data.data.leadId);
                     global.analytics.identify(response.data.data.leadId, {
@@ -236,6 +219,31 @@ class Step1 extends React.Component {
                     Router.push({
                       pathname: "/onboarding/step2"
                     });
+                  })
+                  .catch(error => {
+                    const { response } = error;
+                    const { data } = response;
+                    const { errors } = data;
+
+                    if (errors.code === "auth/email-already-exists") {
+                      this.setState({
+                        error: {
+                          code: error.code,
+                          message: (
+                            <>
+                              This email address has already been used to
+                              complete this step.{" "}
+                              <a href="/emailsignin">Click here</a> to access
+                              your account and complete sign-up.
+                            </>
+                          )
+                        }
+                      });
+                    } else {
+                      this.setState({
+                        error: { code: error.code, message: error.message }
+                      });
+                    }
                   });
               });
           }
@@ -279,51 +287,47 @@ class Step1 extends React.Component {
             }}
           >
             {props => (
-              <>
-                <Form>
-                  <ZipCodeInput
-                    value={props.values.postalCode}
-                    onChangeEvent={props.setFieldValue}
-                    onBlurEvent={props.setFieldTouched}
-                    label="ZipCode"
-                    fieldname="postalCode"
-                  />
-                  <CustomSelect
-                    ref={this.select}
-                    zipCode={props.values.postalCode}
-                    value={props.currentUtility}
-                    disabled={!props.values.postalCode}
-                    onChange={props.setFieldValue}
-                    onBlur={props.setFieldTouched}
-                    touched={props.touched}
-                    fieldname="currentUtility"
-                  />
-                  <div className="two-columns two-columns--responsive">
-                    <Input label="First Name" fieldname="firstName" />
-                    <Input label="Last Name" fieldname="lastName" />
-                  </div>
-                  <Input
-                    type="email"
-                    label="Email"
-                    fieldname="emailAddress"
-                    required
-                  />
-                  <p className="error">
-                    {error.message} {error.link && error.link}
-                  </p>
-                  <Button
-                    primary
-                    disabled={
-                      !!props.values.firstName !== true ||
-                      !!props.values.lastName !== true ||
-                      !!props.values.postalCode !== true ||
-                      !!props.values.emailAddress !== true
-                    }
-                  >
-                    Next
-                  </Button>
-                </Form>
-              </>
+              <Form>
+                <ZipCodeInput
+                  value={props.values.postalCode}
+                  onChangeEvent={props.setFieldValue}
+                  onBlurEvent={props.setFieldTouched}
+                  label="ZipCode"
+                  fieldname="postalCode"
+                />
+                <CustomSelect
+                  ref={this.select}
+                  zipCode={props.values.postalCode}
+                  value={props.currentUtility}
+                  disabled={!props.values.postalCode}
+                  onChange={props.setFieldValue}
+                  onBlur={props.setFieldTouched}
+                  touched={props.touched}
+                  fieldname="currentUtility"
+                />
+                <div className="two-columns two-columns--responsive">
+                  <Input label="First Name" fieldname="firstName" />
+                  <Input label="Last Name" fieldname="lastName" />
+                </div>
+                <Input
+                  type="email"
+                  label="Email"
+                  fieldname="emailAddress"
+                  required
+                />
+                <p className="error">{error.message}</p>
+                <Button
+                  primary
+                  disabled={
+                    !!props.values.firstName !== true ||
+                    !!props.values.lastName !== true ||
+                    !!props.values.postalCode !== true ||
+                    !!props.values.emailAddress !== true
+                  }
+                >
+                  Next
+                </Button>
+              </Form>
             )}
           </Formik>
         </SingleStep>
@@ -335,7 +339,7 @@ class Step1 extends React.Component {
             margin: 0 auto;
           }
           .error {
-            height: 52px;
+            height: 65px;
             margin: 0;
             padding: 1em 0;
             text-align: center;
