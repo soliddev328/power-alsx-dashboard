@@ -84,7 +84,7 @@ export default class Input extends React.PureComponent {
           value={value}
           style={style}
           className={className}
-          maxlength={maxLength}
+          maxLength={maxLength}
         />
         <label
           htmlFor={fieldname}
