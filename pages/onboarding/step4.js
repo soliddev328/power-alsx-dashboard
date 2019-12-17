@@ -131,57 +131,68 @@ class Step4 extends React.Component {
             utilityPassword: ""
           }}
           onSubmit={values => {
-            this.setState({ isLoading: true });
             window.firebase
               .auth()
-              .currentUser.getIdToken(true)
-              .then(idToken => {
-                axios
-                  .put(
-                    `${API}/v1/subscribers/utilities/link`,
-                    {
-                      leadId: leadId,
-                      utility: utility,
-                      agreementChecked: !!values.acceptedTermsAndConditions,
-                      utilityUsername: values.utilityUser,
-                      utilityPwd: values.utilityPassword
-                    },
-                    {
-                      headers: {
-                        Authorization: idToken
-                      }
-                    }
-                  )
-                  .then(response => {
-                    const data = response.data.data;
-
-                    localStorage.setItem("linkedUtility", JSON.stringify(data));
-
-                    if (data && data[0]) {
-                      if (data[0].hasLoggedIn) {
-                        localStorage.setItem("partialConnection", false);
-                        Router.push({
-                          pathname: "/onboarding/step5"
-                        });
-                      } else {
-                        this.setState({ isLoading: false });
-                        Router.push({
-                          pathname: "/onboarding/step4",
-                          query: {
-                            error: true
+              .signInAnonymously()
+              .then(userCredential => {
+                if (userCredential) {
+                  const currentUser =
+                    window.firebase.auth().currentUser || false;
+                  if (currentUser) {
+                    this.setState({ isLoading: true });
+                    currentUser.getIdToken(true).then(idToken => {
+                      axios
+                        .put(
+                          `${API}/v1/subscribers/utilities/link`,
+                          {
+                            leadId: leadId,
+                            utility: utility,
+                            agreementChecked: !!values.acceptedTermsAndConditions,
+                            utilityUsername: values.utilityUser,
+                            utilityPwd: values.utilityPassword
+                          },
+                          {
+                            headers: {
+                              Authorization: idToken
+                            }
                           }
+                        )
+                        .then(response => {
+                          const data = response.data.data;
+
+                          localStorage.setItem(
+                            "linkedUtility",
+                            JSON.stringify(data)
+                          );
+
+                          if (data && data[0]) {
+                            if (data[0].hasLoggedIn) {
+                              localStorage.setItem("partialConnection", false);
+                              Router.push({
+                                pathname: "/onboarding/step5"
+                              });
+                            } else {
+                              this.setState({ isLoading: false });
+                              Router.push({
+                                pathname: "/onboarding/step4",
+                                query: {
+                                  error: true
+                                }
+                              });
+                            }
+                          } else {
+                            localStorage.setItem("partialConnection", true);
+                            Router.push({
+                              pathname: "/onboarding/step5"
+                            });
+                          }
+                        })
+                        .catch(err => {
+                          console.log(err);
                         });
-                      }
-                    } else {
-                      localStorage.setItem("partialConnection", true);
-                      Router.push({
-                        pathname: "/onboarding/step5"
-                      });
-                    }
-                  })
-                  .catch(err => {
-                    console.log(err);
-                  });
+                    });
+                  }
+                }
               });
           }}
         >
@@ -253,32 +264,39 @@ class Step4 extends React.Component {
         onSubmit={values => {
           window.firebase
             .auth()
-            .currentUser.getIdToken(true)
-            .then(idToken => {
-              console.log(leadId);
-              axios
-                .put(
-                  `${API}/v1/subscribers`,
-                  {
-                    leadId: leadId,
-                    agreementChecked: !!values.acceptedTermsAndConditions,
-                    utilityAccountNumber: values.utilityAccountNumber
-                  },
-                  {
-                    headers: {
-                      Authorization: idToken
-                    }
-                  }
-                )
-                .then(() => {
-                  localStorage.setItem("partialConnection", true);
-                  Router.push({
-                    pathname: "/onboarding/step4.2"
+            .signInAnonymously()
+            .then(userCredential => {
+              if (userCredential) {
+                window.firebase
+                  .auth()
+                  .currentUser.getIdToken(true)
+                  .then(idToken => {
+                    console.log(leadId);
+                    axios
+                      .put(
+                        `${API}/v1/subscribers`,
+                        {
+                          leadId: leadId,
+                          agreementChecked: !!values.acceptedTermsAndConditions,
+                          utilityAccountNumber: values.utilityAccountNumber
+                        },
+                        {
+                          headers: {
+                            Authorization: idToken
+                          }
+                        }
+                      )
+                      .then(() => {
+                        localStorage.setItem("partialConnection", true);
+                        Router.push({
+                          pathname: "/onboarding/step4.2"
+                        });
+                      })
+                      .catch(error => {
+                        console.log(error);
+                      });
                   });
-                })
-                .catch(error => {
-                  console.log(error);
-                });
+              }
             });
         }}
       >
