@@ -33,7 +33,7 @@ export default function ReferralsTable({ data }) {
   return (
     <Section tableSection>
       <Panel>
-        <Text h3>Your referrals</Text>
+        <Text h3>Your Referrals</Text>
         {contacts.length > 0 ? (
           <Table headers={["Name", "Status"]} data={contacts} />
         ) : (
