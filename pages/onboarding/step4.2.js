@@ -106,36 +106,13 @@ class Step42 extends React.Component {
               };
 
               localStorage.setItem("address", JSON.stringify(address));
+              localStorage.setItem("phoneNumber", values.phoneNumber);
 
               //if (address.postalCode === postalCode) {
-              window.firebase
-                .auth()
-                .currentUser.getIdToken(true)
-                .then(idToken => {
-                  axios
-                    .put(
-                      `${API}/v1/subscribers`,
-                      {
-                        leadId: leadId,
-                        street: address.street,
-                        state: address.state,
-                        city: address.city,
-                        apt: address.apt,
-                        phone: values.phoneNumber
-                      },
-                      {
-                        headers: {
-                          Authorization: idToken
-                        }
-                      }
-                    )
-                    .then(() => {
-                      Router.push({
-                        pathname: "/onboarding/step5"
-                      });
-                    })
-                    .catch(() => {});
-                });
+
+              Router.push({
+                pathname: "/onboarding/step5"
+              });
               // } else {
               //   this.setState({
               //     errorMessage:

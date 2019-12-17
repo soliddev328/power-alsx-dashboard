@@ -151,6 +151,7 @@ class Step1 extends React.Component {
       } else {
         localStorage.setItem("billingMethod", JSON.stringify(""));
       }
+
       window.firebase
         .auth()
         .signInAnonymously()
@@ -171,7 +172,7 @@ class Step1 extends React.Component {
               "firebaseUserId",
               userCredential.user.uid
             );
-            window.localStorage.setItem("emailAddress", values.emailAddress);
+
             window.firebase
               .auth()
               .currentUser.getIdToken(true)
