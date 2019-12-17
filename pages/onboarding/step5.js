@@ -27,41 +27,52 @@ class Step5 extends React.Component {
   componentDidMount() {
     global.analytics.page("Step 5");
     let storedLeadId = "";
+    let storedEmailAddress = "";
 
     if (localStorage.getItem("leadId")) {
       storedLeadId = localStorage.getItem("leadId");
     }
+    if (localStorage.getItem("email")) {
+      storedEmailAddress = localStorage.getItem("email");
+    }
 
     this.setState({
-      leadId: storedLeadId
+      leadId: storedLeadId,
+      email: storedEmailAddress
     });
   }
 
   submit(values) {
-    const { leadId } = this.state;
-
+    const { leadId, email } = this.state;
     window.firebase
       .auth()
-      .currentUser.getIdToken(true)
-      .then(idToken => {
-        axios
-          .put(
-            `${API}/v1/subscribers`,
-            {
-              leadId: leadId,
-              password: values.password
-            },
-            {
-              headers: {
-                Authorization: idToken
-              }
-            }
-          )
-          .then(response => {
-            Router.push({
-              pathname: "/onboarding/step6"
+      .signInAnonymously()
+      .then(userCredential => {
+        if (userCredential) {
+          window.firebase
+            .auth()
+            .currentUser.getIdToken(true)
+            .then(idToken => {
+              axios
+                .put(
+                  `${API}/v1/subscribers`,
+                  {
+                    leadId: leadId,
+                    password: values.password
+                  },
+                  {
+                    headers: {
+                      Authorization: idToken
+                    }
+                  }
+                )
+                .then(response => {
+                  Router.push({
+                    pathname: "/onboarding/step6"
+                  });
+                });
             });
-          });
+        }
       });
   }
 
