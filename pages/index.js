@@ -35,7 +35,6 @@ class Index extends React.Component {
 
   componentDidUpdate() {
     window.firebase.auth().onAuthStateChanged(user => {
-      console.log(user);
       if (user) {
         Router.push({
           pathname: "/dashboard"
