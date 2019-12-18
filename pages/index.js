@@ -35,6 +35,7 @@ class Index extends React.Component {
 
   componentDidUpdate() {
     window.firebase.auth().onAuthStateChanged(user => {
+      console.log(user);
       if (user) {
         Router.push({
           pathname: "/dashboard"
@@ -49,14 +50,15 @@ class Index extends React.Component {
     window.firebase
       .auth()
       .signInWithEmailAndPassword(values.emailAddress, values.password)
-      .catch(error => {
-        this.setState({ error: { code: error.code, message: error.message } });
-      })
       .then(firebaseData => {
+        console.log(firebaseData);
         if (!error.code) {
           window.firebase
             .auth()
             .currentUser.getIdToken(true)
+            .catch(error => {
+              console.log(error);
+            })
             .then(idToken => {
               axios
                 .get(`${API}/v1/subscribers/${firebaseData.user.uid}`, {
@@ -160,6 +162,9 @@ class Index extends React.Component {
                 });
             });
         }
+      })
+      .catch(error => {
+        this.setState({ error: { code: error.code, message: error.message } });
       });
   }
 
