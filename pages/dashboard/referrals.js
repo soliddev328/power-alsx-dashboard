@@ -236,6 +236,27 @@ export default function Referrals() {
       </Text>
       <Section>
         <Panel>
+          <Text h3>Email Your Referral Link</Text>
+          <Container column alignLeft>
+            <Text h5 noMargin>
+              Sample text:
+            </Text>
+            <Text style={{ marginBottom: "20px" }}>
+              Hi! I just signed up for a new state program that enables me to
+              save $5-$20 per month on my electricity and support clean energy.
+              Check it out!
+            </Text>
+          </Container>
+          <UsersInAreaMap />
+          <SegmentedInput
+            buttonText="Copy Link"
+            referral
+            hasBorder
+          ></SegmentedInput>
+        </Panel>
+      </Section>
+      <Section>
+        <Panel>
           <Text noMargin h3>
             Share on Social Media
           </Text>
@@ -285,25 +306,6 @@ export default function Referrals() {
             inputLabel="Enter Your Friends' Email Addresses Here"
             buttonText="send"
           />
-        </Panel>
-      </Section>
-      <Section>
-        <Panel>
-          <Text h3>Copy Your Referral Link And Email It Yourself</Text>
-          <Container column alignLeft>
-            <Text h5 noMargin>
-              Help us bring clean energy to your community
-            </Text>
-            <Text style={{ marginBottom: "20px" }}>
-              Share the link below and earn $50 per referral!
-            </Text>
-          </Container>
-          <UsersInAreaMap />
-          <SegmentedInput
-            buttonText="Copy Link"
-            referral
-            hasBorder
-          ></SegmentedInput>
         </Panel>
       </Section>
       {referralsDetails && (
