@@ -238,9 +238,6 @@ export default function Referrals() {
         <Panel>
           <Text h3>Email Your Referral Link</Text>
           <Container column alignLeft>
-            <Text h5 noMargin>
-              Sample text:
-            </Text>
             <Text style={{ marginBottom: "20px" }}>
               Hi! I just signed up for a new state program that enables me to
               save $5-$20 per month on my electricity and support clean energy.
