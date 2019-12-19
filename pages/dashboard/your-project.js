@@ -107,7 +107,7 @@ export default function MySource() {
       {!overlayDescription && (
         <Text noMargin>
           Congratulations! This is the new clean energy project you’re helping
-          to build. When the project iscompleted this image will be replaced
+          to build. When the project is completed this image will be replaced
           with a picture of the finished solar farm.
         </Text>
       )}
