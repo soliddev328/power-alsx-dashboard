@@ -4,6 +4,7 @@ import Router from "next/router";
 import Head from "next/head";
 import Link from "next/link";
 import NumberFormat from "react-number-format";
+import { withFirebase } from "../../firebase";
 import { useStateValue } from "../../state";
 import Main from "../../components/Main";
 import Container from "../../components/Container";
@@ -25,10 +26,10 @@ const getUserData = async (userUid, idToken) => {
       Authorization: idToken
     }
   });
-  return response && response.data && response.data.data;
+  return response?.data?.data;
 };
 
-const Dashboard = () => {
+const Dashboard = props => {
   const [{ selectedAccount }] = useStateValue();
   const [userData, setUserData] = useState({});
   const [overlayDescription, setOverlayDescription] = useState(false);
@@ -36,14 +37,15 @@ const Dashboard = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    firebase.auth().onAuthStateChanged(user => {
+
+    props.firebase.doUpdateUser(user => {
       if (user) {
         global.analytics.page("Dashboard");
+
         user.getIdToken(true).then(async idToken => {
           const userInfo = await getUserData(user.uid, idToken);
           if (
-            userInfo &&
-            userInfo.accounts &&
+            userInfo?.accounts &&
             userInfo.accounts[selectedAccount.value].onboardingStatus ===
               "Unassigned"
           ) {
@@ -51,8 +53,7 @@ const Dashboard = () => {
               "Please stay tuned to learn more about the status of your project and your connection timeline! We will provide more details shortly, both here and by email -- and please feel free to always reach out with any questions at"
             );
           } else if (
-            userInfo &&
-            userInfo.accounts &&
+            userInfo?.accounts &&
             userInfo.accounts[selectedAccount.value].onboardingStatus ===
               "Project Live"
           ) {
@@ -60,8 +61,7 @@ const Dashboard = () => {
               "Common Energy can connect you to our available project in your community in as little as 2-5 weeks. We’ll keep you posted on our progress along the way -- and please feel free to always reach out with any questions at"
             );
           } else if (
-            userInfo &&
-            userInfo.accounts &&
+            userInfo?.accounts &&
             userInfo.accounts[selectedAccount.value].onboardingStatus ===
               "No Project"
           ) {
@@ -69,8 +69,7 @@ const Dashboard = () => {
               "Currently, all our projects in your area are filled. However, because of your interest, we’re able to work with a developer on a new project to bring more clean energy and savings to your community! Please stand-by for an update on new projects in a few weeks -- and feel free to reach out with any questions at"
             );
           } else if (
-            userInfo &&
-            userInfo.accounts &&
+            userInfo?.accounts &&
             userInfo.accounts[selectedAccount.value].onboardingStatus ===
               "Project Not Live"
           ) {
@@ -78,8 +77,7 @@ const Dashboard = () => {
               "We’re excited to let you know that we have an available project in your area, but we are not ready to connect you, as it is not yet ready and active. However, we will make sure we update you as we take the project through to completion. Please know that as an early subscriber, you’ve taken an important step in making this project a success! Feel free to reach out with any questions at"
             );
           } else if (
-            userInfo &&
-            userInfo.accounts &&
+            userInfo?.accounts &&
             userInfo.accounts[selectedAccount.value].onboardingStatus ===
               "Meter Live"
           ) {
@@ -103,7 +101,7 @@ const Dashboard = () => {
         <title>Common Energy - Home</title>
       </Head>
       <Text h2 hasDecoration>
-        Welcome {userData && userData.firstName}
+        Welcome {userData?.firstName}
       </Text>
       <Text noMargin>This is your impact and savings dashboard!</Text>
       <Section
@@ -143,8 +141,7 @@ const Dashboard = () => {
               }
             />
             <Text h2 bold style={{ marginTop: "20px" }}>
-              {(userData &&
-                userData.accounts &&
+              {(userData?.accounts &&
                 userData.accounts[selectedAccount.value]
                   .totalCleanEnergyGenerated > 0 && (
                   <NumberFormat
@@ -184,8 +181,7 @@ const Dashboard = () => {
               }
             />
             <Text h2 bold style={{ marginTop: "20px" }}>
-              {(userData &&
-                userData.accounts &&
+              {(userData?.accounts &&
                 userData.accounts[selectedAccount.value].totalC02Avoided >
                   0 && (
                   <NumberFormat
@@ -229,8 +225,7 @@ const Dashboard = () => {
               }
             />
             <Text h2 bold style={{ marginTop: "20px" }}>
-              {(userData &&
-                userData.accounts &&
+              {(userData?.accounts &&
                 userData.accounts[selectedAccount.value].totalSavingsToDate >
                   0 && (
                   <NumberFormat
@@ -277,8 +272,7 @@ const Dashboard = () => {
               }
             />
             <Text h2 bold style={{ marginTop: "20px" }}>
-              {(userData &&
-                userData.accounts &&
+              {(userData?.accounts &&
                 userData.accounts[selectedAccount.value]
                   .lifetimeEstimatedSavings > 0 && (
                   <NumberFormat
@@ -339,4 +333,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default withFirebase(Dashboard);

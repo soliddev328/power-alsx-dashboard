@@ -10,6 +10,7 @@ import Phoneinput from "../../components/Phoneinput";
 import Input from "../../components/Input";
 import Table from "../../components/Table";
 import CONSTANTS from "../../globals";
+import { withFirebase } from "../../firebase";
 
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
@@ -40,18 +41,17 @@ const getPaymentMethods = accounts => {
   return allMethods;
 };
 
-export default function Profile() {
+function Profile(props) {
   const [userData, setUserdata] = useState({});
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged(user => {
+    props.firebase.doUpdateUser(user => {
       if (user) {
         global.analytics.page("Profile");
         user.getIdToken(true).then(async idToken => {
           const userInfo = await getUserData(user.uid, idToken);
-          console.log(userInfo);
           if (userInfo) {
             setUserdata(userInfo);
             setPaymentMethods(getPaymentMethods(userInfo.accounts || []));
@@ -84,7 +84,7 @@ export default function Profile() {
                 fullWidth
                 label="Name"
                 fieldname="name"
-                value={userData && userData.firstName}
+                value={userData.firstName}
               />
               <Input
                 readOnly
@@ -92,7 +92,7 @@ export default function Profile() {
                 fullWidth
                 label="Last Name"
                 fieldname="last-name"
-                value={userData && userData.lastName}
+                value={userData.lastName}
               />
             </Section>
             <Section columns="3">
@@ -102,7 +102,7 @@ export default function Profile() {
                 fullWidth
                 label="Email"
                 fieldname="email"
-                value={userData && userData.email}
+                value={userData?.email}
               />
               <Input
                 readOnly
@@ -111,16 +111,14 @@ export default function Profile() {
                 label="Primary Address"
                 fieldname="primary-address"
                 value={
-                  userData && userData.accounts
-                    ? userData.accounts[0].address.street
-                    : ""
+                  userData?.accounts ? userData.accounts[0].address.street : ""
                 }
               />
               <Phoneinput
                 readOnly
                 outerLabel
                 fullWidth
-                value={(userData && userData.phone) || ""}
+                value={userData?.phone || ""}
                 onChangeEvent={props.setFieldValue}
                 onBlurEvent={props.setFieldTouched}
                 label="Phone Number"
@@ -135,9 +133,7 @@ export default function Profile() {
                 label="City"
                 fieldname="city"
                 value={
-                  userData && userData.accounts
-                    ? userData.accounts[0].address.city
-                    : ""
+                  userData?.accounts ? userData.accounts[0].address.city : ""
                 }
               />
               <Input
@@ -147,9 +143,7 @@ export default function Profile() {
                 label="State"
                 fieldname="state"
                 value={
-                  userData && userData.accounts
-                    ? userData.accounts[0].address.state
-                    : ""
+                  userData?.accounts ? userData.accounts[0].address.state : ""
                 }
               />
               <Input
@@ -159,7 +153,7 @@ export default function Profile() {
                 label="Zip"
                 fieldname="zipcode"
                 value={
-                  userData && userData.accounts
+                  userData?.accounts
                     ? userData.accounts[0].address.postalCode
                     : ""
                 }
@@ -177,3 +171,5 @@ export default function Profile() {
     </Main>
   );
 }
+
+export default withFirebase(Profile);

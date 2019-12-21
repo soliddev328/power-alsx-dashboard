@@ -181,21 +181,6 @@ export default class MyDocument extends Document {
           <script
             dangerouslySetInnerHTML={{ __html: this.renderSegmentSnippet() }}
           />
-          <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase-app.js" />
-          <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase-auth.js" />
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `var config = {
-                apiKey: "${FIREBASE.APIKEY}",
-                authDomain: "${FIREBASE.PROJECTID}.firebaseapp.com",
-                databaseURL: "https://${FIREBASE.DATABASE}.firebaseio.com",
-                projectId: "${FIREBASE.PROJECTID}",
-                storageBucket: "${FIREBASE.BUCKET}.appspot.com",
-                messagingSenderId: "${FIREBASE.SENDERID}",
-              };
-              firebase.initializeApp(config);`
-            }}
-          />
         </Head>
 
         <body>

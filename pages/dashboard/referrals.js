@@ -15,6 +15,7 @@ import ReferralsTable from "../../components/Dashboard/ReferralsTable";
 import SegmentedInput from "../../components/SegmentedInput";
 import UsersInAreaMap from "../../components/Dashboard/UsersInAreaMap";
 import CONSTANTS from "../../globals";
+import { withFirebase } from "../../firebase";
 
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
@@ -53,7 +54,7 @@ const getUserData = async (userUid, idToken) => {
       Authorization: idToken
     }
   });
-  return data && data.data;
+  return data?.data;
 };
 
 const getReferralsData = async (username, idToken) => {
@@ -65,7 +66,7 @@ const getReferralsData = async (username, idToken) => {
       }
     }
   );
-  return data && data.data;
+  return data?.data;
 };
 
 const getReferralsDataDetails = async (username, idToken) => {
@@ -78,17 +79,17 @@ const getReferralsDataDetails = async (username, idToken) => {
     }
   );
 
-  return data && data.data && data.data[0];
+  return data?.data && data.data[0];
 };
 
-export default function Referrals() {
+function Referrals(props) {
   const [userData, setUserData] = useState({});
   const [referralsData, setReferralsData] = useState({});
   const [referralsDetails, setReferralsDetails] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged(user => {
+    props.firebase.doUpdateUser(user => {
       if (user) {
         global.analytics.page("Referrals");
 
@@ -314,3 +315,5 @@ export default function Referrals() {
     </Main>
   );
 }
+
+export default withFirebase(Referrals);

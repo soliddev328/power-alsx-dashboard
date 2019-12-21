@@ -23,6 +23,7 @@
     "babel-plugin-emotion": "^10.0.23",
     "classnames": "^2.2.6",
     "copy-to-clipboard": "^3.2.0",
+    "firebase": "^7.6.1",
     "formik": "^2.0.8",
     "google-map-react": "^1.1.5",
     "js-cookie": "^2.2.1",

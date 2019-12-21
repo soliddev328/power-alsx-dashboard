@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Head from "next/head";
 import axios from "axios";
 import NumberFormat from "react-number-format";
+import { withFirebase } from "../../firebase";
 import { useStateValue } from "../../state";
 import Main from "../../components/Main";
 import Section from "../../components/Section";
@@ -19,7 +20,7 @@ const getUserData = async (userUid, idToken) => {
       Authorization: idToken
     }
   });
-  return data && data.data;
+  return data?.data;
 };
 
 const getProjectInfo = async (projectId, idToken) => {
@@ -28,10 +29,10 @@ const getProjectInfo = async (projectId, idToken) => {
       Authorization: idToken
     }
   });
-  return data && data.data ? data.data[0] : {};
+  return data?.data ? data.data[0] : {};
 };
 
-export default function MySource() {
+function MySource(props) {
   const [isLoading, setIsLoading] = useState(true);
   const [overlayDescription, setOverlayDescription] = useState(false);
   const [projectInfo, setProjectInfo] = useState({});
@@ -39,12 +40,12 @@ export default function MySource() {
 
   useEffect(() => {
     setIsLoading(true);
-    firebase.auth().onAuthStateChanged(user => {
+    props.firebase.doUpdateUser(user => {
       if (user) {
         global.analytics.page("Your project");
         user.getIdToken(true).then(async idToken => {
           const userInfo = await getUserData(user.uid, idToken);
-          if (userInfo && userInfo.accounts) {
+          if (userInfo?.accounts) {
             if (
               userInfo.accounts[selectedAccount.value].onboardingStatus ===
               "Unassigned"
@@ -280,3 +281,5 @@ export default function MySource() {
     </Main>
   );
 }
+
+export default withFirebase(MySource);
