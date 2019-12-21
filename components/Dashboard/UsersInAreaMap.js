@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import GoogleMapReact from "google-map-react";
+import { withFirebase } from "../../firebase";
 import { useStateValue } from "../../state";
 import Container from "../../components/Container";
 import Text from "../Text";
@@ -15,7 +16,7 @@ const getUserData = async (userUid, idToken) => {
       Authorization: idToken
     }
   });
-  return response && response.data && response.data.data;
+  return response?.data?.data;
 };
 
 const getNearbyUsers = async (lat, lon, idToken) => {
@@ -27,17 +28,17 @@ const getNearbyUsers = async (lat, lon, idToken) => {
       }
     }
   );
-  return response && response.data && response.data.data;
+  return response?.data?.data;
 };
 
-export default function UsersInAreaMap() {
+function UsersInAreaMap(props) {
   const [empty, setEmpty] = useState(false);
   const [mapLocation, setMapLocation] = useState([]);
   const [nearbyUsers, setNearbyUsers] = useState([]);
   const [{ selectedAccount }] = useStateValue();
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged(user => {
+    props.firebase.doUpdateUser(user => {
       if (user) {
         user.getIdToken(true).then(async idToken => {
           const userInfo = await getUserData(user.uid, idToken);
@@ -135,3 +136,5 @@ export default function UsersInAreaMap() {
     </div>
   );
 }
+
+export default withFirebase(UsersInAreaMap);

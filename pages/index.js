@@ -2,6 +2,9 @@ import React from "react";
 import Router from "next/router";
 import { Formik, Form } from "formik";
 import axios from "axios";
+
+import { withFirebase } from "../firebase";
+
 import SingleStep from "../components/SingleStep";
 import Header from "../components/Header";
 import Separator from "../components/Separator";
@@ -34,7 +37,7 @@ class Index extends React.Component {
   }
 
   componentDidUpdate() {
-    window.firebase.auth().onAuthStateChanged(user => {
+    this.props.firebase.doUpdateUser(user => {
       if (user) {
         Router.push({
           pathname: "/dashboard"
@@ -46,120 +49,110 @@ class Index extends React.Component {
   autenticate(values) {
     const { error } = this.state;
 
-    window.firebase
-      .auth()
-      .signInWithEmailAndPassword(values.emailAddress, values.password)
+    this.props.firebase
+      .doSignInWithEmailAndPassword(values.emailAddress, values.password)
       .then(firebaseData => {
-        console.log(firebaseData);
         if (!error.code) {
-          window.firebase
-            .auth()
-            .currentUser.getIdToken(true)
-            .catch(error => {
-              console.log(error);
-            })
-            .then(idToken => {
-              axios
-                .get(`${API}/v1/subscribers/${firebaseData.user.uid}`, {
-                  headers: {
-                    Authorization: idToken
-                  }
-                })
-                .then(response => {
-                  const user = response.data.data;
+          this.props.firebase.doGetCurrentUser(idToken =>
+            axios
+              .get(`${API}/v1/subscribers/${firebaseData.user.uid}`, {
+                headers: {
+                  Authorization: idToken
+                }
+              })
+              .then(response => {
+                const user = response.data.data;
 
-                  window.localStorage.setItem("leadId", user.leadId);
+                window.localStorage.setItem("leadId", user.leadId);
 
-                  global.analytics.identify(user.leadId, {
-                    email: user.email
-                  });
-
-                  global.analytics.track("User Signed In", {});
-
-                  // retrieve utility information
-                  const utility =
-                    user && user.milestones ? user.milestones.utility : false;
-
-                  const imageName = utility
-                    ? utility.replace(/\s/g, "")
-                    : false;
-
-                  const utilityInfo = {
-                    image: {
-                      src: imageName
-                        ? `/static/images/utilities/${imageName}.png`
-                        : "/static/images/utilities/placeholder.png",
-                      altText: "Utility logo"
-                    },
-                    label: utility
-                  };
-
-                  localStorage.setItem("utility", JSON.stringify(utilityInfo));
-
-                  // retrieve postalcode
-                  if (
-                    user &&
-                    user.milestones &&
-                    user.milestones.address &&
-                    user.milestones.address.postalCode
-                  ) {
-                    const postalCode = user.milestones.address.postalCode;
-                    localStorage.setItem(
-                      "postalCode",
-                      JSON.stringify(postalCode)
-                    );
-                  }
-
-                  if (
-                    user &&
-                    user.milestones &&
-                    user.milestones.utilityPaperOnly
-                  ) {
-                    localStorage.setItem(
-                      "billingMethod",
-                      JSON.stringify({ billingMethod: "paper" })
-                    );
-                  }
-
-                  // forward to the right page
-                  if (user.signupCompleted) {
-                    Router.push({
-                      pathname: "/dashboard"
-                    });
-                  } else if (!user.milestones.utilityInfoCompleted) {
-                    Router.push({
-                      pathname: "/onboarding/step2",
-                      query: {
-                        onboardingNotFinished: true
-                      }
-                    });
-                  } else if (
-                    (user.milestones.utilityInfoCompleted &&
-                      user.milestones.utilityLoginSuccessful) ||
-                    !user.milestones.bankInfoCompleted
-                  ) {
-                    Router.push({
-                      pathname: "/onboarding/step6",
-                      query: {
-                        onboardingNotFinished: true
-                      }
-                    });
-                  } else if (
-                    user.milestones.utilityInfoCompleted &&
-                    !user.milestones.addressInfoCompleted
-                  ) {
-                    Router.push({
-                      pathname: "/onboarding/step4.2",
-                      query: {
-                        onboardingNotFinished: true
-                      }
-                    });
-                  }
-                })
-                .catch(err => {
-                  console.log(err);
+                global.analytics.identify(user.leadId, {
+                  email: user.email
                 });
-            });
+
+                global.analytics.track("User Signed In", {});
+
+                // retrieve utility information
+                const utility =
+                  user && user.milestones ? user.milestones.utility : false;
+
+                const imageName = utility ? utility.replace(/\s/g, "") : false;
+
+                const utilityInfo = {
+                  image: {
+                    src: imageName
+                      ? `/static/images/utilities/${imageName}.png`
+                      : "/static/images/utilities/placeholder.png",
+                    altText: "Utility logo"
+                  },
+                  label: utility
+                };
+
+                localStorage.setItem("utility", JSON.stringify(utilityInfo));
+
+                // retrieve postalcode
+                if (
+                  user &&
+                  user.milestones &&
+                  user.milestones.address &&
+                  user.milestones.address.postalCode
+                ) {
+                  const postalCode = user.milestones.address.postalCode;
+                  localStorage.setItem(
+                    "postalCode",
+                    JSON.stringify(postalCode)
+                  );
+                }
+
+                if (
+                  user &&
+                  user.milestones &&
+                  user.milestones.utilityPaperOnly
+                ) {
+                  localStorage.setItem(
+                    "billingMethod",
+                    JSON.stringify({ billingMethod: "paper" })
+                  );
+                }
+
+                // forward to the right page
+                if (user.signupCompleted) {
+                  Router.push({
+                    pathname: "/dashboard"
+                  });
+                } else if (!user.milestones.utilityInfoCompleted) {
+                  Router.push({
+                    pathname: "/onboarding/step2",
+                    query: {
+                      onboardingNotFinished: true
+                    }
+                  });
+                } else if (
+                  (user.milestones.utilityInfoCompleted &&
+                    user.milestones.utilityLoginSuccessful) ||
+                  !user.milestones.bankInfoCompleted
+                ) {
+                  Router.push({
+                    pathname: "/onboarding/step6",
+                    query: {
+                      onboardingNotFinished: true
+                    }
+                  });
+                } else if (
+                  user.milestones.utilityInfoCompleted &&
+                  !user.milestones.addressInfoCompleted
+                ) {
+                  Router.push({
+                    pathname: "/onboarding/step4.2",
+                    query: {
+                      onboardingNotFinished: true
+                    }
+                  });
+                }
+              })
+              .catch(err => {
+                console.log(err);
+              })
+          );
         }
       })
       .catch(error => {
@@ -266,4 +259,4 @@ class Index extends React.Component {
   }
 }
 
-export default Index;
+export default withFirebase(Index);

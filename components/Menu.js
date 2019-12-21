@@ -4,21 +4,19 @@ import axios from "axios";
 import MenuItem from "./MenuItem";
 import Text from "./Text";
 import CONSTANTS from "../globals";
+import { withFirebase } from "../firebase";
 import { useStateValue } from "../state";
 
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
-const signOut = () => {
-  window.firebase
-    .auth()
-    .signOut()
-    .then(() => {
-      Router.push({
-        pathname: "/"
-      });
-    })
-    .catch(() => {});
+const signOut = props => {
+  console.log(props);
+  props.firebase.doSignOut().then(() => {
+    Router.push({
+      pathname: "/"
+    });
+  });
 };
 
 const getUserData = async (userUid, idToken) => {
@@ -30,16 +28,17 @@ const getUserData = async (userUid, idToken) => {
   return data && data.data;
 };
 
-export default function MainMenu() {
+function MainMenu(props) {
   const [accounts, setAccounts] = useState([]);
   const [{ selectedAccount }, dispatch] = useStateValue();
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged(user => {
+    props.firebase.doUpdateUser(user => {
       if (user) {
         user.getIdToken(true).then(async idToken => {
           const userData = await getUserData(user.uid, idToken);
-          if (userData && userData.accounts) {
+
+          if (userData?.accounts) {
             userData.accounts.forEach((item, index) => {
               setAccounts(prevState => [
                 ...prevState,
@@ -99,7 +98,7 @@ export default function MainMenu() {
       )}
 
       <li className="sign-out">
-        <button onClick={signOut}>Sign out</button>
+        <button onClick={() => signOut(props)}>Sign out</button>
       </li>
 
       <style jsx>{`
@@ -214,3 +213,5 @@ export default function MainMenu() {
     </ul>
   );
 }
+
+export default withFirebase(MainMenu);
