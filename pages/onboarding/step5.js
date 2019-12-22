@@ -11,7 +11,7 @@ import CONSTANTS from "../../globals";
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
-class Step5 extends React.Component {
+class Step5 extends React.PureComponent {
   constructor(props) {
     super(props);
 

@@ -11,7 +11,7 @@ import CONSTANTS from "../../globals";
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
-class Sorry extends React.Component {
+class Sorry extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {};

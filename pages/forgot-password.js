@@ -5,7 +5,7 @@ import { Formik, Form } from "formik";
 import Input from "../components/Input";
 import Button from "../components/Button";
 
-export default class forgotPassword extends React.Component {
+export default class forgotPassword extends React.PureComponent {
   constructor(props) {
     super(props);
 

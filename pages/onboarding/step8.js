@@ -14,7 +14,7 @@ import Router from "next/router";
 const { STRIPE_KEY, API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
-class Step8 extends React.Component {
+class Step8 extends React.PureComponent {
   constructor(props) {
     super(props);
 

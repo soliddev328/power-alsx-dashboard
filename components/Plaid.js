@@ -9,7 +9,7 @@ const { PLAID_KEY, API } =
 const PLAID_ENV =
   CONSTANTS.NODE_ENV !== "production" ? "sandbox" : "production";
 
-export default class Plaid extends React.Component {
+export default class Plaid extends React.PureComponent {
   constructor(props, context) {
     super(props, context);
     this.state = {
