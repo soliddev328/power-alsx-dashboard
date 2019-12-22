@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { Formik, Form } from "formik";
+import { withFirebase } from "../firebase";
 import Header from "../components/Header";
 import Button from "../components/Button";
 import Input from "../components/Input";
 import SingleStep from "../components/SingleStep";
 
-const EmailLogin = props => {
+function EmailLogin(props) {
   const [email, setEmail] = useState("");
   const [emailSent, setEmailSent] = useState(false);
 
@@ -16,14 +17,14 @@ const EmailLogin = props => {
   const actionCodeSettings = {
     url: "https://my.commonenergy.us/emailsignin",
     handleCodeInApp: true,
-    dynamicLinkDomain: "example.page.link"
+    dynamicLinkDomain: "example.page.link" // TODO ADD PROPER LINK
   };
 
   const sendSecureLoginLink = values => {
     const { email } = values;
-    window.firebase
-      .auth()
-      .sendSignInLinkToEmail(email, actionCodeSettings)
+
+    props.firebase
+      .doSendSignInEmail(email, actionCodeSettings)
       .then(() => {
         setEmailSent(true);
       })
@@ -52,14 +53,12 @@ const EmailLogin = props => {
             }}
           >
             {props => (
-              <>
-                <Form>
-                  <Input type="email" label="Email address" fieldname="email" />
-                  <Button primary disabled={!!props.values.email !== true}>
-                    Send secure login link
-                  </Button>
-                </Form>
-              </>
+              <Form>
+                <Input type="email" label="Email address" fieldname="email" />
+                <Button primary disabled={!!props.values.email !== true}>
+                  Send secure login link
+                </Button>
+              </Form>
             )}
           </Formik>
         )}
@@ -74,6 +73,6 @@ const EmailLogin = props => {
       `}</style>
     </main>
   );
-};
+}
 
-export default EmailLogin;
+export default withFirebase(EmailLogin);

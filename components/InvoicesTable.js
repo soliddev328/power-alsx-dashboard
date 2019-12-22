@@ -1,19 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useStateValue } from "../state";
+import { withFirebase } from "../firebase";
 import CONSTANTS from "../globals";
 
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
-
-const getUserData = async (userUid, idToken) => {
-  const response = await axios.get(`${API}/v1/subscribers/${userUid}`, {
-    headers: {
-      Authorization: idToken
-    }
-  });
-  return response && response.data && response.data.data;
-};
 
 const getInvoiceData = async (id, idToken) => {
   const response = await axios.get(`${API}/v1/subscribers/invoice/${id}`, {
@@ -21,34 +13,26 @@ const getInvoiceData = async (id, idToken) => {
       Authorization: idToken
     }
   });
-  return response && response.data;
+  return response?.data;
 };
 
-const renderDownloadButton = id => {
+const renderDownloadButton = props => {
+  const { id } = props;
   const [invoiceData, setInvoicedata] = useState(undefined);
   const [{ selectedAccount }, dispatch] = useStateValue();
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        global.analytics.page("My Impact");
+    props.firebase.doUpdateUser(async idToken => {
+      const invoiceBase64 = await getInvoiceData(id, idToken);
+      let base64Encoded;
 
-        user.getIdToken(true).then(async idToken => {
-          const invoiceBase64 = await getInvoiceData(id, idToken);
-          let base64Encoded;
-
-          if (invoiceBase64 !== "No invoice found.") {
-            base64Encoded = `data:application/octet-stream;base64,${invoiceBase64}`;
-          } else {
-            base64Encoded = invoiceBase64;
-          }
-          setInvoicedata(base64Encoded);
-        });
+      if (invoiceBase64 !== "No invoice found.") {
+        base64Encoded = `data:application/octet-stream;base64,${invoiceBase64}`;
       } else {
-        Router.push({
-          pathname: "/"
-        });
+        base64Encoded = invoiceBase64;
       }
+
+      setInvoicedata(base64Encoded);
     });
   }, [selectedAccount.value]);
 
@@ -82,7 +66,7 @@ const renderDownloadButton = id => {
   );
 };
 
-export default function Table({ headers = [], data = [] }) {
+function Table({ headers = [], data = [] }) {
   return (
     <div className="table-wrapper">
       <div className="table-scroller">
@@ -108,7 +92,7 @@ export default function Table({ headers = [], data = [] }) {
                     return <td key={`column-content-${index}`}>${item}</td>;
                   }
                   if (row.length === index + 1) {
-                    return renderDownloadButton(item);
+                    return withFirebase(renderDownloadButton(item));
                   }
                   return (
                     <td
@@ -177,3 +161,5 @@ export default function Table({ headers = [], data = [] }) {
     </div>
   );
 }
+
+export default withFirebase(Table);

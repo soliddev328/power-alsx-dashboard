@@ -51,6 +51,14 @@ class Firebase {
         .then(idToken => callback(idToken))
         .catch(error => console.log(error));
     });
+
+  doSendSignInEmail = (email, config) =>
+    this.auth.sendSignInLinkToEmail(email, config);
+
+  doSendPasswordResetEmail = email => this.auth.sendPasswordResetEmail(email);
+
+  doConfirmPasswordReset = (code, newPassword) =>
+    this.auth.confirmPasswordReset(code, newPassword);
 }
 
 export default Firebase;

@@ -1,6 +1,7 @@
-import React from "react";
-import Router from "next/router";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { Formik, Form } from "formik";
+import { withFirebase } from "../../firebase";
 import Header from "../../components/Header";
 import Input from "../../components/Input";
 import SingleStep from "../../components/SingleStep";
@@ -11,20 +12,16 @@ import CONSTANTS from "../../globals";
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
-class Step5 extends React.PureComponent {
-  constructor(props) {
-    super(props);
+function Step5(props) {
+  const router = useRouter();
+  const [leadId, setLeadId] = useState();
+  const [email, setEmail] = useState();
+  const [error, setError] = useState({
+    code: false,
+    message: ""
+  });
 
-    this.state = {
-      error: {
-        code: false,
-        leadId: "",
-        message: ""
-      }
-    };
-  }
-
-  componentDidMount() {
+  useEffect(() => {
     global.analytics.page("Step 5");
     let storedLeadId = "";
     let storedEmailAddress = "";
@@ -32,109 +29,94 @@ class Step5 extends React.PureComponent {
     if (localStorage.getItem("leadId")) {
       storedLeadId = localStorage.getItem("leadId");
     }
+
     if (localStorage.getItem("email")) {
       storedEmailAddress = localStorage.getItem("email");
     }
 
-    this.setState({
-      leadId: storedLeadId,
-      email: storedEmailAddress
+    setLeadId(storedLeadId);
+    setEmail(storedEmailAddress);
+  }, []);
+
+  const submit = values => {
+    props.firebase.doGetCurrentUser(idToken => {
+      axios
+        .put(
+          `${API}/v1/subscribers`,
+          {
+            leadId: leadId,
+            password: values.password
+          },
+          {
+            headers: {
+              Authorization: idToken
+            }
+          }
+        )
+        .then(response => {
+          router.push({
+            pathname: "/onboarding/step6"
+          });
+        });
     });
-  }
+  };
 
-  submit(values) {
-    const { leadId, email } = this.state;
-    window.firebase
-      .auth()
-      .signInAnonymously()
-      .then(userCredential => {
-        if (userCredential) {
-          window.firebase
-            .auth()
-            .currentUser.getIdToken(true)
-            .then(idToken => {
-              axios
-                .put(
-                  `${API}/v1/subscribers`,
-                  {
-                    leadId: leadId,
-                    password: values.password
-                  },
-                  {
-                    headers: {
-                      Authorization: idToken
-                    }
-                  }
-                )
-                .then(response => {
-                  Router.push({
-                    pathname: "/onboarding/step6"
-                  });
-                });
-            });
+  return (
+    <main>
+      <Header />
+      <SingleStep title="Please create a password for your account with us, so you can view your past bills, total emissions you've prevented, and your total savings">
+        <Formik
+          initialValues={{
+            password: ""
+          }}
+          onSubmit={values => {
+            submit(values);
+          }}
+        >
+          {props => (
+            <>
+              <Form>
+                <Input
+                  type="password"
+                  label="Create a Password"
+                  fieldname="password"
+                  required
+                />
+                <p className="password-explanation">
+                  * This password will let you log back in later
+                </p>
+                <p className="error">
+                  {error.message} {error.link && error.link}
+                </p>
+                <Button primary disabled={!!props.values.password !== true}>
+                  Next
+                </Button>
+              </Form>
+            </>
+          )}
+        </Formik>
+      </SingleStep>
+      <style jsx>{`
+        main {
+          display: block;
+          height: 88vh;
+          max-width: 700px;
+          margin: 0 auto;
         }
-      });
-  }
-
-  render() {
-    const { error } = this.state;
-    return (
-      <main>
-        <Header />
-        <SingleStep title="Please create a password for your account with us, so you can view your past bills, total emissions you've prevented, and your total savings">
-          <Formik
-            initialValues={{
-              password: ""
-            }}
-            onSubmit={values => {
-              this.submit(values);
-            }}
-          >
-            {props => (
-              <>
-                <Form>
-                  <Input
-                    type="password"
-                    label="Create a Password"
-                    fieldname="password"
-                    required
-                  />
-                  <p className="password-explanation">
-                    * This password will let you log back in later
-                  </p>
-                  <p className="error">
-                    {error.message} {error.link && error.link}
-                  </p>
-                  <Button primary disabled={!!props.values.password !== true}>
-                    Next
-                  </Button>
-                </Form>
-              </>
-            )}
-          </Formik>
-        </SingleStep>
-        <style jsx>{`
-          main {
-            display: block;
-            height: 88vh;
-            max-width: 700px;
-            margin: 0 auto;
-          }
-          .error {
-            height: 52px;
-            margin: 0;
-            padding: 1em 0;
-            text-align: center;
-          }
-          .password-explanation {
-            max-width: 350px;
-            margin: 0 auto;
-            font-size: 12px;
-          }
-        `}</style>
-      </main>
-    );
-  }
+        .error {
+          height: 52px;
+          margin: 0;
+          padding: 1em 0;
+          text-align: center;
+        }
+        .password-explanation {
+          max-width: 350px;
+          margin: 0 auto;
+          font-size: 12px;
+        }
+      `}</style>
+    </main>
+  );
 }
 
-export default Step5;
+export default withFirebase(Step5);

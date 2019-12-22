@@ -1,7 +1,9 @@
-import React from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { Formik, Form } from "formik";
 import axios from "axios";
 import { Elements, StripeProvider } from "react-stripe-elements";
+import { withFirebase } from "../../firebase";
 import Header from "../../components/Header";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
@@ -9,29 +11,24 @@ import SingleStep from "../../components/SingleStep";
 import Plaid from "../../components/Plaid";
 import Checkout from "../../components/Checkout";
 import CONSTANTS from "../../globals";
-import Router from "next/router";
 
 const { STRIPE_KEY, API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
-class Step8 extends React.PureComponent {
-  constructor(props) {
-    super(props);
+function Step8(props) {
+  const router = useRouter();
+  const [leadId, setLeadId] = useState("");
+  const [name, setName] = useState("");
+  const [error, setError] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("");
+  const [stripe, setStripe] = useState(null);
 
-    this.state = {
-      name: "",
-      email: "",
-      errorMessage: "",
-      paymentMethod: "",
-      stripe: null
-    };
-  }
-
-  componentDidMount() {
+  useEffect(() => {
     global.analytics.page("Step 8");
 
     let storedPaymentMethod = "";
     let storedLeadId = "";
+    let storedName = "";
 
     if (localStorage.getItem("paymentMethod")) {
       storedPaymentMethod = JSON.parse(localStorage.getItem("paymentMethod"));
@@ -41,14 +38,21 @@ class Step8 extends React.PureComponent {
       storedLeadId = localStorage.getItem("leadId");
     }
 
-    this.setState({
-      paymentMethod: storedPaymentMethod.paymentMethod,
-      leadId: storedLeadId,
-      stripe: window.Stripe(STRIPE_KEY)
-    });
-  }
+    if (localStorage.getItem("leadId")) {
+      storedLeadId = localStorage.getItem("leadId");
+    }
 
-  renderBankLink() {
+    if (localStorage.getItem("username")) {
+      storedName = JSON.parse(localStorage.getItem("username"));
+    }
+
+    setPaymentMethod(storedPaymentMethod.paymentMethod);
+    setStripe(window.Stripe(STRIPE_KEY));
+    setLeadId(storedLeadId);
+    setName(storedName.firstName);
+  }, []);
+
+  const renderBankLink = () => {
     return (
       <SingleStep>
         <Plaid />
@@ -63,16 +67,16 @@ class Step8 extends React.PureComponent {
         `}</style>
       </SingleStep>
     );
-  }
+  };
 
-  renderCreditCard() {
+  const renderCreditCard = () => {
     return (
       <SingleStep title="Please enter your credit card information">
         <div className="container">
           <img className="cards" src="/static/images/banks/cards.png" alt="" />
-          <StripeProvider stripe={this.state.stripe}>
+          <StripeProvider stripe={stripe}>
             <Elements>
-              <Checkout stripe={this.state.stripe} name={this.props.name} />
+              <Checkout stripe={stripe} name={name} />
             </Elements>
           </StripeProvider>
         </div>
@@ -122,54 +126,45 @@ class Step8 extends React.PureComponent {
         `}</style>
       </SingleStep>
     );
-  }
+  };
 
-  updateInfo(values) {
+  const updateInfo = values => {
     if (values.bankAccountNumber !== values.bankAccountNumberConfirmation) {
-      this.setState({
-        errorMessage: "Bank account number and confirmation don't match"
-      });
+      setError("Bank account number and confirmation don't match");
     } else if (values.bankRoutingNumber.length !== 9) {
-      this.setState({
-        errorMessage: "Bank Routing Number should have 9 digits"
-      });
+      setError("Bank Routing Number should have 9 digits");
     } else if (values.bankAccountNumber.length < 4) {
-      this.setState({
-        errorMessage: "Bank Account Number should have at least 4 digits"
-      });
+      setError("Bank Account Number should have at least 4 digits");
     } else {
-      window.firebase
-        .auth()
-        .currentUser.getIdToken(true)
-        .then(idToken => {
-          axios
-            .put(
-              `${API}/v1/subscribers`,
-              {
-                leadId: this.state.leadId,
-                bank: values.bankName,
-                bankRoutingNumber: values.bankRoutingNumber,
-                bankAccountNumber: values.bankAccountNumber
-              },
-              {
-                headers: {
-                  Authorization: idToken
-                }
+      props.firebase.doGetUser(idToken => {
+        axios
+          .put(
+            `${API}/v1/subscribers`,
+            {
+              leadId: leadId,
+              bank: values.bankName,
+              bankRoutingNumber: values.bankRoutingNumber,
+              bankAccountNumber: values.bankAccountNumber
+            },
+            {
+              headers: {
+                Authorization: idToken
               }
-            )
-            .then(() => {
-              global.analytics.track("Sign-Up Completed", {});
-              localStorage.setItem("usercreated", true);
-              Router.push({
-                pathname: "/dashboard"
-              });
-            })
-            .catch(() => {});
-        });
+            }
+          )
+          .then(() => {
+            global.analytics.track("Sign-Up Completed", {});
+            localStorage.setItem("usercreated", true);
+            router.push({
+              pathname: "/dashboard"
+            });
+          })
+          .catch(() => {});
+      });
     }
-  }
+  };
 
-  renderManualDataInsert() {
+  const renderManualDataInsert = () => {
     return (
       <SingleStep title="Please provide the following information.">
         <Formik
@@ -180,7 +175,7 @@ class Step8 extends React.PureComponent {
             bankAccountNumberConfirmation: ""
           }}
           onSubmit={values => {
-            this.updateInfo(values);
+            updateInfo(values);
           }}
         >
           {props => (
@@ -202,7 +197,7 @@ class Step8 extends React.PureComponent {
                 label="Bank Account Number Confirmation"
                 fieldname="bankAccountNumberConfirmation"
               />
-              <p className="error">{this.state.errorMessage}</p>
+              <p className="error">{error}</p>
 
               <Button
                 primary
@@ -227,37 +222,32 @@ class Step8 extends React.PureComponent {
         `}</style>
       </SingleStep>
     );
-  }
+  };
 
-  renderForm() {
-    const { paymentMethod } = this.state;
+  const renderForm = () => {
     if (paymentMethod === "automatic") {
-      return this.renderBankLink();
+      return renderBankLink();
     } else if (paymentMethod === "creditCard") {
-      return this.renderCreditCard();
+      return renderCreditCard();
     } else {
-      return this.renderManualDataInsert();
+      return renderManualDataInsert();
     }
-  }
+  };
 
-  render() {
-    const { paymentMethod } = this.state;
-    return (
-      <main>
-        <Header />
-        {paymentMethod && this.renderForm()}
-
-        <style jsx>{`
-          main {
-            display: block;
-            height: 88vh;
-            max-width: 700px;
-            margin: 0 auto;
-          }
-        `}</style>
-      </main>
-    );
-  }
+  return (
+    <main>
+      <Header />
+      {renderForm()}
+      <style jsx>{`
+        main {
+          display: block;
+          height: 88vh;
+          max-width: 700px;
+          margin: 0 auto;
+        }
+      `}</style>
+    </main>
+  );
 }
 
-export default Step8;
+export default withFirebase(Step8);

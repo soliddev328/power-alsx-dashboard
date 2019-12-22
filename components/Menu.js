@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Router from "next/router";
+import { useRouter } from "next/router";
 import axios from "axios";
 import MenuItem from "./MenuItem";
 import Text from "./Text";
@@ -11,9 +11,10 @@ const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 const signOut = props => {
-  console.log(props);
+  const router = useRouter();
+
   props.firebase.doSignOut().then(() => {
-    Router.push({
+    router.push({
       pathname: "/"
     });
   });
@@ -25,7 +26,7 @@ const getUserData = async (userUid, idToken) => {
       Authorization: idToken
     }
   });
-  return data && data.data;
+  return data?.data;
 };
 
 function MainMenu(props) {
@@ -33,24 +34,18 @@ function MainMenu(props) {
   const [{ selectedAccount }, dispatch] = useStateValue();
 
   useEffect(() => {
-    props.firebase.doUpdateUser(user => {
-      if (user) {
-        user.getIdToken(true).then(async idToken => {
-          const userData = await getUserData(user.uid, idToken);
+    props.firebase.doUpdateUser(async idToken => {
+      const userData = await getUserData(user.uid, idToken);
 
-          if (userData?.accounts) {
-            userData.accounts.forEach((item, index) => {
-              setAccounts(prevState => [
-                ...prevState,
-                {
-                  value: index,
-                  label: item.name
-                }
-              ]);
-            });
+      userData?.accounts?.forEach((item, index) => {
+        setAccounts(prevState => [
+          ...prevState,
+          {
+            value: index,
+            label: item.name
           }
-        });
-      }
+        ]);
+      });
     });
   }, []);
 

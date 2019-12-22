@@ -6,7 +6,6 @@ export default function Error() {
       <a href="/" className="button">
         Back to homepage
       </a>
-      <style jsx>{``}</style>
     </section>
   );
 }
