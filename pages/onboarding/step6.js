@@ -4,7 +4,7 @@ import Header from "../../components/Header";
 import SingleStep from "../../components/SingleStep";
 import Button from "../../components/Button";
 
-class Step6 extends React.Component {
+class Step6 extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {};
