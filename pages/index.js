@@ -72,10 +72,9 @@ class Index extends React.PureComponent {
                 global.analytics.track("User Signed In", {});
 
                 // retrieve utility information
-                const utility =
-                  user && user.milestones ? user.milestones.utility : false;
+                const utility = user?.milestiones?.utility || false;
 
-                const imageName = utility ? utility.replace(/\s/g, "") : false;
+                const imageName = utility?.replace(/\s/g, "") || false;
 
                 const utilityInfo = {
                   image: {
@@ -90,12 +89,7 @@ class Index extends React.PureComponent {
                 localStorage.setItem("utility", JSON.stringify(utilityInfo));
 
                 // retrieve postalcode
-                if (
-                  user &&
-                  user.milestones &&
-                  user.milestones.address &&
-                  user.milestones.address.postalCode
-                ) {
+                if (user?.milestones?.address?.postalCode) {
                   const postalCode = user.milestones.address.postalCode;
                   localStorage.setItem(
                     "postalCode",
@@ -103,11 +97,7 @@ class Index extends React.PureComponent {
                   );
                 }
 
-                if (
-                  user &&
-                  user.milestones &&
-                  user.milestones.utilityPaperOnly
-                ) {
+                if (user?.milestones?.utilityPaperOnly) {
                   localStorage.setItem(
                     "billingMethod",
                     JSON.stringify({ billingMethod: "paper" })
@@ -181,41 +171,39 @@ class Index extends React.PureComponent {
             }}
           >
             {props => (
-              <>
-                <Form>
-                  <Input
-                    label="Email"
-                    fieldname="emailAddress"
-                    type="email"
-                    required
-                    autoFocus
-                  />
-                  <Input
-                    label="Password"
-                    fieldname="password"
-                    type="password"
-                    required
-                  />
-                  <p className="error">{error.message}</p>
-                  <Button
-                    primary
-                    disabled={
-                      !!props.values.emailAddress !== true ||
-                      !!props.values.password !== true
-                    }
-                    onClick={() => {
-                      this.setState({
-                        error: {
-                          code: false,
-                          message: ""
-                        }
-                      });
-                    }}
-                  >
-                    Sign in
-                  </Button>
-                </Form>
-              </>
+              <Form>
+                <Input
+                  label="Email"
+                  fieldname="emailAddress"
+                  type="email"
+                  required
+                  autoFocus
+                />
+                <Input
+                  label="Password"
+                  fieldname="password"
+                  type="password"
+                  required
+                />
+                <p className="error">{error.message}</p>
+                <Button
+                  primary
+                  disabled={
+                    !!props.values.emailAddress !== true ||
+                    !!props.values.password !== true
+                  }
+                  onClick={() => {
+                    this.setState({
+                      error: {
+                        code: false,
+                        message: ""
+                      }
+                    });
+                  }}
+                >
+                  Sign in
+                </Button>
+              </Form>
             )}
           </Formik>
           <div className="link">

@@ -1,16 +1,14 @@
-import React from "react";
-import Router from "next/router";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import Header from "../../components/Header";
 import SingleStep from "../../components/SingleStep";
 import Button from "../../components/Button";
 
-class Step6 extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+function Step6() {
+  const router = useRouter();
+  const [partialConnection, setPartialConnection] = useState();
 
-  componentDidMount() {
+  useEffect(() => {
     global.analytics.page("Step 6");
 
     let storedPartialConnection = false;
@@ -21,13 +19,10 @@ class Step6 extends React.PureComponent {
       );
     }
 
-    this.setState({
-      partialConnection: storedPartialConnection
-    });
-  }
+    setPartialConnection(storedPartialConnection);
+  }, []);
 
-  renderContent() {
-    const { partialConnection } = this.state;
+  const renderContent = () => {
     if (partialConnection) {
       return (
         <p className="message">
@@ -56,45 +51,43 @@ class Step6 extends React.PureComponent {
         </>
       );
     }
-  }
+  };
 
-  render() {
-    return (
-      <main>
-        <Header />
-        <SingleStep>
-          <div className="loading">{this.renderContent()}</div>
-          <Button
-            primary
-            onClick={() => {
-              Router.push({
-                pathname: "/onboarding/step7"
-              });
-            }}
-          >
-            Next
-          </Button>
-        </SingleStep>
-        <style jsx>{`
-          main {
-            display: block;
-            height: 88vh;
-            max-width: 700px;
-            margin: 0 auto;
-          }
-          .loading {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-          }
-          h3 {
-            text-align: center;
-          }
-        `}</style>
-      </main>
-    );
-  }
+  return (
+    <main>
+      <Header />
+      <SingleStep>
+        <div className="loading">{renderContent()}</div>
+        <Button
+          primary
+          onClick={() => {
+            router.push({
+              pathname: "/onboarding/step7"
+            });
+          }}
+        >
+          Next
+        </Button>
+      </SingleStep>
+      <style jsx>{`
+        main {
+          display: block;
+          height: 88vh;
+          max-width: 700px;
+          margin: 0 auto;
+        }
+        .loading {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        }
+        h3 {
+          text-align: center;
+        }
+      `}</style>
+    </main>
+  );
 }
 
 export default Step6;

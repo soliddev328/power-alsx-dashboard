@@ -1,42 +1,35 @@
-import React from "react";
+import { useState } from "react";
 import SingleStep from "../components/SingleStep";
 import Header from "../components/Header";
 import { Formik, Form } from "formik";
 import Input from "../components/Input";
 import Button from "../components/Button";
+import { withFirebase } from "../firebase";
 
-export default class forgotPassword extends React.PureComponent {
-  constructor(props) {
-    super(props);
+function ForgotPassword(props) {
+  const [emailSent, setEmailSent] = useState(false);
+  const [error, setError] = useState();
 
-    this.state = {
-      emailSent: false,
-      error: null
-    };
-  }
-
-  sendEmail(values) {
-    const auth = window.firebase.auth();
-
-    auth
-      .sendPasswordResetEmail(values.emailAddress)
+  const sendEmail = values => {
+    props.firebase
+      .doSendPasswordResetEmail(values.emailAddress)
       .then(() => {
-        this.setState({ emailSent: true });
+        setEmailSent(true);
       })
       .catch(error => {
-        this.setState({ error: error.message });
+        setEmailSent(false);
+        setError(error.message);
       });
-  }
+  };
 
-  renderForm() {
-    const { error } = this.state;
+  const renderForm = () => {
     return (
       <Formik
         initialValues={{
           emailAddress: ""
         }}
         onSubmit={values => {
-          this.sendEmail(values);
+          sendEmail(values);
         }}
       >
         {props => (
@@ -66,9 +59,9 @@ export default class forgotPassword extends React.PureComponent {
         )}
       </Formik>
     );
-  }
+  };
 
-  renderThanks() {
+  const renderThanks = () => {
     return (
       <p>
         Thanks! please check your email in order to restore your account.
@@ -79,29 +72,28 @@ export default class forgotPassword extends React.PureComponent {
         `}</style>
       </p>
     );
-  }
+  };
 
-  renderContent() {
-    const { emailSent } = this.state;
-    return emailSent ? this.renderThanks() : this.renderForm();
-  }
+  const renderContent = () => {
+    return emailSent ? renderThanks() : renderForm();
+  };
 
-  render() {
-    return (
-      <main>
-        <Header first />
-        <SingleStep prefix="Please enter your email address">
-          {this.renderContent()}
-        </SingleStep>
-        <style jsx>{`
-          main {
-            display: block;
-            height: 88vh;
-            max-width: 700px;
-            margin: 0 auto;
-          }
-        `}</style>
-      </main>
-    );
-  }
+  return (
+    <main>
+      <Header first />
+      <SingleStep prefix="Please enter your email address">
+        {renderContent()}
+      </SingleStep>
+      <style jsx>{`
+        main {
+          display: block;
+          height: 88vh;
+          max-width: 700px;
+          margin: 0 auto;
+        }
+      `}</style>
+    </main>
+  );
 }
+
+export default withFirebase(ForgotPassword);
