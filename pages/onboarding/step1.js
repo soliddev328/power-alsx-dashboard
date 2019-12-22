@@ -1,7 +1,8 @@
-import React from "react";
-import Router from "next/router";
+import React, { useEffect, useState, useRef } from "react";
+import { useRouter } from "next/router";
 import { Formik, Form } from "formik";
 import Cookie from "js-cookie";
+import { withFirebase } from "../../firebase";
 import Header from "../../components/Header";
 import Input from "../../components/Input";
 import ZipCodeInput from "../../components/ZipcodeInput";
@@ -14,23 +15,21 @@ import CONSTANTS from "../../globals";
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
-class Step1 extends React.Component {
-  constructor(props) {
-    super(props);
+function Step1(props) {
+  const selectRef = useRef(null);
+  const router = useRouter();
+  const { query } = router;
+  const [error, setError] = useState(false);
+  const [partner, setPartner] = useState(false);
+  const [referrer, setReferrer] = useState(false);
+  const [referrerPage, setReferrerPage] = useState(false);
+  const [salesRep, setSalesRep] = useState(false);
+  const [affiliate, setAffiliate] = useState(false);
+  const [utmCampaign, setUtmCampaign] = useState(false);
+  const [utmSource, setUtmSource] = useState(false);
+  const [utmMedium, setUtmMedium] = useState(false);
 
-    this.state = {
-      address: "",
-      postalCode: "",
-      currentUtility: "",
-      error: {
-        code: false,
-        message: ""
-      }
-    };
-    this.select = React.createRef();
-  }
-
-  componentDidMount() {
+  useEffect(() => {
     global.analytics.page("Step 1");
     global.analytics.track("Sign-Up Initiated", {});
 
@@ -43,7 +42,6 @@ class Step1 extends React.Component {
     localStorage.removeItem("email");
     localStorage.removeItem("username");
 
-    const { query } = this.props;
     let storedReferrerPage = Cookie.get("ce_aff_slug");
     let storedCustomerReferral = Cookie.get("customer_referral");
     let storedPartnerReferral = Cookie.get("partner_referral");
@@ -55,6 +53,7 @@ class Step1 extends React.Component {
 
     if (document.referrer) {
       storedReferrerPage = document.referrer;
+      setReferrerPage(storedReferrerPage);
     }
     if (storedPartnerReferral) {
       localStorage.setItem("Partner", storedPartnerReferral);
@@ -79,26 +78,32 @@ class Step1 extends React.Component {
       storedPartnerReferral = query.partner;
       localStorage.setItem("Partner", storedPartnerReferral);
     }
+
     if (query.advocate) {
       storedCustomerReferral = query.advocate;
       localStorage.setItem("Referrer", storedCustomerReferral);
     }
+
     if (query.rep) {
       storedSalesRep = query.rep;
       localStorage.setItem("SalesRep", storedSalesRep);
     }
+
     if (query.affiliate) {
       storedAffiliate = query.affiliate;
       localStorage.setItem("Affiliate", storedAffiliate);
     }
+
     if (query.utm_campaign) {
       storedUtmCampaign = query.utm_campaign;
       localStorage.setItem("UtmCampaign", storedUtmCampaign);
     }
+
     if (query.utm_source) {
       storedUtmSource = query.utm_source;
       localStorage.setItem("UtmSource", storedUtmSource);
     }
+
     if (query.utm_medium) {
       storedUtmMedium = query.utm_medium;
       localStorage.setItem("UtmMedium", storedUtmMedium);
@@ -108,26 +113,19 @@ class Step1 extends React.Component {
       localStorage.setItem("utility", query.utility);
     }
 
-    this.setState({
-      referrer: storedCustomerReferral,
-      partner: storedPartnerReferral,
-      salesRep: storedSalesRep,
-      affiliate: storedAffiliate,
-      utmCampaign: storedUtmCampaign,
-      utmMedium: storedUtmMedium,
-      utmSource: storedUtmSource,
-      referrerPage: storedReferrerPage
-    });
-  }
+    setPartner(storedPartnerReferral);
+    setReferrer(storedCustomerReferral);
+    setSalesRep(storedSalesRep);
+    setAffiliate(storedAffiliate);
+    setUtmCampaign(storedUtmCampaign);
+    setUtmSource(storedUtmSource);
+    setUtmMedium(storedUtmMedium);
+  }, []);
 
-  capitalize(word) {
-    return word && word[0].toUpperCase() + word.slice(1);
-  }
-
-  autenticate(values) {
+  const authenticate = values => {
     let utility = "";
-    const options = this.select.current.state.options;
-    const singleOption = this.select.current.state.singleOption;
+    const options = selectRef.current.state.options;
+    const singleOption = selectRef.current.state.singleOption;
 
     const name = {
       firstName: values.firstName,
@@ -146,209 +144,164 @@ class Step1 extends React.Component {
 
     if (options !== null && utility !== "") {
       localStorage.setItem("utility", JSON.stringify(utility));
+
       if (utility.paperOnly) {
         localStorage.setItem("billingMethod", JSON.stringify("paper"));
       } else {
         localStorage.setItem("billingMethod", JSON.stringify(""));
       }
 
-      window.firebase
-        .auth()
-        .signInAnonymously()
-        .then(userCredential => {
-          const {
-            referrer,
-            partner,
-            salesRep,
-            affiliate,
-            utmCampaign,
-            utmMedium,
-            utmSource,
-            referrerPage
-          } = this.state;
+      props.firebase.doSignInAnonymously(userCredential => {
+        localStorage.setItem("firebaseUserId", userCredential.user.uid);
+        props.firebase.doUpdateUser(idToken => {
+          axios
+            .post(
+              `${API}/v1/subscribers`,
+              {
+                email: values.emailAddress,
+                firstName: name.firstName,
+                lastName: name.lastName,
+                utility: utility.label,
+                postalCode: values.postalCode,
+                firebaseUserId: userCredential.user.uid,
+                referrer: referrer,
+                partner: partner,
+                salesRep: salesRep,
+                affiliate: affiliate,
+                utmCampaign: utmCampaign,
+                utmMedium: utmMedium,
+                utmSource: utmSource,
+                referrerPage: referrerPage
+              },
+              {
+                headers: {
+                  Authorization: idToken
+                }
+              }
+            )
+            .then(response => {
+              localStorage.setItem("leadId", response.data.data.leadId);
 
-          if (userCredential) {
-            window.localStorage.setItem(
-              "firebaseUserId",
-              userCredential.user.uid
-            );
-
-            window.firebase
-              .auth()
-              .currentUser.getIdToken(true)
-              .then(idToken => {
-                axios
-                  .post(
-                    `${API}/v1/subscribers`,
-                    {
-                      email: values.emailAddress,
-                      firstName: name.firstName,
-                      lastName: name.lastName,
-                      utility: utility.label,
-                      postalCode: values.postalCode,
-                      firebaseUserId: userCredential.user.uid,
-                      referrer: referrer,
-                      partner: partner,
-                      salesRep: salesRep,
-                      affiliate: affiliate,
-                      utmCampaign: utmCampaign,
-                      utmMedium: utmMedium,
-                      utmSource: utmSource,
-                      referrerPage: referrerPage
-                    },
-                    {
-                      headers: {
-                        Authorization: idToken
-                      }
-                    }
-                  )
-                  .then(response => {
-                    window.localStorage.setItem(
-                      "leadId",
-                      response.data.data.leadId
-                    );
-                    // Call Segement events
-                    global.analytics.alias(response.data.data.leadId);
-                    global.analytics.identify(response.data.data.leadId, {
-                      firstName: values.firstName,
-                      lastName: values.lastName,
-                      email: values.emailAddress
-                    });
-
-                    global.analytics.track("Lead Created", {});
-
-                    Router.push({
-                      pathname: "/onboarding/step2"
-                    });
-                  })
-                  .catch(error => {
-                    const { response } = error;
-                    const { data } = response;
-                    const { errors } = data;
-
-                    if (errors.code === "auth/email-already-exists") {
-                      this.setState({
-                        error: {
-                          code: error.code,
-                          message: (
-                            <>
-                              This email address has already been used to
-                              complete this step.{" "}
-                              <a href="/emailsignin">Click here</a> to access
-                              your account and complete sign-up.
-                            </>
-                          )
-                        }
-                      });
-                    } else {
-                      this.setState({
-                        error: { code: error.code, message: error.message }
-                      });
-                    }
-                  });
+              // Call Segement events
+              global.analytics.alias(response.data.data.leadId);
+              global.analytics.identify(response.data.data.leadId, {
+                firstName: values.firstName,
+                lastName: values.lastName,
+                email: values.emailAddress
               });
-          }
+
+              global.analytics.track("Lead Created", {});
+
+              router.push({
+                pathname: "/onboarding/step2"
+              });
+            })
+            .catch(failure => {
+              if (failure.code === "auth/email-already-exists") {
+                setError({
+                  code: failure.code,
+                  message: (
+                    <>
+                      This email address has already been used to complete this
+                      step. <a href="/emailsignin">Click here</a> to access your
+                      account and complete sign-up.
+                    </>
+                  )
+                });
+              } else {
+                setError({ code: failure.code, message: failure.message });
+              }
+            });
         });
+      });
     } else if (options === null) {
-      Router.push({
+      router.push({
         pathname: "/onboarding/sorry"
       });
     } else {
-      this.setState({
-        error: {
-          message: "Please select your utility"
-        }
+      setError({
+        message: "Please select your utility"
       });
     }
-  }
+  };
 
-  static getInitialProps({ query }) {
-    return { query };
-  }
-
-  render() {
-    const { error } = this.state;
-    const { query } = this.props;
-
-    return (
-      <main>
-        <Header />
-        <SingleStep title="Hi, I’m Martin. If you provide a little information, I can check to see your savings opportunities.">
-          <Formik
-            initialValues={{
-              postalCode: query.zipcode,
-              currentUtility: "",
-              emailAddress: query.email,
-              firstName: query.fname,
-              lastName: query.lname,
-              password: ""
-            }}
-            onSubmit={values => {
-              this.autenticate(values);
-            }}
-          >
-            {props => (
-              <Form>
-                <ZipCodeInput
-                  value={props.values.postalCode}
-                  onChangeEvent={props.setFieldValue}
-                  onBlurEvent={props.setFieldTouched}
-                  label="ZipCode"
-                  fieldname="postalCode"
-                />
-                <CustomSelect
-                  ref={this.select}
-                  zipCode={props.values.postalCode}
-                  value={props.currentUtility}
-                  disabled={!props.values.postalCode}
-                  onChange={props.setFieldValue}
-                  onBlur={props.setFieldTouched}
-                  touched={props.touched}
-                  fieldname="currentUtility"
-                />
-                <div className="two-columns two-columns--responsive">
-                  <Input label="First Name" fieldname="firstName" />
-                  <Input label="Last Name" fieldname="lastName" />
-                </div>
-                <Input
-                  type="email"
-                  label="Email"
-                  fieldname="emailAddress"
-                  required
-                />
-                <p className="error">{error.message}</p>
-                <Button
-                  primary
-                  disabled={
-                    !!props.values.firstName !== true ||
-                    !!props.values.lastName !== true ||
-                    !!props.values.postalCode !== true ||
-                    !!props.values.emailAddress !== true
-                  }
-                >
-                  Next
-                </Button>
-              </Form>
-            )}
-          </Formik>
-        </SingleStep>
-        <style jsx>{`
-          main {
-            display: block;
-            height: 88vh;
-            max-width: 700px;
-            margin: 0 auto;
-          }
-          .error {
-            height: 65px;
-            margin: 0;
-            padding: 1em 0;
-            text-align: center;
-          }
-        `}</style>
-      </main>
-    );
-  }
+  return (
+    <main>
+      <Header />
+      <SingleStep title="Hi, I’m Martin. If you provide a little information, I can check to see your savings opportunities.">
+        <Formik
+          initialValues={{
+            postalCode: query.zipcode,
+            currentUtility: "",
+            emailAddress: query.email,
+            firstName: query.fname,
+            lastName: query.lname
+          }}
+          onSubmit={values => {
+            authenticate(values);
+          }}
+        >
+          {props => (
+            <Form>
+              <ZipCodeInput
+                value={props.values.postalCode}
+                onChangeEvent={props.setFieldValue}
+                onBlurEvent={props.setFieldTouched}
+                label="ZipCode"
+                fieldname="postalCode"
+              />
+              <CustomSelect
+                ref={selectRef}
+                zipCode={props.values.postalCode}
+                value={props.currentUtility}
+                disabled={!props.values.postalCode}
+                onChange={props.setFieldValue}
+                onBlur={props.setFieldTouched}
+                touched={props.touched}
+                fieldname="currentUtility"
+              />
+              <div className="two-columns two-columns--responsive">
+                <Input label="First Name" fieldname="firstName" />
+                <Input label="Last Name" fieldname="lastName" />
+              </div>
+              <Input
+                type="email"
+                label="Email"
+                fieldname="emailAddress"
+                required
+              />
+              <p className="error">{error.message}</p>
+              <Button
+                primary
+                disabled={
+                  !!props.values.firstName !== true ||
+                  !!props.values.lastName !== true ||
+                  !!props.values.postalCode !== true ||
+                  !!props.values.emailAddress !== true
+                }
+              >
+                Next
+              </Button>
+            </Form>
+          )}
+        </Formik>
+      </SingleStep>
+      <style jsx>{`
+        main {
+          display: block;
+          height: 88vh;
+          max-width: 700px;
+          margin: 0 auto;
+        }
+        .error {
+          height: 65px;
+          margin: 0;
+          padding: 1em 0;
+          text-align: center;
+        }
+      `}</style>
+    </main>
+  );
 }
 
-export default Step1;
+export default withFirebase(Step1);

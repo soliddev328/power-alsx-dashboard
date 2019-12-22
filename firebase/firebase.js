@@ -1,7 +1,5 @@
 import app from "firebase/app";
 import "firebase/auth";
-import "firebase/database";
-import "firebase/storage";
 import CONSTANTS from "../globals";
 
 const { FIREBASE } =
@@ -30,40 +28,28 @@ class Firebase {
   doSignInWithEmailAndPassword = (email, password) =>
     this.auth.signInWithEmailAndPassword(email, password);
 
+  doSignInAnonymously = callback =>
+    this.auth
+      .signInAnonymously()
+      .then(authUser => {
+        callback(authUser);
+      })
+      .catch(error => console.log(error));
+
   doSignOut = () => this.auth.signOut();
+
   doGetCurrentUser = callback =>
     this.auth.currentUser
       .getIdToken(true)
-      .catch(error => {
-        console.log(error);
-      })
-      .then(idToken => callback(idToken));
-  doUpdateUser = callback =>
-    this.auth.onAuthStateChanged(user => callback(user));
+      .then(idToken => callback(idToken))
+      .catch(error => console.log(error));
 
-  // MERGE AUTH AND DB USER API
-  onAuthUserListener = (next, fallback) =>
-    this.auth.onAuthStateChanged(authUser => {
-      if (authUser) {
-        this.user(authUser.uid)
-          .once("value")
-          .then(snapshot => {
-            const dbUser = snapshot.val();
-            // default empty roles
-            if (!dbUser.roles) {
-              dbUser.roles = {};
-            }
-            // merge auth and db user
-            authUser = {
-              uid: authUser.uid,
-              email: authUser.email,
-              ...dbUser
-            };
-            next(authUser);
-          });
-      } else {
-        fallback();
-      }
+  doUpdateUser = callback =>
+    this.auth.onAuthStateChanged(user => {
+      user
+        .getIdToken(true)
+        .then(idToken => callback(idToken))
+        .catch(error => console.log(error));
     });
 }
 

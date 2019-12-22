@@ -4,7 +4,7 @@ import Header from "../../components/Header";
 import { FadeLoader } from "react-spinners";
 import SingleStep from "../../components/SingleStep";
 
-class Searching extends React.Component {
+class Searching extends React.PureComponent {
   constructor(props) {
     super(props);
 

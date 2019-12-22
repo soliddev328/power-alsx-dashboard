@@ -6,7 +6,7 @@ import RadioCard from "../../components/RadioCard";
 import SingleStep from "../../components/SingleStep";
 import Button from "../../components/Button";
 
-class Step7 extends React.Component {
+class Step7 extends React.PureComponent {
   componentDidMount() {
     global.analytics.page("Step 7");
   }

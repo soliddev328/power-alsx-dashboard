@@ -6,7 +6,7 @@ import CONSTANTS from "../globals";
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
-export default class CustomSelect extends React.Component {
+export default class CustomSelect extends React.PureComponent {
   constructor(props) {
     super(props);
 

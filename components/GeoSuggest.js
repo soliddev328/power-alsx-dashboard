@@ -1,7 +1,7 @@
 import React from "react";
 import Geosuggest from "react-geosuggest";
 
-export default class GeoSuggest extends React.Component {
+export default class GeoSuggest extends React.PureComponent {
   constructor(props) {
     super(props);
     this.inputField = React.createRef();

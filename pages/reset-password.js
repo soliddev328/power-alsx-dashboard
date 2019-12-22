@@ -7,7 +7,7 @@ import SingleStep from "../components/SingleStep";
 import Input from "../components/Input";
 import Button from "../components/Button";
 
-export default class forgotPassword extends React.Component {
+export default class forgotPassword extends React.PureComponent {
   constructor(props) {
     super(props);
 

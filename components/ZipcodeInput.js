@@ -1,7 +1,7 @@
 import React from "react";
 import zip from "zippo";
 
-export default class ZipCodeInput extends React.Component {
+export default class ZipCodeInput extends React.PureComponent {
   constructor(props) {
     super(props);
 
