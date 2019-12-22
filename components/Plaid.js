@@ -6,6 +6,7 @@ import CONSTANTS from "../globals";
 
 const { PLAID_KEY, API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
+
 const PLAID_ENV =
   CONSTANTS.NODE_ENV !== "production" ? "sandbox" : "production";
 

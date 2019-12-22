@@ -1,10 +1,12 @@
-import Router from "next/router";
+import { useRouter } from "next/router";
 
-export default function BankCard({ code, image, largeIcon, accent }) {
+function BankCard({ code, image, largeIcon, accent }) {
+  const router = useRouter();
+
   return (
     <button
       onClick={() => {
-        Router.push({
+        router.push({
           pathname: "/onboarding/step13",
           query: {
             bankCode: code
@@ -34,9 +36,9 @@ export default function BankCard({ code, image, largeIcon, accent }) {
         }
 
         button {
+          appearance: none;
           border: none;
           background: none;
-          appearance: none;
           cursor: pointer;
         }
 
@@ -48,3 +50,5 @@ export default function BankCard({ code, image, largeIcon, accent }) {
     </button>
   );
 }
+
+export default BankCard;
