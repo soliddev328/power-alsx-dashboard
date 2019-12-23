@@ -315,7 +315,7 @@ const Dashboard = () => {
           <UsersInAreaMap />
           <Link>
             <a className="inner-link" href="/dashboard/referrals">
-              <Button primary>Common Energy Referral Center</Button>
+              <Button primary>Refer Friends To Common Energy</Button>
             </a>
           </Link>
         </Panel>
