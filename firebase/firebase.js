@@ -1,7 +1,7 @@
 import app from "firebase/app";
 import "firebase/auth";
 import CONSTANTS from "../globals";
-import { Router } from "next/router";
+import Router from "next/router";
 
 const { FIREBASE } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
@@ -47,6 +47,7 @@ class Firebase {
 
   doUpdateUser = callback =>
     this.auth.onAuthStateChanged(user => {
+      console.log("authstatechanged: ", user);
       if (user) {
         user
           .getIdToken(true)
@@ -54,7 +55,7 @@ class Firebase {
           .catch(error => console.log(error));
       } else {
         Router.push({
-          pathname: "/dashboard"
+          pathname: "/"
         });
       }
     });

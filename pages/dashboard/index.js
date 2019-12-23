@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Router from "next/router";
 import Head from "next/head";
 import Link from "next/link";
 import NumberFormat from "react-number-format";
@@ -298,8 +297,8 @@ const Dashboard = props => {
             </Text>
           </Container>
           <UsersInAreaMap />
-          <Link>
-            <a className="inner-link" href="/dashboard/referrals">
+          <Link href="/dashboard/referrals">
+            <a className="inner-link">
               <Button primary>Common Energy Referral Center</Button>
             </a>
           </Link>
