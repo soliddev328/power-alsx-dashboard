@@ -41,15 +41,15 @@ export default class CustomSelect extends React.PureComponent {
     }
   }
 
-  handleChange = value => {
+  handleChange(value) {
     const { onChange, fieldname } = this.props;
     onChange(fieldname, value);
-  };
+  }
 
-  handleBlur = () => {
+  handleBlur() {
     const { onBlur, fieldname } = this.props;
     onBlur(fieldname, true);
-  };
+  }
 
   getOptions(code) {
     if (code && code.length > 4) {

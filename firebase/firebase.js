@@ -68,4 +68,14 @@ class Firebase {
     this.auth.confirmPasswordReset(code, newPassword);
 }
 
-export default Firebase;
+let firebase;
+
+function getFirebase(app, auth) {
+  if (!firebase) {
+    firebase = new Firebase(app, auth);
+  }
+
+  return firebase;
+}
+
+export default getFirebase;
