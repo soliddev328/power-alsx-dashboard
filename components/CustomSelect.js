@@ -6,6 +6,19 @@ import CONSTANTS from "../globals";
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
+const { Option } = components;
+
+const CustomOption = props => (
+  <Option {...props}>
+    <img
+      className="select__option-icon"
+      src={props.data.image.src}
+      alt={props.data.image.altText}
+    />
+    {props.data.label}
+  </Option>
+);
+
 export default class CustomSelect extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -18,6 +31,9 @@ export default class CustomSelect extends React.PureComponent {
     };
 
     this.scrollOnFocus = this.scrollOnFocus.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.getOptions = this.getOptions.bind(this);
   }
 
   componentDidMount() {
@@ -111,18 +127,6 @@ export default class CustomSelect extends React.PureComponent {
   }
 
   render() {
-    const { Option } = components;
-    const CustomOption = props => (
-      <Option {...props}>
-        <img
-          className="select__option-icon"
-          src={props.data.image.src}
-          alt={props.data.image.altText}
-        />
-        {props.data.label}
-      </Option>
-    );
-
     const getOptionValue = option => option.code;
     const { fieldname, label, disabled, value } = this.props;
     const { options = false } = this.state;
