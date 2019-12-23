@@ -10,23 +10,23 @@ export default class ZipCodeInput extends React.PureComponent {
     };
   }
 
-  format = event => {
+  format(event) {
     let { value } = event.target;
 
     this.setState({
       code: zip.parse(value)
     });
-  };
+  }
 
-  handleChange = e => {
+  handleChange(e) {
     const { onChangeEvent, fieldname } = this.props;
     onChangeEvent(fieldname, e.target.value);
-  };
+  }
 
-  handleBlur = () => {
+  handleBlur() {
     const { onBlurEvent, fieldname } = this.props;
     onBlurEvent(fieldname, true);
-  };
+  }
 
   render() {
     const { value, fieldname, label, secondary } = this.props;
