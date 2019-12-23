@@ -37,13 +37,7 @@ class Index extends React.PureComponent {
   }
 
   componentDidUpdate() {
-    this.props.firebase.doUpdateUser(user => {
-      if (user) {
-        Router.push({
-          pathname: "/dashboard"
-        });
-      }
-    });
+    this.props.firebase.doUpdateUser();
   }
 
   autenticate(values) {

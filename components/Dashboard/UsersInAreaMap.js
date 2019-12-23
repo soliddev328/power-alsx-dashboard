@@ -38,30 +38,26 @@ function UsersInAreaMap(props) {
   const [{ selectedAccount }] = useStateValue();
 
   useEffect(() => {
-    props.firebase.doUpdateUser(user => {
-      if (user) {
-        user.getIdToken(true).then(async idToken => {
-          const userInfo = await getUserData(user.uid, idToken);
+    props.firebase.doUpdateUser(async idToken => {
+      const userInfo = await getUserData(user.uid, idToken);
 
-          if (userInfo && userInfo.accounts) {
-            const nearbyUsersInfo = await getNearbyUsers(
-              userInfo.accounts[selectedAccount.value].address.lat,
-              userInfo.accounts[selectedAccount.value].address.lon,
-              idToken
-            );
+      if (userInfo && userInfo.accounts) {
+        const nearbyUsersInfo = await getNearbyUsers(
+          userInfo.accounts[selectedAccount.value].address.lat,
+          userInfo.accounts[selectedAccount.value].address.lon,
+          idToken
+        );
 
-            setMapLocation([
-              parseFloat(userInfo.accounts[selectedAccount.value].address.lat),
-              parseFloat(userInfo.accounts[selectedAccount.value].address.lon)
-            ]);
+        setMapLocation([
+          parseFloat(userInfo.accounts[selectedAccount.value].address.lat),
+          parseFloat(userInfo.accounts[selectedAccount.value].address.lon)
+        ]);
 
-            if (nearbyUsersInfo) {
-              setNearbyUsers(nearbyUsersInfo);
-            } else {
-              setEmpty(true);
-            }
-          }
-        });
+        if (nearbyUsersInfo) {
+          setNearbyUsers(nearbyUsersInfo);
+        } else {
+          setEmpty(true);
+        }
       }
     });
   }, [selectedAccount.value]);

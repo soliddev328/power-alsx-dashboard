@@ -89,38 +89,29 @@ function Referrals(props) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    props.firebase.doUpdateUser(user => {
-      if (user) {
-        global.analytics.page("Referrals");
+    props.firebase.doUpdateUser(async idToken => {
+      global.analytics.page("Referrals");
+      const userInfo = await getUserData(user.uid, idToken);
+      if (userInfo) {
+        setUserData(userInfo);
 
-        user.getIdToken(true).then(async idToken => {
-          const userInfo = await getUserData(user.uid, idToken);
-          if (userInfo) {
-            setUserData(userInfo);
+        const referralsInfo = await getReferralsData(
+          userInfo.username,
+          idToken
+        );
 
-            const referralsInfo = await getReferralsData(
-              userInfo.username,
-              idToken
-            );
+        referralsInfo
+          ? setReferralsData(referralsInfo[0])
+          : setReferralsData({});
 
-            referralsInfo
-              ? setReferralsData(referralsInfo[0])
-              : setReferralsData({});
+        const referralsInfoDetails = await getReferralsDataDetails(
+          userInfo.username,
+          idToken
+        );
 
-            const referralsInfoDetails = await getReferralsDataDetails(
-              userInfo.username,
-              idToken
-            );
+        setReferralsDetails(referralsInfoDetails);
 
-            setReferralsDetails(referralsInfoDetails);
-
-            setIsLoading(false);
-          }
-        });
-      } else {
-        Router.push({
-          pathname: "/"
-        });
+        setIsLoading(false);
       }
     });
   }, []);
