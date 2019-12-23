@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   ResponsiveContainer,
   AreaChart,
@@ -8,7 +9,6 @@ import {
   Tooltip
 } from "recharts";
 import Router from "next/router";
-import { useEffect, useState } from "react";
 import axios from "axios";
 import Container from "../../components/Container";
 import Section from "../../components/Section";

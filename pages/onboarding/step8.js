@@ -136,7 +136,7 @@ function Step8(props) {
     } else if (values.bankAccountNumber.length < 4) {
       setError("Bank Account Number should have at least 4 digits");
     } else {
-      props.firebase.doGetUser(idToken => {
+      props.firebase.doUpdateUser(idToken => {
         axios
           .put(
             `${API}/v1/subscribers`,
