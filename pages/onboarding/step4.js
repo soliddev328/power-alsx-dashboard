@@ -339,10 +339,6 @@ function Step4(props) {
     );
   };
 
-  const renderForms = () => {
-    return;
-  };
-
   return (
     <main>
       <Header />
