@@ -9,18 +9,12 @@
     "build": "NODE_ENV=development next build",
     "lint:staged": "lint-staged"
   },
-  "engines": {
-    "npm": ">=5.0",
-    "node": ">=8.10"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@babel/polyfill": "^7.7.0",
     "@segment/snippet": "^4.4.0",
     "axios": "^0.19.0",
-    "babel-plugin-emotion": "^10.0.23",
     "classnames": "^2.2.6",
     "copy-to-clipboard": "^3.2.0",
     "firebase": "^7.6.1",

@@ -38,7 +38,7 @@ function CheckoutForm(props) {
 
   const submit = ev => {
     ev.preventDefault();
-    props.firebase.doUpdateUser(idToken => {
+    props.firebase.doGetCurrentUser(idToken => {
       if (stripe) {
         props.stripe.createToken({ type: "card" }).then(payload => {
           if (payload.token) {

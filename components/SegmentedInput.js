@@ -53,19 +53,10 @@ function SegmentedInput(props) {
   };
 
   useEffect(() => {
-    props.firebase.doUpdateUser(user => {
-      if (user) {
-        user.getIdToken(true).then(async idToken => {
-          setToken(idToken);
-          const userInfo = await getUserData(user.uid, idToken);
-          if (userInfo) {
-            setUserName(userInfo.username);
-          }
-        });
-      } else {
-        Router.push({
-          pathname: "/"
-        });
+    props.firebase.doUpdateUser(async idToken => {
+      const userInfo = await getUserData(user.uid, idToken);
+      if (userInfo) {
+        setUserName(userInfo.username);
       }
     });
   }, []);

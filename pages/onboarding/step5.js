@@ -39,7 +39,7 @@ function Step5(props) {
   }, []);
 
   const submit = values => {
-    props.firebase.doGetCurrentUser(idToken => {
+    props.firebase.doUpdateUser(idToken => {
       axios
         .put(
           `${API}/v1/subscribers`,

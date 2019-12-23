@@ -47,21 +47,13 @@ function Profile(props) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    props.firebase.doUpdateUser(user => {
-      if (user) {
-        global.analytics.page("Profile");
-        user.getIdToken(true).then(async idToken => {
-          const userInfo = await getUserData(user.uid, idToken);
-          if (userInfo) {
-            setUserdata(userInfo);
-            setPaymentMethods(getPaymentMethods(userInfo.accounts || []));
-            setIsLoading(false);
-          }
-        });
-      } else {
-        Router.push({
-          pathname: "/"
-        });
+    props.firebase.doUpdateUser(async idToken => {
+      global.analytics.page("Profile");
+      const userInfo = await getUserData(user.uid, idToken);
+      if (userInfo) {
+        setUserdata(userInfo);
+        setPaymentMethods(getPaymentMethods(userInfo.accounts || []));
+        setIsLoading(false);
       }
     });
   }, []);
