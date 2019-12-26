@@ -133,11 +133,10 @@ export default function Referrals() {
         Your Referrals
       </Text>
       <Text noMargin>
-        Common Energy’s referral program enables you to help your friends and
-        family save, bring more clean energy to your community, and increase
-        your savings even further. You will receive a{" "}
-        <b>$50 credit for each referral</b> who signs up. Refer 10 people and
-        receive <b>free electricity for one year!</b>
+        Common Energy’s referral program enables you increase your impact and your savings. 
+        When you refer a friend, both you and they will receive a{" "}
+        <b>$50 credit.</b> That's a combined $100 for spreading the word.
+        <b> Refer 10 people and receive $1,000!</b>
       </Text>
       <Section columns="4">
         <Panel small specialShadow center>
@@ -236,6 +235,24 @@ export default function Referrals() {
       </Text>
       <Section>
         <Panel>
+          <Text h3>Email Your Referral Link</Text>
+          <Container column alignLeft>
+            <Text style={{ marginBottom: "20px" }}>
+              Sample message: Hi! I just signed up for a new state program that enables me to
+              save $5-$20 per month on my electricity and support clean energy.
+              Check it out!
+            </Text>
+          </Container>
+          <UsersInAreaMap />
+          <SegmentedInput
+            buttonText="Copy Link"
+            referral
+            hasBorder
+          ></SegmentedInput>
+        </Panel>
+      </Section>
+      <Section>
+        <Panel>
           <Text noMargin h3>
             Share on Social Media
           </Text>
@@ -285,25 +302,6 @@ export default function Referrals() {
             inputLabel="Enter Your Friends' Email Addresses Here"
             buttonText="send"
           />
-        </Panel>
-      </Section>
-      <Section>
-        <Panel>
-          <Text h3>Copy Your Referral Link And Email It Yourself</Text>
-          <Container column alignLeft>
-            <Text h5 noMargin>
-              Help us bring clean energy to your community
-            </Text>
-            <Text style={{ marginBottom: "20px" }}>
-              Share the link below and earn $50 per referral!
-            </Text>
-          </Container>
-          <UsersInAreaMap />
-          <SegmentedInput
-            buttonText="Copy Link"
-            referral
-            hasBorder
-          ></SegmentedInput>
         </Panel>
       </Section>
       {referralsDetails && (
