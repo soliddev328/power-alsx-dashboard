@@ -133,8 +133,8 @@ export default function Referrals() {
         Your Referrals
       </Text>
       <Text noMargin>
-        Common Energy’s referral program enables you increase your impact and your savings. 
-        When you refer a friend, both you and they will receive a{" "}
+        Common Energy’s referral program enables you increase your impact and
+        your savings. When you refer a friend, both you and they will receive a{" "}
         <b>$50 credit.</b> That's a combined $100 for spreading the word.
         <b> Refer 10 people and receive $1,000!</b>
       </Text>
@@ -238,9 +238,9 @@ export default function Referrals() {
           <Text h3>Email Your Referral Link</Text>
           <Container column alignLeft>
             <Text style={{ marginBottom: "20px" }}>
-              Sample message: Hi! I just signed up for a new state program that enables me to
-              save $5-$20 per month on my electricity and support clean energy.
-              Check it out!
+              Sample message: Hi! I just signed up for a new state program that
+              enables me to save $5-$20 per month on my electricity and support
+              clean energy. Check it out!
             </Text>
           </Container>
           <UsersInAreaMap />
