@@ -37,7 +37,7 @@ export default function SegmentedInput({
     setTimeout(() => setCopied(false), 1000);
   };
 
-  const inviteReferral = values => {
+  const inviteReferral = (values, callback) => {
     if (values.emailAddress) {
       setSent(true);
 
@@ -51,7 +51,21 @@ export default function SegmentedInput({
           headers: { Authorization: token }
         })
         .then(() => {
-          setTimeout(() => setSent(false), 1000);
+          setTimeout(() => {
+            setSent(false);
+            callback({
+              emailAddress: ""
+            });
+          }, 1000);
+        })
+        .catch(error => {
+          console.log(error);
+          setTimeout(() => {
+            setSent(false);
+            callback({
+              emailAddress: ""
+            });
+          }, 1000);
         });
     }
   };
@@ -101,16 +115,20 @@ export default function SegmentedInput({
         </>
       ) : (
         <Formik
-          initialValues={{}}
-          onSubmit={values => {
-            inviteReferral(values);
+          initialValues={{
+            emailAddress: ""
           }}
-          render={props => (
+          onSubmit={(values, { resetForm }) => {
+            inviteReferral(values, resetForm);
+          }}
+        >
+          {props => (
             <Form>
               <Input
                 fullWidth
                 noMargin
                 outerLabel
+                value={props.values.emailAddress || ""}
                 scrollOnFocus={false}
                 type="email"
                 fieldname="emailAddress"
@@ -127,7 +145,7 @@ export default function SegmentedInput({
               </Button>
             </Form>
           )}
-        />
+        </Formik>
       )}
       <style jsx global>{`
         .segmented-input-wrapper {
