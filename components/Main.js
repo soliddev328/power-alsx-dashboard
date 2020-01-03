@@ -96,7 +96,7 @@ export default function Main({ isLoading = true, children, popup = false }) {
           <br />
           When you do, both you and your referral will recieve a $50 credit.
           <br />
-          Refer 10 friends and receive free $1,000!
+          Refer 10 friends and receive $1,000!
         </Text>
         <Button
           primary
