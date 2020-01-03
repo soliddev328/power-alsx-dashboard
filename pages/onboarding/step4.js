@@ -254,7 +254,7 @@ function Step4(props) {
               )
               .then(() => {
                 localStorage.setItem("partialConnection", true);
-                Router.push({
+                router.push({
                   pathname: "/onboarding/step4.2"
                 });
               })
