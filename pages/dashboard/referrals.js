@@ -231,7 +231,7 @@ export default function Referrals() {
       <Text h2>Referral Tools</Text>
       <Text noMargin>
         Spreading the word about Common Energy is easy! Use the links below to
-        share on social media and to email your friends and family.
+        email your friends and family and share on social media.
       </Text>
       <Section>
         <Panel>
