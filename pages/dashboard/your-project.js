@@ -47,8 +47,9 @@ export default function MySource() {
           const userInfo = await getUserData(user.uid, idToken);
           if (userInfo && userInfo.accounts) {
             if (
-              userInfo.accounts[selectedAccount.value].onboardingStatus ===
-              "Meter Live"
+              userInfo.accounts[selectedAccount.value].projectId &&
+              userInfo.accounts[selectedAccount.value].onboardingStatus !==
+                "Meter Inactive"
             ) {
               setOverlayDescription(false);
             } else {
