@@ -238,29 +238,30 @@ function Step4(props) {
         }}
         onSubmit={values => {
           props.firebase.doUpdateUser(idToken => {
-            axios
-              .put(
-                `${API}/v1/subscribers`,
-                {
-                  leadId: leadId,
-                  agreementChecked: !!values.acceptedTermsAndConditions,
-                  utilityAccountNumber: values.utilityAccountNumber
-                },
-                {
-                  headers: {
-                    Authorization: idToken
-                  }
-                }
-              )
-              .then(() => {
-                localStorage.setItem("partialConnection", true);
-                Router.push({
-                  pathname: "/onboarding/step4.2"
-                });
-              })
-              .catch(error => {
-                console.log(error);
-              });
+            console.log(idToken);
+            // axios
+            //   .put(
+            //     `${API}/v1/subscribers`,
+            //     {
+            //       leadId: leadId,
+            //       agreementChecked: !!values.acceptedTermsAndConditions,
+            //       utilityAccountNumber: values.utilityAccountNumber
+            //     },
+            //     {
+            //       headers: {
+            //         Authorization: idToken
+            //       }
+            //     }
+            //   )
+            //   .then(() => {
+            //     localStorage.setItem("partialConnection", true);
+            //     router.push({
+            //       pathname: "/onboarding/step4.2"
+            //     });
+            //   })
+            //   .catch(error => {
+            //     console.log(error);
+            //   });
           });
         }}
       >
