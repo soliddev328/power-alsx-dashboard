@@ -47,9 +47,9 @@ export default function Main({ isLoading = true, children, popup = false }) {
   }, []);
 
   useEffect(() => {
-    const hidePopup = localStorage.getItem("hidePopup");
+    const showPopup = localStorage.getItem("showPopup");
     const currentAccount = accounts[selectedAccount.value] || {};
-    if (!hidePopup && currentAccount.onboardingStatus == "Unassigned") {
+    if (showPopup && currentAccount.onboardingStatus == "Unassigned") {
       setDisplayPopUp(!!popup);
     } else {
       setDisplayPopUp(false);

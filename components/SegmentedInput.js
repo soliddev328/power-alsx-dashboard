@@ -27,6 +27,7 @@ export default function SegmentedInput({
   onClick
 }) {
   const [userName, setUserName] = useState("");
+  const [placeholder, setPlaceholder] = useState("");
   const [token, setToken] = useState();
   const [copied, setCopied] = useState(false);
   const [sent, setSent] = useState(false);
@@ -38,7 +39,7 @@ export default function SegmentedInput({
   };
 
   const inviteReferral = (values, callback) => {
-    if (values.emailAddress) {
+    if (values.emailAddress && !sent) {
       setSent(true);
 
       const payload = {
@@ -51,21 +52,23 @@ export default function SegmentedInput({
           headers: { Authorization: token }
         })
         .then(() => {
+          callback({
+            emailAddress: ""
+          });
+          setPlaceholder("Your email has been sent! Why not send another? :)");
           setTimeout(() => {
             setSent(false);
-            callback({
-              emailAddress: ""
-            });
-          }, 1000);
+          }, 3000);
         })
         .catch(error => {
           console.log(error);
+          callback({
+            emailAddress: ""
+          });
+          setPlaceholder("Your email has been sent! Why not send another? :)");
           setTimeout(() => {
             setSent(false);
-            callback({
-              emailAddress: ""
-            });
-          }, 1000);
+          }, 3000);
         });
     }
   };
@@ -128,6 +131,7 @@ export default function SegmentedInput({
                 fullWidth
                 noMargin
                 outerLabel
+                placeholder={placeholder}
                 value={props.values.emailAddress || ""}
                 scrollOnFocus={false}
                 type="email"
