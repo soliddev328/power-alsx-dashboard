@@ -46,19 +46,24 @@ class Firebase {
       .catch(error => console.log(error));
 
   doUpdateUser = callback =>
-    this.auth.onAuthStateChanged(user => {
-      console.log("authstatechanged: ", user);
-      if (user) {
-        user
-          .getIdToken(true)
-          .then(idToken => callback(idToken))
-          .catch(error => console.log(error));
-      } else {
-        Router.push({
-          pathname: "/"
-        });
-      }
-    });
+    this.auth
+      .onAuthStateChanged(user => {
+        console.log(user);
+        if (user) {
+          user
+            .getIdToken(true)
+            .then(idToken => callback(idToken))
+            .catch(error => console.log(error));
+        }
+        // } else {
+        //   Router.push({
+        //     pathname: "/"
+        //   });
+        // }
+      })
+      .catch(error => {
+        console.log(error.toJSON());
+      });
 
   doSendSignInEmail = (email, config) =>
     this.auth.sendSignInLinkToEmail(email, config);

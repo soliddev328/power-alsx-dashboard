@@ -8,7 +8,7 @@ import {
   Label,
   Tooltip
 } from "recharts";
-import Router from "next/router";
+import { useRouter } from "next/router";
 import axios from "axios";
 import Container from "../../components/Container";
 import Section from "../../components/Section";
@@ -37,6 +37,7 @@ const getProductionData = async (project, idToken) => {
 };
 
 export default function ProductionChart({ projectName }) {
+  const router = useRouter();
   const [data, setData] = useState({});
 
   useEffect(() => {
@@ -46,7 +47,7 @@ export default function ProductionChart({ projectName }) {
           setData(await getProductionData(projectName, idToken));
         });
       } else {
-        Router.push({
+        router.push({
           pathname: "/"
         });
       }
