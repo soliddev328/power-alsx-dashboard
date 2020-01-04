@@ -184,6 +184,7 @@ class Step9 extends React.Component {
             bankAccountNumberConfirmation: ""
           }}
           onSubmit={values => {
+            localStorage.setItem("showPopup", true);
             this.updateInfo(values);
           }}
           render={props => (
