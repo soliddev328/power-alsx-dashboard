@@ -270,7 +270,12 @@ export default function Referrals() {
                 secondary
                 transparent
                 share="facebook"
-                onClick={() => FacebookShare(userData.username)}
+                onClick={() => {
+                  FacebookShare(userData.username);
+                  global.analytics.track("Referral Link Clicked", {
+                    Platform: "Facebook"
+                  });
+                }}
               >
                 Share on Facebook
               </Button>
@@ -278,7 +283,12 @@ export default function Referrals() {
                 secondary
                 transparent
                 share="twitter"
-                onClick={() => TwitterShare(userData.username)}
+                onClick={() => {
+                  TwitterShare(userData.username);
+                  global.analytics.track("Referral Link Clicked", {
+                    Platform: "Twitter"
+                  });
+                }}
               >
                 Share on Twitter
               </Button>
@@ -286,7 +296,12 @@ export default function Referrals() {
                 secondary
                 transparent
                 share="linkedin"
-                onClick={() => LinkedinShare(userData.username)}
+                onClick={() => {
+                  LinkedinShare(userData.username);
+                  global.analytics.track("Referral Link Clicked", {
+                    Platform: "Linkedin"
+                  });
+                }}
               >
                 Share on LinkedIn
               </Button>
