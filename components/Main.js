@@ -47,14 +47,13 @@ export default function Main({ isLoading = true, children, popup = false }) {
   }, []);
 
   useEffect(() => {
-    const showPopup = localStorage.getItem("showPopup");
-    const currentAccount = accounts[selectedAccount.value] || {};
-    if (showPopup && currentAccount.onboardingStatus == "Unassigned") {
+    const showPopup = JSON.parse(localStorage.getItem("showPopup"));
+    if (showPopup) {
       setDisplayPopUp(!!popup);
     } else {
       setDisplayPopUp(false);
     }
-  }, [popup, selectedAccount.value]);
+  }, [popup]);
 
   const renderLoader = () => {
     return (
@@ -103,7 +102,7 @@ export default function Main({ isLoading = true, children, popup = false }) {
           maxWidth="250px"
           onClick={() => {
             setDisplayPopUp(false);
-            localStorage.setItem("hidePopup", true);
+            localStorage.setItem("showPopup", false);
           }}
         >
           Got it!
