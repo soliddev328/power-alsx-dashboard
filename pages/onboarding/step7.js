@@ -159,6 +159,7 @@ class Step7 extends React.Component {
             )
             .then(() => {
               global.analytics.track("Sign-Up Completed", {});
+              localStorage.setItem("showPopup", true);
               localStorage.setItem("usercreated", true);
               Router.push({
                 pathname: "/dashboard"
