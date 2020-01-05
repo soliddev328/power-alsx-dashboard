@@ -33,9 +33,13 @@ export default function SegmentedInput({
   const [sent, setSent] = useState(false);
 
   const copyLink = () => {
-    copy(`https://www.commonenergy.us/referrals?advocate=${userName}`);
+    const referralUrl = `https://www.commonenergy.us/referrals?advocate=${userName}`;
+    copy(referralUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 1000);
+    global.analytics.track("Referral Link Copied", {
+      "Referral URL": referralUrl
+    });
   };
 
   const inviteReferral = (values, callback) => {
@@ -56,6 +60,9 @@ export default function SegmentedInput({
             emailAddress: ""
           });
           setPlaceholder("Your email has been sent! Why not send another? :)");
+          global.analytics.track("Referral Invite Sent", {
+            "Referred Email": payload.email
+          });
           setTimeout(() => {
             setSent(false);
           }, 3000);
