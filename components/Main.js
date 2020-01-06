@@ -93,7 +93,8 @@ export default function Main({ isLoading = true, children, popup = false }) {
           Your account will be set up shortly. In the meantime, you can increase
           your savings and enable more clean energy by referring your friends.
           <br />
-          When you do, both you and your referral will recieve a $50 credit.
+          When you do,{" "}
+          <b>both you and your referral will recieve a $50 credit.</b>
           <br />
           Refer 10 friends and receive $1,000!
         </Text>
@@ -120,7 +121,7 @@ export default function Main({ isLoading = true, children, popup = false }) {
           width: 100vw;
           height: 100vh;
           min-height: 300px;
-          background-color: rgba(255, 255, 255, 0.95);
+          background-color: rgba(255, 255, 255, 0.8);
           text-align: center;
           z-index: 1000;
         }
