@@ -38,19 +38,19 @@ function UsersInAreaMap(props) {
   const [{ selectedAccount }] = useStateValue();
 
   useEffect(() => {
-    props.firebase.doUpdateUser(async idToken => {
+    props.firebase.doUpdateUser(async (user, idToken) => {
       const userInfo = await getUserData(user.uid, idToken);
 
-      if (userInfo && userInfo.accounts) {
+      if (userInfo?.accounts) {
         const nearbyUsersInfo = await getNearbyUsers(
-          userInfo.accounts[selectedAccount.value].address.lat,
-          userInfo.accounts[selectedAccount.value].address.lon,
+          userInfo?.accounts[selectedAccount.value]?.address?.lat,
+          userInfo?.accounts[selectedAccount.value]?.address?.lon,
           idToken
         );
 
         setMapLocation([
-          parseFloat(userInfo.accounts[selectedAccount.value].address.lat),
-          parseFloat(userInfo.accounts[selectedAccount.value].address.lon)
+          parseFloat(userInfo?.accounts[selectedAccount.value]?.address?.lat),
+          parseFloat(userInfo?.accounts[selectedAccount.value]?.address?.lon)
         ]);
 
         if (nearbyUsersInfo) {

@@ -29,41 +29,53 @@ class Firebase {
   doSignInWithEmailAndPassword = (email, password) =>
     this.auth.signInWithEmailAndPassword(email, password);
 
+  doEmailAuthProvider = (email, password, callback) => {
+    const credential = app.auth.EmailAuthProvider.credential(email, password);
+    this.auth.currentUser.linkWithCredential(credential).then(
+      usercred => {
+        const { user } = usercred;
+        callback(user);
+      },
+      error => {
+        console.log("Account linking error", error);
+      }
+    );
+  };
+
   doSignInAnonymously = callback =>
-    this.auth
-      .signInAnonymously()
-      .then(authUser => {
+    this.auth.signInAnonymously().then(
+      authUser => {
         callback(authUser);
-      })
-      .catch(error => console.log(error));
+      },
+      error => console.log(error)
+    );
 
   doSignOut = () => this.auth.signOut();
 
   doGetCurrentUser = callback =>
-    this.auth.currentUser
-      .getIdToken(true)
-      .then(idToken => callback(idToken))
-      .catch(error => console.log(error));
+    this.auth.currentUser.getIdToken(true).then(
+      idToken => callback(idToken),
+      error => console.log(error)
+    );
 
   doUpdateUser = callback =>
-    this.auth
-      .onAuthStateChanged(user => {
-        console.log(user);
+    this.auth.onAuthStateChanged(
+      user => {
         if (user) {
-          user
-            .getIdToken(true)
-            .then(idToken => callback(idToken))
-            .catch(error => console.log(error));
+          user.getIdToken(true).then(
+            idToken => callback(user, idToken),
+            error => console.log(error)
+          );
+        } else {
+          Router.push({
+            pathname: "/"
+          });
         }
-        // } else {
-        //   Router.push({
-        //     pathname: "/"
-        //   });
-        // }
-      })
-      .catch(error => {
-        console.log(error.toJSON());
-      });
+      },
+      error => {
+        console.log(error);
+      }
+    );
 
   doSendSignInEmail = (email, config) =>
     this.auth.sendSignInLinkToEmail(email, config);

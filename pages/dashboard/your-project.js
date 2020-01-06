@@ -40,7 +40,7 @@ function MySource(props) {
 
   useEffect(() => {
     setIsLoading(true);
-    props.firebase.doUpdateUser(async idToken => {
+    props.firebase.doUpdateUser(async (user, idToken) => {
       global.analytics.page("Your project");
       const userInfo = await getUserData(user.uid, idToken);
       if (userInfo?.accounts) {

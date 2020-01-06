@@ -16,6 +16,7 @@ class Sorry extends React.PureComponent {
     super(props);
     this.state = {};
   }
+
   componentDidMount() {
     global.analytics.page("Out of area");
 

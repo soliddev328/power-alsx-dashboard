@@ -48,7 +48,7 @@ function MyImpact(props) {
 
   useEffect(() => {
     setIsLoading(true);
-    props.firebase.doUpdateUser(async idToken => {
+    props.firebase.doUpdateUser(async (user, idToken) => {
       global.analytics.page("Your impact");
       const userData = await getUserData(user.uid, idToken);
       if (userData?.accounts) {

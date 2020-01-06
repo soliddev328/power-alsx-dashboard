@@ -37,7 +37,7 @@ class Index extends React.PureComponent {
   }
 
   componentDidUpdate() {
-    this.props.firebase.doUpdateUser();
+    // this.props.firebase.doUpdateUser();
   }
 
   autenticate(values) {
@@ -47,7 +47,7 @@ class Index extends React.PureComponent {
       .doSignInWithEmailAndPassword(values.emailAddress, values.password)
       .then(firebaseData => {
         if (!error.code) {
-          this.props.firebase.doGetCurrentUser(idToken =>
+          this.props.firebase.doGetCurrentUser(idToken => {
             axios
               .get(`${API}/v1/subscribers/${firebaseData.user.uid}`, {
                 headers: {
@@ -66,9 +66,9 @@ class Index extends React.PureComponent {
                 global.analytics.track("User Signed In", {});
 
                 // retrieve utility information
-                const utility = user?.milestiones?.utility || false;
+                const utility = user.milestones.utility || false;
 
-                const imageName = utility?.replace(/\s/g, "") || false;
+                const imageName = utility.replace(/\s/g, "") || false;
 
                 const utilityInfo = {
                   image: {
@@ -83,7 +83,7 @@ class Index extends React.PureComponent {
                 localStorage.setItem("utility", JSON.stringify(utilityInfo));
 
                 // retrieve postalcode
-                if (user?.milestones?.address?.postalCode) {
+                if (user.milestones.address.postalCode) {
                   const postalCode = user.milestones.address.postalCode;
                   localStorage.setItem(
                     "postalCode",
@@ -135,8 +135,8 @@ class Index extends React.PureComponent {
               })
               .catch(err => {
                 console.log(err);
-              })
-          );
+              });
+          });
         }
       })
       .catch(error => {
