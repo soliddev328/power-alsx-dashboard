@@ -257,9 +257,8 @@ const Dashboard = () => {
               Help us bring more clean energy to your community!
             </Text>
             <Text style={{ marginBottom: "20px" }}>
-              You can receive <strong>free electricity for a year</strong> by
-              helping spread the word about Common Energy. Find out how with the
-              link below.
+              You can earn <strong>over $1,000</strong> by helping spread the
+              word about Common Energy. Find out how with the link below.
             </Text>
           </Container>
           <UsersInAreaMap />
