@@ -6,7 +6,6 @@ import Header from "../../components/Header";
 import Input from "../../components/Input";
 import SingleStep from "../../components/SingleStep";
 import Button from "../../components/Button";
-import axios from "axios";
 import CONSTANTS from "../../globals";
 
 const { API } =
@@ -14,50 +13,24 @@ const { API } =
 
 function Step5(props) {
   const router = useRouter();
-  const [leadId, setLeadId] = useState();
   const [email, setEmail] = useState();
-  const [error, setError] = useState({
-    code: false,
-    message: ""
-  });
 
   useEffect(() => {
     global.analytics.page("Step 5");
-    let storedLeadId = "";
     let storedEmailAddress = "";
-
-    if (localStorage.getItem("leadId")) {
-      storedLeadId = localStorage.getItem("leadId");
-    }
 
     if (localStorage.getItem("email")) {
       storedEmailAddress = localStorage.getItem("email");
     }
 
-    setLeadId(storedLeadId);
     setEmail(storedEmailAddress);
   }, []);
 
   const submit = values => {
-    props.firebase.doUpdateUser(idToken => {
-      axios
-        .put(
-          `${API}/v1/subscribers`,
-          {
-            leadId: leadId,
-            password: values.password
-          },
-          {
-            headers: {
-              Authorization: idToken
-            }
-          }
-        )
-        .then(response => {
-          router.push({
-            pathname: "/onboarding/step6"
-          });
-        });
+    props.firebase.doEmailAuthProvider(email, values.password, () => {
+      router.push({
+        pathname: "/onboarding/step6"
+      });
     });
   };
 
@@ -84,9 +57,6 @@ function Step5(props) {
                 />
                 <p className="password-explanation">
                   * This password will let you log back in later
-                </p>
-                <p className="error">
-                  {error.message} {error.link && error.link}
                 </p>
                 <Button primary disabled={!!props.values.password !== true}>
                   Next

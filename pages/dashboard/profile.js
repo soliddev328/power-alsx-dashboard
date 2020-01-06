@@ -10,6 +10,7 @@ import Phoneinput from "../../components/Phoneinput";
 import Input from "../../components/Input";
 import Table from "../../components/Table";
 import CONSTANTS from "../../globals";
+import { useStateValue } from "../../state";
 import { withFirebase } from "../../firebase";
 
 const { API } =
@@ -21,7 +22,7 @@ const getUserData = async (userUid, idToken) => {
       Authorization: idToken
     }
   });
-  return response && response.data && response.data.data;
+  return response?.data?.data;
 };
 
 const getPaymentMethods = accounts => {
@@ -30,7 +31,7 @@ const getPaymentMethods = accounts => {
   if (accounts.length > 0) {
     accounts.forEach(element => {
       const singleMethod = [];
-      singleMethod.push(element.address.street);
+      singleMethod.push(element?.address?.street);
       element.hasACH
         ? singleMethod.push("ACH")
         : singleMethod.push("Credit Card");
@@ -45,9 +46,10 @@ function Profile(props) {
   const [userData, setUserdata] = useState({});
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [{ selectedAccount }, dispatch] = useStateValue();
 
   useEffect(() => {
-    props.firebase.doUpdateUser(async idToken => {
+    props.firebase.doUpdateUser(async (user, idToken) => {
       global.analytics.page("Profile");
       const userInfo = await getUserData(user.uid, idToken);
       if (userInfo) {
@@ -76,7 +78,7 @@ function Profile(props) {
                 fullWidth
                 label="Name"
                 fieldname="name"
-                value={userData.firstName}
+                value={userData?.firstName}
               />
               <Input
                 readOnly
@@ -84,7 +86,7 @@ function Profile(props) {
                 fullWidth
                 label="Last Name"
                 fieldname="last-name"
-                value={userData.lastName}
+                value={userData?.lastName}
               />
             </Section>
             <Section columns="3">
@@ -103,7 +105,7 @@ function Profile(props) {
                 label="Primary Address"
                 fieldname="primary-address"
                 value={
-                  userData?.accounts ? userData.accounts[0].address.street : ""
+                  userData?.accounts[selectedAccount.value]?.address?.street
                 }
               />
               <Phoneinput
@@ -124,9 +126,7 @@ function Profile(props) {
                 fullWidth
                 label="City"
                 fieldname="city"
-                value={
-                  userData?.accounts ? userData.accounts[0].address.city : ""
-                }
+                value={userData?.accounts[selectedAccount.value]?.address?.city}
               />
               <Input
                 readOnly
@@ -135,7 +135,7 @@ function Profile(props) {
                 label="State"
                 fieldname="state"
                 value={
-                  userData?.accounts ? userData.accounts[0].address.state : ""
+                  userData?.accounts[selectedAccount.value]?.address?.state
                 }
               />
               <Input
@@ -145,9 +145,7 @@ function Profile(props) {
                 label="Zip"
                 fieldname="zipcode"
                 value={
-                  userData?.accounts
-                    ? userData.accounts[0].address.postalCode
-                    : ""
+                  userData?.accounts[selectedAccount.value]?.address?.postalCode
                 }
               />
             </Section>

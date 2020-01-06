@@ -124,7 +124,7 @@ function Step4(props) {
             utilityPassword: ""
           }}
           onSubmit={values => {
-            props.firebase.doUpdateUser(idToken => {
+            props.firebase.doUpdateUser((user, idToken) => {
               setIsLoading(true);
               axios
                 .put(
@@ -237,31 +237,30 @@ function Step4(props) {
           acceptedTermsAndConditions: false
         }}
         onSubmit={values => {
-          props.firebase.doUpdateUser(idToken => {
-            console.log(idToken);
-            // axios
-            //   .put(
-            //     `${API}/v1/subscribers`,
-            //     {
-            //       leadId: leadId,
-            //       agreementChecked: !!values.acceptedTermsAndConditions,
-            //       utilityAccountNumber: values.utilityAccountNumber
-            //     },
-            //     {
-            //       headers: {
-            //         Authorization: idToken
-            //       }
-            //     }
-            //   )
-            //   .then(() => {
-            //     localStorage.setItem("partialConnection", true);
-            //     router.push({
-            //       pathname: "/onboarding/step4.2"
-            //     });
-            //   })
-            //   .catch(error => {
-            //     console.log(error);
-            //   });
+          props.firebase.doUpdateUser((user, idToken) => {
+            axios
+              .put(
+                `${API}/v1/subscribers`,
+                {
+                  leadId: leadId,
+                  agreementChecked: !!values.acceptedTermsAndConditions,
+                  utilityAccountNumber: values.utilityAccountNumber
+                },
+                {
+                  headers: {
+                    Authorization: idToken
+                  }
+                }
+              )
+              .then(() => {
+                localStorage.setItem("partialConnection", true);
+                router.push({
+                  pathname: "/onboarding/step4.2"
+                });
+              })
+              .catch(error => {
+                console.log(error);
+              });
           });
         }}
       >

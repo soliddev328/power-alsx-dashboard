@@ -88,7 +88,7 @@ function Referrals(props) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    props.firebase.doUpdateUser(async idToken => {
+    props.firebase.doUpdateUser(async (user, idToken) => {
       global.analytics.page("Referrals");
       const userInfo = await getUserData(user.uid, idToken);
       if (userInfo) {
