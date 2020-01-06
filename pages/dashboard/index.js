@@ -19,25 +19,24 @@ import CONSTANTS from "../../globals";
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
-const getUserData = async (userUid, idToken) => {
-  const response = await axios.get(`${API}/v1/subscribers/${userUid}`, {
-    headers: {
-      Authorization: idToken
-    }
-  });
-  return response?.data?.data;
-};
-
 const Dashboard = props => {
   const [{ selectedAccount }] = useStateValue();
   const [userData, setUserData] = useState({});
   const [overlayDescription, setOverlayDescription] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  const getUserData = async (userUid, idToken) => {
+    const response = await axios.get(`${API}/v1/subscribers/${userUid}`, {
+      headers: {
+        Authorization: idToken
+      }
+    });
+    return response?.data?.data;
+  };
+
   useEffect(() => {
     setIsLoading(true);
-
-    props.firebase.doUpdateUser(async idToken => {
+    props.firebase.doUpdateUser(async (user, idToken) => {
       global.analytics.page("Dashboard");
       const userInfo = await getUserData(user.uid, idToken);
       if (

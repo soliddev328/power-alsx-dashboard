@@ -10,32 +10,31 @@ import { useStateValue } from "../state";
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
-const signOut = props => {
-  const router = useRouter();
-
-  props.firebase.doSignOut().then(() => {
-    router.push({
-      pathname: "/"
-    });
-  });
-};
-
-const getUserData = async (userUid, idToken) => {
-  const { data } = await axios.get(`${API}/v1/subscribers/${userUid}`, {
-    headers: {
-      Authorization: idToken
-    }
-  });
-  return data?.data;
-};
-
 function MainMenu(props) {
+  const router = useRouter();
   const [accounts, setAccounts] = useState([]);
   const [{ selectedAccount }, dispatch] = useStateValue();
 
+  const signOut = props => {
+    props.firebase.doSignOut().then(() => {
+      router.push({
+        pathname: "/"
+      });
+    });
+  };
+
+  const getUserData = async (userUid, idToken) => {
+    const { data } = await axios.get(`${API}/v1/subscribers/${userUid}`, {
+      headers: {
+        Authorization: idToken
+      }
+    });
+    return data?.data;
+  };
+
   useEffect(() => {
-    props.firebase.doUpdateUser(async idToken => {
-      const userData = await getUserData(user.uid, idToken);
+    props.firebase.doUpdateUser(async (user, idToken) => {
+      const userData = await getUserData(user.id, idToken);
 
       userData?.accounts?.forEach((item, index) => {
         setAccounts(prevState => [

@@ -1,10 +1,9 @@
 import React from "react";
 import cn from "classnames";
 import { FadeLoader } from "react-spinners";
-
 import Menubar from "./Menubar";
 
-export default function Main({ isLoading = true, children }) {
+function Main({ isLoading = true, children }) {
   const renderLoader = () => {
     return (
       <div className="wrapper">
@@ -77,3 +76,5 @@ export default function Main({ isLoading = true, children }) {
     </main>
   );
 }
+
+export default Main;

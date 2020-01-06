@@ -22,8 +22,8 @@ const renderDownloadButton = props => {
   const [{ selectedAccount }, dispatch] = useStateValue();
 
   useEffect(() => {
-    props.firebase.doUpdateUser(async idToken => {
-      const invoiceBase64 = await getInvoiceData(id, idToken);
+    props.firebase.doUpdateUser(async (user, idToken) => {
+      const invoiceBase64 = await getInvoiceData(user.id, idToken);
       let base64Encoded;
 
       if (invoiceBase64 !== "No invoice found.") {

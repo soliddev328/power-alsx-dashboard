@@ -153,7 +153,7 @@ function Step1(props) {
 
       props.firebase.doSignInAnonymously(userCredential => {
         localStorage.setItem("firebaseUserId", userCredential.user.uid);
-        props.firebase.doUpdateUser(idToken => {
+        props.firebase.doUpdateUser((user, idToken) => {
           axios
             .post(
               `${API}/v1/subscribers`,
