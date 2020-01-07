@@ -24,7 +24,10 @@ function Step3() {
               JSON.stringify(values.isPaperOnly)
             );
             router.push({
-              pathname: "/onboarding/step4"
+              pathname: "/onboarding/step4",
+              query: {
+                next: true
+              }
             });
           }}
         >

@@ -64,7 +64,6 @@ class Firebase {
     this.auth.onAuthStateChanged(
       user => {
         const { pathname } = Router;
-        console.log(user);
         if (user) {
           user.getIdToken(true).then(
             idToken => callback(user, idToken),

@@ -91,8 +91,11 @@ function Step42(props) {
           `${API}/v1/subscribers`,
           {
             leadId: leadId,
-            address: address,
-            phone: phoneNumber
+            street: address.street,
+            state: address.state,
+            city: address.city,
+            apt: address.apt,
+            phone: values.phoneNumber
           },
           {
             headers: {
