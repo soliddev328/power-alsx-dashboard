@@ -52,7 +52,9 @@ class Firebase {
 
   doSignOut = () => this.auth.signOut();
 
-  doGetCurrentUser = callback =>
+  doGetCurrentUser = callback => callback(this.auth.currentUser);
+
+  doGetCurrentUserIdToken = callback =>
     this.auth.currentUser.getIdToken(true).then(
       idToken => callback(idToken),
       error => console.log(error)
@@ -61,15 +63,19 @@ class Firebase {
   doUpdateUser = callback =>
     this.auth.onAuthStateChanged(
       user => {
+        const { pathname } = Router;
+        console.log(user);
         if (user) {
           user.getIdToken(true).then(
             idToken => callback(user, idToken),
             error => console.log(error)
           );
         } else {
-          Router.push({
-            pathname: "/"
-          });
+          if (pathname.includes("/dashboard")) {
+            Router.push({
+              pathname: "/"
+            });
+          }
         }
       },
       error => {

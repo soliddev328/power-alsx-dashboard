@@ -26,20 +26,6 @@ class Index extends React.PureComponent {
     };
   }
 
-  componentDidMount() {
-    // window.firebase.auth().onAuthStateChanged(user => {
-    //   if (user) {
-    //     Router.push({
-    //       pathname: "/dashboard"
-    //     });
-    //   }
-    // });
-  }
-
-  componentDidUpdate() {
-    // this.props.firebase.doUpdateUser();
-  }
-
   autenticate(values) {
     const { error } = this.state;
 
@@ -47,7 +33,7 @@ class Index extends React.PureComponent {
       .doSignInWithEmailAndPassword(values.emailAddress, values.password)
       .then(firebaseData => {
         if (!error.code) {
-          this.props.firebase.doGetCurrentUser(idToken => {
+          this.props.firebase.doGetCurrentUserIdToken(idToken => {
             axios
               .get(`${API}/v1/subscribers/${firebaseData.user.uid}`, {
                 headers: {
@@ -55,21 +41,19 @@ class Index extends React.PureComponent {
                 }
               })
               .then(response => {
-                const user = response.data.data;
+                const user = response?.data?.data;
 
-                window.localStorage.setItem("leadId", user.leadId);
+                window.localStorage.setItem("leadId", user?.leadId);
 
-                global.analytics.identify(user.leadId, {
-                  email: user.email
+                global.analytics.identify(user?.leadId, {
+                  email: user?.email
                 });
 
                 global.analytics.track("User Signed In", {});
 
                 // retrieve utility information
-                const utility = user.milestones.utility || false;
-
-                const imageName = utility.replace(/\s/g, "") || false;
-
+                const utility = user?.milestones?.utility;
+                const imageName = utility?.replace(/\s/g, "") || false;
                 const utilityInfo = {
                   image: {
                     src: imageName
@@ -83,8 +67,8 @@ class Index extends React.PureComponent {
                 localStorage.setItem("utility", JSON.stringify(utilityInfo));
 
                 // retrieve postalcode
-                if (user.milestones.address.postalCode) {
-                  const postalCode = user.milestones.address.postalCode;
+                if (user?.milestones?.address?.postalCode) {
+                  const postalCode = user?.milestones?.address?.postalCode;
                   localStorage.setItem(
                     "postalCode",
                     JSON.stringify(postalCode)
@@ -98,35 +82,40 @@ class Index extends React.PureComponent {
                   );
                 }
 
+                const userStillNeedsToAddUtilityInfo = !user.milestones
+                  .utilityInfoCompleted;
+
+                const userStillNeedstoAddBankInfo =
+                  (user.milestones.utilityInfoCompleted &&
+                    user.milestones.utilityLoginSuccessful) ||
+                  !user.milestones.bankInfoCompleted;
+
+                const userStillNeedsToAddAddressInfo =
+                  user.milestones.utilityInfoCompleted &&
+                  !user.milestones.addressInfoCompleted;
+
                 // forward to the right page
                 if (user.signupCompleted) {
                   Router.push({
                     pathname: "/dashboard"
                   });
-                } else if (!user.milestones.utilityInfoCompleted) {
+                } else if (userStillNeedsToAddUtilityInfo) {
                   Router.push({
                     pathname: "/onboarding/step2",
                     query: {
                       onboardingNotFinished: true
                     }
                   });
-                } else if (
-                  (user.milestones.utilityInfoCompleted &&
-                    user.milestones.utilityLoginSuccessful) ||
-                  !user.milestones.bankInfoCompleted
-                ) {
+                } else if (userStillNeedsToAddAddressInfo) {
                   Router.push({
-                    pathname: "/onboarding/step6",
+                    pathname: "/onboarding/step4.2",
                     query: {
                       onboardingNotFinished: true
                     }
                   });
-                } else if (
-                  user.milestones.utilityInfoCompleted &&
-                  !user.milestones.addressInfoCompleted
-                ) {
+                } else if (userStillNeedstoAddBankInfo) {
                   Router.push({
-                    pathname: "/onboarding/step4.2",
+                    pathname: "/onboarding/step7",
                     query: {
                       onboardingNotFinished: true
                     }
