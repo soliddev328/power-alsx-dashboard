@@ -107,11 +107,17 @@ function Step2() {
           onClick={() => {
             if (utility?.billingMethod.includes("paper")) {
               router.push({
-                pathname: "/onboarding/step4"
+                pathname: "/onboarding/step4",
+                query: {
+                  next: true
+                }
               });
             } else {
               router.push({
-                pathname: "/onboarding/step3"
+                pathname: "/onboarding/step3",
+                query: {
+                  next: true
+                }
               });
             }
           }}

@@ -27,7 +27,10 @@ function Step7() {
               JSON.stringify(values)
             );
             router.push({
-              pathname: "/onboarding/step8"
+              pathname: "/onboarding/step8",
+              query: {
+                next: true
+              }
             });
           }}
         >
