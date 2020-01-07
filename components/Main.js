@@ -94,7 +94,7 @@ export default function Main({ isLoading = true, children, popup = false }) {
           your savings and enable more clean energy by referring your friends.
           <br />
           When you do,{" "}
-          <b>both you and your referral will recieve a $50 credit.</b>
+          <b>both you and your referral will recieve a $50 gift card.</b>
           <br />
           Refer 10 friends and receive $1,000!
         </Text>
