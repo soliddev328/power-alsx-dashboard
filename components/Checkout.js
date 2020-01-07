@@ -71,7 +71,7 @@ class CheckoutForm extends Component {
                   localStorage.setItem("showPopup", true);
                   localStorage.setItem("usercreated", true);
                   Router.push({
-                    pathname: "/"
+                    pathname: "/dashboard"
                   });
                 });
             }
