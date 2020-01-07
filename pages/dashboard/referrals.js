@@ -135,7 +135,7 @@ export default function Referrals() {
       <Text noMargin>
         Common Energy’s referral program enables you increase your impact and
         your savings. When you refer a friend, both you and they will receive a{" "}
-        <b>$50 credit.</b> That's a combined $100 for spreading the word.
+        <b>$50 gift card.</b> That's a combined $100 for spreading the word.
         <b> Refer 10 people and receive $1,000!</b>
       </Text>
       <Section columns="4">
