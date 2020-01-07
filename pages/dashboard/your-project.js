@@ -156,33 +156,6 @@ export default function MySource() {
                 </div>
                 <div className="item">
                   <Text noMargin bold>
-                    Project Address:
-                  </Text>
-                  <Text noMargin>
-                    {projectInfo
-                      ? `${projectInfo.town}, ${projectInfo.state}`
-                      : ""}
-                  </Text>
-                </div>
-                <div className="item">
-                  <Text noMargin bold>
-                    Project Size:
-                  </Text>
-                  <Text noMargin>
-                    {projectInfo ? (
-                      <NumberFormat
-                        value={projectInfo.sizeDC}
-                        displayType={"text"}
-                        thousandSeparator={true}
-                        suffix={" kW DC"}
-                      />
-                    ) : (
-                      ""
-                    )}{" "}
-                  </Text>
-                </div>
-                <div className="item">
-                  <Text noMargin bold>
                     Annual generation:
                   </Text>
                   <Text noMargin>
@@ -196,6 +169,16 @@ export default function MySource() {
                     ) : (
                       ""
                     )}{" "}
+                  </Text>
+                </div>
+                <div className="item">
+                  <Text noMargin bold>
+                    Project Address:
+                  </Text>
+                  <Text noMargin>
+                    {projectInfo
+                      ? `${projectInfo.town}, ${projectInfo.state}`
+                      : ""}
                   </Text>
                 </div>
                 <div className="item">
@@ -215,6 +198,24 @@ export default function MySource() {
                     )}{" "}
                   </Text>
                 </div>
+                <div className="item">
+                  <Text noMargin bold>
+                    Project Size:
+                  </Text>
+                  <Text noMargin>
+                    {projectInfo ? (
+                      <NumberFormat
+                        value={projectInfo.sizeDC}
+                        displayType={"text"}
+                        thousandSeparator={true}
+                        suffix={" kW DC"}
+                      />
+                    ) : (
+                      ""
+                    )}{" "}
+                  </Text>
+                </div>
+
                 <div className="item">
                   <Text noMargin bold>
                     Equivalent trees planted:
