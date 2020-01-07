@@ -52,7 +52,7 @@ export default class Plaid extends React.Component {
               localStorage.setItem("showPopup", true);
               localStorage.setItem("usercreated", true);
               Router.push({
-                pathname: "/"
+                pathname: "/dashboard"
               });
             });
         }}
@@ -67,7 +67,7 @@ export default class Plaid extends React.Component {
             });
           }
           Router.push({
-            pathname: "/onboarding/step9"
+            pathname: "/onboarding/step6"
           });
         }}
       />
