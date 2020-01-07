@@ -1,31 +1,41 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Formik, Form } from "formik";
+import axios from "axios";
+import { withFirebase } from "../../firebase";
 import GeoSuggest from "../../components/GeoSuggest";
 import Phoneinput from "../../components/Phoneinput";
 import Input from "../../components/Input";
 import Header from "../../components/Header";
 import SingleStep from "../../components/SingleStep";
 import Button from "../../components/Button";
+import CONSTANTS from "../../globals";
 
-function Step42() {
+const { API } =
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
+
+function Step42(props) {
   const router = useRouter();
-  const [name, setName] = useState("user");
   const [postalCode, setPostalCode] = useState("");
+  const [name, setName] = useState("user");
+  const [leadId, setLeadId] = useState("user");
   const [error, setError] = useState("");
 
   useEffect(() => {
     global.analytics.page("Step 4.2");
     let storedPostalCode = "";
     let storedName = "";
-
+    let storedLeadId = "";
     if (localStorage.getItem("postalCode")) {
       storedPostalCode = JSON.parse(localStorage.getItem("postalCode"));
     }
     if (localStorage.getItem("username")) {
       storedName = JSON.parse(localStorage.getItem("username"));
     }
-
+    if (localStorage.getItem("leadId")) {
+      storedLeadId = localStorage.getItem("leadId");
+    }
+    setLeadId(storedLeadId);
     setPostalCode(storedPostalCode);
     setName(storedName.firstName);
   }, []);
@@ -57,6 +67,50 @@ function Step42() {
     return word && word[0].toUpperCase() + word.slice(1);
   };
 
+  const submit = values => {
+    const phoneNumber = values.phoneNumber || "";
+    const arrayAddress = values.address.description.split(",");
+    const street = arrayAddress[0] || "";
+    const city = arrayAddress[1] ? arrayAddress[1].replace(/\s/g, "") : "";
+
+    const address = {
+      street: street,
+      city: city,
+      state: getStateAddress(values),
+      postalCode: postalCode || getPostalCode(values),
+      apt: values?.apt || ""
+    };
+
+    localStorage.setItem("address", JSON.stringify(address));
+    localStorage.setItem("phoneNumber", phoneNumber);
+
+    //if (address.postalCode === postalCode) {
+    props.firebase
+      .doGetCurrentUserIdToken(idToken => {
+        axios.put(
+          `${API}/v1/subscribers`,
+          {
+            leadId: leadId,
+            address: address,
+            phone: phoneNumber
+          },
+          {
+            headers: {
+              Authorization: idToken
+            }
+          }
+        );
+      })
+      .then(() => {
+        router.push({
+          pathname: "/onboarding/step5"
+        });
+      });
+    // } else {
+    //   setError("Address has different zip code than the one initially provided.")
+    // }
+  };
+
   return (
     <main>
       <Header />
@@ -71,32 +125,7 @@ function Step42() {
             phoneNumber: "",
             apt: ""
           }}
-          onSubmit={values => {
-            const arrayAddress = values.address.description.split(",");
-            const street = arrayAddress[0] || "";
-            const city = arrayAddress[1]
-              ? arrayAddress[1].replace(/\s/g, "")
-              : "";
-
-            const address = {
-              street: street,
-              city: city,
-              state: getStateAddress(values),
-              postalCode: postalCode || getPostalCode(values),
-              apt: values?.apt || ""
-            };
-
-            localStorage.setItem("address", JSON.stringify(address));
-            localStorage.setItem("phoneNumber", values.phoneNumber);
-
-            //if (address.postalCode === postalCode) {
-            router.push({
-              pathname: "/onboarding/step5"
-            });
-            // } else {
-            //   setError("Address has different zip code than the one initially provided.")
-            // }
-          }}
+          onSubmit={submit}
         >
           {props => (
             <Form>
@@ -140,4 +169,4 @@ function Step42() {
   );
 }
 
-export default Step42;
+export default withFirebase(Step42);
