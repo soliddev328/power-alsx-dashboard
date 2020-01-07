@@ -151,7 +151,10 @@ function Step4(props) {
                     if (data[0].hasLoggedIn) {
                       localStorage.setItem("partialConnection", false);
                       router.push({
-                        pathname: "/onboarding/step5"
+                        pathname: "/onboarding/step5",
+                        query: {
+                          next: true
+                        }
                       });
                     } else {
                       setIsLoading(false);
@@ -165,7 +168,10 @@ function Step4(props) {
                   } else {
                     localStorage.setItem("partialConnection", true);
                     router.push({
-                      pathname: "/onboarding/step5"
+                      pathname: "/onboarding/step5",
+                      query: {
+                        next: true
+                      }
                     });
                   }
                 })

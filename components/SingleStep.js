@@ -11,7 +11,7 @@ const { API } =
 
 function SingleStep(props) {
   const router = useRouter();
-  const { pathname } = router;
+  const { pathname, query } = router;
   const { highlight, prefix, title, suffix, toast, children, image } = props;
   const [isLoading, setIsLoading] = useState(true);
 
@@ -61,7 +61,6 @@ function SingleStep(props) {
 
   useEffect(() => {
     const isOnboarding = pathname.includes("/onboarding");
-    console.log("onboarding:", isOnboarding);
     if (isOnboarding) {
       setIsLoading(true);
       props.firebase.doGetCurrentUser(user => {
@@ -76,8 +75,6 @@ function SingleStep(props) {
               .then(response => {
                 setIsLoading(false);
                 const user = response?.data?.data;
-
-                console.log(user);
 
                 localStorage.setItem(
                   "username",
@@ -136,21 +133,21 @@ function SingleStep(props) {
                   router.push({
                     pathname: "/dashboard"
                   });
-                } else if (userStillNeedsToAddUtilityInfo) {
+                } else if (userStillNeedsToAddUtilityInfo && !query.next) {
                   router.push({
                     pathname: "/onboarding/step2",
                     query: {
                       onboardingNotFinished: true
                     }
                   });
-                } else if (userStillNeedsToAddAddressInfo) {
+                } else if (userStillNeedsToAddAddressInfo && !query.next) {
                   router.push({
                     pathname: "/onboarding/step4.2",
                     query: {
                       onboardingNotFinished: true
                     }
                   });
-                } else if (userStillNeedstoAddBankInfo) {
+                } else if (userStillNeedstoAddBankInfo && !query.next) {
                   router.push({
                     pathname: "/onboarding/step7",
                     query: {
