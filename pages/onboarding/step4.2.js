@@ -106,7 +106,10 @@ function Step42(props) {
       })
       .then(() => {
         router.push({
-          pathname: "/onboarding/step5"
+          pathname: "/onboarding/step5",
+          query: {
+            next: true
+          }
         });
       });
     // } else {
