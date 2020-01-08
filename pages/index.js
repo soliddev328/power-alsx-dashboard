@@ -26,6 +26,16 @@ class Index extends React.PureComponent {
     };
   }
 
+  componentDidMount() {
+    this.props.firebase.doUpdateUser(user => {
+      if (!user?.isAnonymous) {
+        Router.push({
+          pathname: "/dashboard"
+        });
+      }
+    });
+  }
+
   autenticate(values) {
     const { error } = this.state;
 
