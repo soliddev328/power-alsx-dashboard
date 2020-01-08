@@ -197,9 +197,13 @@ function Step1(props) {
               });
             })
             .catch(failure => {
-              if (failure.code === "auth/email-already-exists") {
+              const { response } = failure;
+              const { data } = response;
+              const { errors } = data;
+
+              if (errors.code === "auth/email-already-exists") {
                 setError({
-                  code: failure.code,
+                  code: errors.code,
                   message: (
                     <>
                       This email address has already been used to complete this
@@ -209,14 +213,17 @@ function Step1(props) {
                   )
                 });
               } else {
-                setError({ code: failure.code, message: failure.message });
+                setError({ code: errors.code, message: errors.message });
               }
             });
         });
       });
     } else if (options === null) {
       router.push({
-        pathname: "/onboarding/sorry"
+        pathname: "/onboarding/sorry",
+        query: {
+          next: true
+        }
       });
     } else {
       setError({
