@@ -116,20 +116,20 @@ function SingleStep(props) {
                   );
                 }
 
-                const userStillNeedsToAddUtilityInfo = !user.milestones
-                  .utilityInfoCompleted;
+                const userStillNeedsToAddUtilityInfo = !user?.milestones
+                  ?.utilityInfoCompleted;
 
                 const userStillNeedstoAddBankInfo =
-                  (user.milestones.utilityInfoCompleted &&
-                    user.milestones.utilityLoginSuccessful) ||
-                  !user.milestones.bankInfoCompleted;
+                  (user?.milestones?.utilityInfoCompleted &&
+                    user?.milestones?.utilityLoginSuccessful) ||
+                  !user?.milestones?.bankInfoCompleted;
 
                 const userStillNeedsToAddAddressInfo =
-                  user.milestones.utilityInfoCompleted &&
-                  !user.milestones.addressInfoCompleted;
+                  user?.milestones?.utilityInfoCompleted &&
+                  !user?.milestones?.addressInfoCompleted;
 
                 // forward to the right page
-                if (user.signupCompleted) {
+                if (user?.signupCompleted) {
                   router.push({
                     pathname: "/dashboard"
                   });
