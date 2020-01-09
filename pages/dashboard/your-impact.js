@@ -21,7 +21,6 @@ export default function MyImpact() {
   const [userData, setUserdata] = useState({});
   const [billingData, setBillingData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [overlayDescription, setOverlayDescription] = useState(false);
   const [{ selectedAccount }] = useStateValue();
 
   const getUserData = async (userUid, idToken) => {
@@ -56,40 +55,6 @@ export default function MyImpact() {
           if (userData && userData.accounts) {
             setIsLoading(false);
             setUserdata(userData);
-            if (
-              userData.accounts[selectedAccount.value].onboardingStatus ===
-              "Unassigned"
-            ) {
-              setOverlayDescription(
-                "Please stay tuned to learn more about the status of your project and your connection timeline! We will provide more details shortly, both here and by email -- and please feel free to always reach out with any questions at"
-              );
-            } else if (
-              userData.accounts[selectedAccount.value].onboardingStatus ===
-              "Project Live"
-            ) {
-              setOverlayDescription(
-                "Common Energy can connect you to our available project in your community in as little as 2-5 weeks. We'll keep you posted on our progress along the way -- and please feel free to always reach out with any questions at"
-              );
-            } else if (
-              userData.accounts[selectedAccount.value].onboardingStatus ===
-              "No Project"
-            ) {
-              setOverlayDescription(
-                "Currently, all our projects in your area are filled. However, because of your interest, we're able to work with a developer on a new project to bring more clean energy and savings to your community! Please stand-by for an update on new projects in a few weeks -- and feel free to reach out with any questions at"
-              );
-            } else if (
-              userData.accounts[selectedAccount.value].onboardingStatus ===
-              "Project Not Live"
-            ) {
-              setOverlayDescription(
-                "We're excited to let you know that we have an available project in your area, but we are not ready to connect you, as it is not yet ready and active. However, we will make sure we update you as we take the project through to completion. Please know that as an early subscriber, you've taken an important step in making this project a success! Feel free to reach out with any questions at"
-              );
-            } else if (
-              userData.accounts[selectedAccount.value].onboardingStatus ===
-              "Meter Live"
-            ) {
-              setOverlayDescription(false);
-            }
 
             const billings = await getBillings(
               userData.accounts[selectedAccount.value].id,
@@ -130,11 +95,7 @@ export default function MyImpact() {
       <Text h2 style={{ marginTop: "40px" }}>
         Cumulative Impact and Savings
       </Text>
-      <Section
-        columns="4"
-        disabled={overlayDescription}
-        overlayDescription={overlayDescription}
-      >
+      <Section columns="4">
         <Panel small specialShadow>
           <Text small noMargin>
             Clean Energy (kWh)
