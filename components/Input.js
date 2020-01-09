@@ -58,6 +58,7 @@ export default class Input extends React.PureComponent {
       style,
       value,
       readOnly,
+      placeholder,
       className,
       scrollOnFocus = true,
       outerLabel
@@ -74,6 +75,7 @@ export default class Input extends React.PureComponent {
           component="input"
           name={fieldname}
           id={fieldname}
+          placeholder={placeholder}
           validate={validator ? validator : false}
           onInvalid={this.applyValidation}
           onInput={this.customSetCustomValidity}

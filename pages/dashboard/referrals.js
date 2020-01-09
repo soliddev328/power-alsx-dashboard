@@ -133,9 +133,9 @@ export default function Referrals() {
         Your Referrals
       </Text>
       <Text noMargin>
-        Common Energy’s referral program enables you increase your impact and your savings. 
-        When you refer a friend, both you and they will receive a{" "}
-        <b>$50 credit.</b> That's a combined $100 for spreading the word.
+        Common Energy’s referral program enables you increase your impact and
+        your savings. When you refer a friend, both you and they will receive a{" "}
+        <b>$50 gift card.</b> That's a combined $100 for spreading the word.
         <b> Refer 10 people and receive $1,000!</b>
       </Text>
       <Section columns="4">
@@ -231,16 +231,16 @@ export default function Referrals() {
       <Text h2>Referral Tools</Text>
       <Text noMargin>
         Spreading the word about Common Energy is easy! Use the links below to
-        share on social media and to email your friends and family.
+        email your friends and family and share on social media.
       </Text>
       <Section>
         <Panel>
           <Text h3>Email Your Referral Link</Text>
           <Container column alignLeft>
             <Text style={{ marginBottom: "20px" }}>
-              Sample message: Hi! I just signed up for a new state program that enables me to
-              save $5-$20 per month on my electricity and support clean energy.
-              Check it out!
+              Sample message: Hi! I just signed up for a new state program that
+              enables me to save $5-$20 per month on my electricity and support
+              clean energy. Check it out!
             </Text>
           </Container>
           <UsersInAreaMap />
@@ -270,7 +270,12 @@ export default function Referrals() {
                 secondary
                 transparent
                 share="facebook"
-                onClick={() => FacebookShare(userData.username)}
+                onClick={() => {
+                  FacebookShare(userData.username);
+                  global.analytics.track("Referral Link Clicked", {
+                    Platform: "Facebook"
+                  });
+                }}
               >
                 Share on Facebook
               </Button>
@@ -278,7 +283,12 @@ export default function Referrals() {
                 secondary
                 transparent
                 share="twitter"
-                onClick={() => TwitterShare(userData.username)}
+                onClick={() => {
+                  TwitterShare(userData.username);
+                  global.analytics.track("Referral Link Clicked", {
+                    Platform: "Twitter"
+                  });
+                }}
               >
                 Share on Twitter
               </Button>
@@ -286,7 +296,12 @@ export default function Referrals() {
                 secondary
                 transparent
                 share="linkedin"
-                onClick={() => LinkedinShare(userData.username)}
+                onClick={() => {
+                  LinkedinShare(userData.username);
+                  global.analytics.track("Referral Link Clicked", {
+                    Platform: "Linkedin"
+                  });
+                }}
               >
                 Share on LinkedIn
               </Button>

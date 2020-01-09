@@ -31,7 +31,6 @@ const getUserData = async (userUid, idToken) => {
 const Dashboard = () => {
   const [{ selectedAccount }] = useStateValue();
   const [userData, setUserData] = useState({});
-  const [overlayDescription, setOverlayDescription] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -41,51 +40,6 @@ const Dashboard = () => {
         global.analytics.page("Dashboard");
         user.getIdToken(true).then(async idToken => {
           const userInfo = await getUserData(user.uid, idToken);
-          if (
-            userInfo &&
-            userInfo.accounts &&
-            userInfo.accounts[selectedAccount.value].onboardingStatus ===
-              "Unassigned"
-          ) {
-            setOverlayDescription(
-              "Please stay tuned to learn more about the status of your project and your connection timeline! We will provide more details shortly, both here and by email -- and please feel free to always reach out with any questions at"
-            );
-          } else if (
-            userInfo &&
-            userInfo.accounts &&
-            userInfo.accounts[selectedAccount.value].onboardingStatus ===
-              "Project Live"
-          ) {
-            setOverlayDescription(
-              "Common Energy can connect you to our available project in your community in as little as 2-5 weeks. We’ll keep you posted on our progress along the way -- and please feel free to always reach out with any questions at"
-            );
-          } else if (
-            userInfo &&
-            userInfo.accounts &&
-            userInfo.accounts[selectedAccount.value].onboardingStatus ===
-              "No Project"
-          ) {
-            setOverlayDescription(
-              "Currently, all our projects in your area are filled. However, because of your interest, we’re able to work with a developer on a new project to bring more clean energy and savings to your community! Please stand-by for an update on new projects in a few weeks -- and feel free to reach out with any questions at"
-            );
-          } else if (
-            userInfo &&
-            userInfo.accounts &&
-            userInfo.accounts[selectedAccount.value].onboardingStatus ===
-              "Project Not Live"
-          ) {
-            setOverlayDescription(
-              "We’re excited to let you know that we have an available project in your area, but we are not ready to connect you, as it is not yet ready and active. However, we will make sure we update you as we take the project through to completion. Please know that as an early subscriber, you’ve taken an important step in making this project a success! Feel free to reach out with any questions at"
-            );
-          } else if (
-            userInfo &&
-            userInfo.accounts &&
-            userInfo.accounts[selectedAccount.value].onboardingStatus ===
-              "Meter Live"
-          ) {
-            setOverlayDescription(false);
-          }
-
           setUserData(userInfo);
           setIsLoading(false);
         });
@@ -98,7 +52,7 @@ const Dashboard = () => {
   }, [selectedAccount.value]);
 
   return (
-    <Main isLoading={isLoading}>
+    <Main isLoading={isLoading} popup={true}>
       <Head>
         <title>Common Energy - Home</title>
       </Head>
@@ -106,11 +60,7 @@ const Dashboard = () => {
         Welcome {userData && userData.firstName}
       </Text>
       <Text noMargin>This is your impact and savings dashboard!</Text>
-      <Section
-        columns="4"
-        disabled={overlayDescription}
-        overlayDescription={overlayDescription}
-      >
+      <Section columns="4">
         <span className="label">
           <Text bold noMargin style={{ textAlign: "center", color: "#a8a8ba" }}>
             Your Impact
@@ -251,7 +201,7 @@ const Dashboard = () => {
             Savings to Date
           </Text>
         </Panel>
-        <Panel small specialShadow center hasDecoration={!overlayDescription}>
+        <Panel small specialShadow center>
           <Container column>
             <Icon
               icon={
@@ -291,7 +241,7 @@ const Dashboard = () => {
                     prefix={"$"}
                   />
                 )) ||
-                "$0"}{" "}
+                "$1,000 - $2,000"}{" "}
             </Text>
           </Container>
           <Separator margin="10px auto 25px auto" small />
@@ -307,14 +257,13 @@ const Dashboard = () => {
               Help us bring more clean energy to your community!
             </Text>
             <Text style={{ marginBottom: "20px" }}>
-              You can receive <strong>free electricity for a year</strong> by
-              helping spread the word about Common Energy. Find out how with the
-              link below.
+              You can earn <strong>over $1,000</strong> by helping spread the
+              word about Common Energy. Find out how with the link below.
             </Text>
           </Container>
           <UsersInAreaMap />
-          <Link>
-            <a className="inner-link" href="/dashboard/referrals">
+          <Link href="/dashboard/referrals">
+            <a className="inner-link">
               <Button primary>Refer Friends To Common Energy</Button>
             </a>
           </Link>
