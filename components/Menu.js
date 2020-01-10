@@ -16,6 +16,7 @@ function MainMenu(props) {
   const [{ selectedAccount }, dispatch] = useStateValue();
 
   const signOut = props => {
+    localStorage.setItem("loggedIn", false);
     props.firebase.doSignOut().then(() => {
       router.push({
         pathname: "/"
