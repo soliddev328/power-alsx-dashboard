@@ -43,7 +43,7 @@ function EmailLogin(props) {
             : "Enter the email that you used when you signed up for Common Energy and we will send you an email with a secure login link."
         }
       >
-        {!emailSent && email && (
+        {!emailSent && (
           <Formik
             initialValues={{
               email: email
