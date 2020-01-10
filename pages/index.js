@@ -1,5 +1,5 @@
-import React from "react";
-import Router from "next/router";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { Formik, Form } from "formik";
 import axios from "axios";
 
@@ -15,35 +15,25 @@ import CONSTANTS from "../globals";
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
-class Index extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      error: {
-        code: false,
-        message: ""
-      }
-    };
-  }
+function Index(props) {
+  const router = useRouter();
+  const [error, setError] = useState();
+  const [isLoading, setIsLoading] = useState(true);
 
-  componentDidMount() {
-    this.props.firebase.doUpdateUser(user => {
-      if (!user?.isAnonymous) {
-        Router.push({
-          pathname: "/dashboard"
-        });
-      }
-    });
-  }
+  useEffect(() => {
+    if (JSON.parse(localStorage.getItem("loggedIn"))) {
+      router.push("/dashboard");
+    } else {
+      setIsLoading(false);
+    }
+  }, []);
 
-  autenticate(values) {
-    const { error } = this.state;
-
-    this.props.firebase
+  const autenticate = values => {
+    props.firebase
       .doSignInWithEmailAndPassword(values.emailAddress, values.password)
       .then(firebaseData => {
         if (!error.code) {
-          this.props.firebase.doGetCurrentUserIdToken(idToken => {
+          props.firebase.doGetCurrentUserIdToken(idToken => {
             axios
               .get(`${API}/v1/subscribers/${firebaseData.user.uid}`, {
                 headers: {
@@ -53,7 +43,8 @@ class Index extends React.PureComponent {
               .then(response => {
                 const user = response?.data?.data;
 
-                window.localStorage.setItem("leadId", user?.leadId);
+                localStorage.setItem("leadId", user?.leadId);
+                localStorage.setItem("loggedIn", true);
 
                 global.analytics.identify(user?.leadId, {
                   email: user?.email
@@ -92,39 +83,39 @@ class Index extends React.PureComponent {
                   );
                 }
 
-                const userStillNeedsToAddUtilityInfo = !user.milestones
-                  .utilityInfoCompleted;
+                const userStillNeedsToAddUtilityInfo = !user?.milestones
+                  ?.utilityInfoCompleted;
 
                 const userStillNeedstoAddBankInfo =
-                  (user.milestones.utilityInfoCompleted &&
-                    user.milestones.utilityLoginSuccessful) ||
-                  !user.milestones.bankInfoCompleted;
+                  (user?.milestones?.utilityInfoCompleted &&
+                    user?.milestones?.utilityLoginSuccessful) ||
+                  !user?.milestones?.bankInfoCompleted;
 
                 const userStillNeedsToAddAddressInfo =
-                  user.milestones.utilityInfoCompleted &&
-                  !user.milestones.addressInfoCompleted;
+                  user?.milestones?.utilityInfoCompleted &&
+                  !user?.milestones?.addressInfoCompleted;
 
                 // forward to the right page
-                if (user.signupCompleted) {
-                  Router.push({
+                if (user?.signupCompleted) {
+                  router.push({
                     pathname: "/dashboard"
                   });
                 } else if (userStillNeedsToAddUtilityInfo) {
-                  Router.push({
+                  router.push({
                     pathname: "/onboarding/step2",
                     query: {
                       onboardingNotFinished: true
                     }
                   });
                 } else if (userStillNeedsToAddAddressInfo) {
-                  Router.push({
+                  router.push({
                     pathname: "/onboarding/step4.2",
                     query: {
                       onboardingNotFinished: true
                     }
                   });
                 } else if (userStillNeedstoAddBankInfo) {
-                  Router.push({
+                  router.push({
                     pathname: "/onboarding/step7",
                     query: {
                       onboardingNotFinished: true
@@ -139,18 +130,12 @@ class Index extends React.PureComponent {
         }
       })
       .catch(error => {
-        this.setState({ error: { code: error.code, message: error.message } });
+        setError({ code: error.code, message: error.message });
       });
-  }
+  };
 
-  static getInitialProps({ query }) {
-    return { query };
-  }
-
-  render() {
-    const { error } = this.state;
-
-    return (
+  return (
+    !isLoading && (
       <main>
         <Header first />
         <SingleStep prefix="Enter your email address to sign in or create an account">
@@ -160,7 +145,7 @@ class Index extends React.PureComponent {
               password: ""
             }}
             onSubmit={values => {
-              this.autenticate(values);
+              autenticate(values);
             }}
           >
             {props => (
@@ -178,7 +163,7 @@ class Index extends React.PureComponent {
                   type="password"
                   required
                 />
-                <p className="error">{error.message}</p>
+                <p className="error">{error?.message}</p>
                 <Button
                   primary
                   disabled={
@@ -186,11 +171,9 @@ class Index extends React.PureComponent {
                     !!props.values.password !== true
                   }
                   onClick={() => {
-                    this.setState({
-                      error: {
-                        code: false,
-                        message: ""
-                      }
+                    setError({
+                      code: false,
+                      message: ""
                     });
                   }}
                 >
@@ -208,7 +191,7 @@ class Index extends React.PureComponent {
           <Button
             primary
             onClick={() => {
-              Router.push({
+              router.push({
                 pathname: "/onboarding/step1"
               });
             }}
@@ -236,8 +219,8 @@ class Index extends React.PureComponent {
           }
         `}</style>
       </main>
-    );
-  }
+    )
+  );
 }
 
 export default withFirebase(Index);
