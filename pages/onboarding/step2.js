@@ -85,18 +85,18 @@ class Step2 extends React.Component {
 
   renderState() {
     const { utility } = this.state;
-    const { state } = utility?.project;
+    const { state, name } = utility?.project;
 
     switch (state) {
       case "NY":
-        return <NY />;
+        return <NY project={name} />;
         break;
       case "MD":
-        return <MD />;
+        return <MD project={name} />;
         break;
 
       default:
-        return <NY />;
+        return <NY project={name} />;
         break;
     }
   }
