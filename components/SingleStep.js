@@ -1,5 +1,6 @@
 import React from "react";
 import Highlight from "./Highlight";
+import cn from "classnames";
 
 export default class SingleStep extends React.PureComponent {
   renderPrefix() {
@@ -27,9 +28,9 @@ export default class SingleStep extends React.PureComponent {
   }
 
   render() {
-    const { toast, prefix, title, suffix, image, children } = this.props;
+    const { toast, prefix, title, suffix, image, children, wide } = this.props;
     return (
-      <div className="content">
+      <div className={cn("content", { wide })}>
         <div className="heading">
           {toast && <p className="title">{toast}</p>}
           {prefix && this.renderPrefix()}
@@ -44,8 +45,13 @@ export default class SingleStep extends React.PureComponent {
         {children}
         <style jsx>{`
           .content {
-            max-width: 87%;
+            max-width: 100%;
             margin: 0 auto;
+          }
+          .content.wide {
+            margin-left: -20%;
+            margin-right: -20%;
+            max-width: initial;
           }
           p {
             font-size: 1rem;

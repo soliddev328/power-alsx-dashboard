@@ -5,6 +5,8 @@ import Header from "../../components/Header";
 import BulletItem from "../../components/BulletItem";
 import Progressbar from "../../components/Progressbar";
 import SingleStep from "../../components/SingleStep";
+import NY from "../../components/States/NY";
+import MD from "../../components/States/MD";
 import Button from "../../components/Button";
 import CONSTANTS from "../../globals";
 
@@ -63,65 +65,86 @@ class Step2 extends React.Component {
 
     return axios(`${API}/v1/utilities?${generatedParams}`)
       .then(response => {
-        if (response.data.data) {
-          const data = response.data.data[0];
-          this.setState({
-            utility: {
-              project: {
-                imageUrl:
-                  data.projects &&
-                  data.projects.length > 0 &&
-                  data.projects[0].imageUrl !== null
-                    ? data.projects[0].imageUrl
-                    : "/static/images/illustrations/t&c.png",
-                name: (data.projects && data.projects[0].displayName) || false,
-                completion:
-                  (data.projects && data.projects[0].completion) || false
-              },
-              billingMethod: storedBillingMethod
-            }
-          });
-        }
+        const data = response?.data?.data[0];
+        this.setState({
+          utility: {
+            project: {
+              imageUrl:
+                data?.projects[0]?.imageUrl ||
+                "/static/images/illustrations/t&c.png",
+              name: data?.projects[0]?.displayName || false,
+              state: data?.projects[0]?.state || false,
+              completion: data?.projects[0]?.completion || false
+            },
+            billingMethod: storedBillingMethod
+          }
+        });
       })
       .catch(error => console.log(error));
   }
 
+  renderState() {
+    const { utility } = this.state;
+    const { state } = utility?.project;
+
+    switch (state) {
+      case "NY":
+        return <NY />;
+        break;
+      case "MD":
+        return <MD />;
+        break;
+
+      default:
+        return <NY />;
+        break;
+    }
+  }
+
   render() {
     const { utility } = this.state;
-    const imageUrl = utility.project && utility.project.imageUrl;
-    const completion =
-      utility.project && utility.project.completion
-        ? utility.project.completion
-        : false;
+    const { imageUrl, completion, name, state } = utility?.project;
 
     return (
       <main>
         <Header />
         <SingleStep
-          prefix="Great news, we've got a clean energy project in your area! By signing up you will start receiving energy credits that lower your electricity cost."
-          title={
-            utility.project && utility.project.name ? utility.project.name : ""
-          }
+          title="Great news, we've got a clean energy project in your area!"
+          wide
         >
           <div className="content">
-            <figure>
-              <img src={imageUrl} alt="" />
-            </figure>
-            {completion && <Progressbar completion={completion} />}
-            <p>
-              Just answer a few quick questions about your utility account and
-              address to:
-            </p>
-            <div className="items">
-              <BulletItem
-                content="Save $10-20 per month on your electricity bill"
-                bulletIcon="dollar"
-              />
-              <BulletItem
-                content="Lower emissions and pollution in your community"
-                bulletIcon="co2"
-              />
-            </div>
+            <aside>
+              <figure>
+                <img src={imageUrl} alt="" />
+                <figcaption>
+                  {name}, {state}
+                </figcaption>
+                <div className="state-graphic">{this.renderState()}</div>
+              </figure>
+              {completion && <Progressbar completion={completion} />}
+            </aside>
+            <aside>
+              <h3>5 Reasons to Sign Up</h3>
+              <div className="items">
+                <BulletItem
+                  content="State program with guaranteed saving"
+                  bulletIcon="check"
+                />
+                <BulletItem
+                  content="Save $5-20 per month for up to 20 years"
+                  bulletIcon="check"
+                />
+                <BulletItem
+                  content="Lower pollution in your community"
+                  bulletIcon="check"
+                />
+                <BulletItem content="Free to enroll" bulletIcon="check" />
+                <BulletItem
+                  content="No impact on your electricity supply"
+                  bulletIcon="check"
+                />
+              </div>
+            </aside>
           </div>
           <Button
             primary
@@ -147,9 +170,23 @@ class Step2 extends React.Component {
             max-width: 700px;
             margin: 0 auto;
           }
+
           .content {
-            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            height: 375px;
+            margin: 50px 0;
           }
+
+          .content aside {
+            overflow: hidden;
+          }
+
+          .content aside:last-child {
+            padding: 40px;
+            background-color: #f3f3f4;
+          }
+
           .disclaimer {
             text-align: center;
             font-size: 0.8rem;
@@ -160,22 +197,36 @@ class Step2 extends React.Component {
             margin-top: 0;
           }
 
-          .content {
-            margin-bottom: 2rem;
-            min-height: 370px;
-          }
-
           .disclaimer {
             text-align: center;
           }
 
           figure {
-            max-width: 100vw;
+            max-width: 100%;
             height: 190px;
-            margin: 1.5rem -7% 0 -7%;
+            margin: 0;
             background-color: transparent;
-            overflow: hidden;
             display: flex;
+            position: relative;
+          }
+
+          figcaption {
+            position: absolute;
+            left: 40px;
+            bottom: 20px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.63;
+            letter-spacing: 0.5px;
+          }
+
+          .state-graphic {
+            position: absolute;
+            width: 150px;
+            right: 20px;
+            bottom: -20%;
+            z-index: 100;
           }
 
           img {
@@ -197,6 +248,16 @@ class Step2 extends React.Component {
           @keyframes fadeIn {
             to {
               opacity: 1;
+            }
+          }
+
+          @media (max-width: 1000px) {
+            .content {
+              display: grid;
+              grid-template-columns: 1fr;
+              height: auto;
+              max-width: 375px;
+              margin: 20px auto;
             }
           }
         `}</style>
