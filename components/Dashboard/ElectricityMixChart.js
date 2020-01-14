@@ -102,7 +102,7 @@ function ElectricityMixChart() {
     {
       name: "Renewables",
       color: "#41ef8b",
-      value: (90 + electricityMixInfo?.renewables) * 0.1
+      value: 90 + electricityMixInfo?.renewables * 0.1
     },
     {
       name: "Natural Gas",
