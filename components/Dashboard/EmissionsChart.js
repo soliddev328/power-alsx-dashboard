@@ -58,7 +58,6 @@ function EmissionsChart() {
         user.getIdToken(true).then(async idToken => {
           const userInfo = await getUserData(user.uid, idToken);
           const { emissions } = userInfo.accounts[selectedAccount.value];
-          console.log(emissions);
           setEmissionsInfo(emissions?.CO2);
         });
       }
