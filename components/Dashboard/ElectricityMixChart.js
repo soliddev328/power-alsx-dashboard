@@ -48,77 +48,76 @@ function ElectricityMixChart() {
       if (user) {
         user.getIdToken(true).then(async idToken => {
           const userInfo = await getUserData(user.uid, idToken);
-          setElectricityMixInfo(
-            userInfo.accounts[selectedAccount.value].electricityMix
-          );
+          const { electricityMix } = userInfo.accounts[selectedAccount.value];
+          setElectricityMixInfo(electricityMix);
         });
       }
     });
   }, [selectedAccount.value]);
 
-  const data01 = [
+  const oldData = [
     {
       name: "Coal",
       color: "#113a7a",
-      value: 400
+      value: electricityMixInfo?.coal
     },
     {
       name: "Nuclear",
       color: "#2479ff",
-      value: 300
+      value: electricityMixInfo?.nuclear
     },
     {
       name: "Renewables",
       color: "#41ef8b",
-      value: 300
+      value: electricityMixInfo?.renewables
     },
     {
       name: "Natural Gas",
       color: "#1259c8",
-      value: 200
+      value: electricityMixInfo?.gas
     },
     {
       name: "Hydro",
       color: "#87b5ff",
-      value: 278
+      value: electricityMixInfo?.hydro
     },
     {
       name: "Other",
       color: "#cde0ff",
-      value: 189
+      value: electricityMixInfo?.other
     }
   ];
 
-  const data02 = [
+  const newData = [
     {
       name: "Coal",
       color: "#113a7a",
-      value: 2400
+      value: electricityMixInfo?.coal * 0.1
     },
     {
       name: "Nuclear",
       color: "#2479ff",
-      value: 4567
+      value: electricityMixInfo?.nuclear * 0.1
     },
     {
       name: "Renewables",
       color: "#41ef8b",
-      value: 1398
+      value: (90 + electricityMixInfo?.renewables) * 0.1
     },
     {
       name: "Natural Gas",
       color: "#1259c8",
-      value: 9800
+      value: electricityMixInfo?.gas * 0.1
     },
     {
       name: "Hydro",
       color: "#87b5ff",
-      value: 3908
+      value: electricityMixInfo?.hydro * 0.1
     },
     {
       name: "Other",
       color: "#cde0ff",
-      value: 4800
+      value: electricityMixInfo?.other * 0.1
     }
   ];
 
@@ -129,17 +128,16 @@ function ElectricityMixChart() {
           <Text style={{ textAlign: "center" }}>Your Electricity Mix</Text>
           <PieChart width={180} height={180}>
             <Pie
-              data={data01}
+              data={oldData}
               dataKey="value"
               nameKey="name"
               cx="50%"
               cy="50%"
               innerRadius={50}
               outerRadius={70}
-              fill="#82ca9d"
             >
-              {data01.map((entry, index) => (
-                <Cell fill={entry.color} />
+              {oldData.map((entry, index) => (
+                <Cell fill={entry.color} key={`${index}-pie-item`} />
               ))}
             </Pie>
           </PieChart>
@@ -153,17 +151,16 @@ function ElectricityMixChart() {
           </Text>
           <PieChart width={180} height={180}>
             <Pie
-              data={data02}
+              data={newData}
               dataKey="value"
               nameKey="name"
               cx="50%"
               cy="50%"
               innerRadius={50}
               outerRadius={70}
-              fill="#82ca9d"
             >
-              {data02.map((entry, index) => (
-                <Cell fill={entry.color} />
+              {newData.map((entry, index) => (
+                <Cell fill={entry.color} key={`${index}-pie-item`} />
               ))}
             </Pie>
           </PieChart>
