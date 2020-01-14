@@ -21,9 +21,10 @@ const getUserData = async (userUid, idToken) => {
 
 const customLabel = ({ x, y, value }) => (
   <>
+    {console.log("value", value)}
     <text
       x="50%"
-      y={value >= 150 ? "50%" : "100%"}
+      y={value >= 29500 ? "50%" : "101.5%"}
       dy={-10}
       fill="#fff"
       fontSize={18}
@@ -35,7 +36,7 @@ const customLabel = ({ x, y, value }) => (
     </text>
     <text
       x="62%"
-      y={value >= 150 ? "50.5%" : "100%"}
+      y={value >= 29500 ? "50.5%" : "102.5%"}
       dy={-10}
       fill="#fff"
       fontSize={13}
