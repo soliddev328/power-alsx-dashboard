@@ -4,7 +4,6 @@ import Router from "next/router";
 import Head from "next/head";
 import Link from "next/link";
 import NumberFormat from "react-number-format";
-import { BarChart, Bar, CartesianGrid, YAxis } from "recharts";
 import { useStateValue } from "../../state";
 import Main from "../../components/Main";
 import Container from "../../components/Container";
@@ -15,6 +14,8 @@ import Separator from "../../components/Separator";
 import Icon from "../../components/Icon";
 import Button from "../../components/Button";
 import UsersInAreaMap from "../../components/Dashboard/UsersInAreaMap";
+import ElectricityMixChart from "../../components/Dashboard/ElectricityMixChart";
+import EmissionsChart from "../../components/Dashboard/EmissionsChart";
 import CONSTANTS from "../../globals";
 
 const { API } =
@@ -256,80 +257,10 @@ const Dashboard = () => {
       </Text>
       <Section columns="2">
         <Panel>
-          <Section columns="2" noMargin>
-            <aside>
-              <Text style={{ textAlign: "center" }}>Your Electricity Mix</Text>
-              <p>Chart A</p>
-            </aside>
-            <aside>
-              <Text style={{ textAlign: "center" }}>
-                Your Electricity Mix with Common Energy
-              </Text>
-              <p>Chart B</p>
-            </aside>
-          </Section>
-          <Section noMargin columns="3">
-            <p>A</p>
-            <p>B</p>
-            <p>C</p>
-            <p>D</p>
-            <p>E</p>
-            <p>F</p>
-          </Section>
+          <ElectricityMixChart />
         </Panel>
         <Panel>
-          <Section columns="2" noMargin>
-            <aside>
-              <Text style={{ textAlign: "center" }}>
-                Your Utility’s Emissions
-              </Text>
-              <BarChart
-                width={90}
-                height={200}
-                data={[
-                  {
-                    name: "Page A",
-                    co2: 295,
-                    amt: 300
-                  }
-                ]}
-              >
-                <CartesianGrid vertical={false} />
-                <YAxis
-                  dataKey="amt"
-                  interval={0}
-                  tick={false}
-                  tickLine={false}
-                />
-                <Bar dataKey="co2" fill="#113a7a" />
-              </BarChart>
-            </aside>
-            <aside>
-              <Text style={{ textAlign: "center" }}>
-                Your Emissions with Common Energy
-              </Text>
-              <BarChart
-                width={90}
-                height={200}
-                data={[
-                  {
-                    name: "Page A",
-                    co2: 30,
-                    amt: 300
-                  }
-                ]}
-              >
-                <CartesianGrid vertical={false} />
-                <YAxis
-                  dataKey="amt"
-                  interval={0}
-                  tick={false}
-                  tickLine={false}
-                />
-                <Bar dataKey="co2" fill="#113a7a" width={85} />
-              </BarChart>
-            </aside>
-          </Section>
+          <EmissionsChart />
         </Panel>
       </Section>
       <Section>
@@ -358,6 +289,18 @@ const Dashboard = () => {
 
         .inner-link {
           text-decoration: none;
+        }
+
+        @keyframes expandWidth {
+          from {
+            width: 0;
+          }
+        }
+
+        @keyframes fadeIn {
+          to {
+            opacity: 1;
+          }
         }
 
         @media (max-width: 700px) {
