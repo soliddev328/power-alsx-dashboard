@@ -44,7 +44,7 @@ const labelListCustom = ({ x, y, value }) => (
     fontFamily="Poppins"
     textAnchor="middle"
   >
-    {value} lbs/MWh
+    {value} lbs/Wh
   </text>
 );
 
@@ -58,7 +58,8 @@ function EmissionsChart() {
         user.getIdToken(true).then(async idToken => {
           const userInfo = await getUserData(user.uid, idToken);
           const { emissions } = userInfo.accounts[selectedAccount.value];
-          setEmissionsInfo(emissions?.co2 * 0.1);
+          console.log(emissions);
+          setEmissionsInfo(emissions?.CO2);
         });
       }
     });
@@ -67,16 +68,16 @@ function EmissionsChart() {
   const data0 = [
     {
       name: "Utility's Emissions",
-      co2: 295,
-      amt: 300
+      co2: emissionsInfo,
+      amt: 300000
     }
   ];
 
   const data1 = [
     {
       name: "Your emissions",
-      co2: 30,
-      amt: 300
+      co2: emissionsInfo * 0.1,
+      amt: 300000
     }
   ];
 
