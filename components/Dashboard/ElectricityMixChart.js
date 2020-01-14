@@ -4,6 +4,7 @@ import Text from "../Text";
 import { useStateValue } from "../../state";
 import Section from "../Section";
 import axios from "axios";
+import ArrowIcon from "../Icons/ArrowIcon";
 import CONSTANTS from "../../globals";
 
 const { API } =
@@ -142,6 +143,9 @@ function ElectricityMixChart() {
               ))}
             </Pie>
           </PieChart>
+          <div className="arrow">
+            <ArrowIcon color="#2479ff" width="27" height="26" />
+          </div>
         </aside>
         <aside>
           <Text style={{ textAlign: "center" }}>
@@ -180,9 +184,17 @@ function ElectricityMixChart() {
           display: grid;
           grid-template-rows: 70px 1fr;
           justify-items: center;
+          position: relative;
         }
+
         .references {
           margin-top: 40px;
+        }
+
+        .arrow {
+          position: absolute;
+          right: -18%;
+          top: 60%;
         }
       `}</style>
     </div>
