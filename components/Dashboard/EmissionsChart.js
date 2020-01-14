@@ -20,18 +20,32 @@ const getUserData = async (userUid, idToken) => {
 };
 
 const customLabel = ({ x, y, value }) => (
-  <text
-    x="50%"
-    y={value >= 150 ? "50%" : "100%"}
-    dy={-10}
-    fill="#fff"
-    fontSize={15}
-    opacity={0.9}
-    fontFamily="Poppins"
-    textAnchor="middle"
-  >
-    CO2
-  </text>
+  <>
+    <text
+      x="50%"
+      y={value >= 150 ? "50%" : "100%"}
+      dy={-10}
+      fill="#fff"
+      fontSize={18}
+      opacity={0.9}
+      fontFamily="Poppins"
+      textAnchor="middle"
+    >
+      CO
+    </text>
+    <text
+      x="62%"
+      y={value >= 150 ? "50.5%" : "100%"}
+      dy={-10}
+      fill="#fff"
+      fontSize={13}
+      opacity={0.9}
+      fontFamily="Poppins"
+      textAnchor="middle"
+    >
+      2
+    </text>
+  </>
 );
 
 const labelListCustom = ({ x, y, value }) => (
@@ -40,7 +54,7 @@ const labelListCustom = ({ x, y, value }) => (
     y={y}
     dy={-10}
     fill="#555e80"
-    fontSize={12}
+    fontSize={14}
     fontFamily="Poppins"
     textAnchor="middle"
   >
