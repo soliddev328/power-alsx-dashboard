@@ -56,7 +56,7 @@ export default function Progressbar({ completion }) {
 
         progress::-webkit-progress-value {
           border-radius: 8px;
-          background: #fff;
+          background: #2479ff;
         }
 
         .completion {
