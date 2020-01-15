@@ -19,36 +19,6 @@ const getUserData = async (userUid, idToken) => {
   return response && response.data && response.data.data;
 };
 
-const customLabel = ({ x, y, value }) => (
-  <>
-    {console.log("value", value)}
-    <text
-      x="50%"
-      y={value >= 29500 ? "50%" : "101.5%"}
-      dy={-10}
-      fill="#fff"
-      fontSize={18}
-      opacity={0.9}
-      fontFamily="Poppins"
-      textAnchor="middle"
-    >
-      CO
-    </text>
-    <text
-      x="62%"
-      y={value >= 29500 ? "50.5%" : "102.5%"}
-      dy={-10}
-      fill="#fff"
-      fontSize={13}
-      opacity={0.9}
-      fontFamily="Poppins"
-      textAnchor="middle"
-    >
-      2
-    </text>
-  </>
-);
-
 const labelListCustom = ({ x, y, value }) => (
   <text
     x="50%"
@@ -59,13 +29,43 @@ const labelListCustom = ({ x, y, value }) => (
     fontFamily="Poppins"
     textAnchor="middle"
   >
-    {value} lbs/Wh
+    {value} lbs/MWh
   </text>
 );
 
 function EmissionsChart() {
   const [emissionsInfo, setEmissionsInfo] = useState();
+  const [capAmount, setCapAmount] = useState();
   const [{ selectedAccount }] = useStateValue();
+
+  const customLabel = ({ x, y, value }) => (
+    <>
+      <text
+        x="50%"
+        y={value >= capAmount / 2 ? "50%" : "101.5%"}
+        dy={-10}
+        fill="#fff"
+        fontSize={18}
+        opacity={0.9}
+        fontFamily="Poppins"
+        textAnchor="middle"
+      >
+        CO
+      </text>
+      <text
+        x="62%"
+        y={value >= capAmount / 2 ? "50.5%" : "102.5%"}
+        dy={-10}
+        fill="#fff"
+        fontSize={13}
+        opacity={0.9}
+        fontFamily="Poppins"
+        textAnchor="middle"
+      >
+        2
+      </text>
+    </>
+  );
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
@@ -74,24 +74,25 @@ function EmissionsChart() {
           const userInfo = await getUserData(user.uid, idToken);
           const { emissions } = userInfo.accounts[selectedAccount.value];
           setEmissionsInfo(emissions?.CO2);
+          setCapAmount(emissions?.CO2 * 1.01);
         });
       }
     });
   }, [selectedAccount.value]);
 
-  const data0 = [
+  const oldData = [
     {
       name: "Utility's Emissions",
       co2: emissionsInfo,
-      amt: 300000
+      amt: capAmount
     }
   ];
 
-  const data1 = [
+  const newData = [
     {
       name: "Your emissions",
       co2: emissionsInfo * 0.1,
-      amt: 300000
+      amt: capAmount
     }
   ];
 
@@ -104,7 +105,7 @@ function EmissionsChart() {
             margin={{ top: 35, right: 0, bottom: 0, left: 0 }}
             width={150}
             height={280}
-            data={data0}
+            data={oldData}
           >
             <CartesianGrid vertical={false} />
             <YAxis dataKey="amt" hide />
@@ -128,7 +129,7 @@ function EmissionsChart() {
             margin={{ top: 35, right: 0, bottom: 0, left: 0 }}
             width={150}
             height={280}
-            data={data1}
+            data={newData}
           >
             <CartesianGrid vertical={false} />
             <YAxis dataKey="amt" hide />
