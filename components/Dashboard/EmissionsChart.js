@@ -38,7 +38,7 @@ function EmissionsChart() {
   const [capAmount, setCapAmount] = useState();
   const [{ selectedAccount }] = useStateValue();
 
-  const customLabel = ({ x, y, value }) => (
+  const customLabel = ({ value }) => (
     <>
       <text
         x="50%"
@@ -74,7 +74,7 @@ function EmissionsChart() {
           const userInfo = await getUserData(user.uid, idToken);
           const { emissions } = userInfo.accounts[selectedAccount.value];
           setEmissionsInfo(emissions?.CO2);
-          setCapAmount(emissions?.CO2 * 1.01);
+          setCapAmount(Math.ceil((emissions?.CO2 * 1.01) / 100) * 100);
         });
       }
     });
