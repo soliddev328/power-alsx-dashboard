@@ -74,7 +74,7 @@ function EmissionsChart() {
           const userInfo = await getUserData(user.uid, idToken);
           const { emissions } = userInfo.accounts[selectedAccount.value];
           setEmissionsInfo(emissions?.CO2);
-          setCapAmount(Math.ceil((emissions?.CO2 * 1.01) / 100) * 100);
+          setCapAmount(emissions?.CO2 * 1.01);
         });
       }
     });
@@ -91,7 +91,7 @@ function EmissionsChart() {
   const newData = [
     {
       name: "Your emissions",
-      co2: emissionsInfo * 0.1,
+      co2: Math.round(emissionsInfo * 0.1),
       amt: capAmount
     }
   ];
