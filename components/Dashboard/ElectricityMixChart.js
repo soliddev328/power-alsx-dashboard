@@ -125,7 +125,7 @@ function ElectricityMixChart() {
     <div className="wrapper">
       <Section columns="2" noMargin>
         <aside>
-          <Text style={{ textAlign: "center" }}>Your Electricity Mix</Text>
+          <Text style={{ textAlign: "center" }}>Utility's Electricity Mix</Text>
           <PieChart width={180} height={180}>
             <Pie
               data={oldData}
