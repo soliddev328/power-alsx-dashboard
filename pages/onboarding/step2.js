@@ -2,6 +2,7 @@ import React from "react";
 import Router from "next/router";
 import axios from "axios";
 import Header from "../../components/Header";
+import Text from "../../components/Text";
 import BulletItem from "../../components/BulletItem";
 import Progressbar from "../../components/Progressbar";
 import SingleStep from "../../components/SingleStep";
@@ -104,25 +105,48 @@ class Step2 extends React.Component {
   render() {
     const { utility } = this.state;
     const { imageUrl, completion, name, state } = utility?.project;
+    const projectAvailable = !!utility?.project?.name;
 
     return (
       <main>
         <Header />
         <SingleStep
-          title="Great news, we've got a clean energy project in your area!"
+          title={
+            projectAvailable
+              ? "Great news, we've got a clean energy project in your area!"
+              : "Great news, we're building a project in your area!"
+          }
           wide
         >
           <div className="content">
-            <aside>
-              <figure>
-                <img src={imageUrl} alt="" />
-                <figcaption>
-                  {name}, {state}
-                </figcaption>
-                <div className="state-graphic">{this.renderState()}</div>
-              </figure>
-              {completion && <Progressbar completion={completion} />}
-            </aside>
+            {projectAvailable ? (
+              <aside>
+                <figure>
+                  <img src={imageUrl} alt="" />
+                  <figcaption>
+                    {name}, {state}
+                  </figcaption>
+                  <div className="state-graphic">{this.renderState()}</div>
+                </figure>
+                {completion && <Progressbar completion={completion} />}
+              </aside>
+            ) : (
+              <aside className="no-project">
+                <figure>
+                  <img src={imageUrl} alt="" />
+                  <div className="state-graphic">{this.renderState()}</div>
+                </figure>
+                <Text
+                  style={{
+                    margin: "75px 20px 0 20px",
+                    fontSize: "14px",
+                    textAlign: "center"
+                  }}
+                >
+                  Bring more clean energy to your community and save
+                </Text>
+              </aside>
+            )}
             <aside>
               <h3>5 Reasons to Sign Up</h3>
               <div className="items">
@@ -180,6 +204,22 @@ class Step2 extends React.Component {
 
           .content aside {
             overflow: hidden;
+          }
+
+          .content aside.no-project {
+            position: relative;
+            background-color: #fff;
+          }
+
+          .content aside.no-project figure:before {
+            content: "";
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.7);
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
           }
 
           .content aside:last-child {
