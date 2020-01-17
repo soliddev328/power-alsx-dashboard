@@ -299,6 +299,9 @@ class Step2 extends React.Component {
               max-width: 375px;
               margin: 20px auto;
             }
+            .content aside:last-child {
+              padding: 30px;
+            }
           }
         `}</style>
       </main>

@@ -77,6 +77,13 @@ export default class SingleStep extends React.PureComponent {
           img {
             max-width: 65%;
           }
+
+          @media (max-width: 1000px) {
+            .content.wide {
+              max-width: 90%;
+              margin: 0 auto;
+            }
+          }
         `}</style>
         <style jsx global>{`
           p.prefix,
