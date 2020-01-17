@@ -96,6 +96,8 @@ export default function Progressbar({ completion }) {
         @media (max-width: 1000px) {
           .wrapper {
             height: 150px;
+            padding: 0 25px;
+            padding-top: 30px;
           }
         }
       `}</style>
