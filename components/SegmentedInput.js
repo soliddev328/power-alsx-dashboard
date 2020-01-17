@@ -101,28 +101,14 @@ export default function SegmentedInput({
   return (
     <div className="segmented-input-wrapper">
       {referral ? (
-        <>
-          <input
-            type="text"
-            htmlFor="segmented-field"
-            value={
-              referral
-                ? `https://www.commonenergy.us/referrals?advocate=${userName}`
-                : ""
-            }
-            readOnly
-            disabled
-            className={cn({ "referral has-border": hasBorder })}
-          />
-          <label htmlFor="segmented-field">{inputLabel}</label>
-          <Button
-            maxWidth="170px"
-            primary
-            onClick={referral ? copyLink : onClick}
-          >
-            {copied ? "Copied!" : buttonText}
-          </Button>
-        </>
+        <Button
+          maxWidth="150px"
+          style={{ borderRadius: "5px" }}
+          primary
+          onClick={copyLink}
+        >
+          {copied ? "Copied!" : buttonText}
+        </Button>
       ) : (
         <Formik
           initialValues={{
