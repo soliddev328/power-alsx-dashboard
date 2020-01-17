@@ -25,7 +25,7 @@ const labelListCustom = ({ x, y, value }) => (
     y={y}
     dy={-10}
     fill="#555e80"
-    fontSize={14}
+    fontSize={17}
     fontFamily="Poppins"
     textAnchor="middle"
   >
@@ -100,7 +100,7 @@ function EmissionsChart() {
     <div className="wrapper">
       <Section columns="2" noMargin>
         <aside>
-          <Text style={{ textAlign: "center" }}>Your Utility’s Emissions</Text>
+          <Text style={{ textAlign: "center" }}>Utility’s Emissions</Text>
           <BarChart
             margin={{ top: 35, right: 0, bottom: 0, left: 0 }}
             width={150}
