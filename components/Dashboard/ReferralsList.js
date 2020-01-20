@@ -53,8 +53,6 @@ export default function ReferralsList() {
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        global.analytics.page("Referrals");
-
         user.getIdToken(true).then(async idToken => {
           const userInfo = await getUserData(user.uid, idToken);
           if (userInfo) {
