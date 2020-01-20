@@ -102,8 +102,11 @@ export default function SegmentedInput({
     <div className="segmented-input-wrapper">
       {referral ? (
         <Button
-          maxWidth="150px"
-          style={{ borderRadius: "5px" }}
+          style={{
+            borderRadius: "5px",
+            margin: "3em auto",
+            marginBottom: "1em"
+          }}
           primary
           onClick={copyLink}
         >
