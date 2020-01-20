@@ -82,7 +82,7 @@ export default function ReferralsList() {
           return (
             <li
               key={`referral-${index}`}
-              className={cn({ active: item.status === "Lead Created" })}
+              className={cn({ active: item.status === "Enrolled" })}
             >
               <div className="status-name">
                 {item.name ? (
@@ -94,6 +94,11 @@ export default function ReferralsList() {
                   </>
                 ) : (
                   <Text noMargin>{item.email}</Text>
+                )}
+                {item.status === "Lead Created" && (
+                  <Text small style={{ marginLeft: "10px" }}>
+                    (has not signed up)
+                  </Text>
                 )}
               </div>
               <div className="status-indicator">
