@@ -76,12 +76,6 @@ export default function Referrals() {
       <Text h2 hasDecoration>
         Your Referrals
       </Text>
-      <Text noMargin>
-        Common Energy’s referral program enables you increase your impact and
-        your savings. When you refer a friend, both you and they will receive a{" "}
-        <b>$50 gift card.</b> That's a combined $100 for spreading the word.
-        <b> Refer 10 people and receive $1,000!</b>
-      </Text>
       <Section columns="4">
         <Panel small specialShadow center>
           <Container column>
@@ -174,8 +168,10 @@ export default function Referrals() {
       </Section>
       <Text h2>Invite Friends and Save Even More</Text>
       <Text noMargin>
-        Spreading the word about Common Energy is easy! Use the links below to
-        email your friends and family and share on social media.
+        Common Energy’s referral program enables you increase your impact and
+        your savings. When you refer a friend, both you and they will receive a{" "}
+        <b>$50 gift card.</b> That's a combined $100 for spreading the word.
+        <b> Refer 10 people and receive $1,000!</b>
       </Text>
       <Section>
         <Panel>
