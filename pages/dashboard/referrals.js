@@ -6,46 +6,15 @@ import Main from "../../components/Main";
 import Container from "../../components/Container";
 import Section from "../../components/Section";
 import Panel from "../../components/Panel";
-import Button from "../../components/Button";
 import Separator from "../../components/Separator";
 import Text from "../../components/Text";
-import Image from "../../components/Image";
 import Icon from "../../components/Icon";
 import ReferralsTable from "../../components/Dashboard/ReferralsTable";
-import SegmentedInput from "../../components/SegmentedInput";
-import UsersInAreaMap from "../../components/Dashboard/UsersInAreaMap";
+import Sharing from "../../components/Referrals/Sharing";
 import CONSTANTS from "../../globals";
 
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
-
-const FacebookShare = username => {
-  // FB.ui({
-  //   method: "share",
-  //   href: "https://www.commonenergy.us"
-  // });
-  window.open(
-    `https://www.facebook.com/sharer/sharer.php?u=https%3A//www.commonenergy.us/referrals?advocate=${username}`,
-    "_blank",
-    "toolbar=yes,scrollbars=yes,resizable=yes,width=800,height=600"
-  );
-};
-
-const TwitterShare = username => {
-  window.open(
-    `https://twitter.com/intent/tweet?url=https%3A%2F%2Fwww.commonenergy.us%2Freferrals?advocate=${username}`,
-    "_blank",
-    "toolbar=yes,scrollbars=yes,resizable=yes,width=800,height=600"
-  );
-};
-
-const LinkedinShare = username => {
-  window.open(
-    `https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fwww.commonenergy.us%2Freferrals?advocate=${username}`,
-    "_blank",
-    "toolbar=yes,scrollbars=yes,resizable=yes,width=800,height=600"
-  );
-};
 
 const getUserData = async (userUid, idToken) => {
   const { data } = await axios.get(`${API}/v1/subscribers/${userUid}`, {
@@ -68,23 +37,8 @@ const getReferralsData = async (username, idToken) => {
   return data && data.data;
 };
 
-const getReferralsDataDetails = async (username, idToken) => {
-  const { data } = await axios.get(
-    `${API}/v1/subscribers/referrals/details/${username}`,
-    {
-      headers: {
-        Authorization: idToken
-      }
-    }
-  );
-
-  return data && data.data && data.data[0];
-};
-
 export default function Referrals() {
-  const [userData, setUserData] = useState({});
   const [referralsData, setReferralsData] = useState({});
-  const [referralsDetails, setReferralsDetails] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -95,8 +49,6 @@ export default function Referrals() {
         user.getIdToken(true).then(async idToken => {
           const userInfo = await getUserData(user.uid, idToken);
           if (userInfo) {
-            setUserData(userInfo);
-
             const referralsInfo = await getReferralsData(
               userInfo.username,
               idToken
@@ -105,13 +57,6 @@ export default function Referrals() {
             referralsInfo
               ? setReferralsData(referralsInfo[0])
               : setReferralsData({});
-
-            const referralsInfoDetails = await getReferralsDataDetails(
-              userInfo.username,
-              idToken
-            );
-
-            setReferralsDetails(referralsInfoDetails);
 
             setIsLoading(false);
           }
@@ -235,53 +180,9 @@ export default function Referrals() {
       </Text>
       <Section>
         <Panel>
-          <Container>
-            <SegmentedInput
-              hasBorder
-              inputLabel="Enter Your Friends' Email Addresses Here"
-              buttonText="send"
-            />
-            <Button
-              maxWidth="65px"
-              style={{
-                height: "50px"
-              }}
-              secondary
-              transparent
-              share="facebook"
-              onClick={() => {
-                FacebookShare(userData.username);
-                global.analytics.track("Referral Link Clicked", {
-                  Platform: "Facebook"
-                });
-              }}
-            />
-            <Button
-              maxWidth="65px"
-              style={{
-                height: "50px"
-              }}
-              secondary
-              transparent
-              share="twitter"
-              onClick={() => {
-                TwitterShare(userData.username);
-                global.analytics.track("Referral Link Clicked", {
-                  Platform: "Twitter"
-                });
-              }}
-            />
-            <SegmentedInput
-              buttonText="Copy Referral Link"
-              referral
-              hasBorder
-            />
-          </Container>
+          <Sharing />
         </Panel>
       </Section>
-      {referralsDetails && (
-        <ReferralsTable data={referralsDetails}></ReferralsTable>
-      )}
     </Main>
   );
 }
