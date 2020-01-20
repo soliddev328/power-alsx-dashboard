@@ -17,16 +17,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@babel/polyfill": "^7.8.0",
+    "@babel/polyfill": "^7.8.3",
     "@segment/snippet": "^4.4.0",
     "axios": "^0.19.1",
-    "babel-plugin-emotion": "^10.0.27",
     "classnames": "^2.2.6",
     "copy-to-clipboard": "^3.2.0",
-    "formik": "^2.1.1",
+    "formik": "^2.1.2",
     "google-map-react": "^1.1.5",
     "js-cookie": "^2.2.1",
-    "next": "^9.1.7",
+    "next": "^9.2.0",
     "query-string": "^6.10.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
@@ -41,7 +40,7 @@
     "zippo": "^1.0.1"
   },
   "devDependencies": {
-    "lint-staged": "^9.5.0",
+    "lint-staged": "^10.0.0",
     "pre-commit": "1.2.2",
     "prettier": "^1.19.1"
   },
