@@ -8,6 +8,7 @@ import DiscountIcon from "./Icons/DiscountIcon";
 import CalendarIcon from "./Icons/CalendarIcon";
 import PlantIcon from "./Icons/PlantIcon";
 import Co2Icon from "./Icons/Co2Icon";
+import Check from "./Icons/Check";
 
 const BulletIcon = bulletIcon => {
   if (bulletIcon === "cross") {
@@ -30,6 +31,8 @@ const BulletIcon = bulletIcon => {
     return <LocationIcon />;
   } else if (bulletIcon === "plant") {
     return <PlantIcon />;
+  } else if (bulletIcon === "check") {
+    return <Check />;
   }
 };
 export default function BulletItem({ bulletIcon, content }) {
@@ -40,10 +43,10 @@ export default function BulletItem({ bulletIcon, content }) {
       <style jsx>{`
         .wrapper {
           display: grid;
-          grid-template-columns: 1fr 5fr;
+          grid-template-columns: 30px 5fr;
           align-items: center;
           margin: 0;
-          margin-bottom: 5px;
+          margin-bottom: 15px;
         }
 
         .wrapper .icon {
@@ -54,12 +57,14 @@ export default function BulletItem({ bulletIcon, content }) {
 
         p {
           display: inline;
-          color: #161621;
-          font-size: 0.8rem;
-          font-weight: 800;
           margin: 0;
           margin-left: 1.5em;
           opacity: 1;
+          font-size: 16px;
+          font-weight: normal;
+          line-height: 1.63;
+          letter-spacing: 0.5px;
+          color: #555e80;
         }
       `}</style>
     </div>
