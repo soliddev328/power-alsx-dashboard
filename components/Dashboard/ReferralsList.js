@@ -94,9 +94,7 @@ export default function ReferralsList() {
                   <Text noMargin>{item.email}</Text>
                 )}
                 {item.status === "Lead Created" && (
-                  <Text small style={{ marginLeft: "10px" }}>
-                    (has not signed up)
-                  </Text>
+                  <Text small>(has not signed up)</Text>
                 )}
               </div>
               <div className="status-indicator">
@@ -155,6 +153,11 @@ export default function ReferralsList() {
             top: 50%;
             border-radius: 8px;
             transform: translate(-50%, -50%);
+          }
+
+          .status-name {
+            display: flex;
+            flex-direction: column;
           }
         `}</style>
       </ul>
