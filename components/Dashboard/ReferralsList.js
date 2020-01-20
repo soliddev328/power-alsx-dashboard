@@ -84,7 +84,18 @@ export default function ReferralsList() {
               key={`referral-${index}`}
               className={cn({ active: item.status === "Lead Created" })}
             >
-              <Text noMargin>{item.email}</Text>
+              <div className="status-name">
+                {item.name ? (
+                  <>
+                    <Text noMargin>{item.name || item.email}</Text>
+                    <Text noMargin small>
+                      {item.email}
+                    </Text>
+                  </>
+                ) : (
+                  <Text noMargin>{item.email}</Text>
+                )}
+              </div>
               <div className="status-indicator">
                 <Text noMargin>$50</Text>
                 <div className="status" />
