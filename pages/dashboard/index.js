@@ -14,6 +14,8 @@ import Separator from "../../components/Separator";
 import Icon from "../../components/Icon";
 import Button from "../../components/Button";
 import UsersInAreaMap from "../../components/Dashboard/UsersInAreaMap";
+import ElectricityMixChart from "../../components/Dashboard/ElectricityMixChart";
+import EmissionsChart from "../../components/Dashboard/EmissionsChart";
 import CONSTANTS from "../../globals";
 
 const { API } =
@@ -57,7 +59,7 @@ const Dashboard = () => {
         <title>Common Energy - Home</title>
       </Head>
       <Text h2 hasDecoration>
-        Welcome {userData && userData.firstName}
+        Welcome {userData?.firstName}
       </Text>
       <Text noMargin>This is your impact and savings dashboard!</Text>
       <Section columns="4">
@@ -250,6 +252,17 @@ const Dashboard = () => {
           </Text>
         </Panel>
       </Section>
+      <Text h2 bold noMargin>
+        Your Electricity and Impact
+      </Text>
+      <Section columns="2">
+        <Panel>
+          <ElectricityMixChart />
+        </Panel>
+        <Panel>
+          <EmissionsChart />
+        </Panel>
+      </Section>
       <Section>
         <Panel>
           <Container column alignLeft>
@@ -276,6 +289,18 @@ const Dashboard = () => {
 
         .inner-link {
           text-decoration: none;
+        }
+
+        @keyframes expandWidth {
+          from {
+            width: 0;
+          }
+        }
+
+        @keyframes fadeIn {
+          to {
+            opacity: 1;
+          }
         }
 
         @media (max-width: 700px) {
