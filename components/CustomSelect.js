@@ -84,7 +84,7 @@ export default class CustomSelect extends React.Component {
               label: item
             };
             // hack since Richard asked for this to be done in the next hour
-            if (item == "ConEd" || item == "ORU" || item == "Central Hudson") utilityInfo.paperOnly = true;
+            if (item == "ConEd" || item == "ORU") utilityInfo.paperOnly = true;
             newOptions.push(utilityInfo);
           });
         } else {
