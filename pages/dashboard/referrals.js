@@ -9,7 +9,6 @@ import Panel from "../../components/Panel";
 import Separator from "../../components/Separator";
 import Text from "../../components/Text";
 import Icon from "../../components/Icon";
-import ReferralsTable from "../../components/Dashboard/ReferralsTable";
 import Sharing from "../../components/Referrals/Sharing";
 import CONSTANTS from "../../globals";
 
