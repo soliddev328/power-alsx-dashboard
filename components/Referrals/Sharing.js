@@ -1,6 +1,12 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
 import Button from "../../components/Button";
 import SegmentedInput from "../../components/SegmentedInput";
 import ReferralsList from "../../components/Dashboard/ReferralsList";
+import CONSTANTS from "../../globals";
+
+const { API } =
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 const FacebookShare = username => {
   window.open(
@@ -18,7 +24,31 @@ const TwitterShare = username => {
   );
 };
 
+const getUserData = async (userUid, idToken) => {
+  const { data } = await axios.get(`${API}/v1/subscribers/${userUid}`, {
+    headers: {
+      Authorization: idToken
+    }
+  });
+  return data && data.data;
+};
+
 function Sharing() {
+  const [userData, setUserData] = useState(true);
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        user.getIdToken(true).then(async idToken => {
+          const userInfo = await getUserData(user.uid, idToken);
+          if (userInfo) {
+            setUserData(userInfo);
+          }
+        });
+      }
+    });
+  }, []);
+
   return (
     <div className="sharing">
       <div className="sharing-actions">
