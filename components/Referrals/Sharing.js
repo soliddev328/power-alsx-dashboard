@@ -53,11 +53,7 @@ function Sharing() {
     <div className="sharing">
       <div className="sharing-actions">
         <div className="email">
-          <SegmentedInput
-            hasBorder
-            inputLabel="Enter Your Friends' Email Addresses Here"
-            buttonText="send"
-          />
+          <SegmentedInput hasBorder inputLabel="" buttonText="send" />
         </div>
         <div className="social">
           <Button
