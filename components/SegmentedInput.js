@@ -104,8 +104,7 @@ export default function SegmentedInput({
         <Button
           style={{
             borderRadius: "5px",
-            margin: "3em auto",
-            marginBottom: "1em"
+            margin: 0
           }}
           primary
           onClick={copyLink}
@@ -150,9 +149,9 @@ export default function SegmentedInput({
       <style jsx global>{`
         .segmented-input-wrapper {
           display: flex;
-          align-items: center;
+          align-items: flex-end;
           position: relative;
-          height: 3.75rem;
+          height: 5.75rem;
           width: 100%;
           margin: 0 auto;
           margin-bottom: 0.5rem;
@@ -162,7 +161,7 @@ export default function SegmentedInput({
           display: flex;
           align-items: center;
           position: relative;
-          height: 3.75rem;
+          height: 5.75rem;
           width: 100%;
           margin: 0 auto;
         }
@@ -194,6 +193,13 @@ export default function SegmentedInput({
             position: absolute;
             top: -35%;
             width: 150%;
+          }
+          .segmented-input-wrapper label {
+            width: 200%;
+            left: 0;
+          }
+          .segmented-input-wrapper {
+            justify-content: center;
           }
         }
       `}</style>
