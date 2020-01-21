@@ -61,9 +61,10 @@ function Sharing() {
         </div>
         <div className="social">
           <Button
-            maxWidth="65px"
             style={{
-              height: "50px"
+              marginBottom: 0,
+
+              width: "65px"
             }}
             secondary
             transparent
@@ -76,9 +77,11 @@ function Sharing() {
             }}
           />
           <Button
-            maxWidth="65px"
             style={{
-              height: "50px"
+              marginBottom: 0,
+              marginLeft: "10px",
+
+              width: "65px"
             }}
             secondary
             transparent
@@ -102,15 +105,18 @@ function Sharing() {
         .sharing-actions {
           display: grid;
           grid-template-columns: 3fr 1fr 1fr;
-          align-items: center;
+          align-items: end;
         }
 
         .social {
           display: flex;
           padding: 0 1em;
+          max-width: 200px;
+          margin: 0 auto;
+          margin-bottom: 0.5em;
         }
 
-        @media (max-width: 700px) {
+        @media (max-width: 800px) {
           .sharing-actions {
             grid-template-columns: 1fr;
             justify-content: center;
@@ -118,6 +124,7 @@ function Sharing() {
           .social {
             padding-top: 2em;
             padding-bottom: 1em;
+            justify-self: center;
           }
         }
       `}</style>
