@@ -160,7 +160,10 @@ export default function Referrals() {
               }
             />
             <Text h2 bold style={{ marginTop: "20px" }}>
-              ${(referralsData && referralsData.totalEarned) || 0}
+              $
+              {referralsData.contacts && referralsData.contacts.allTime
+                ? referralsData.contacts.allTime * 50
+                : 0}
             </Text>
           </Container>
           <Separator margin="10px auto" small />
