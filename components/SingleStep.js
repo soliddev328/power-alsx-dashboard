@@ -106,7 +106,7 @@ function SingleStep(props) {
             border: none;
             cursor: pointer;
             font-size: 32px;
-            color: #4a4a4a;
+            color: #2479ff;
           }
         `}</style>
       </div>
