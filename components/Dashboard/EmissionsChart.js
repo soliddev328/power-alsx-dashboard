@@ -156,6 +156,12 @@ function EmissionsChart() {
           right: -18%;
           top: 60%;
         }
+
+        @media (max-width: 800px) {
+          .arrow {
+            display: none;
+          }
+        }
       `}</style>
     </div>
   );
