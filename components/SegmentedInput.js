@@ -24,10 +24,11 @@ export default function SegmentedInput({
   referral,
   buttonText,
   hasBorder,
+  placeholder,
   onClick
 }) {
   const [userName, setUserName] = useState("");
-  const [placeholder, setPlaceholder] = useState("");
+  const [innerPlaceholder, setInnerPlaceholder] = useState(placeholder);
   const [token, setToken] = useState();
   const [copied, setCopied] = useState(false);
   const [sent, setSent] = useState(false);
@@ -59,7 +60,9 @@ export default function SegmentedInput({
           callback({
             emailAddress: ""
           });
-          setPlaceholder("Your email has been sent! Why not send another? :)");
+          setInnerPlaceholder(
+            "Your email has been sent! Why not send another? :)"
+          );
           global.analytics.track("Referral Invite Sent", {
             "Referred Email": payload.email
           });
@@ -72,7 +75,9 @@ export default function SegmentedInput({
           callback({
             emailAddress: ""
           });
-          setPlaceholder("Your email has been sent! Why not send another? :)");
+          setInnerPlaceholder(
+            "Your email has been sent! Why not send another? :)"
+          );
           setTimeout(() => {
             setSent(false);
           }, 3000);
@@ -101,28 +106,16 @@ export default function SegmentedInput({
   return (
     <div className="segmented-input-wrapper">
       {referral ? (
-        <>
-          <input
-            type="text"
-            htmlFor="segmented-field"
-            value={
-              referral
-                ? `https://www.commonenergy.us/referrals?advocate=${userName}`
-                : ""
-            }
-            readOnly
-            disabled
-            className={cn({ "referral has-border": hasBorder })}
-          />
-          <label htmlFor="segmented-field">{inputLabel}</label>
-          <Button
-            maxWidth="170px"
-            primary
-            onClick={referral ? copyLink : onClick}
-          >
-            {copied ? "Copied!" : buttonText}
-          </Button>
-        </>
+        <Button
+          style={{
+            borderRadius: "5px",
+            margin: 0
+          }}
+          primary
+          onClick={copyLink}
+        >
+          {copied ? "Copied!" : buttonText}
+        </Button>
       ) : (
         <Formik
           initialValues={{
@@ -138,7 +131,7 @@ export default function SegmentedInput({
                 fullWidth
                 noMargin
                 outerLabel
-                placeholder={placeholder}
+                placeholder={innerPlaceholder}
                 value={props.values.emailAddress || ""}
                 scrollOnFocus={false}
                 type="email"
@@ -161,9 +154,9 @@ export default function SegmentedInput({
       <style jsx global>{`
         .segmented-input-wrapper {
           display: flex;
-          align-items: center;
+          align-items: flex-end;
           position: relative;
-          height: 3.75rem;
+          height: 5.75rem;
           width: 100%;
           margin: 0 auto;
           margin-bottom: 0.5rem;
@@ -173,7 +166,7 @@ export default function SegmentedInput({
           display: flex;
           align-items: center;
           position: relative;
-          height: 3.75rem;
+          height: 5.75rem;
           width: 100%;
           margin: 0 auto;
         }
@@ -205,6 +198,13 @@ export default function SegmentedInput({
             position: absolute;
             top: -35%;
             width: 150%;
+          }
+          .segmented-input-wrapper label {
+            width: 200%;
+            left: 0;
+          }
+          .segmented-input-wrapper {
+            justify-content: center;
           }
         }
       `}</style>

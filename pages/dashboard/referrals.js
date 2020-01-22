@@ -6,46 +6,14 @@ import Main from "../../components/Main";
 import Container from "../../components/Container";
 import Section from "../../components/Section";
 import Panel from "../../components/Panel";
-import Button from "../../components/Button";
 import Separator from "../../components/Separator";
 import Text from "../../components/Text";
-import Image from "../../components/Image";
 import Icon from "../../components/Icon";
-import ReferralsTable from "../../components/Dashboard/ReferralsTable";
-import SegmentedInput from "../../components/SegmentedInput";
-import UsersInAreaMap from "../../components/Dashboard/UsersInAreaMap";
+import Sharing from "../../components/Referrals/Sharing";
 import CONSTANTS from "../../globals";
 
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
-
-const FacebookShare = username => {
-  // FB.ui({
-  //   method: "share",
-  //   href: "https://www.commonenergy.us"
-  // });
-  window.open(
-    `https://www.facebook.com/sharer/sharer.php?u=https%3A//www.commonenergy.us/referrals?advocate=${username}`,
-    "_blank",
-    "toolbar=yes,scrollbars=yes,resizable=yes,width=800,height=600"
-  );
-};
-
-const TwitterShare = username => {
-  window.open(
-    `https://twitter.com/intent/tweet?url=https%3A%2F%2Fwww.commonenergy.us%2Freferrals?advocate=${username}`,
-    "_blank",
-    "toolbar=yes,scrollbars=yes,resizable=yes,width=800,height=600"
-  );
-};
-
-const LinkedinShare = username => {
-  window.open(
-    `https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fwww.commonenergy.us%2Freferrals?advocate=${username}`,
-    "_blank",
-    "toolbar=yes,scrollbars=yes,resizable=yes,width=800,height=600"
-  );
-};
 
 const getUserData = async (userUid, idToken) => {
   const { data } = await axios.get(`${API}/v1/subscribers/${userUid}`, {
@@ -68,23 +36,8 @@ const getReferralsData = async (username, idToken) => {
   return data && data.data;
 };
 
-const getReferralsDataDetails = async (username, idToken) => {
-  const { data } = await axios.get(
-    `${API}/v1/subscribers/referrals/details/${username}`,
-    {
-      headers: {
-        Authorization: idToken
-      }
-    }
-  );
-
-  return data && data.data && data.data[0];
-};
-
 export default function Referrals() {
-  const [userData, setUserData] = useState({});
   const [referralsData, setReferralsData] = useState({});
-  const [referralsDetails, setReferralsDetails] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -95,8 +48,6 @@ export default function Referrals() {
         user.getIdToken(true).then(async idToken => {
           const userInfo = await getUserData(user.uid, idToken);
           if (userInfo) {
-            setUserData(userInfo);
-
             const referralsInfo = await getReferralsData(
               userInfo.username,
               idToken
@@ -105,13 +56,6 @@ export default function Referrals() {
             referralsInfo
               ? setReferralsData(referralsInfo[0])
               : setReferralsData({});
-
-            const referralsInfoDetails = await getReferralsDataDetails(
-              userInfo.username,
-              idToken
-            );
-
-            setReferralsDetails(referralsInfoDetails);
 
             setIsLoading(false);
           }
@@ -132,27 +76,21 @@ export default function Referrals() {
       <Text h2 hasDecoration>
         Your Referrals
       </Text>
-      <Text noMargin>
-        Common Energy’s referral program enables you increase your impact and
-        your savings. When you refer a friend, both you and they will receive a{" "}
-        <b>$50 gift card.</b> That's a combined $100 for spreading the word.
-        <b> Refer 10 people and receive $1,000!</b>
-      </Text>
       <Section columns="4">
         <Panel small specialShadow center>
           <Container column>
             <Icon
               icon={
                 <svg
+                  height="28"
+                  viewBox="0 0 33 28"
+                  width="33"
                   xmlns="http://www.w3.org/2000/svg"
-                  width="25"
-                  height="29"
-                  viewBox="0 0 25 29"
                 >
                   <path
-                    fill="#2479FF"
+                    d="m11.515 4.746c0-1.259.501-2.466 1.39-3.356a4.75 4.75 0 0 1 6.713 0 4.75 4.75 0 0 1 0 6.713 4.75 4.75 0 0 1 -6.713 0 4.75 4.75 0 0 1 -1.39-3.357zm15.246 4.808a4.02 4.02 0 1 0 -2.832-1.172 4.023 4.023 0 0 0 2.847 1.172zm-21.013-8.035a4.017 4.017 0 0 0 -3.715 2.474 4.018 4.018 0 1 0 6.56-1.287 4.018 4.018 0 0 0 -2.845-1.187zm21.028 9.966a6.943 6.943 0 0 0 -3.212.716 8 8 0 0 1 .915 1.312c1.682 3.049.935 7.581.03 10.824h6.307s2.943-6.978 1.103-10.28c-1.484-2.674-4.772-2.572-5.143-2.572zm-21.028 0c-.371 0-3.66-.102-5.143 2.571-1.84 3.303 1.103 10.306 1.103 10.306h6.306c-.904-3.242-1.651-7.795.03-10.824.261-.466.568-.906.916-1.31a6.943 6.943 0 0 0 -3.212-.743zm10.514-.203c-.463 0-4.574-.127-6.439 3.221-1.82 3.268.102 9.417.981 11.846a1.57 1.57 0 0 0 1.474 1.017h7.968a1.57 1.57 0 0 0 1.474-1.017c.879-2.429 2.8-8.593.98-11.846-1.865-3.353-5.976-3.221-6.438-3.221z"
+                    fill="#0080f9"
                     fillRule="evenodd"
-                    d="M12.5 0a2.895 2.895 0 0 0-2.885 2.885 2.89 2.89 0 0 0 2.244 2.804v3.987a4.474 4.474 0 0 0-2.925 1.722L5.59 9.335c.116-.313.18-.65.18-1.002 0-1.585-1.3-2.884-2.884-2.884A2.895 2.895 0 0 0 0 8.333c0 1.585 1.3 2.885 2.885 2.885a2.87 2.87 0 0 0 1.993-.811l3.435 2.113a4.467 4.467 0 0 0-.3 1.583c0 .553.115 1.081.3 1.572l-3.445 2.113a2.866 2.866 0 0 0-1.983-.8A2.895 2.895 0 0 0 0 19.871c0 1.585 1.3 2.884 2.885 2.884 1.585 0 2.884-1.3 2.884-2.884 0-.356-.07-.696-.19-1.012l3.355-2.063a4.468 4.468 0 0 0 2.925 1.733v3.986a2.89 2.89 0 0 0-2.244 2.805c0 1.585 1.3 2.884 2.885 2.884 1.585 0 2.885-1.3 2.885-2.884a2.89 2.89 0 0 0-2.244-2.805V18.53a4.468 4.468 0 0 0 2.925-1.733l3.355 2.063c-.12.316-.19.656-.19 1.012 0 1.585 1.3 2.884 2.884 2.884 1.585 0 2.885-1.3 2.885-2.884 0-1.585-1.3-2.885-2.885-2.885-.767 0-1.464.307-1.983.801l-3.445-2.113c.185-.49.3-1.02.3-1.572 0-.558-.114-1.09-.3-1.583l3.435-2.113c.52.5 1.22.811 1.993.811 1.585 0 2.885-1.3 2.885-2.885 0-1.585-1.3-2.884-2.885-2.884a2.895 2.895 0 0 0-2.884 2.884c0 .352.064.689.18 1.002l-3.345 2.063a4.474 4.474 0 0 0-2.925-1.722V5.689a2.89 2.89 0 0 0 2.244-2.804C15.385 1.3 14.085 0 12.5 0z"
                   />
                 </svg>
               }
@@ -221,107 +159,28 @@ export default function Referrals() {
               }
             />
             <Text h2 bold style={{ marginTop: "20px" }}>
-              ${(referralsData && referralsData.totalEarned) || 0}
+              $
+              {referralsData.contacts && referralsData.contacts.allTime
+                ? referralsData.contacts.allTime * 50
+                : 0}
             </Text>
           </Container>
           <Separator margin="10px auto" small />
           <Text noMargin>Total Earnings</Text>
         </Panel>
       </Section>
-      <Text h2>Referral Tools</Text>
-      <Text noMargin>
-        Spreading the word about Common Energy is easy! Use the links below to
-        email your friends and family and share on social media.
-      </Text>
-      <Section>
+      <Section noMargin>
+        <Text h2>Invite Friends and Save Even More</Text>
+        <Text noMargin>
+          Common Energy’s referral program enables you increase your impact and
+          your savings. When you refer a friend, both you and they will receive
+          a <b>$50 gift card.</b> That's a combined $100 for spreading the word.
+          <b> Refer 10 people and receive $1,000!</b>
+        </Text>
         <Panel>
-          <Text h3>Email Your Referral Link</Text>
-          <Container column alignLeft>
-            <Text style={{ marginBottom: "20px" }}>
-              Sample message: Hi! I just signed up for a new state program that
-              enables me to save $5-$20 per month on my electricity and support
-              clean energy. Check it out!
-            </Text>
-          </Container>
-          <UsersInAreaMap />
-          <SegmentedInput
-            buttonText="Copy Link"
-            referral
-            hasBorder
-          ></SegmentedInput>
+          <Sharing />
         </Panel>
       </Section>
-      <Section>
-        <Panel>
-          <Text noMargin h3>
-            Share on Social Media
-          </Text>
-          <Section columns="2">
-            <Image
-              contain
-              src="/static/images/share/share.png"
-              alt=""
-              bgColor="#fff"
-              hasBorder
-            />
-
-            <Container column>
-              <Button
-                secondary
-                transparent
-                share="facebook"
-                onClick={() => {
-                  FacebookShare(userData.username);
-                  global.analytics.track("Referral Link Clicked", {
-                    Platform: "Facebook"
-                  });
-                }}
-              >
-                Share on Facebook
-              </Button>
-              <Button
-                secondary
-                transparent
-                share="twitter"
-                onClick={() => {
-                  TwitterShare(userData.username);
-                  global.analytics.track("Referral Link Clicked", {
-                    Platform: "Twitter"
-                  });
-                }}
-              >
-                Share on Twitter
-              </Button>
-              <Button
-                secondary
-                transparent
-                share="linkedin"
-                onClick={() => {
-                  LinkedinShare(userData.username);
-                  global.analytics.track("Referral Link Clicked", {
-                    Platform: "Linkedin"
-                  });
-                }}
-              >
-                Share on LinkedIn
-              </Button>
-            </Container>
-          </Section>
-        </Panel>
-      </Section>
-      <Section>
-        <Panel>
-          <Text h3>Send An Email Directly</Text>
-          <SegmentedInput
-            hasBorder
-            inputLabel="Enter Your Friends' Email Addresses Here"
-            buttonText="send"
-          />
-        </Panel>
-      </Section>
-      {referralsDetails && (
-        <ReferralsTable data={referralsDetails}></ReferralsTable>
-      )}
     </Main>
   );
 }
