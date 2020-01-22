@@ -155,6 +155,19 @@ export default function ReferralsList() {
             transform: translate(-50%, -50%);
           }
 
+          li.active .status:after {
+            display: block;
+            content: "✓";
+            font-size: 12px;
+            line-height: 8px;
+            color: #fff;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            border-radius: 8px;
+            transform: translate(-50%, -50%);
+          }
+
           .status-name {
             display: flex;
             flex-direction: column;
