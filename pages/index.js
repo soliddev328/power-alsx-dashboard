@@ -138,7 +138,10 @@ function Index(props) {
     !isLoading && (
       <main>
         <Header first />
-        <SingleStep prefix="Enter your email address to sign in or create an account">
+        <SingleStep
+          isFirst
+          prefix="Enter your email address to sign in or create an account"
+        >
           <Formik
             initialValues={{
               emailAddress: "",
