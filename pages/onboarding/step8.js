@@ -76,7 +76,35 @@ function Step8(props) {
           <img className="cards" src="/static/images/banks/cards.png" alt="" />
           <StripeProvider stripe={stripe}>
             <Elements>
-              <Checkout stripe={stripe} name={name} />
+              <Checkout
+                stripe={stripe}
+                name={name}
+                callback={payload => {
+                  props.firebase.doGetCurrentUserIdToken(idToken => {
+                    axios
+                      .put(
+                        `${API}/v1/subscribers`,
+                        {
+                          leadId: leadId,
+                          email: email,
+                          stripeToken: payload.token.id
+                        },
+                        {
+                          headers: {
+                            Authorization: idToken
+                          }
+                        }
+                      )
+                      .then(() => {
+                        global.analytics.track("Sign-Up Completed", {});
+                        localStorage.setItem("usercreated", true);
+                        router.push({
+                          pathname: "/"
+                        });
+                      });
+                  });
+                }}
+              />
             </Elements>
           </StripeProvider>
         </div>
