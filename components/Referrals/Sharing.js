@@ -53,7 +53,12 @@ function Sharing() {
     <div className="sharing">
       <div className="sharing-actions">
         <div className="email">
-          <SegmentedInput hasBorder inputLabel="" buttonText="send" />
+          <SegmentedInput
+            hasBorder
+            inputLabel=""
+            buttonText="send"
+            placeholder="email@domain.com"
+          />
         </div>
         <div className="social">
           <Button
