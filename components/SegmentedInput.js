@@ -24,10 +24,11 @@ export default function SegmentedInput({
   referral,
   buttonText,
   hasBorder,
+  placeholder,
   onClick
 }) {
   const [userName, setUserName] = useState("");
-  const [placeholder, setPlaceholder] = useState("");
+  const [innerPlaceholder, setInnerPlaceholder] = useState(placeholder);
   const [token, setToken] = useState();
   const [copied, setCopied] = useState(false);
   const [sent, setSent] = useState(false);
@@ -59,7 +60,9 @@ export default function SegmentedInput({
           callback({
             emailAddress: ""
           });
-          setPlaceholder("Your email has been sent! Why not send another? :)");
+          setInnerPlaceholder(
+            "Your email has been sent! Why not send another? :)"
+          );
           global.analytics.track("Referral Invite Sent", {
             "Referred Email": payload.email
           });
@@ -72,7 +75,9 @@ export default function SegmentedInput({
           callback({
             emailAddress: ""
           });
-          setPlaceholder("Your email has been sent! Why not send another? :)");
+          setInnerPlaceholder(
+            "Your email has been sent! Why not send another? :)"
+          );
           setTimeout(() => {
             setSent(false);
           }, 3000);
@@ -126,7 +131,7 @@ export default function SegmentedInput({
                 fullWidth
                 noMargin
                 outerLabel
-                placeholder={placeholder}
+                placeholder={innerPlaceholder}
                 value={props.values.emailAddress || ""}
                 scrollOnFocus={false}
                 type="email"
