@@ -235,7 +235,10 @@ function Step1(props) {
   return (
     <main>
       <Header />
-      <SingleStep title="Hi, I’m Martin. If you provide a little information, I can check to see your savings opportunities.">
+      <SingleStep
+        isFirst
+        title="Hi, I’m Martin. If you provide a little information, I can check to see your savings opportunities."
+      >
         <Formik
           initialValues={{
             postalCode: query.zipcode,
