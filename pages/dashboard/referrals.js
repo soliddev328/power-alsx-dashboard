@@ -169,14 +169,14 @@ export default function Referrals() {
           <Text noMargin>Total Earnings</Text>
         </Panel>
       </Section>
-      <Text h2>Invite Friends and Save Even More</Text>
-      <Text noMargin>
-        Common Energy’s referral program enables you increase your impact and
-        your savings. When you refer a friend, both you and they will receive a{" "}
-        <b>$50 gift card.</b> That's a combined $100 for spreading the word.
-        <b> Refer 10 people and receive $1,000!</b>
-      </Text>
-      <Section>
+      <Section noMargin>
+        <Text h2>Invite Friends and Save Even More</Text>
+        <Text noMargin>
+          Common Energy’s referral program enables you increase your impact and
+          your savings. When you refer a friend, both you and they will receive
+          a <b>$50 gift card.</b> That's a combined $100 for spreading the word.
+          <b> Refer 10 people and receive $1,000!</b>
+        </Text>
         <Panel>
           <Sharing />
         </Panel>

@@ -102,6 +102,7 @@ function Sharing() {
           display: grid;
           grid-template-columns: 3fr 1fr 1fr;
           align-items: end;
+          margin-top: -2em;
         }
 
         .social {
