@@ -1,12 +1,15 @@
+import cn from "classnames";
+
 export default function Container({
   children,
   column,
   centered,
   height,
+  grid,
   alignLeft = false
 }) {
   return (
-    <section>
+    <section className={cn({ grid })}>
       {children}
       <style jsx>{`
         section {
