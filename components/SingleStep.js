@@ -74,8 +74,8 @@ function SingleStep(props) {
               })
               .then(response => {
                 setIsLoading(false);
-                const user = response?.data?.data;
 
+                const user = response?.data?.data;
                 localStorage.setItem(
                   "username",
                   JSON.stringify({
@@ -84,6 +84,7 @@ function SingleStep(props) {
                   })
                 );
                 localStorage.setItem("leadId", user?.leadId);
+                localStorage.setItem("email", user?.email);
 
                 // retrieve utility information
                 const utility = user?.milestones?.utility;
