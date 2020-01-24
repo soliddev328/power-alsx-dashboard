@@ -86,7 +86,7 @@ function ResetPassword(props) {
   return (
     <main>
       <Header first />
-      <SingleStep prefix="Please enter your new password">
+      <SingleStep isFirst prefix="Please enter your new password">
         {renderForm()}
       </SingleStep>
       <style jsx>{`

@@ -82,13 +82,23 @@ class Firebase {
       }
     );
 
-  doSendSignInEmail = (email, config) =>
-    this.auth.sendSignInLinkToEmail(email, config);
-
-  doSendPasswordResetEmail = email => this.auth.sendPasswordResetEmail(email);
+  doSendPasswordResetEmail = email => {
+    const actionCodeSettings = {
+      url: "https://my.commonenergy.us/"
+    };
+    this.auth.sendPasswordResetEmail(email, actionCodeSettings);
+  };
 
   doConfirmPasswordReset = (code, newPassword) =>
     this.auth.confirmPasswordReset(code, newPassword);
+
+  doSendSignInEmail = (email, config) =>
+    this.auth.sendSignInLinkToEmail(email, config);
+
+  doCheckIsSignInWithEmailLink = url => this.auth.isSignInWithEmailLink(url);
+
+  doSignInWithEmailLink = (email, completeUrl) =>
+    this.auth.signInWithEmailLink(email, completeUrl);
 }
 
 let firebase;

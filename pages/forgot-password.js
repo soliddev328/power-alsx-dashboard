@@ -81,7 +81,7 @@ function ForgotPassword(props) {
   return (
     <main>
       <Header first />
-      <SingleStep prefix="Please enter your email address">
+      <SingleStep isFirst prefix="Please enter your email address">
         {renderContent()}
       </SingleStep>
       <style jsx>{`
