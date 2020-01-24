@@ -5,13 +5,15 @@ import { withFirebase } from "../firebase";
 
 function Header(props) {
   const router = useRouter();
+  const { query } = router;
   const renderRestart = () => {
     return (
       <div className="wrapper">
         <button
           onClick={() => {
+            console.log(query);
             props.firebase.doSignOut();
-            router.push("/onboarding/step1");
+            router.push({ pathname: "/onboarding/step1", query: query });
           }}
         >
           ⟲
