@@ -48,71 +48,6 @@ function SingleStep(props) {
     );
   };
 
-  const renderRestart = () => {
-    return (
-      <div className="wrapper">
-        <button
-          onClick={() => {
-            props.firebase.doSignOut();
-            router.push("/onboarding/step1");
-          }}
-        >
-          ⟲
-        </button>
-        <span className="tooltip">Start Over</span>
-        <style jsx>{`
-          .wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: absolute;
-            top: 0;
-            right: 0;
-            transform: translate(100%, -215%);
-          }
-
-          .tooltip {
-            display: none;
-            font-size: 10px;
-            color: #fff;
-            background-color: #4a4a4a;
-            padding: 3px 6px;
-            border-radius: 2px;
-            position: relative;
-            transform: translate(-80%, -90%);
-          }
-
-          .tooltip:after {
-            top: 100%;
-            left: 50%;
-            border: solid transparent;
-            content: " ";
-            height: 0;
-            width: 0;
-            position: absolute;
-            pointer-events: none;
-            border-color: rgba(74, 74, 74, 0);
-            border-top-color: #4a4a4a;
-            border-width: 3px;
-            margin-left: -3px;
-          }
-
-          .wrapper:hover .tooltip {
-            display: block;
-          }
-
-          button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 32px;
-            color: #2479ff;
-          }
-        `}</style>
-      </div>
-    );
-  };
-
   const renderTitle = () => {
     return highlight ? (
       <Highlight className="title" content={title} highlight={highlight} />
@@ -251,7 +186,6 @@ function SingleStep(props) {
       ) : (
         <>
           <div className="heading">
-            {!isFirst && renderRestart()}
             {toast && <p className="title">{toast}</p>}
             {prefix && renderPrefix()}
             {title && renderTitle()}
@@ -269,6 +203,7 @@ function SingleStep(props) {
         .content {
           max-width: 87%;
           margin: 0 auto;
+          position: relative;
         }
         p {
           font-size: 1rem;
