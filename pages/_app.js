@@ -4,6 +4,7 @@ import React from "react";
 import settings from "../settings.json";
 import Firebase, { FirebaseContext } from "../firebase";
 import { StateProvider } from "../state";
+import "../global.css";
 
 const initialState = {
   selectedAccount: {
