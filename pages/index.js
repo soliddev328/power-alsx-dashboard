@@ -28,107 +28,133 @@ function Index(props) {
     }
   }, []);
 
+  useEffect(() => {
+    const windowLocationHref = location.href;
+    const email = localStorage.getItem("email") || false;
+    if (props.firebase.doCheckIsSignInWithEmailLink(windowLocationHref)) {
+      if (!email) {
+        email = prompt("Please provide your email for confirmation");
+      }
+      props.firebase
+        .doSignInWithEmailLink(email, windowLocationHref)
+        .then(result => {
+          if (history && history.replaceState) {
+            history.replaceState(
+              {},
+              document.title,
+              location.href.split("?")[0]
+            );
+          }
+          authenticatedLogic(result);
+        })
+        .catch(error => {
+          setError({ code: error.code, message: error.message });
+        });
+    }
+  }, []);
+
+  const authenticatedLogic = result => {
+    const { user } = result;
+
+    if (!error.code) {
+      props.firebase.doGetCurrentUserIdToken(idToken => {
+        axios
+          .get(`${API}/v1/subscribers/${user.uid}`, {
+            headers: {
+              Authorization: idToken
+            }
+          })
+          .then(response => {
+            const user = response?.data?.data;
+
+            localStorage.setItem("leadId", user?.leadId);
+            localStorage.setItem("loggedIn", true);
+
+            global.analytics.identify(user?.leadId, {
+              email: user?.email
+            });
+
+            global.analytics.track("User Signed In", {});
+
+            // retrieve utility information
+            const utility = user?.milestones?.utility;
+            const imageName = utility?.replace(/\s/g, "") || false;
+            const utilityInfo = {
+              image: {
+                src: imageName
+                  ? `/static/images/utilities/${imageName}.png`
+                  : "/static/images/utilities/placeholder.png",
+                altText: "Utility logo"
+              },
+              label: utility
+            };
+
+            localStorage.setItem("utility", JSON.stringify(utilityInfo));
+
+            // retrieve postalcode
+            if (user?.milestones?.address?.postalCode) {
+              const postalCode = user?.milestones?.address?.postalCode;
+              localStorage.setItem("postalCode", JSON.stringify(postalCode));
+            }
+
+            if (user?.milestones?.utilityPaperOnly) {
+              localStorage.setItem(
+                "billingMethod",
+                JSON.stringify({ billingMethod: "paper" })
+              );
+            }
+
+            const userStillNeedsToAddUtilityInfo = !user?.milestones
+              ?.utilityInfoCompleted;
+
+            const userStillNeedstoAddBankInfo =
+              (user?.milestones?.utilityInfoCompleted &&
+                user?.milestones?.utilityLoginSuccessful) ||
+              !user?.milestones?.bankInfoCompleted;
+
+            const userStillNeedsToAddAddressInfo =
+              user?.milestones?.utilityInfoCompleted &&
+              !user?.milestones?.addressInfoCompleted;
+
+            // forward to the right page
+            if (user?.signupCompleted) {
+              router.push({
+                pathname: "/dashboard"
+              });
+            } else if (userStillNeedsToAddUtilityInfo) {
+              router.push({
+                pathname: "/onboarding/step2",
+                query: {
+                  onboardingNotFinished: true
+                }
+              });
+            } else if (userStillNeedsToAddAddressInfo) {
+              router.push({
+                pathname: "/onboarding/step4.2",
+                query: {
+                  onboardingNotFinished: true
+                }
+              });
+            } else if (userStillNeedstoAddBankInfo) {
+              router.push({
+                pathname: "/onboarding/step7",
+                query: {
+                  onboardingNotFinished: true
+                }
+              });
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      });
+    }
+  };
+
   const autenticate = values => {
     props.firebase
       .doSignInWithEmailAndPassword(values.emailAddress, values.password)
-      .then(firebaseData => {
-        if (!error.code) {
-          props.firebase.doGetCurrentUserIdToken(idToken => {
-            axios
-              .get(`${API}/v1/subscribers/${firebaseData.user.uid}`, {
-                headers: {
-                  Authorization: idToken
-                }
-              })
-              .then(response => {
-                const user = response?.data?.data;
-
-                localStorage.setItem("leadId", user?.leadId);
-                localStorage.setItem("loggedIn", true);
-
-                global.analytics.identify(user?.leadId, {
-                  email: user?.email
-                });
-
-                global.analytics.track("User Signed In", {});
-
-                // retrieve utility information
-                const utility = user?.milestones?.utility;
-                const imageName = utility?.replace(/\s/g, "") || false;
-                const utilityInfo = {
-                  image: {
-                    src: imageName
-                      ? `/static/images/utilities/${imageName}.png`
-                      : "/static/images/utilities/placeholder.png",
-                    altText: "Utility logo"
-                  },
-                  label: utility
-                };
-
-                localStorage.setItem("utility", JSON.stringify(utilityInfo));
-
-                // retrieve postalcode
-                if (user?.milestones?.address?.postalCode) {
-                  const postalCode = user?.milestones?.address?.postalCode;
-                  localStorage.setItem(
-                    "postalCode",
-                    JSON.stringify(postalCode)
-                  );
-                }
-
-                if (user?.milestones?.utilityPaperOnly) {
-                  localStorage.setItem(
-                    "billingMethod",
-                    JSON.stringify({ billingMethod: "paper" })
-                  );
-                }
-
-                const userStillNeedsToAddUtilityInfo = !user?.milestones
-                  ?.utilityInfoCompleted;
-
-                const userStillNeedstoAddBankInfo =
-                  (user?.milestones?.utilityInfoCompleted &&
-                    user?.milestones?.utilityLoginSuccessful) ||
-                  !user?.milestones?.bankInfoCompleted;
-
-                const userStillNeedsToAddAddressInfo =
-                  user?.milestones?.utilityInfoCompleted &&
-                  !user?.milestones?.addressInfoCompleted;
-
-                // forward to the right page
-                if (user?.signupCompleted) {
-                  router.push({
-                    pathname: "/dashboard"
-                  });
-                } else if (userStillNeedsToAddUtilityInfo) {
-                  router.push({
-                    pathname: "/onboarding/step2",
-                    query: {
-                      onboardingNotFinished: true
-                    }
-                  });
-                } else if (userStillNeedsToAddAddressInfo) {
-                  router.push({
-                    pathname: "/onboarding/step4.2",
-                    query: {
-                      onboardingNotFinished: true
-                    }
-                  });
-                } else if (userStillNeedstoAddBankInfo) {
-                  router.push({
-                    pathname: "/onboarding/step7",
-                    query: {
-                      onboardingNotFinished: true
-                    }
-                  });
-                }
-              })
-              .catch(err => {
-                console.log(err);
-              });
-          });
-        }
-      })
+      .then(authenticatedLogic)
       .catch(error => {
         setError({ code: error.code, message: error.message });
       });
