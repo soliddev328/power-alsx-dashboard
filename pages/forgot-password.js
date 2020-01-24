@@ -80,7 +80,7 @@ function ForgotPassword(props) {
 
   return (
     <main>
-      <Header first />
+      <Header first firstStep />
       <SingleStep isFirst prefix="Please enter your email address">
         {renderContent()}
       </SingleStep>
