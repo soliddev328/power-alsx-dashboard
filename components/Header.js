@@ -11,7 +11,6 @@ function Header(props) {
       <div className="wrapper">
         <button
           onClick={() => {
-            console.log(query);
             props.firebase.doSignOut();
             router.push({ pathname: "/onboarding/step1", query: query });
           }}
