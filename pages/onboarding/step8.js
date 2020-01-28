@@ -98,6 +98,7 @@ function Step8(props) {
                       .then(() => {
                         global.analytics.track("Sign-Up Completed", {});
                         localStorage.setItem("usercreated", true);
+                        localStorage.setItem("loggedIn", true);
                         router.push({
                           pathname: "/dashboard"
                         });
@@ -183,6 +184,7 @@ function Step8(props) {
           .then(() => {
             global.analytics.track("Sign-Up Completed", {});
             localStorage.setItem("usercreated", true);
+            localStorage.setItem("loggedIn", true);
             router.push({
               pathname: "/dashboard"
             });
