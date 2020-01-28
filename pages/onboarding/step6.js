@@ -62,7 +62,10 @@ function Step6() {
           primary
           onClick={() => {
             router.push({
-              pathname: "/onboarding/step7"
+              pathname: "/onboarding/step7",
+              query: {
+                next: true
+              }
             });
           }}
         >
