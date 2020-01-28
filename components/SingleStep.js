@@ -72,19 +72,19 @@ function SingleStep(props) {
     const isOnboarding = pathname.includes("/onboarding");
     if (isOnboarding) {
       setIsLoading(true);
-      props.firebase.doGetCurrentUser(user => {
-        if (!!user) {
-          user.getIdToken(true).then(idToken => {
+      props.firebase.doGetCurrentUser(firebaseUser => {
+        if (!!firebaseUser) {
+          firebaseUser.getIdToken(true).then(idToken => {
             axios
-              .get(`${API}/v1/subscribers/${user.uid}`, {
+              .get(`${API}/v1/subscribers/${firebaseUser.uid}`, {
                 headers: {
                   Authorization: idToken
                 }
               })
               .then(response => {
                 setIsLoading(false);
-
                 const user = response?.data?.data;
+
                 localStorage.setItem(
                   "username",
                   JSON.stringify({
@@ -126,6 +126,10 @@ function SingleStep(props) {
                   );
                 }
 
+                const userStillNeedstoAddPwd =
+                  !user?.milestones?.bankInfoCompleted &&
+                  firebaseUser?.isAnonymous;
+
                 const userStillNeedsToAddUtilityInfo = !user?.milestones
                   ?.utilityInfoCompleted;
 
@@ -138,26 +142,34 @@ function SingleStep(props) {
                   user?.milestones?.utilityInfoCompleted &&
                   !user?.milestones?.addressInfoCompleted;
 
+                const notManualSignup = query.next;
                 // forward to the right page
                 if (user?.signupCompleted) {
                   router.push({
                     pathname: "/dashboard"
                   });
-                } else if (userStillNeedsToAddUtilityInfo && !query.next) {
+                } else if (userStillNeedsToAddUtilityInfo && !notManualSignup) {
                   router.push({
                     pathname: "/onboarding/step2",
                     query: {
                       onboardingNotFinished: true
                     }
                   });
-                } else if (userStillNeedsToAddAddressInfo && !query.next) {
+                } else if (userStillNeedsToAddAddressInfo && !notManualSignup) {
                   router.push({
                     pathname: "/onboarding/step4.2",
                     query: {
                       onboardingNotFinished: true
                     }
                   });
-                } else if (userStillNeedstoAddBankInfo && !query.next) {
+                } else if (userStillNeedstoAddPwd && !notManualSignup) {
+                  router.push({
+                    pathname: "/onboarding/step5",
+                    query: {
+                      onboardingNotFinished: true
+                    }
+                  });
+                } else if (userStillNeedstoAddBankInfo && !notManualSignup) {
                   router.push({
                     pathname: "/onboarding/step7",
                     query: {

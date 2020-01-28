@@ -99,7 +99,7 @@ function Step8(props) {
                         global.analytics.track("Sign-Up Completed", {});
                         localStorage.setItem("usercreated", true);
                         router.push({
-                          pathname: "/"
+                          pathname: "/dashboard"
                         });
                       });
                   });
