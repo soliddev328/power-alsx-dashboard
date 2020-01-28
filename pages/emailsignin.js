@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Formik, Form } from "formik";
-import { useRouter } from "next/router";
 import { withFirebase } from "../firebase";
 import Header from "../components/Header";
 import Button from "../components/Button";
@@ -8,7 +7,6 @@ import Input from "../components/Input";
 import SingleStep from "../components/SingleStep";
 
 function EmailLogin(props) {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [emailSent, setEmailSent] = useState(false);
 
@@ -47,6 +45,9 @@ function EmailLogin(props) {
       >
         {!emailSent && (
           <Formik
+            defaultValues={{
+              email: email
+            }}
             initialValues={{
               email: email
             }}
@@ -56,7 +57,12 @@ function EmailLogin(props) {
           >
             {props => (
               <Form>
-                <Input type="email" label="Email address" fieldname="email" />
+                <Input
+                  type="email"
+                  label={props.values.email ? false : "Email address"}
+                  fieldname="email"
+                  value={props.values.email}
+                />
                 <Button primary disabled={!!props.values.email !== true}>
                   Send secure login link
                 </Button>
