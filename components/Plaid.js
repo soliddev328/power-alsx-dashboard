@@ -51,6 +51,7 @@ export default class Plaid extends React.PureComponent {
             .then(() => {
               global.analytics.track("Sign-Up Completed", {});
               localStorage.setItem("usercreated", true);
+              localStorage.setItem("loggedIn", true);
               Router.push({
                 pathname: "/dashboard"
               });

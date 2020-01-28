@@ -37,9 +37,10 @@ const Dashboard = props => {
   };
 
   useEffect(() => {
-    if (!JSON.parse(localStorage.getItem("loggedIn"))) {
-      router.push("/");
-    }
+    console.log("loaded");
+    // if (!JSON.parse(localStorage.getItem("loggedIn"))) {
+    //   router.push("/");
+    // }
   }, []);
 
   useEffect(() => {
