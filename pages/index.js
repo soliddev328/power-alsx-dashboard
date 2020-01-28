@@ -54,12 +54,12 @@ function Index(props) {
   }, []);
 
   const authenticatedLogic = result => {
-    const { user } = result;
+    const { firebaseUser } = result;
 
     if (!error.code) {
       props.firebase.doGetCurrentUserIdToken(idToken => {
         axios
-          .get(`${API}/v1/subscribers/${user.uid}`, {
+          .get(`${API}/v1/subscribers/${firebaseUser.uid}`, {
             headers: {
               Authorization: idToken
             }
@@ -104,6 +104,9 @@ function Index(props) {
               );
             }
 
+            const userStillNeedstoAddPwd =
+              !user?.milestones?.bankInfoCompleted && firebaseUser?.isAnonymous;
+
             const userStillNeedsToAddUtilityInfo = !user?.milestones
               ?.utilityInfoCompleted;
 
@@ -131,6 +134,13 @@ function Index(props) {
             } else if (userStillNeedsToAddAddressInfo) {
               router.push({
                 pathname: "/onboarding/step4.2",
+                query: {
+                  onboardingNotFinished: true
+                }
+              });
+            } else if (userStillNeedstoAddPwd) {
+              router.push({
+                pathname: "/onboarding/step5",
                 query: {
                   onboardingNotFinished: true
                 }
