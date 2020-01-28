@@ -52,7 +52,7 @@ export default class Plaid extends React.PureComponent {
               global.analytics.track("Sign-Up Completed", {});
               localStorage.setItem("usercreated", true);
               Router.push({
-                pathname: "/"
+                pathname: "/dashboard"
               });
             });
         }}

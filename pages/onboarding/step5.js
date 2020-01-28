@@ -29,7 +29,10 @@ function Step5(props) {
   const submit = values => {
     props.firebase.doEmailAuthProvider(email, values.password, () => {
       router.push({
-        pathname: "/onboarding/step6"
+        pathname: "/onboarding/step6",
+        query: {
+          next: true
+        }
       });
     });
   };

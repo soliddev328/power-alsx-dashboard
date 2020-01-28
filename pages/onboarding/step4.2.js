@@ -151,7 +151,12 @@ function Step42(props) {
                 fieldname="phoneNumber"
               />
               <p className="error">{error}</p>
-              <Button primary disabled={!props.values.address != ""}>
+              <Button
+                primary
+                disabled={
+                  !props.values.address != "" || !props.values.phoneNumber != ""
+                }
+              >
                 Next
               </Button>
             </Form>
