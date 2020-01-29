@@ -37,7 +37,7 @@ function Index(props) {
       }
       props.firebase
         .doSignInWithEmailLink(email, windowLocationHref)
-        .then(result => {
+        .then(firebaseUser => {
           if (history && history.replaceState) {
             history.replaceState(
               {},
@@ -45,7 +45,7 @@ function Index(props) {
               location.href.split("?")[0]
             );
           }
-          authenticatedLogic(result);
+          authenticatedLogic(firebaseUser);
         })
         .catch(error => {
           setError({ code: error.code, message: error.message });
@@ -53,13 +53,12 @@ function Index(props) {
     }
   }, []);
 
-  const authenticatedLogic = result => {
-    const { firebaseUser } = result;
-
-    if (!error.code) {
+  const authenticatedLogic = firebaseUser => {
+    const { uid } = firebaseUser.user;
+    if (uid) {
       props.firebase.doGetCurrentUserIdToken(idToken => {
         axios
-          .get(`${API}/v1/subscribers/${firebaseUser.uid}`, {
+          .get(`${API}/v1/subscribers/${uid}`, {
             headers: {
               Authorization: idToken
             }
