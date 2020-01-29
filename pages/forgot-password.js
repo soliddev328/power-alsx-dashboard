@@ -17,9 +17,11 @@ export default class forgotPassword extends React.Component {
 
   sendEmail(values) {
     const auth = window.firebase.auth();
-
+    const actionCodeSettings = {
+      url: "https://my.commonenergy.us/"
+    };
     auth
-      .sendPasswordResetEmail(values.emailAddress)
+      .sendPasswordResetEmail(values.emailAddress, actionCodeSettings)
       .then(() => {
         this.setState({ emailSent: true });
       })
