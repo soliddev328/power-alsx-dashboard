@@ -8,16 +8,16 @@ import SingleStep from "../components/SingleStep";
 
 function EmailLogin(props) {
   const [email, setEmail] = useState("");
+  const [actionCodeSettings, setActionCodeSettings] = useState("");
   const [emailSent, setEmailSent] = useState(false);
 
   useEffect(() => {
     setEmail(localStorage.getItem("email"));
+    setActionCodeSettings({
+      url: window.location.origin,
+      handleCodeInApp: true
+    });
   }, []);
-
-  const actionCodeSettings = {
-    url: "https://my.commonenergy.us/emailsignin",
-    handleCodeInApp: true
-  };
 
   const sendSecureLoginLink = values => {
     const { email } = values;
