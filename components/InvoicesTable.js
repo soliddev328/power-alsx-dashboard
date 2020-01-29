@@ -66,6 +66,7 @@ const renderDownloadButton = props => {
   );
 };
 
+const renderFirebaseDownloadButton = withFirebase(renderDownloadButton);
 function Table({ headers = [], data = [] }) {
   return (
     <div className="table-wrapper">
@@ -92,7 +93,7 @@ function Table({ headers = [], data = [] }) {
                     return <td key={`column-content-${index}`}>${item}</td>;
                   }
                   if (row.length === index + 1) {
-                    return withFirebase(renderDownloadButton(item));
+                    return renderFirebaseDownloadButton(item);
                   }
                   return (
                     <td
