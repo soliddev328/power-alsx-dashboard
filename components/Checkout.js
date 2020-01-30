@@ -38,9 +38,34 @@ function CheckoutForm(props) {
 
   const submit = ev => {
     ev.preventDefault();
-    props.stripe.createToken({ type: "card" }).then(payload => {
-      if (payload.token) {
-        callback(payload);
+    props.firebase.doGetCurrentUserIdToken(idToken => {
+      if (stripe) {
+        stripe.createToken({ type: "card" }).then(payload => {
+          if (payload.token) {
+            axios
+              .put(
+                `${API}/v1/subscribers`,
+                {
+                  leadId: leadId,
+                  email: email,
+                  stripeToken: payload.token.id
+                },
+                {
+                  headers: {
+                    Authorization: idToken
+                  }
+                }
+              )
+              .then(() => {
+                global.analytics.track("Sign-Up Completed", {});
+                localStorage.setItem("showPopup", true);
+                localStorage.setItem("usercreated", true);
+                router.push({
+                  pathname: "/dashboard"
+                });
+              });
+          }
+        });
       }
     });
   };
@@ -179,4 +204,6 @@ function CheckoutForm(props) {
   );
 }
 
-export default injectStripe(CheckoutForm);
+const FirebaseCheckoutForm = withFirebase(CheckoutForm);
+
+export default injectStripe(FirebaseCheckoutForm);

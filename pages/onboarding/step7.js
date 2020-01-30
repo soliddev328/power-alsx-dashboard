@@ -22,10 +22,7 @@ function Step7() {
             paymentMethod: ""
           }}
           onSubmit={values => {
-            window.localStorage.setItem(
-              "paymentMethod",
-              JSON.stringify(values)
-            );
+            localStorage.setItem("paymentMethod", JSON.stringify(values));
             router.push({
               pathname: "/onboarding/step8",
               query: {
