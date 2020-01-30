@@ -79,7 +79,7 @@ h1 {
 }
 
 h2 {
-  font-size: calc(28px + (32 - 28) * (100vw - 400px) / (1440 - 400));
+  font-size: calc(28px + (30 - 28) * (100vw - 400px) / (1440 - 400));
   font-weight: 800;
   line-height: 1.2em;
 }
@@ -383,6 +383,9 @@ hr {
   .two-columns--responsive {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
+@media (min-width: 1200px) {
   .desktop-only {
     display: block;
   }
