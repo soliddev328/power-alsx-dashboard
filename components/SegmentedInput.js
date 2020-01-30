@@ -22,19 +22,24 @@ const getUserData = async (userUid, idToken) => {
 
 function SegmentedInput(props) {
   const [userName, setUserName] = useState("");
+  const [innerPlaceholder, setInnerPlaceholder] = useState(props.placeholder);
   const [token, setToken] = useState();
   const [copied, setCopied] = useState(false);
   const [sent, setSent] = useState(false);
   const { inputLabel, referral, buttonText, hasBorder, onClick } = props;
 
   const copyLink = () => {
-    copy(`https://www.commonenergy.us/referrals?advocate=${userName}`);
+    const referralUrl = `https://www.commonenergy.us/referrals?advocate=${userName}`;
+    copy(referralUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 1000);
+    global.analytics.track("Referral Link Copied", {
+      "Referral URL": referralUrl
+    });
   };
 
-  const inviteReferral = values => {
-    if (values.emailAddress) {
+  const inviteReferral = (values, callback) => {
+    if (values.emailAddress && !sent) {
       setSent(true);
 
       const payload = {
@@ -47,7 +52,30 @@ function SegmentedInput(props) {
           headers: { Authorization: token }
         })
         .then(() => {
-          setTimeout(() => setSent(false), 1000);
+          callback({
+            emailAddress: ""
+          });
+          setInnerPlaceholder(
+            "Your email has been sent! Why not send another? :)"
+          );
+          global.analytics.track("Referral Invite Sent", {
+            "Referred Email": payload.email
+          });
+          setTimeout(() => {
+            setSent(false);
+          }, 3000);
+        })
+        .catch(error => {
+          console.log(error);
+          callback({
+            emailAddress: ""
+          });
+          setInnerPlaceholder(
+            "Your email has been sent! Why not send another? :)"
+          );
+          setTimeout(() => {
+            setSent(false);
+          }, 3000);
         });
     }
   };
@@ -64,40 +92,33 @@ function SegmentedInput(props) {
   return (
     <div className="segmented-input-wrapper">
       {referral ? (
-        <>
-          <input
-            type="text"
-            htmlFor="segmented-field"
-            value={
-              referral
-                ? `https://www.commonenergy.us/referrals?advocate=${userName}`
-                : ""
-            }
-            readOnly
-            disabled
-            className={cn({ "referral has-border": hasBorder })}
-          />
-          <label htmlFor="segmented-field">{inputLabel}</label>
-          <Button
-            maxWidth="170px"
-            primary
-            onClick={referral ? copyLink : onClick}
-          >
-            {copied ? "Copied!" : buttonText}
-          </Button>
-        </>
+        <Button
+          style={{
+            borderRadius: "5px",
+            margin: 0
+          }}
+          primary
+          onClick={copyLink}
+        >
+          {copied ? "Copied!" : buttonText}
+        </Button>
       ) : (
         <Formik
-          initialValues={{}}
-          onSubmit={values => {
-            inviteReferral(values);
+          initialValues={{
+            emailAddress: ""
           }}
-          render={props => (
+          onSubmit={(values, { resetForm }) => {
+            inviteReferral(values, resetForm);
+          }}
+        >
+          {props => (
             <Form>
               <Input
                 fullWidth
                 noMargin
                 outerLabel
+                placeholder={innerPlaceholder}
+                value={props.values.emailAddress || ""}
                 scrollOnFocus={false}
                 type="email"
                 fieldname="emailAddress"
@@ -114,14 +135,14 @@ function SegmentedInput(props) {
               </Button>
             </Form>
           )}
-        />
+        </Formik>
       )}
       <style jsx global>{`
         .segmented-input-wrapper {
           display: flex;
-          align-items: center;
+          align-items: flex-end;
           position: relative;
-          height: 3.75rem;
+          height: 5.75rem;
           width: 100%;
           margin: 0 auto;
           margin-bottom: 0.5rem;
@@ -131,7 +152,7 @@ function SegmentedInput(props) {
           display: flex;
           align-items: center;
           position: relative;
-          height: 3.75rem;
+          height: 5.75rem;
           width: 100%;
           margin: 0 auto;
         }
@@ -163,6 +184,13 @@ function SegmentedInput(props) {
             position: absolute;
             top: -35%;
             width: 150%;
+          }
+          .segmented-input-wrapper label {
+            width: 200%;
+            left: 0;
+          }
+          .segmented-input-wrapper {
+            justify-content: center;
           }
         }
       `}</style>
