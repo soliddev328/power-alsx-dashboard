@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
+import Router from "next/router";
 import axios from "axios";
 import NumberFormat from "react-number-format";
 import { withFirebase } from "../../firebase";
@@ -40,43 +41,20 @@ function MySource(props) {
 
   useEffect(() => {
     setIsLoading(true);
+
     props.firebase.doUpdateUser(async (user, idToken) => {
       global.analytics.page("Your project");
       const userInfo = await getUserData(user.uid, idToken);
+
       if (userInfo?.accounts) {
         if (
-          userInfo.accounts[selectedAccount.value].onboardingStatus ===
-          "Unassigned"
-        ) {
-          setOverlayDescription(
-            "Please stay tuned to learn more about the status of your project and your connection timeline! We will provide more details shortly, both here and by email -- and please feel free to always reach out with any questions at"
-          );
-        } else if (
-          userInfo.accounts[selectedAccount.value].onboardingStatus ===
-          "Project Live"
-        ) {
-          setOverlayDescription(
-            "Common Energy can connect you to our available project in your community in as little as 2-5 weeks. We'll keep you posted on our progress along the way -- and please feel free to always reach out with any questions at"
-          );
-        } else if (
-          userInfo.accounts[selectedAccount.value].onboardingStatus ===
-          "No Project"
-        ) {
-          setOverlayDescription(
-            "Currently, all our projects in your area are filled. However, because of your interest, we're able to work with a developer on a new project to bring more clean energy and savings to your community! Please stand-by for an update on new projects in a few weeks -- and feel free to reach out with any questions at"
-          );
-        } else if (
-          userInfo.accounts[selectedAccount.value].onboardingStatus ===
-          "Project Not Live"
-        ) {
-          setOverlayDescription(
-            "We're excited to let you know that we have an available project in your area, but we are not ready to connect you, as it is not yet ready and active. However, we will make sure we update you as we take the project through to completion. Please know that as an early subscriber, you've taken an important step in making this project a success! Feel free to reach out with any questions at"
-          );
-        } else if (
-          userInfo.accounts[selectedAccount.value].onboardingStatus ===
-          "Meter Live"
+          userInfo.accounts[selectedAccount.value].projectId &&
+          userInfo.accounts[selectedAccount.value].onboardingStatus !==
+            "Meter Inactive"
         ) {
           setOverlayDescription(false);
+        } else {
+          setOverlayDescription("Pending Connection...");
         }
 
         const projectData = await getProjectInfo(
@@ -100,7 +78,7 @@ function MySource(props) {
       {!overlayDescription && (
         <Text noMargin>
           Congratulations! This is the new clean energy project you’re helping
-          to build. When the project iscompleted this image will be replaced
+          to build. When the project is completed this image will be replaced
           with a picture of the finished solar farm.
         </Text>
       )}
@@ -173,33 +151,6 @@ function MySource(props) {
                 </div>
                 <div className="item">
                   <Text noMargin bold>
-                    Project Address:
-                  </Text>
-                  <Text noMargin>
-                    {projectInfo
-                      ? `${projectInfo.town}, ${projectInfo.state}`
-                      : ""}
-                  </Text>
-                </div>
-                <div className="item">
-                  <Text noMargin bold>
-                    Project Size:
-                  </Text>
-                  <Text noMargin>
-                    {projectInfo ? (
-                      <NumberFormat
-                        value={projectInfo.sizeDC}
-                        displayType={"text"}
-                        thousandSeparator={true}
-                        suffix={" kW DC"}
-                      />
-                    ) : (
-                      ""
-                    )}{" "}
-                  </Text>
-                </div>
-                <div className="item">
-                  <Text noMargin bold>
                     Annual generation:
                   </Text>
                   <Text noMargin>
@@ -213,6 +164,16 @@ function MySource(props) {
                     ) : (
                       ""
                     )}{" "}
+                  </Text>
+                </div>
+                <div className="item">
+                  <Text noMargin bold>
+                    Project Address:
+                  </Text>
+                  <Text noMargin>
+                    {projectInfo
+                      ? `${projectInfo.town}, ${projectInfo.state}`
+                      : ""}
                   </Text>
                 </div>
                 <div className="item">
@@ -232,6 +193,24 @@ function MySource(props) {
                     )}{" "}
                   </Text>
                 </div>
+                <div className="item">
+                  <Text noMargin bold>
+                    Project Size:
+                  </Text>
+                  <Text noMargin>
+                    {projectInfo ? (
+                      <NumberFormat
+                        value={projectInfo.sizeDC}
+                        displayType={"text"}
+                        thousandSeparator={true}
+                        suffix={" kW DC"}
+                      />
+                    ) : (
+                      ""
+                    )}{" "}
+                  </Text>
+                </div>
+
                 <div className="item">
                   <Text noMargin bold>
                     Equivalent trees planted:

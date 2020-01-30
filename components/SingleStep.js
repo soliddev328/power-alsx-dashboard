@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { FadeLoader } from "react-spinners";
+import cn from "classnames";
 import Highlight from "./Highlight";
 import { withFirebase } from "../firebase";
 import CONSTANTS from "../globals";
@@ -20,7 +21,7 @@ function SingleStep(props) {
     toast,
     children,
     image,
-    isFirst
+    wide
   } = props;
   const [isLoading, setIsLoading] = useState(true);
 
@@ -192,7 +193,7 @@ function SingleStep(props) {
   }, []);
 
   return (
-    <div className="content">
+    <div className={cn("content", { wide })}>
       {isLoading ? (
         renderLoader()
       ) : (
@@ -213,9 +214,13 @@ function SingleStep(props) {
       )}
       <style jsx>{`
         .content {
-          max-width: 87%;
+          max-width: 100%;
           margin: 0 auto;
-          position: relative;
+        }
+        .content.wide {
+          margin-left: -20%;
+          margin-right: -20%;
+          max-width: initial;
         }
         p {
           font-size: 1rem;
@@ -233,7 +238,6 @@ function SingleStep(props) {
         }
         .heading {
           margin-bottom: 1.5em;
-          position: relative;
         }
         figure {
           margin: 0;
@@ -241,6 +245,12 @@ function SingleStep(props) {
         }
         img {
           max-width: 65%;
+        }
+        @media (max-width: 1000px) {
+          .content.wide {
+            max-width: 90%;
+            margin: 0 auto;
+          }
         }
       `}</style>
       <style jsx global>{`
