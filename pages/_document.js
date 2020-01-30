@@ -148,7 +148,6 @@ export default class MyDocument extends Document {
           <meta name="twitter:site" content={settings.meta.twitterUserName} />
           <meta name="twitter:image" content="https://url/static/OG.jpg" />
           <meta name="twitter:image:alt" content="" />
-          <link rel="stylesheet" href="/static/global.css" />
           <script src="https://js.stripe.com/v3/" />
           <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js" />
           <script
