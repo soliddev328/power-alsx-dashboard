@@ -165,8 +165,21 @@ function Index(props) {
     props.firebase
       .doSignInWithEmailAndPassword(values.emailAddress, values.password)
       .then(authenticatedLogic)
-      .catch(error => {
-        setError({ code: error.code, message: error.message });
+      .catch(failure => {
+        if (failure.code === "auth/wrong-password") {
+          setError({
+            code: failure.code,
+            message: (
+              <>
+                The password is invalid or the user does not have a password.{" "}
+                <a href="/emailsignin">Click here</a> to access your account and
+                complete sign-up.
+              </>
+            )
+          });
+        } else {
+          setError({ code: failure.code, message: failure.message });
+        }
       });
   };
 
@@ -246,7 +259,7 @@ function Index(props) {
             margin: 0 auto;
           }
           .error {
-            height: 52px;
+            height: 65px;
             margin: 0;
             padding: 1em 0;
             text-align: center;
