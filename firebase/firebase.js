@@ -50,9 +50,18 @@ class Firebase {
       error => console.log(error)
     );
 
-  doSignOut = () => this.auth.signOut();
+  doSignOut = () => {
+    localStorage.clear();
+    this.auth.signOut();
+  };
 
-  doGetCurrentUser = callback => callback(this.auth.currentUser);
+  doGetCurrentUser = callback => {
+    if (this.auth.currentUser) {
+      callback(this.auth.currentUser);
+    } else {
+      callback(false);
+    }
+  };
 
   doGetCurrentUserIdToken = callback =>
     this.auth.currentUser.getIdToken(true).then(
