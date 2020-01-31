@@ -166,6 +166,7 @@ function Index(props) {
       .doSignInWithEmailAndPassword(values.emailAddress, values.password)
       .then(authenticatedLogic)
       .catch(failure => {
+        localStorage.setItem("email", values.emailAddress);
         if (failure.code === "auth/wrong-password") {
           setError({
             code: failure.code,
