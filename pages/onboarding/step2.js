@@ -25,7 +25,7 @@ function Step2() {
     billingMethod: ""
   });
 
-  const getData = async () => {
+  const getData = () => {
     let utility = "";
     let state = "";
     let storedBillingMethod = "";
@@ -53,7 +53,8 @@ function Step2() {
 
     return axios(`${API}/v1/utilities?${generatedParams}`)
       .then(response => {
-        const data = response?.data?.data[0];
+        const data = response?.data?.data;
+
         setUtility({
           project: {
             imageUrl:
