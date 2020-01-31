@@ -120,6 +120,7 @@ function Index(props) {
 
             // forward to the right page
             if (user?.signupCompleted) {
+              localStorage.setItem("loggedIn", true);
               router.push({
                 pathname: "/dashboard"
               });
@@ -160,7 +161,7 @@ function Index(props) {
     }
   };
 
-  const autenticate = values => {
+  const authenticate = values => {
     props.firebase
       .doSignInWithEmailAndPassword(values.emailAddress, values.password)
       .then(authenticatedLogic)
@@ -183,7 +184,7 @@ function Index(props) {
               password: ""
             }}
             onSubmit={values => {
-              autenticate(values);
+              authenticate(values);
             }}
           >
             {props => (

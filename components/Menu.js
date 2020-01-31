@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import axios from "axios";
 import MenuItem from "./MenuItem";
 import Text from "./Text";
@@ -11,17 +10,11 @@ const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 function MainMenu(props) {
-  const router = useRouter();
   const [accounts, setAccounts] = useState([]);
   const [{ selectedAccount }, dispatch] = useStateValue();
 
   const signOut = props => {
-    localStorage.setItem("loggedIn", false);
-    props.firebase.doSignOut().then(() => {
-      router.push({
-        pathname: "/"
-      });
-    });
+    props.firebase.doSignOut();
   };
 
   const getUserData = async (userUid, idToken) => {
