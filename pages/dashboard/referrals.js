@@ -70,13 +70,6 @@ function Referrals(props) {
           ? setReferralsData(referralsInfo[0])
           : setReferralsData({});
 
-        const referralsInfoDetails = await getReferralsDataDetails(
-          userInfo.username,
-          idToken
-        );
-
-        setReferralsDetails(referralsInfoDetails);
-
         setIsLoading(false);
       }
     });
