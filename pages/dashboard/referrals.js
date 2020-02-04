@@ -36,21 +36,7 @@ const getReferralsData = async (username, idToken) => {
   return data?.data;
 };
 
-const getReferralsDataDetails = async (username, idToken) => {
-  const { data } = await axios.get(
-    `${API}/v1/subscribers/referrals/details/${username}`,
-    {
-      headers: {
-        Authorization: idToken
-      }
-    }
-  );
-
-  return data?.data && data.data[0];
-};
-
 function Referrals(props) {
-  const [userData, setUserData] = useState({});
   const [referralsData, setReferralsData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
@@ -59,8 +45,6 @@ function Referrals(props) {
       global.analytics.page("Referrals");
       const userInfo = await getUserData(user.uid, idToken);
       if (userInfo) {
-        setUserData(userInfo);
-
         const referralsInfo = await getReferralsData(
           userInfo.username,
           idToken
