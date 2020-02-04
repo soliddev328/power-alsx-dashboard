@@ -4,20 +4,14 @@ import { FadeLoader } from "react-spinners";
 import Menubar from "./Menubar";
 import Text from "./Text";
 import Button from "./Button";
-import { withFirebase } from "../firebase";
 
-function Main(props) {
-  const { isLoading = true, children, popup = false } = props;
+function Main({ isLoading, children }) {
   const [displayPopup, setDisplayPopUp] = useState();
 
   useEffect(() => {
     const showPopup = JSON.parse(localStorage.getItem("showPopup"));
-    if (showPopup) {
-      setDisplayPopUp(!!popup);
-    } else {
-      setDisplayPopUp(false);
-    }
-  }, [popup]);
+    setDisplayPopUp(showPopup);
+  }, []);
 
   const renderLoader = () => {
     return (
@@ -166,4 +160,4 @@ function Main(props) {
   );
 }
 
-export default withFirebase(Main);
+export default Main;

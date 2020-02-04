@@ -47,7 +47,7 @@ const Dashboard = props => {
   }, [selectedAccount.value]);
 
   return (
-    <Main isLoading={isLoading} popup={true}>
+    <Main isLoading={isLoading}>
       <Head>
         <title>Common Energy - Home</title>
       </Head>
