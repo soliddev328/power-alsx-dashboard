@@ -23,7 +23,6 @@ const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 const Dashboard = props => {
-  const router = useRouter();
   const [{ selectedAccount }] = useStateValue();
   const [userData, setUserData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -36,13 +35,6 @@ const Dashboard = props => {
     });
     return response?.data?.data;
   };
-
-  useEffect(() => {
-    console.log("loaded");
-    // if (!JSON.parse(localStorage.getItem("loggedIn"))) {
-    //   router.push("/");
-    // }
-  }, []);
 
   useEffect(() => {
     setIsLoading(true);

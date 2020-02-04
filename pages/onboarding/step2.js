@@ -53,8 +53,7 @@ function Step2() {
 
     return axios(`${API}/v1/utilities?${generatedParams}`)
       .then(response => {
-        const data = response?.data?.data;
-
+        const data = response?.data?.data[0];
         setUtility({
           project: {
             imageUrl:
@@ -109,7 +108,6 @@ function Step2() {
               <figure>
                 <img src={utility?.project?.imageUrl} alt="" />
                 <figcaption>
-                  {console.log(utility.project)}
                   {utility?.project?.name}, {utility?.project?.state}
                 </figcaption>
                 <div className="state-graphic">{renderState()}</div>
