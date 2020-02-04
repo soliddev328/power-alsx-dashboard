@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import cn from "classnames";
 import axios from "axios";
 import { FadeLoader } from "react-spinners";
+import { withFirebase } from "../../firebase";
 import Section from "../Section";
 import Text from "../Text";
 import CONSTANTS from "../../globals";
@@ -45,13 +46,13 @@ const getReferralsDataDetails = async (username, idToken) => {
   return data && data.data && data.data[0];
 };
 
-export default function ReferralsList() {
+function ReferralsList(props) {
   const [isLoading, setIsLoading] = useState(true);
   const [contacts, setContacts] = useState();
   const [referralsDetails, setReferralsDetails] = useState({});
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged(user => {
+    props.firebase.doGetCurrentUser(user => {
       if (user) {
         user.getIdToken(true).then(async idToken => {
           const userInfo = await getUserData(user.uid, idToken);
@@ -210,3 +211,5 @@ export default function ReferralsList() {
     </Section>
   );
 }
+
+export default withFirebase(ReferralsList);
