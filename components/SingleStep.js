@@ -72,9 +72,7 @@ function SingleStep(props) {
 
   useEffect(() => {
     const isOnboarding = pathname.includes("/onboarding");
-
     props.firebase.doGetCurrentUser(firebaseUser => {
-      console.log("pinged firebase");
       if (!!firebaseUser) {
         firebaseUser.getIdToken(true).then(idToken => {
           axios
@@ -84,7 +82,6 @@ function SingleStep(props) {
               }
             })
             .then(response => {
-              console.log("success response from our server");
               const user = response?.data?.data;
               user.isAnonymous = firebaseUser.isAnonymous;
               routeUser(user);
