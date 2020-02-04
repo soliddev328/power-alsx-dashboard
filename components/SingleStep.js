@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import axios from "axios";
 import { FadeLoader } from "react-spinners";
+import { useRouter } from "next/router";
 import cn from "classnames";
 import Highlight from "./Highlight";
+import routeUser from "../lib/route-user";
 import { withFirebase } from "../firebase";
 import CONSTANTS from "../globals";
 
@@ -11,8 +12,6 @@ const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 function SingleStep(props) {
-  const router = useRouter();
-  const { pathname, query } = router;
   const {
     highlight,
     prefix,
@@ -24,6 +23,8 @@ function SingleStep(props) {
     wide
   } = props;
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
+  const { pathname, query } = router;
 
   const renderLoader = () => {
     return (
@@ -72,128 +73,33 @@ function SingleStep(props) {
   useEffect(() => {
     const isOnboarding = pathname.includes("/onboarding");
 
-    if (isOnboarding) {
-      if (localStorage.getItem("loggedIn")) {
-        router.push("/dashboard");
-      } else {
-        setIsLoading(true);
-        props.firebase.doGetCurrentUser(firebaseUser => {
-          if (!!firebaseUser) {
-            firebaseUser.getIdToken(true).then(idToken => {
-              axios
-                .get(`${API}/v1/subscribers/${firebaseUser.uid}`, {
-                  headers: {
-                    Authorization: idToken
-                  }
-                })
-                .then(response => {
-                  setIsLoading(false);
-                  const user = response?.data?.data;
-
-                  localStorage.setItem(
-                    "username",
-                    JSON.stringify({
-                      firstName: user.firstName,
-                      lastName: user.lastName
-                    })
-                  );
-                  localStorage.setItem("leadId", user?.leadId);
-                  localStorage.setItem("email", user?.email);
-
-                  // retrieve utility information
-                  const utility = user?.milestones?.utility;
-                  const imageName = utility?.replace(/\s/g, "") || false;
-                  const utilityInfo = {
-                    image: {
-                      src: imageName
-                        ? `/static/images/utilities/${imageName}.png`
-                        : "/static/images/utilities/placeholder.png",
-                      altText: "Utility logo"
-                    },
-                    label: utility
-                  };
-
-                  localStorage.setItem("utility", JSON.stringify(utilityInfo));
-
-                  // retrieve postalcode
-                  if (user?.milestones?.address?.postalCode) {
-                    const postalCode = user?.milestones?.address?.postalCode;
-                    localStorage.setItem(
-                      "postalCode",
-                      JSON.stringify(postalCode)
-                    );
-                  }
-
-                  if (user?.milestones?.utilityPaperOnly) {
-                    localStorage.setItem(
-                      "billingMethod",
-                      JSON.stringify({ billingMethod: "paper" })
-                    );
-                  }
-
-                  const userStillNeedstoAddPwd =
-                    !user?.milestones?.bankInfoCompleted &&
-                    firebaseUser?.isAnonymous;
-
-                  const userStillNeedsToAddUtilityInfo = !user?.milestones
-                    ?.utilityInfoCompleted;
-
-                  const userStillNeedstoAddBankInfo =
-                    (user?.milestones?.utilityInfoCompleted &&
-                      user?.milestones?.utilityLoginSuccessful) ||
-                    !user?.milestones?.bankInfoCompleted;
-
-                  const userStillNeedsToAddAddressInfo =
-                    user?.milestones?.utilityInfoCompleted &&
-                    !user?.milestones?.addressInfoCompleted;
-
-                  const notManualSignup = query.next;
-                  // forward to the right page
-                  if (userStillNeedsToAddUtilityInfo && !notManualSignup) {
-                    router.push({
-                      pathname: "/onboarding/step2",
-                      query: {
-                        onboardingNotFinished: true
-                      }
-                    });
-                  } else if (
-                    userStillNeedsToAddAddressInfo &&
-                    !notManualSignup
-                  ) {
-                    router.push({
-                      pathname: "/onboarding/step4.2",
-                      query: {
-                        onboardingNotFinished: true
-                      }
-                    });
-                  } else if (userStillNeedstoAddPwd && !notManualSignup) {
-                    router.push({
-                      pathname: "/onboarding/step5",
-                      query: {
-                        onboardingNotFinished: true
-                      }
-                    });
-                  } else if (userStillNeedstoAddBankInfo && !notManualSignup) {
-                    router.push({
-                      pathname: "/onboarding/step7",
-                      query: {
-                        onboardingNotFinished: true
-                      }
-                    });
-                  }
-                })
-                .catch(err => {
-                  console.log(err);
-                });
+    props.firebase.doGetCurrentUser(firebaseUser => {
+      console.log("pinged firebase");
+      if (!!firebaseUser) {
+        firebaseUser.getIdToken(true).then(idToken => {
+          axios
+            .get(`${API}/v1/subscribers/${firebaseUser.uid}`, {
+              headers: {
+                Authorization: idToken
+              }
+            })
+            .then(response => {
+              console.log("success response from our server");
+              const user = response?.data?.data;
+              user.isAnonymous = firebaseUser.isAnonymous;
+              routeUser(user);
+              if (isOnboarding) {
+                setIsLoading(false);
+              }
+            })
+            .catch(err => {
+              console.log(err);
             });
-          } else {
-            setIsLoading(false);
-          }
         });
+      } else {
+        setIsLoading(false);
       }
-    } else {
-      setIsLoading(false);
-    }
+    });
   }, []);
 
   return (

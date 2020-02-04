@@ -1,55 +1,17 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import cn from "classnames";
 import { FadeLoader } from "react-spinners";
 import Menubar from "./Menubar";
 import Text from "./Text";
 import Button from "./Button";
-import CONSTANTS from "../globals";
 import { withFirebase } from "../firebase";
-import { useStateValue } from "../state";
-
-const { API } =
-  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 function Main(props) {
   const { isLoading = true, children, popup = false } = props;
   const [displayPopup, setDisplayPopUp] = useState();
-  const [{ selectedAccount }] = useStateValue();
-  const [accounts, setAccounts] = useState([]);
-
-  const getUserData = async (userUid, idToken) => {
-    const { data } = await axios.get(`${API}/v1/subscribers/${userUid}`, {
-      headers: {
-        Authorization: idToken
-      }
-    });
-    return data && data.data;
-  };
-
-  useEffect(() => {
-    props.firebase.doUpdateUser(async (user, idToken) => {
-      if (user) {
-        const userData = await getUserData(user.uid, idToken);
-
-        if (userData?.accounts) {
-          userData?.accounts?.forEach((item, index) => {
-            setAccounts(prevState => [
-              ...prevState,
-              {
-                value: index,
-                label: item.name
-              }
-            ]);
-          });
-        }
-      }
-    });
-  }, []);
 
   useEffect(() => {
     const showPopup = JSON.parse(localStorage.getItem("showPopup"));
-
     if (showPopup) {
       setDisplayPopUp(!!popup);
     } else {
