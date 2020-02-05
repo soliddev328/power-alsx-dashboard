@@ -72,6 +72,9 @@ function SingleStep(props) {
 
   useEffect(() => {
     const isOnboarding = pathname.includes("/onboarding");
+    const isEmailSignIn = pathname.includes("/emailsignin");
+    const isForgotPassword = pathname.includes("/forgot-password");
+    const isResetPassword = pathname.includes("/reset-password");
     props.firebase.doGetCurrentUser(firebaseUser => {
       if (!!firebaseUser) {
         firebaseUser.getIdToken(true).then(idToken => {
@@ -83,9 +86,16 @@ function SingleStep(props) {
             })
             .then(response => {
               const user = response?.data?.data;
-              user.isAnonymous = firebaseUser.isAnonymous;
-              routeUser(user);
-              if (isOnboarding) {
+              if (user) {
+                user.isAnonymous = firebaseUser.isAnonymous;
+                routeUser(user);
+              }
+              if (
+                isOnboarding ||
+                isEmailSignIn ||
+                isForgotPassword ||
+                isResetPassword
+              ) {
                 setIsLoading(false);
               }
             })
