@@ -75,6 +75,7 @@ function SingleStep(props) {
     const isEmailSignIn = pathname.includes("/emailsignin");
     const isForgotPassword = pathname.includes("/forgot-password");
     const isResetPassword = pathname.includes("/reset-password");
+
     props.firebase.doGetCurrentUser(firebaseUser => {
       if (!!firebaseUser) {
         firebaseUser.getIdToken(true).then(idToken => {
@@ -94,7 +95,8 @@ function SingleStep(props) {
                 isOnboarding ||
                 isEmailSignIn ||
                 isForgotPassword ||
-                isResetPassword
+                isResetPassword ||
+                !user
               ) {
                 setIsLoading(false);
               }
