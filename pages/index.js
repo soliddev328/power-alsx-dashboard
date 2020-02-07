@@ -34,13 +34,13 @@ class Index extends React.Component {
   }
 
   componentDidUpdate() {
-    window.firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        Router.push({
-          pathname: "/dashboard"
-        });
-      }
-    });
+    // window.firebase.auth().onAuthStateChanged(user => {
+    //   if (user) {
+    //     Router.push({
+    //       pathname: "/dashboard"
+    //     });
+    //   }
+    // });
   }
 
   autenticate(values) {
