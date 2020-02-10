@@ -98,7 +98,7 @@ function Step8(props) {
                       .then(() => {
                         global.analytics.track("Sign-Up Completed", {});
                         localStorage.setItem("usercreated", true);
-                        localStorage.setItem("loggedIn", true);
+                        localStorage.setItem("showPopup", true);
                         router.push({
                           pathname: "/dashboard"
                         });
@@ -165,7 +165,7 @@ function Step8(props) {
     } else if (values.bankAccountNumber.length < 4) {
       setError("Bank Account Number should have at least 4 digits");
     } else {
-      props.firebase.doUpdateUser((user, idToken) => {
+      props.firebase.doGetCurrentUserIdToken(idToken => {
         axios
           .put(
             `${API}/v1/subscribers`,
@@ -184,7 +184,7 @@ function Step8(props) {
           .then(() => {
             global.analytics.track("Sign-Up Completed", {});
             localStorage.setItem("usercreated", true);
-            localStorage.setItem("loggedIn", true);
+            localStorage.setItem("showPopup", true);
             router.push({
               pathname: "/dashboard"
             });

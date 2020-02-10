@@ -23,7 +23,7 @@ const getUserData = async (userUid, idToken) => {
 const labelListCustom = ({ x, y, value }) => (
   <text
     x="50%"
-    y={y}
+    y={y || 0}
     dy={-10}
     fill="#555e80"
     fontSize={17}

@@ -193,7 +193,10 @@ function Step1(props) {
               global.analytics.track("Lead Created", {});
 
               router.push({
-                pathname: "/onboarding/step2"
+                pathname: "/onboarding/step2",
+                query: {
+                  next: true
+                }
               });
             })
             .catch(failure => {
