@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Head from "next/head";
-import Router from "next/router";
 import { withFirebase } from "../../firebase";
 import { useStateValue } from "../../state";
 import NumberFormat from "react-number-format";
