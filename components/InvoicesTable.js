@@ -17,13 +17,13 @@ const getInvoiceData = async (id, idToken) => {
 };
 
 const renderDownloadButton = props => {
-  const { id } = props;
+  const { item } = props;
   const [invoiceData, setInvoicedata] = useState(undefined);
   const [{ selectedAccount }, dispatch] = useStateValue();
 
   useEffect(() => {
-    props.firebase.doUpdateUser(async (user, idToken) => {
-      const invoiceBase64 = await getInvoiceData(user.id, idToken);
+    props.firebase.doGetCurrentUserIdToken(async idToken => {
+      const invoiceBase64 = await getInvoiceData(item, idToken);
       let base64Encoded;
 
       if (invoiceBase64 !== "No invoice found.") {
@@ -37,13 +37,13 @@ const renderDownloadButton = props => {
   }, [selectedAccount.value]);
 
   return (
-    <td key={`invoice-${id}`}>
+    <td key={`invoice-${item}`}>
       {invoiceData ? (
         invoiceData === "No invoice found." ? (
           <p>{invoiceData}</p>
         ) : (
           <a
-            download={`CE-Invoice-${id}`}
+            download={`CE-Invoice-${item}`}
             href={invoiceData}
             target="_blank"
             rel="noopener noreferrer"
@@ -67,6 +67,7 @@ const renderDownloadButton = props => {
 };
 
 const renderFirebaseDownloadButton = withFirebase(renderDownloadButton);
+
 function Table({ headers = [], data = [] }) {
   return (
     <div className="table-wrapper">
@@ -93,7 +94,7 @@ function Table({ headers = [], data = [] }) {
                     return <td key={`column-content-${index}`}>${item}</td>;
                   }
                   if (row.length === index + 1) {
-                    return renderFirebaseDownloadButton(item);
+                    return renderFirebaseDownloadButton({ item });
                   }
                   return (
                     <td
