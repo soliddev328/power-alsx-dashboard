@@ -23,7 +23,6 @@ const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 const Dashboard = props => {
-  const router = useRouter();
   const [{ selectedAccount }] = useStateValue();
   const [userData, setUserData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -38,13 +37,6 @@ const Dashboard = props => {
   };
 
   useEffect(() => {
-    console.log("loaded");
-    // if (!JSON.parse(localStorage.getItem("loggedIn"))) {
-    //   router.push("/");
-    // }
-  }, []);
-
-  useEffect(() => {
     setIsLoading(true);
     props.firebase.doUpdateUser(async (user, idToken) => {
       global.analytics.page("Dashboard");
@@ -55,7 +47,7 @@ const Dashboard = props => {
   }, [selectedAccount.value]);
 
   return (
-    <Main isLoading={isLoading} popup={true}>
+    <Main isLoading={isLoading}>
       <Head>
         <title>Common Energy - Home</title>
       </Head>

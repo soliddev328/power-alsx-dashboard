@@ -56,11 +56,9 @@ class Firebase {
   };
 
   doGetCurrentUser = callback => {
-    if (this.auth.currentUser) {
-      callback(this.auth.currentUser);
-    } else {
-      callback(false);
-    }
+    this.auth.onAuthStateChanged(user => {
+      callback(user);
+    });
   };
 
   doGetCurrentUserIdToken = callback =>
