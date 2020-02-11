@@ -82,6 +82,7 @@ function SegmentedInput(props) {
 
   useEffect(() => {
     props.firebase.doUpdateUser(async (user, idToken) => {
+      setToken(idToken);
       const userInfo = await getUserData(user.uid, idToken);
       if (userInfo) {
         setUserName(userInfo.username);
