@@ -97,7 +97,7 @@ function Step4(props) {
       setPostalCode(storedPostalCode);
       setBillingMethod(storedBillingMethod);
     } finally {
-      setCanLinkAccount(billingMethod?.includes("paper"));
+      setCanLinkAccount(!billingMethod?.includes("paper"));
       getLinks();
     }
   }, []);
