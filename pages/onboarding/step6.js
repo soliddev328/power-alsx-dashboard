@@ -1,116 +1,96 @@
-import React from "react";
-import Router from "next/router";
-import { Formik, Form } from "formik";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import Header from "../../components/Header";
-import RadioCard from "../../components/RadioCard";
 import SingleStep from "../../components/SingleStep";
 import Button from "../../components/Button";
 
-class Step6 extends React.Component {
-  componentDidMount() {
+function Step6() {
+  const router = useRouter();
+  const [partialConnection, setPartialConnection] = useState();
+
+  useEffect(() => {
     global.analytics.page("Step 6");
-  }
 
-  static async getInitialProps({ query }) {
-    const props = {
-      displayMessage: query.onboardingNotFinished
-    };
+    let storedPartialConnection = false;
 
-    return props;
-  }
+    if (window.localStorage.getItem("partialConnection")) {
+      storedPartialConnection = JSON.parse(
+        window.localStorage.getItem("partialConnection")
+      );
+    }
 
-  render() {
-    return (
-      <main>
-        <Header />
-        <SingleStep title="Going forward, instead of paying your utility you will pay Common Energy a lower amount for your electricity:">
-          <Formik
-            initialValues={{
-              paymentMethod: ""
-            }}
-            onSubmit={values => {
-              window.localStorage.setItem(
-                "paymentMethod",
-                JSON.stringify(values)
-              );
-              Router.push({
-                pathname: "/onboarding/step7"
-              });
-            }}
-          >
-            {props => (
-              <>
-                <Form>
-                  <RadioCard
-                    number="3"
-                    name="paymentMethod"
-                    value="manualBanking"
-                    heading="Automatic Payment via ACH"
-                    content="Receive an additional $25 credit with automatic deductions from your bank account"
-                    highlight="$25 credit"
-                  />
-                  <RadioCard
-                    number="1"
-                    name="paymentMethod"
-                    value="automatic"
-                    heading="Automatic Payment via Bank Link"
-                    content="Receive an additional $25 credit with automatic deductions from your bank account"
-                    highlight="$25 credit"
-                  />
-                  <RadioCard
-                    number="2"
-                    name="paymentMethod"
-                    value="creditCard"
-                    heading="Credit Card"
-                    content="A 2.9% processing fee is applied to cover transaction costs."
-                    highlight="2.9%"
-                  />
-                  <Button
-                    primary
-                    disabled={!!props.values.paymentMethod !== true}
-                  >
-                    Next
-                  </Button>
-                  <p className="small">
-                    <svg
-                      width="14"
-                      height="18"
-                      viewBox="0 0 14 18"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M13.9952011 10.470321c0-.92422-.7617776-1.67188-1.7018596-1.67032h-.5030834l-.0015915-3.9382c-.0023882-2.682-2.2256466-4.863999-4.957474-4.861799C4.0985501.002346 1.876979 2.184401 1.876979 4.865601l.0023882 3.9382h-.1775076C.7625723 8.806145 0 9.553801 0 10.475681l.0039798 5.853999C.0039798 17.25156.7657573 18 1.7058393 18l10.5923011-.00625C13.2374277 17.99375 14 17.24609 14 16.32343l-.0047989-5.853109zm-10.2882666-1.6664l-.0023883-3.9382c-.0023862-1.69376 1.4017601-3.0718 3.1259332-3.0742 1.7257401 0 3.1298028 1.37812 3.1322481 3.0704l.0023863 3.9382-6.2581793.0038z"
-                        fill="#2479FF"
-                        fillRule="evenodd"
-                      />
-                    </svg>
-                    All your information is 128 bit encrypted
-                  </p>
-                </Form>
-              </>
-            )}
-          </Formik>
-        </SingleStep>
-        <style jsx>{`
-          main {
-            display: block;
-            height: 88vh;
-            max-width: 700px;
-            margin: 0 auto;
-          }
-          p.small {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-          }
-          p svg {
-            margin-right: 10px;
-          }
-        `}</style>
-      </main>
-    );
-  }
+    setPartialConnection(storedPartialConnection);
+  }, []);
+
+  const renderContent = () => {
+    if (partialConnection) {
+      return (
+        <p className="message">
+          We are connecting your account and will contact you if we need more
+          information
+          <style jsx>{`
+            .message {
+              text-align: center;
+            }
+          `}</style>
+        </p>
+      );
+    } else {
+      return (
+        <>
+          <svg width="55" height="55" xmlns="http://www.w3.org/2000/svg">
+            <g fill="none" fillRule="evenodd">
+              <circle cx="27.5" cy="27.5" r="27.5" fill="#41EF8B" />
+              <path
+                d="M32.9977909 21.3976621c1.6389735-1.6389735 4.2050581.8556542 2.494699 2.494699l-10.262155 10.333588c-.712883.6414974-1.7817447.6414974-2.494699 0l-5.1310774-5.2025105c-1.6389731-1.6389736.8556542-4.1336251 2.4946989-2.494699l3.9195632 3.9195632 8.9789703-9.0506407z"
+                fill="#FFF"
+              />
+            </g>
+          </svg>
+          <p>Congratulations, you're connected!</p>
+        </>
+      );
+    }
+  };
+
+  return (
+    <main>
+      <Header />
+      <SingleStep>
+        <div className="loading">{renderContent()}</div>
+        <Button
+          primary
+          onClick={() => {
+            router.push({
+              pathname: "/onboarding/step7",
+              query: {
+                next: true
+              }
+            });
+          }}
+        >
+          Next
+        </Button>
+      </SingleStep>
+      <style jsx>{`
+        main {
+          display: block;
+          height: 88vh;
+          max-width: 700px;
+          margin: 0 auto;
+        }
+        .loading {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        }
+        h3 {
+          text-align: center;
+        }
+      `}</style>
+    </main>
+  );
 }
 
 export default Step6;

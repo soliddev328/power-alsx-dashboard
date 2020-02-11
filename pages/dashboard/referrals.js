@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Router from "next/router";
 import Head from "next/head";
 import axios from "axios";
 import Main from "../../components/Main";
@@ -11,6 +10,7 @@ import Text from "../../components/Text";
 import Icon from "../../components/Icon";
 import Sharing from "../../components/Referrals/Sharing";
 import CONSTANTS from "../../globals";
+import { withFirebase } from "../../firebase";
 
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
@@ -21,7 +21,7 @@ const getUserData = async (userUid, idToken) => {
       Authorization: idToken
     }
   });
-  return data && data.data;
+  return data?.data;
 };
 
 const getReferralsData = async (username, idToken) => {
@@ -33,37 +33,28 @@ const getReferralsData = async (username, idToken) => {
       }
     }
   );
-  return data && data.data;
+  return data?.data;
 };
 
-export default function Referrals() {
+function Referrals(props) {
   const [referralsData, setReferralsData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        global.analytics.page("Referrals");
+    props.firebase.doUpdateUser(async (user, idToken) => {
+      global.analytics.page("Referrals");
+      const userInfo = await getUserData(user.uid, idToken);
+      if (userInfo) {
+        const referralsInfo = await getReferralsData(
+          userInfo.username,
+          idToken
+        );
 
-        user.getIdToken(true).then(async idToken => {
-          const userInfo = await getUserData(user.uid, idToken);
-          if (userInfo) {
-            const referralsInfo = await getReferralsData(
-              userInfo.username,
-              idToken
-            );
+        referralsInfo
+          ? setReferralsData(referralsInfo[0])
+          : setReferralsData({});
 
-            referralsInfo
-              ? setReferralsData(referralsInfo[0])
-              : setReferralsData({});
-
-            setIsLoading(false);
-          }
-        });
-      } else {
-        Router.push({
-          pathname: "/"
-        });
+        setIsLoading(false);
       }
     });
   }, []);
@@ -184,3 +175,5 @@ export default function Referrals() {
     </Main>
   );
 }
+
+export default withFirebase(Referrals);

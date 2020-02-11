@@ -3,6 +3,7 @@ import Head from "next/head";
 import Router from "next/router";
 import axios from "axios";
 import NumberFormat from "react-number-format";
+import { withFirebase } from "../../firebase";
 import { useStateValue } from "../../state";
 import Main from "../../components/Main";
 import Section from "../../components/Section";
@@ -20,7 +21,7 @@ const getUserData = async (userUid, idToken) => {
       Authorization: idToken
     }
   });
-  return data && data.data;
+  return data?.data;
 };
 
 const getProjectInfo = async (projectId, idToken) => {
@@ -29,10 +30,10 @@ const getProjectInfo = async (projectId, idToken) => {
       Authorization: idToken
     }
   });
-  return data && data.data ? data.data[0] : {};
+  return data?.data ? data.data[0] : {};
 };
 
-export default function MySource() {
+function MySource(props) {
   const [isLoading, setIsLoading] = useState(true);
   const [overlayDescription, setOverlayDescription] = useState(false);
   const [projectInfo, setProjectInfo] = useState({});
@@ -40,34 +41,28 @@ export default function MySource() {
 
   useEffect(() => {
     setIsLoading(true);
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        global.analytics.page("Your project");
-        user.getIdToken(true).then(async idToken => {
-          const userInfo = await getUserData(user.uid, idToken);
-          if (userInfo && userInfo.accounts) {
-            if (
-              userInfo.accounts[selectedAccount.value].projectId &&
-              userInfo.accounts[selectedAccount.value].onboardingStatus !==
-                "Meter Inactive"
-            ) {
-              setOverlayDescription(false);
-            } else {
-              setOverlayDescription("Pending Connection...");
-            }
 
-            const projectData = await getProjectInfo(
-              userInfo.accounts[selectedAccount.value].projectId,
-              idToken
-            );
-            setProjectInfo(projectData);
-            setIsLoading(false);
-          }
-        });
-      } else {
-        Router.push({
-          pathname: "/"
-        });
+    props.firebase.doUpdateUser(async (user, idToken) => {
+      global.analytics.page("Your project");
+      const userInfo = await getUserData(user.uid, idToken);
+
+      if (userInfo?.accounts) {
+        if (
+          userInfo.accounts[selectedAccount.value].projectId &&
+          userInfo.accounts[selectedAccount.value].onboardingStatus !==
+            "Meter Inactive"
+        ) {
+          setOverlayDescription(false);
+        } else {
+          setOverlayDescription("Pending Connection...");
+        }
+
+        const projectData = await getProjectInfo(
+          userInfo.accounts[selectedAccount.value].projectId,
+          idToken
+        );
+        setProjectInfo(projectData);
+        setIsLoading(false);
       }
     });
   }, [selectedAccount.value]);
@@ -257,3 +252,5 @@ export default function MySource() {
     </Main>
   );
 }
+
+export default withFirebase(MySource);

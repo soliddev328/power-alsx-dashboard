@@ -10,6 +10,8 @@ import Phoneinput from "../../components/Phoneinput";
 import Input from "../../components/Input";
 import Table from "../../components/Table";
 import CONSTANTS from "../../globals";
+import { useStateValue } from "../../state";
+import { withFirebase } from "../../firebase";
 
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
@@ -20,7 +22,7 @@ const getUserData = async (userUid, idToken) => {
       Authorization: idToken
     }
   });
-  return response && response.data && response.data.data;
+  return response?.data?.data;
 };
 
 const getPaymentMethods = accounts => {
@@ -29,7 +31,7 @@ const getPaymentMethods = accounts => {
   if (accounts.length > 0) {
     accounts.forEach(element => {
       const singleMethod = [];
-      singleMethod.push(element.address.street);
+      singleMethod.push(element?.address?.street);
       element.hasACH
         ? singleMethod.push("ACH")
         : singleMethod.push("Credit Card");
@@ -40,28 +42,20 @@ const getPaymentMethods = accounts => {
   return allMethods;
 };
 
-export default function Profile() {
+function Profile(props) {
   const [userData, setUserdata] = useState({});
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [{ selectedAccount }, dispatch] = useStateValue();
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        global.analytics.page("Profile");
-        user.getIdToken(true).then(async idToken => {
-          const userInfo = await getUserData(user.uid, idToken);
-          console.log(userInfo);
-          if (userInfo) {
-            setUserdata(userInfo);
-            setPaymentMethods(getPaymentMethods(userInfo.accounts || []));
-            setIsLoading(false);
-          }
-        });
-      } else {
-        Router.push({
-          pathname: "/"
-        });
+    props.firebase.doUpdateUser(async (user, idToken) => {
+      global.analytics.page("Profile");
+      const userInfo = await getUserData(user.uid, idToken);
+      if (userInfo) {
+        setUserdata(userInfo);
+        setPaymentMethods(getPaymentMethods(userInfo.accounts || []));
+        setIsLoading(false);
       }
     });
   }, []);
@@ -84,7 +78,7 @@ export default function Profile() {
                 fullWidth
                 label="Name"
                 fieldname="name"
-                value={userData && userData.firstName}
+                value={userData?.firstName}
               />
               <Input
                 readOnly
@@ -92,7 +86,7 @@ export default function Profile() {
                 fullWidth
                 label="Last Name"
                 fieldname="last-name"
-                value={userData && userData.lastName}
+                value={userData?.lastName}
               />
             </Section>
             <Section columns="3">
@@ -102,7 +96,7 @@ export default function Profile() {
                 fullWidth
                 label="Email"
                 fieldname="email"
-                value={userData && userData.email}
+                value={userData?.email}
               />
               <Input
                 readOnly
@@ -111,16 +105,14 @@ export default function Profile() {
                 label="Primary Address"
                 fieldname="primary-address"
                 value={
-                  userData && userData.accounts
-                    ? userData.accounts[0].address.street
-                    : ""
+                  userData?.accounts[selectedAccount.value]?.address?.street
                 }
               />
               <Phoneinput
                 readOnly
                 outerLabel
                 fullWidth
-                value={(userData && userData.phone) || ""}
+                value={userData?.phone || ""}
                 onChangeEvent={props.setFieldValue}
                 onBlurEvent={props.setFieldTouched}
                 label="Phone Number"
@@ -134,11 +126,7 @@ export default function Profile() {
                 fullWidth
                 label="City"
                 fieldname="city"
-                value={
-                  userData && userData.accounts
-                    ? userData.accounts[0].address.city
-                    : ""
-                }
+                value={userData?.accounts[selectedAccount.value]?.address?.city}
               />
               <Input
                 readOnly
@@ -147,9 +135,7 @@ export default function Profile() {
                 label="State"
                 fieldname="state"
                 value={
-                  userData && userData.accounts
-                    ? userData.accounts[0].address.state
-                    : ""
+                  userData?.accounts[selectedAccount.value]?.address?.state
                 }
               />
               <Input
@@ -159,9 +145,7 @@ export default function Profile() {
                 label="Zip"
                 fieldname="zipcode"
                 value={
-                  userData && userData.accounts
-                    ? userData.accounts[0].address.postalCode
-                    : ""
+                  userData?.accounts[selectedAccount.value]?.address?.postalCode
                 }
               />
             </Section>
@@ -177,3 +161,5 @@ export default function Profile() {
     </Main>
   );
 }
+
+export default withFirebase(Profile);
