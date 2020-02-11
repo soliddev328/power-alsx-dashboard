@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { BarChart, Bar, YAxis, CartesianGrid, LabelList } from "recharts";
+import axios from "axios";
 import Text from "../Text";
 import Section from "../Section";
+import { withFirebase } from "../../firebase";
 import { useStateValue } from "../../state";
 import ArrowIcon from "../Icons/ArrowIcon";
-import axios from "axios";
 import CONSTANTS from "../../globals";
 
 const { API } =
@@ -16,13 +17,13 @@ const getUserData = async (userUid, idToken) => {
       Authorization: idToken
     }
   });
-  return response && response.data && response.data.data;
+  return response?.data?.data;
 };
 
 const labelListCustom = ({ x, y, value }) => (
   <text
     x="50%"
-    y={y}
+    y={y || 0}
     dy={-10}
     fill="#555e80"
     fontSize={17}
@@ -33,7 +34,7 @@ const labelListCustom = ({ x, y, value }) => (
   </text>
 );
 
-function EmissionsChart() {
+function EmissionsChart(props) {
   const [emissionsInfo, setEmissionsInfo] = useState();
   const [capAmount, setCapAmount] = useState();
   const [{ selectedAccount }] = useStateValue();
@@ -68,15 +69,12 @@ function EmissionsChart() {
   );
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        user.getIdToken(true).then(async idToken => {
-          const userInfo = await getUserData(user.uid, idToken);
-          const { emissions } = userInfo.accounts[selectedAccount.value];
-          setEmissionsInfo(emissions?.CO2);
-          setCapAmount(emissions?.CO2 * 1.01);
-        });
-      }
+    props.firebase.doUpdateUser(async (user, idToken) => {
+      const userInfo = await getUserData(user.uid, idToken);
+      const { emissions } = userInfo.accounts[selectedAccount.value];
+
+      setEmissionsInfo(emissions?.CO2);
+      setCapAmount(emissions?.CO2 * 1.01);
     });
   }, [selectedAccount.value]);
 
@@ -167,4 +165,4 @@ function EmissionsChart() {
   );
 }
 
-export default EmissionsChart;
+export default withFirebase(EmissionsChart);

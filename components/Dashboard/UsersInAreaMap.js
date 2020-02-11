@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import GoogleMapReact from "google-map-react";
+import { withFirebase } from "../../firebase";
 import { useStateValue } from "../../state";
 import Container from "../../components/Container";
 import Text from "../Text";
@@ -15,7 +16,7 @@ const getUserData = async (userUid, idToken) => {
       Authorization: idToken
     }
   });
-  return response && response.data && response.data.data;
+  return response?.data?.data;
 };
 
 const getNearbyUsers = async (lat, lon, idToken) => {
@@ -27,40 +28,36 @@ const getNearbyUsers = async (lat, lon, idToken) => {
       }
     }
   );
-  return response && response.data && response.data.data;
+  return response?.data?.data;
 };
 
-export default function UsersInAreaMap() {
+function UsersInAreaMap(props) {
   const [empty, setEmpty] = useState(false);
   const [mapLocation, setMapLocation] = useState([]);
   const [nearbyUsers, setNearbyUsers] = useState([]);
   const [{ selectedAccount }] = useStateValue();
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        user.getIdToken(true).then(async idToken => {
-          const userInfo = await getUserData(user.uid, idToken);
+    props.firebase.doUpdateUser(async (user, idToken) => {
+      const userInfo = await getUserData(user.uid, idToken);
 
-          if (userInfo && userInfo.accounts) {
-            const nearbyUsersInfo = await getNearbyUsers(
-              userInfo.accounts[selectedAccount.value].address.lat,
-              userInfo.accounts[selectedAccount.value].address.lon,
-              idToken
-            );
+      if (userInfo?.accounts) {
+        const nearbyUsersInfo = await getNearbyUsers(
+          userInfo?.accounts[selectedAccount.value]?.address?.lat,
+          userInfo?.accounts[selectedAccount.value]?.address?.lon,
+          idToken
+        );
 
-            setMapLocation([
-              parseFloat(userInfo.accounts[selectedAccount.value].address.lat),
-              parseFloat(userInfo.accounts[selectedAccount.value].address.lon)
-            ]);
+        setMapLocation([
+          parseFloat(userInfo?.accounts[selectedAccount.value]?.address?.lat),
+          parseFloat(userInfo?.accounts[selectedAccount.value]?.address?.lon)
+        ]);
 
-            if (nearbyUsersInfo) {
-              setNearbyUsers(nearbyUsersInfo);
-            } else {
-              setEmpty(true);
-            }
-          }
-        });
+        if (nearbyUsersInfo) {
+          setNearbyUsers(nearbyUsersInfo);
+        } else {
+          setEmpty(true);
+        }
       }
     });
   }, [selectedAccount.value]);
@@ -135,3 +132,5 @@ export default function UsersInAreaMap() {
     </div>
   );
 }
+
+export default withFirebase(UsersInAreaMap);

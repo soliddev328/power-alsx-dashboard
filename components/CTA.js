@@ -5,7 +5,7 @@ export default function CTA({ secondary, onClick, type, info, children }) {
     <button
       className={secondary ? "secondary" : ""}
       onClick={onClick}
-      type={type ? type : "submit"}
+      type={type || "submit"}
     >
       <span>{children}</span>
       {info && info.length && <InfoIcon content={info} />}

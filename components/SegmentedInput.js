@@ -6,6 +6,7 @@ import { Formik, Form } from "formik";
 import Input from "./Input";
 import Button from "./Button";
 import CONSTANTS from "../globals";
+import { withFirebase } from "../firebase";
 
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
@@ -16,22 +17,16 @@ const getUserData = async (userUid, idToken) => {
       Authorization: idToken
     }
   });
-  return response && response.data && response.data.data;
+  return response?.data?.data;
 };
 
-export default function SegmentedInput({
-  inputLabel,
-  referral,
-  buttonText,
-  hasBorder,
-  placeholder,
-  onClick
-}) {
+function SegmentedInput(props) {
   const [userName, setUserName] = useState("");
-  const [innerPlaceholder, setInnerPlaceholder] = useState(placeholder);
+  const [innerPlaceholder, setInnerPlaceholder] = useState(props.placeholder);
   const [token, setToken] = useState();
   const [copied, setCopied] = useState(false);
   const [sent, setSent] = useState(false);
+  const { inputLabel, referral, buttonText, hasBorder, onClick } = props;
 
   const copyLink = () => {
     const referralUrl = `https://www.commonenergy.us/referrals?advocate=${userName}`;
@@ -86,19 +81,10 @@ export default function SegmentedInput({
   };
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        user.getIdToken(true).then(async idToken => {
-          setToken(idToken);
-          const userInfo = await getUserData(user.uid, idToken);
-          if (userInfo) {
-            setUserName(userInfo.username);
-          }
-        });
-      } else {
-        Router.push({
-          pathname: "/"
-        });
+    props.firebase.doUpdateUser(async (user, idToken) => {
+      const userInfo = await getUserData(user.uid, idToken);
+      if (userInfo) {
+        setUserName(userInfo.username);
       }
     });
   }, []);
@@ -211,3 +197,5 @@ export default function SegmentedInput({
     </div>
   );
 }
+
+export default withFirebase(SegmentedInput);

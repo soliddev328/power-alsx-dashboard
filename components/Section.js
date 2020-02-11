@@ -80,7 +80,7 @@ export default function Section({
           margin: 0 auto;
         }
 
-        @media (max-width: 1400px) {
+        @media (max-width: 1200px) {
           .section {
             ${!singleColumn
               ? "grid-template-columns: repeat(auto-fill, minmax(calc(50% - 40px), 1fr));"

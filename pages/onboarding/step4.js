@@ -1,7 +1,8 @@
-import React from "react";
-import Router from "next/router";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import { Formik, Form } from "formik";
 import axios from "axios";
+import { withFirebase } from "../../firebase";
 import { FadeLoader } from "react-spinners";
 import Header from "../../components/Header";
 import Input from "../../components/Input";
@@ -13,36 +14,25 @@ import CONSTANTS from "../../globals";
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
-class Step4 extends React.Component {
-  constructor(props) {
-    super(props);
+function Step4(props) {
+  const router = useRouter();
+  const { query } = router;
+  const [isLoading, setIsLoading] = useState(false);
+  const [canLinkAccount, setCanLinkAccount] = useState(false);
+  const [leadId, setLeadId] = useState();
+  const [utility, setUtility] = useState();
+  const [currentUtility, setCurrentUtility] = useState();
+  const [postalCode, setPostalCode] = useState();
+  const [billingMethod, setBillingMethod] = useState();
+  const [forgotPwdLink, setForgotPwdLink] = useState();
+  const [forgotEmailLink, setForgotEmailLink] = useState();
+  const [createLoginLink, setCreateLoginLink] = useState();
+  const [agreement, setAgreement] = useState({
+    terms: "",
+    conditions: ""
+  });
 
-    this.state = {
-      isLoading: false,
-      currentUtility: "",
-      forgotPwdLink: "",
-      forgotEmailLink: "",
-      createLoginLink: "",
-      agreement: {
-        terms: "",
-        conditions: ""
-      }
-    };
-  }
-
-  static async getInitialProps({ req, query, params }) {
-    if (req) {
-      try {
-        return { query: req.query, params: req.params };
-      } catch (err) {
-        return { query: req.query, params: req.params };
-      }
-    }
-
-    return { query, params };
-  }
-
-  getLinks() {
+  const getLinks = () => {
     let storedPostalCode = JSON.parse(localStorage.getItem("postalCode"));
     let storedUtility = JSON.parse(localStorage.getItem("utility"));
 
@@ -62,23 +52,21 @@ class Step4 extends React.Component {
             if (response.data.data) {
               const data = response.data.data[0];
 
-              this.setState({
-                forgotPwdLink: data.forgotPwdLink,
-                forgotEmailLink: data.forgotEmailLink,
-                createLoginLink: data.createLoginLink,
-                agreement: {
-                  terms: data.agreement.termsLink,
-                  conditions: data.agreement.conditionsLink
-                }
+              setForgotPwdLink(data.forgotPwdLink);
+              setForgotEmailLink(data.forgotEmailLink);
+              setCreateLoginLink(data.createLoginLink);
+              setAgreement({
+                terms: data.agreement.termsLink,
+                conditions: data.agreement.conditionsLink
               });
             }
           });
         }
       });
     }
-  }
+  };
 
-  componentDidMount() {
+  useEffect(() => {
     global.analytics.page("Step 4");
 
     let storedLeadId = "";
@@ -102,22 +90,27 @@ class Step4 extends React.Component {
       storedBillingMethod = JSON.parse(localStorage.getItem("billingMethod"));
     }
 
-    this.setState(
-      {
-        leadId: storedLeadId,
-        utility: storedUtility.label,
-        currentUtility: storedUtility,
-        postalCode: storedPostalCode,
-        billingMethod: storedBillingMethod
-      },
-      this.getLinks()
-    );
-  }
+    try {
+      setLeadId(storedLeadId);
+      setUtility(storedUtility.label);
+      setCurrentUtility(storedUtility);
+      setPostalCode(storedPostalCode);
+      setBillingMethod(storedBillingMethod);
+    } finally {
+      setCanLinkAccount(billingMethod?.includes("paper"));
+      getLinks();
+    }
+  }, []);
 
-  renderUtilityLogin() {
-    const { query } = this.props;
-    const { leadId, utility, agreement } = this.state;
+  const renderText = () => {
+    let text = canLinkAccount
+      ? "Ok great. Let's connect your account and get you saving!"
+      : "No problem! We can use your account number to get you connected and saving.";
 
+    return isLoading ? "" : text;
+  };
+
+  const renderUtilityLogin = () => {
     return (
       <>
         {query && query.error && (
@@ -131,137 +124,17 @@ class Step4 extends React.Component {
             utilityPassword: ""
           }}
           onSubmit={values => {
-            this.setState({ isLoading: true });
-            window.firebase
-              .auth()
-              .currentUser.getIdToken(true)
-              .then(idToken => {
-                axios
-                  .put(
-                    `${API}/v1/subscribers/utilities/link`,
-                    {
-                      leadId: leadId,
-                      utility: utility,
-                      agreementChecked: !!values.acceptedTermsAndConditions,
-                      utilityUsername: values.utilityUser,
-                      utilityPwd: values.utilityPassword
-                    },
-                    {
-                      headers: {
-                        Authorization: idToken
-                      }
-                    }
-                  )
-                  .then(response => {
-                    const data = response.data.data;
-
-                    localStorage.setItem("linkedUtility", JSON.stringify(data));
-
-                    if (data && data[0]) {
-                      if (data[0].hasLoggedIn) {
-                        localStorage.setItem("partialConnection", false);
-                        Router.push({
-                          pathname: "/onboarding/step5"
-                        });
-                      } else {
-                        this.setState({ isLoading: false });
-                        Router.push({
-                          pathname: "/onboarding/step4",
-                          query: {
-                            error: true
-                          }
-                        });
-                      }
-                    } else {
-                      localStorage.setItem("partialConnection", true);
-                      Router.push({
-                        pathname: "/onboarding/step5"
-                      });
-                    }
-                  })
-                  .catch(err => {
-                    console.log(err);
-                  });
-              });
-          }}
-        >
-          {props => (
-            <>
-              <Form>
-                <Input label="User name" fieldname="utilityUser" />
-                <Input
-                  type="password"
-                  label="Password"
-                  fieldname="utilityPassword"
-                  autoComplete="no"
-                />
-                <Checkbox fieldname="acceptedTermsAndConditions">
-                  <p className="checkbox__label">
-                    I authorize Common Energy to act as my Agent and to enroll
-                    me in a clean energy savings program, according to these{" "}
-                    <a
-                      href={agreement.terms}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      terms
-                    </a>{" "}
-                    and{" "}
-                    <a
-                      href={agreement.conditions}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      conditions
-                    </a>
-                    .
-                  </p>
-                </Checkbox>
-                <Button
-                  primary
-                  disabled={
-                    !props.values.acceptedTermsAndConditions != "" ||
-                    !props.values.utilityUser != "" ||
-                    !props.values.utilityPassword != ""
-                  }
-                >
-                  Next
-                </Button>
-              </Form>
-            </>
-          )}
-        </Formik>
-        <style jsx>{`
-          .error {
-            text-align: center;
-            color: red;
-          }
-        `}</style>
-      </>
-    );
-  }
-
-  renderAskForUtilityAccount() {
-    const { leadId, agreement } = this.state;
-
-    return (
-      <Formik
-        initialValues={{
-          utilityAccountNumber: "",
-          acceptedTermsAndConditions: false
-        }}
-        onSubmit={values => {
-          window.firebase
-            .auth()
-            .currentUser.getIdToken(true)
-            .then(idToken => {
+            props.firebase.doUpdateUser((user, idToken) => {
+              setIsLoading(true);
               axios
                 .put(
-                  `${API}/v1/subscribers`,
+                  `${API}/v1/subscribers/utilities/link`,
                   {
                     leadId: leadId,
+                    utility: utility,
                     agreementChecked: !!values.acceptedTermsAndConditions,
-                    utilityAccountNumber: values.utilityAccountNumber
+                    utilityUsername: values.utilityUser,
+                    utilityPwd: values.utilityPassword
                   },
                   {
                     headers: {
@@ -269,22 +142,54 @@ class Step4 extends React.Component {
                     }
                   }
                 )
-                .then(() => {
-                  localStorage.setItem("partialConnection", true);
-                  Router.push({
-                    pathname: "/onboarding/step4.2"
-                  });
+                .then(response => {
+                  const { data } = response?.data;
+
+                  localStorage.setItem("linkedUtility", JSON.stringify(data));
+
+                  if (data[0]) {
+                    if (data[0].hasLoggedIn) {
+                      localStorage.setItem("partialConnection", false);
+                      router.push({
+                        pathname: "/onboarding/step5",
+                        query: {
+                          next: true
+                        }
+                      });
+                    } else {
+                      setIsLoading(false);
+                      router.push({
+                        pathname: "/onboarding/step4",
+                        query: {
+                          error: true
+                        }
+                      });
+                    }
+                  } else {
+                    localStorage.setItem("partialConnection", true);
+                    router.push({
+                      pathname: "/onboarding/step5",
+                      query: {
+                        next: true
+                      }
+                    });
+                  }
                 })
-                .catch(error => {
-                  console.log(error);
+                .catch(err => {
+                  console.log(err);
                 });
             });
-        }}
-      >
-        {props => (
-          <>
+          }}
+        >
+          {props => (
             <Form>
-              <Input label="Account Number" fieldname="utilityAccountNumber" />
+              <Input label="User name" fieldname="utilityUser" />
+              <Input
+                type="password"
+                label="Password"
+                fieldname="utilityPassword"
+                autoComplete="no"
+              />
               <Checkbox fieldname="acceptedTermsAndConditions">
                 <p className="checkbox__label">
                   I authorize Common Energy to act as my Agent and to enroll me
@@ -310,31 +215,102 @@ class Step4 extends React.Component {
               <Button
                 primary
                 disabled={
-                  !props.values.utilityAccountNumber != "" ||
-                  !props.values.acceptedTermsAndConditions
+                  !props.values.acceptedTermsAndConditions != "" ||
+                  !props.values.utilityUser != "" ||
+                  !props.values.utilityPassword != ""
                 }
               >
                 Next
               </Button>
             </Form>
-          </>
+          )}
+        </Formik>
+        <style jsx>{`
+          .error {
+            text-align: center;
+            color: red;
+          }
+        `}</style>
+      </>
+    );
+  };
+
+  const renderAskForUtilityAccount = () => {
+    return (
+      <Formik
+        initialValues={{
+          utilityAccountNumber: "",
+          acceptedTermsAndConditions: false
+        }}
+        onSubmit={values => {
+          props.firebase.doUpdateUser((user, idToken) => {
+            axios
+              .put(
+                `${API}/v1/subscribers`,
+                {
+                  leadId: leadId,
+                  agreementChecked: !!values.acceptedTermsAndConditions,
+                  utilityAccountNumber: values.utilityAccountNumber
+                },
+                {
+                  headers: {
+                    Authorization: idToken
+                  }
+                }
+              )
+              .then(() => {
+                localStorage.setItem("partialConnection", true);
+                router.push({
+                  pathname: "/onboarding/step4.2"
+                });
+              })
+              .catch(error => {
+                console.log(error);
+              });
+          });
+        }}
+      >
+        {props => (
+          <Form>
+            <Input label="Account Number" fieldname="utilityAccountNumber" />
+            <Checkbox fieldname="acceptedTermsAndConditions">
+              <p className="checkbox__label">
+                I authorize Common Energy to act as my Agent and to enroll me in
+                a clean energy savings program, according to these{" "}
+                <a
+                  href={agreement.terms}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  terms
+                </a>{" "}
+                and{" "}
+                <a
+                  href={agreement.conditions}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  conditions
+                </a>
+                .
+              </p>
+            </Checkbox>
+            <Button
+              primary
+              disabled={
+                !props.values.utilityAccountNumber != "" ||
+                !props.values.acceptedTermsAndConditions
+              }
+            >
+              Next
+            </Button>
+          </Form>
         )}
       </Formik>
     );
-  }
+  };
 
-  renderForms() {
-    const { billingMethod } = this.state;
-
-    const canLinkAccount =
-      billingMethod && billingMethod.indexOf("paper") !== 0;
-
-    return canLinkAccount
-      ? this.renderUtilityLogin()
-      : this.renderAskForUtilityAccount();
-  }
-
-  renderLoader() {
+  const renderLoader = () => {
     return (
       <>
         <div className="loading">
@@ -367,98 +343,87 @@ class Step4 extends React.Component {
         `}</style>
       </>
     );
-  }
+  };
 
-  renderText() {
-    const { billingMethod, isLoading } = this.state;
+  return (
+    <main>
+      <Header />
+      <SingleStep title={renderText()}>
+        {currentUtility && !isLoading && (
+          <figure>
+            <img
+              src={currentUtility?.image?.src}
+              alt={currentUtility?.image?.altText}
+            />
+          </figure>
+        )}
+        {isLoading
+          ? renderLoader()
+          : canLinkAccount
+          ? renderUtilityLogin()
+          : renderAskForUtilityAccount()}
+        {!isLoading && canLinkAccount && (
+          <div className="links">
+            {createLoginLink && (
+              <a className="cta" href={createLoginLink}>
+                Create an online utility account
+              </a>
+            )}
+            {forgotEmailLink && (
+              <a className="cta" href={forgotEmailLink}>
+                Forgot your utility username
+              </a>
+            )}
+            {forgotPwdLink && (
+              <a className="cta" href={forgotPwdLink}>
+                Forgot your utility password
+              </a>
+            )}
+          </div>
+        )}
+      </SingleStep>
+      <style jsx>{`
+        main {
+          display: block;
+          height: 88vh;
+          max-width: 700px;
+          margin: 0 auto;
+        }
+        figure {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: #fff;
+          margin: 0;
+          margin-bottom: 1em;
+          padding: 1em;
+        }
 
-    const canLinkAccount =
-      billingMethod && billingMethod.indexOf("paper") !== 0;
+        img {
+          max-width: 60%;
+        }
 
-    let text = canLinkAccount
-      ? "Ok great. Let's connect your account and get you saving!"
-      : "No problem! We can use your account number to get you connected and saving.";
-
-    return isLoading ? "" : text;
-  }
-
-  render() {
-    const {
-      currentUtility,
-      billingMethod,
-      isLoading,
-      createLoginLink,
-      forgotEmailLink,
-      forgotPwdLink
-    } = this.state;
-
-    const canLinkAccount =
-      billingMethod && billingMethod.indexOf("paper") !== 0;
-
-    return (
-      <main>
-        <Header />
-        <SingleStep title={this.renderText()}>
-          {this.state && currentUtility && !isLoading && (
-            <figure>
-              <img
-                src={currentUtility.image.src}
-                alt={currentUtility.image.altText}
-              />
-            </figure>
-          )}
-          {isLoading ? this.renderLoader() : this.renderForms()}
-          {!isLoading && canLinkAccount && (
-            <div className="links">
-              {createLoginLink && (
-                <a className="cta" href={createLoginLink}>
-                  Create an online utility account
-                </a>
-              )}
-              {forgotEmailLink && (
-                <a className="cta" href={forgotEmailLink}>
-                  Forgot your utility username
-                </a>
-              )}
-              {forgotPwdLink && (
-                <a className="cta" href={forgotPwdLink}>
-                  Forgot your utility password
-                </a>
-              )}
-            </div>
-          )}
-        </SingleStep>
-        <style jsx>{`
-          main {
-            display: block;
-            height: 88vh;
-            max-width: 700px;
-            margin: 0 auto;
-          }
-          figure {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #fff;
-            margin: 0;
-            margin-bottom: 1em;
-            padding: 1em;
-          }
-
-          img {
-            max-width: 60%;
-          }
-
-          .links {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-          }
-        `}</style>
-      </main>
-    );
-  }
+        .links {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        }
+      `}</style>
+    </main>
+  );
 }
 
-export default Step4;
+Step4.getInitialProps = ({ req, query, params }) => {
+  if (req) {
+    try {
+      return { query: req.query, params: req.params };
+    } catch (err) {
+      return { query: req.query, params: req.params };
+    }
+  }
+
+  return { query, params };
+};
+
+export default withFirebase(Step4);

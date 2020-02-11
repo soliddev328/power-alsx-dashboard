@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Head from "next/head";
-import Router from "next/router";
+import { withFirebase } from "../../firebase";
 import { useStateValue } from "../../state";
 import NumberFormat from "react-number-format";
 import Main from "../../components/Main";
@@ -17,7 +17,7 @@ import CONSTANTS from "../../globals";
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
-export default function MyImpact() {
+function MyImpact(props) {
   const [userData, setUserdata] = useState({});
   const [billingData, setBillingData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -29,7 +29,7 @@ export default function MyImpact() {
         Authorization: idToken
       }
     });
-    return data && data.data;
+    return data?.data;
   };
 
   const getBillings = async (id, idToken) => {
@@ -41,45 +41,36 @@ export default function MyImpact() {
         }
       }
     );
-    return data && data.data;
+    return data?.data;
   };
 
   useEffect(() => {
     setIsLoading(true);
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        global.analytics.page("Your impact");
+    props.firebase.doUpdateUser(async (user, idToken) => {
+      global.analytics.page("Your impact");
+      const userData = await getUserData(user.uid, idToken);
 
-        user.getIdToken(true).then(async idToken => {
-          const userData = await getUserData(user.uid, idToken);
-          if (userData && userData.accounts) {
-            setIsLoading(false);
-            setUserdata(userData);
+      if (userData?.accounts) {
+        setIsLoading(false);
+        setUserdata(userData);
+        const billings = await getBillings(
+          userData.accounts[selectedAccount.value].id,
+          idToken
+        );
 
-            const billings = await getBillings(
-              userData.accounts[selectedAccount.value].id,
-              idToken
-            );
+        const finalData = [];
 
-            const finalData = [];
-
-            billings.forEach(async item => {
-              const tableItem = [];
-              tableItem.push(item.endDate);
-              tableItem.push(item.cleanEnergy);
-              tableItem.push(Math.round(item.avoidedC02));
-              tableItem.push(item.savings);
-              tableItem.push(item.id);
-              finalData.push(tableItem);
-            });
-
-            setBillingData(finalData);
-          }
+        billings.forEach(async item => {
+          const tableItem = [];
+          tableItem.push(item.endDate);
+          tableItem.push(item.cleanEnergy);
+          tableItem.push(Math.round(item.avoidedC02));
+          tableItem.push(item.savings);
+          tableItem.push(item.id);
+          finalData.push(tableItem);
         });
-      } else {
-        Router.push({
-          pathname: "/"
-        });
+
+        setBillingData(finalData);
       }
     });
   }, [selectedAccount.value]);
@@ -118,7 +109,7 @@ export default function MyImpact() {
               }
             />
             <Text h2 bold style={{ margin: "5px 0 0 20px" }}>
-              {(userData && userData.accounts && (
+              {(userData?.accounts && (
                 <NumberFormat
                   value={Math.round(
                     userData.accounts[selectedAccount.value]
@@ -155,7 +146,7 @@ export default function MyImpact() {
               }
             />
             <Text h2 bold style={{ margin: "5px 0 0 20px" }}>
-              {(userData && userData.accounts && (
+              {(userData?.accounts && (
                 <NumberFormat
                   value={Math.round(
                     userData.accounts[selectedAccount.value].totalC02Avoided
@@ -191,8 +182,7 @@ export default function MyImpact() {
               }
             />
             <Text h2 bold style={{ margin: "5px 0 0 20px" }}>
-              {(userData &&
-                userData.accounts &&
+              {(userData?.accounts &&
                 userData.accounts[selectedAccount.value].totalTreesPlanted >
                   0 && (
                   <NumberFormat
@@ -230,8 +220,7 @@ export default function MyImpact() {
               }
             />
             <Text h2 bold style={{ margin: "5px 0 0 20px" }}>
-              {(userData &&
-                userData.accounts &&
+              {(userData?.accounts &&
                 userData.accounts[selectedAccount.value].totalSavingsToDate >
                   0 && (
                   <NumberFormat
@@ -253,7 +242,7 @@ export default function MyImpact() {
       <Section tableSection>
         <Panel>
           <Text h3>Utility Invoices</Text>
-          {billingData && billingData.length > 0 ? (
+          {billingData?.length > 0 ? (
             <InvoicesTable
               hasDownloads
               headers={[
@@ -272,3 +261,5 @@ export default function MyImpact() {
     </Main>
   );
 }
+
+export default withFirebase(MyImpact);

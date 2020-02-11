@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Router from "next/router";
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import NumberFormat from "react-number-format";
+import { withFirebase } from "../../firebase";
 import { useStateValue } from "../../state";
 import Main from "../../components/Main";
 import Container from "../../components/Container";
@@ -21,40 +22,32 @@ import CONSTANTS from "../../globals";
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
-const getUserData = async (userUid, idToken) => {
-  const response = await axios.get(`${API}/v1/subscribers/${userUid}`, {
-    headers: {
-      Authorization: idToken
-    }
-  });
-  return response && response.data && response.data.data;
-};
-
-const Dashboard = () => {
+const Dashboard = props => {
   const [{ selectedAccount }] = useStateValue();
   const [userData, setUserData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
+  const getUserData = async (userUid, idToken) => {
+    const response = await axios.get(`${API}/v1/subscribers/${userUid}`, {
+      headers: {
+        Authorization: idToken
+      }
+    });
+    return response?.data?.data;
+  };
+
   useEffect(() => {
     setIsLoading(true);
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        global.analytics.page("Dashboard");
-        user.getIdToken(true).then(async idToken => {
-          const userInfo = await getUserData(user.uid, idToken);
-          setUserData(userInfo);
-          setIsLoading(false);
-        });
-      } else {
-        Router.push({
-          pathname: "/"
-        });
-      }
+    props.firebase.doUpdateUser(async (user, idToken) => {
+      global.analytics.page("Dashboard");
+      const userInfo = await getUserData(user.uid, idToken);
+      setUserData(userInfo);
+      setIsLoading(false);
     });
   }, [selectedAccount.value]);
 
   return (
-    <Main isLoading={isLoading} popup={true}>
+    <Main isLoading={isLoading}>
       <Head>
         <title>Common Energy - Home</title>
       </Head>
@@ -286,7 +279,6 @@ const Dashboard = () => {
         .label {
           grid-column: span 2;
         }
-
         .inner-link {
           text-decoration: none;
         }
@@ -313,4 +305,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default withFirebase(Dashboard);

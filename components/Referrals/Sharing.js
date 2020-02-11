@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { withFirebase } from "../../firebase";
 import Button from "../../components/Button";
 import SegmentedInput from "../../components/SegmentedInput";
 import ReferralsList from "../../components/Dashboard/ReferralsList";
@@ -33,11 +34,11 @@ const getUserData = async (userUid, idToken) => {
   return data && data.data;
 };
 
-function Sharing() {
+function Sharing(props) {
   const [userData, setUserData] = useState(true);
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged(user => {
+    props.firebase.doGetCurrentUser(user => {
       if (user) {
         user.getIdToken(true).then(async idToken => {
           const userInfo = await getUserData(user.uid, idToken);
@@ -134,4 +135,4 @@ function Sharing() {
   );
 }
 
-export default Sharing;
+export default withFirebase(Sharing);
