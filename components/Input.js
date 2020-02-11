@@ -15,6 +15,7 @@ function Input({
   value,
   readOnly,
   className,
+  placeholder,
   scrollOnFocus = true,
   outerLabel
 }) {
@@ -63,6 +64,7 @@ function Input({
         readOnly={readOnly}
         value={value}
         style={style}
+        placeholder={placeholder || ""}
         className={className}
         maxLength={maxLength}
       />
