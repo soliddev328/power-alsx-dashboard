@@ -1,46 +1,37 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import qs from "query-string";
 import { Formik, Form } from "formik";
-import Router from "next/router";
+import { useRouter } from "next/router";
+import { withFirebase } from "../firebase";
 import Header from "../components/Header";
 import SingleStep from "../components/SingleStep";
 import Input from "../components/Input";
 import Button from "../components/Button";
 
-export default class forgotPassword extends React.Component {
-  constructor(props) {
-    super(props);
+function ResetPassword(props) {
+  const router = useRouter();
+  const [code, setCode] = useState("");
+  const [error, setError] = useState("");
 
-    this.state = {
-      code: "",
-      error: ""
-    };
-  }
-
-  componentDidMount() {
+  useEffect(() => {
     const parsedURL = qs.parse(window.location.search);
-    this.setState({ code: parsedURL.oobCode });
-  }
+    setCode(parsedURL.oobCode);
+  }, []);
 
-  saveNewPassword(values) {
-    const auth = window.firebase.auth();
-    const { code } = this.state;
-
-    auth
-      .confirmPasswordReset(code, values.password)
+  const saveNewPassword = values => {
+    props.firebase
+      .doConfirmPasswordReset(code, values.password)
       .then(() => {
-        Router.push({
+        router.push({
           pathname: "/"
         });
       })
       .catch(error => {
-        this.setState({ error: error.message });
+        setError(error.message);
       });
-  }
+  };
 
-  renderForm() {
-    const { error } = this.state;
-
+  const renderForm = () => {
     return (
       <Formik
         initialValues={{
@@ -48,7 +39,7 @@ export default class forgotPassword extends React.Component {
           passwordConfirmation: ""
         }}
         onSubmit={values => {
-          this.saveNewPassword(values);
+          saveNewPassword(values);
         }}
       >
         {props => (
@@ -90,24 +81,24 @@ export default class forgotPassword extends React.Component {
         )}
       </Formik>
     );
-  }
+  };
 
-  render() {
-    return (
-      <main>
-        <Header first />
-        <SingleStep prefix="Please enter your new password">
-          {this.renderForm()}
-        </SingleStep>
-        <style jsx>{`
-          main {
-            display: block;
-            height: 88vh;
-            max-width: 700px;
-            margin: 0 auto;
-          }
-        `}</style>
-      </main>
-    );
-  }
+  return (
+    <main>
+      <Header first firstStep />
+      <SingleStep prefix="Please enter your new password">
+        {renderForm()}
+      </SingleStep>
+      <style jsx>{`
+        main {
+          display: block;
+          height: 88vh;
+          max-width: 700px;
+          margin: 0 auto;
+        }
+      `}</style>
+    </main>
+  );
 }
+
+export default withFirebase(ResetPassword);

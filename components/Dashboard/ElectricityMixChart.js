@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { PieChart, Pie, Cell } from "recharts";
+import axios from "axios";
 import Text from "../Text";
 import { useStateValue } from "../../state";
 import Section from "../Section";
-import axios from "axios";
 import ArrowIcon from "../Icons/ArrowIcon";
+import { withFirebase } from "../../firebase";
 import CONSTANTS from "../../globals";
 
 const { API } =
@@ -16,7 +17,7 @@ const getUserData = async (userUid, idToken) => {
       Authorization: idToken
     }
   });
-  return response && response.data && response.data.data;
+  return response?.data?.data;
 };
 
 const Reference = ({ label, color }) => (
@@ -39,18 +40,16 @@ const Reference = ({ label, color }) => (
   </div>
 );
 
-function ElectricityMixChart() {
+function ElectricityMixChart(props) {
   const [electricityMixInfo, setElectricityMixInfo] = useState();
   const [{ selectedAccount }] = useStateValue();
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged(user => {
+    props.firebase.doUpdateUser(async (user, idToken) => {
       if (user) {
-        user.getIdToken(true).then(async idToken => {
-          const userInfo = await getUserData(user.uid, idToken);
-          const { electricityMix } = userInfo.accounts[selectedAccount.value];
-          setElectricityMixInfo(electricityMix);
-        });
+        const userInfo = await getUserData(user.uid, idToken);
+        const { electricityMix } = userInfo.accounts[selectedAccount.value];
+        setElectricityMixInfo(electricityMix);
       }
     });
   }, [selectedAccount.value]);
@@ -203,4 +202,4 @@ function ElectricityMixChart() {
   );
 }
 
-export default ElectricityMixChart;
+export default withFirebase(ElectricityMixChart);

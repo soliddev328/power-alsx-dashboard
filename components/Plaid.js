@@ -6,10 +6,11 @@ import CONSTANTS from "../globals";
 
 const { PLAID_KEY, API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
+
 const PLAID_ENV =
   CONSTANTS.NODE_ENV !== "production" ? "sandbox" : "production";
 
-export default class Plaid extends React.Component {
+export default class Plaid extends React.PureComponent {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -67,7 +68,10 @@ export default class Plaid extends React.Component {
             });
           }
           Router.push({
-            pathname: "/onboarding/step6"
+            pathname: "/onboarding/step8",
+            query: {
+              next: true
+            }
           });
         }}
       />

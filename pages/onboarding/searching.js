@@ -1,24 +1,20 @@
-import React from "react";
-import Router from "next/router";
-import Header from "../../components/Header";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 import { FadeLoader } from "react-spinners";
+import Header from "../../components/Header";
 import SingleStep from "../../components/SingleStep";
 
-class Searching extends React.Component {
-  constructor(props) {
-    super(props);
+function Searching() {
+  const router = useRouter();
 
-    this.state = {};
-  }
-
-  componentDidMount() {
+  useEffect(() => {
     global.analytics.page("Searching");
-  }
+  });
 
-  renderLoader() {
+  const renderLoader = () => {
     if (typeof window !== "undefined") {
       setTimeout(() => {
-        Router.push({
+        router.push({
           pathname: "/onboarding/step2"
         });
       }, 2000);
@@ -56,24 +52,22 @@ class Searching extends React.Component {
         `}</style>
       </SingleStep>
     );
-  }
+  };
 
-  render() {
-    return (
-      <main>
-        <Header />
-        {this.renderLoader()}
-        <style jsx>{`
-          main {
-            display: block;
-            height: 88vh;
-            max-width: 700px;
-            margin: 0 auto;
-          }
-        `}</style>
-      </main>
-    );
-  }
+  return (
+    <main>
+      <Header />
+      {renderLoader()}
+      <style jsx>{`
+        main {
+          display: block;
+          height: 88vh;
+          max-width: 700px;
+          margin: 0 auto;
+        }
+      `}</style>
+    </main>
+  );
 }
 
 export default Searching;

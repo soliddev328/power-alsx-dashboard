@@ -1,11 +1,87 @@
+import { useRouter } from "next/router";
 import LogoIcon from "./Icons/LogoIcon";
 import ProfilePic from "./ProfilePic";
+import { withFirebase } from "../firebase";
 
-export default function Header({ first }) {
+function Header(props) {
+  const router = useRouter();
+  const { query } = router;
+  const renderRestart = () => {
+    return (
+      <div className="wrapper">
+        <button
+          onClick={() => {
+            props.firebase.doSignOut();
+            router.push({ pathname: "/onboarding/step1", query: query });
+          }}
+        >
+          ⟲
+        </button>
+        <span className="tooltip">Start Over</span>
+        <style jsx>{`
+          .wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            position: fixed;
+            right: 20px;
+            top: 20px;
+          }
+
+          .tooltip {
+            display: none;
+            font-size: 10px;
+            width: 65px;
+            text-align: center;
+            color: #fff;
+            background-color: #4a4a4a;
+            padding: 3px 6px;
+            border-radius: 2px;
+            position: absolute;
+            right: -50%;
+            top: 0;
+            transform: translateY(-55%);
+          }
+
+          .tooltip:after {
+            top: 100%;
+            left: 50%;
+            border: solid transparent;
+            content: " ";
+            height: 0;
+            width: 0;
+            position: absolute;
+            pointer-events: none;
+            border-color: rgba(74, 74, 74, 0);
+            border-top-color: #4a4a4a;
+            border-width: 3px;
+            margin-left: -3px;
+          }
+
+          .wrapper:hover .tooltip {
+            display: block;
+          }
+
+          button {
+            display: block;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #2479ff;
+            padding: 0;
+            font-size: 32px;
+          }
+        `}</style>
+      </div>
+    );
+  };
+
   return (
     <header>
-      {first ? <LogoIcon medium /> : <LogoIcon small />}
-      {!first && (
+      {!props.first && !props.firstStep && renderRestart()}
+      {props.first ? <LogoIcon medium /> : <LogoIcon small />}
+      {!props.first && (
         <div className="bubble">
           <ProfilePic
             image={{
@@ -29,8 +105,11 @@ export default function Header({ first }) {
           right: 0;
           bottom: 0;
           transform: translateY(50%);
+          pointer-events: none;
         }
       `}</style>
     </header>
   );
 }
+
+export default withFirebase(Header);

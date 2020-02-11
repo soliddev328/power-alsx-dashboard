@@ -1,57 +1,44 @@
 import { useEffect, useState } from "react";
-import Router from "next/router";
 import axios from "axios";
 import MenuItem from "./MenuItem";
 import Text from "./Text";
 import CONSTANTS from "../globals";
+import { withFirebase } from "../firebase";
 import { useStateValue } from "../state";
 
 const { API } =
   CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
-const signOut = () => {
-  window.firebase
-    .auth()
-    .signOut()
-    .then(() => {
-      Router.push({
-        pathname: "/"
-      });
-    })
-    .catch(() => {});
-};
-
-const getUserData = async (userUid, idToken) => {
-  const { data } = await axios.get(`${API}/v1/subscribers/${userUid}`, {
-    headers: {
-      Authorization: idToken
-    }
-  });
-  return data && data.data;
-};
-
-export default function MainMenu() {
+function MainMenu(props) {
   const [accounts, setAccounts] = useState([]);
   const [{ selectedAccount }, dispatch] = useStateValue();
 
-  useEffect(() => {
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        user.getIdToken(true).then(async idToken => {
-          const userData = await getUserData(user.uid, idToken);
-          if (userData && userData.accounts) {
-            userData.accounts.forEach((item, index) => {
-              setAccounts(prevState => [
-                ...prevState,
-                {
-                  value: index,
-                  label: item.name
-                }
-              ]);
-            });
-          }
-        });
+  const signOut = props => {
+    props.firebase.doSignOut();
+  };
+
+  const getUserData = async (userUid, idToken) => {
+    const { data } = await axios.get(`${API}/v1/subscribers/${userUid}`, {
+      headers: {
+        Authorization: idToken
       }
+    });
+    return data?.data;
+  };
+
+  useEffect(() => {
+    props.firebase.doUpdateUser(async (user, idToken) => {
+      const userData = await getUserData(user.id, idToken);
+
+      userData?.accounts?.forEach((item, index) => {
+        setAccounts(prevState => [
+          ...prevState,
+          {
+            value: index,
+            label: item.name
+          }
+        ]);
+      });
     });
   }, []);
 
@@ -75,7 +62,9 @@ export default function MainMenu() {
 
       {accounts.length >= 2 && (
         <li className="account-selector">
-          <Text noMargin>Your Accounts</Text>
+          <Text small noMargin>
+            Your Accounts
+          </Text>
           <select
             name="account"
             className="custom-select"
@@ -97,7 +86,7 @@ export default function MainMenu() {
       )}
 
       <li className="sign-out">
-        <button onClick={signOut}>Sign out</button>
+        <button onClick={() => signOut(props)}>Sign out</button>
       </li>
 
       <style jsx>{`
@@ -212,3 +201,5 @@ export default function MainMenu() {
     </ul>
   );
 }
+
+export default withFirebase(MainMenu);

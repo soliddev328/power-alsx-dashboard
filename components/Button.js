@@ -23,7 +23,7 @@ export default function Button({
 }) {
   return (
     <button
-      type={type ? type : "submit"}
+      type={type || "submit"}
       onClick={onClick}
       className={share ? "share" : ""}
       disabled={disabled}

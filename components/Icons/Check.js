@@ -10,8 +10,8 @@ export default function CrossIcon() {
         <path
           d="m10.135 15.81 2.578 2.473m7.297-6.932-7.037 6.932"
           stroke="#fff"
-          stroke-linecap="round"
-          stroke-width="2.5"
+          strokeLinecap="round"
+          strokeWidth="2.5"
         />
       </svg>
       <style jsx>{`
