@@ -92,7 +92,6 @@ function Step42(props) {
           {
             leadId: leadId,
             street: address.street,
-            state: address.state,
             city: address.city,
             apt: address.apt,
             phone: values.phoneNumber
