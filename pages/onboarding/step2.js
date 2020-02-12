@@ -159,7 +159,7 @@ function Step2() {
         <Button
           primary
           onClick={() => {
-            if (utility?.billingMethod?.includes("online")) {
+            if (utility?.billingMethod) {
               router.push({
                 pathname: "/onboarding/step4",
                 query: {
