@@ -145,7 +145,7 @@ function Step1(props) {
     if (options !== null && utility !== "") {
       localStorage.setItem("utility", JSON.stringify(utility));
 
-      if (utility.paperOnly) {
+      if (utility.paperOnly || query.affiliate) {
         localStorage.setItem("billingMethod", JSON.stringify("paper"));
       } else {
         localStorage.setItem("billingMethod", JSON.stringify(""));
