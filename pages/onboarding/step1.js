@@ -145,8 +145,10 @@ function Step1(props) {
     if (options !== null && utility !== "") {
       localStorage.setItem("utility", JSON.stringify(utility));
 
-      if (utility.paperOnly || query.affiliate) {
+      if (utility.paperOnly) {
         localStorage.setItem("billingMethod", JSON.stringify("paper"));
+      } else if (query.affiliate) {
+        localStorage.setItem("billingMethod", JSON.stringify("online"));
       } else {
         localStorage.setItem("billingMethod", JSON.stringify(""));
       }
