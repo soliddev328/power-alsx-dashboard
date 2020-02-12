@@ -357,7 +357,6 @@ function Step4(props) {
             />
           </figure>
         )}
-        {console.log("can link", canLinkAccount)}
         {isLoading
           ? renderLoader()
           : canLinkAccount
