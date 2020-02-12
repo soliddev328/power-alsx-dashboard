@@ -96,8 +96,8 @@ function Step4(props) {
       setCurrentUtility(storedUtility);
       setPostalCode(storedPostalCode);
       setBillingMethod(storedBillingMethod);
+      setCanLinkAccount(storedBillingMethod.includes("paper"));
     } finally {
-      setCanLinkAccount(billingMethod?.includes("paper"));
       getLinks();
     }
   }, []);
@@ -357,6 +357,7 @@ function Step4(props) {
             />
           </figure>
         )}
+        {console.log("can link", canLinkAccount)}
         {isLoading
           ? renderLoader()
           : canLinkAccount
