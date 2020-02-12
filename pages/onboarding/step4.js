@@ -96,7 +96,7 @@ function Step4(props) {
       setCurrentUtility(storedUtility);
       setPostalCode(storedPostalCode);
       setBillingMethod(storedBillingMethod);
-      setCanLinkAccount(storedBillingMethod.includes("paper"));
+      setCanLinkAccount(!storedBillingMethod.includes("paper"));
     } finally {
       getLinks();
     }
