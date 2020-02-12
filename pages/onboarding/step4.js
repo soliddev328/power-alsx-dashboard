@@ -87,7 +87,7 @@ function Step4(props) {
     }
 
     if (localStorage.getItem("billingMethod")) {
-      storedBillingMethod = JSON.parse(localStorage.getItem("billingMethod"));
+      storedBillingMethod = localStorage.getItem("billingMethod");
     }
 
     try {
@@ -96,7 +96,7 @@ function Step4(props) {
       setCurrentUtility(storedUtility);
       setPostalCode(storedPostalCode);
       setBillingMethod(storedBillingMethod);
-      setCanLinkAccount(storedBillingMethod.includes("paper"));
+      setCanLinkAccount(storedBillingMethod.includes("online"));
     } finally {
       getLinks();
     }
