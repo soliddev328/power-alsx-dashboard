@@ -95,9 +95,11 @@ function Step4(props) {
       setUtility(storedUtility.label);
       setCurrentUtility(storedUtility);
       setPostalCode(storedPostalCode);
+      //console.log(storedBillingMethod);
       setBillingMethod(storedBillingMethod);
     } finally {
-      setCanLinkAccount(!billingMethod?.includes("paper"));
+      //console.log(billingMethod); //billingMethod is undefined
+      setCanLinkAccount(!storedBillingMethod?.includes("paper"));
       getLinks();
     }
   }, []);
