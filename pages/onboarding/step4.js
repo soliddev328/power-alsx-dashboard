@@ -95,8 +95,14 @@ function Step4(props) {
       setUtility(storedUtility.label);
       setCurrentUtility(storedUtility);
       setPostalCode(storedPostalCode);
+      //console.log(storedBillingMethod);
       setBillingMethod(storedBillingMethod);
-      setCanLinkAccount(storedBillingMethod.includes("online"));
+      
+      if(storedBillingMethod.includes("online")) {
+        setCanLinkAccount(true);
+      } else {
+        setCanLinkAccount(false);
+      }
     } finally {
       getLinks();
     }
