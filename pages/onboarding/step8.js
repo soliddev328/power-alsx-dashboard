@@ -17,6 +17,7 @@ const { STRIPE_KEY, API } =
 
 function Step8(props) {
   const router = useRouter();
+  const [email, setEmail] = useState("");
   const [leadId, setLeadId] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState("");
@@ -29,13 +30,14 @@ function Step8(props) {
     let storedPaymentMethod = "";
     let storedLeadId = "";
     let storedName = "";
+    let storedEmail = "";
 
     if (localStorage.getItem("paymentMethod")) {
       storedPaymentMethod = JSON.parse(localStorage.getItem("paymentMethod"));
     }
 
-    if (localStorage.getItem("leadId")) {
-      storedLeadId = localStorage.getItem("leadId");
+    if (localStorage.getItem("email")) {
+      storedEmail = localStorage.getItem("email");
     }
 
     if (localStorage.getItem("leadId")) {
@@ -49,6 +51,7 @@ function Step8(props) {
     setPaymentMethod(storedPaymentMethod.paymentMethod);
     setStripe(window.Stripe(STRIPE_KEY));
     setLeadId(storedLeadId);
+    setEmail(storedEmail);
     setName(storedName.firstName);
   }, []);
 
