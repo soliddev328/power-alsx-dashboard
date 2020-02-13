@@ -39,7 +39,7 @@ function Step2() {
     }
 
     if (localStorage.getItem("billingMethod")) {
-      storedBillingMethod = localStorage.getItem("billingMethod");
+      storedBillingMethod = JSON.parse(localStorage.getItem("billingMethod"));
     }
 
     const rawParams = {
@@ -159,7 +159,8 @@ function Step2() {
         <Button
           primary
           onClick={() => {
-            if (utility?.billingMethod) {
+            const hasBillingMethod = !!utility?.billingMethod;
+            if (hasBillingMethod) {
               router.push({
                 pathname: "/onboarding/step4",
                 query: {
