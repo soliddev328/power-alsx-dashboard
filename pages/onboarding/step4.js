@@ -87,7 +87,7 @@ function Step4(props) {
     }
 
     if (localStorage.getItem("billingMethod")) {
-      storedBillingMethod = localStorage.getItem("billingMethod");
+      storedBillingMethod = JSON.parse(localStorage.getItem("billingMethod"));
     }
 
     try {
@@ -95,14 +95,8 @@ function Step4(props) {
       setUtility(storedUtility.label);
       setCurrentUtility(storedUtility);
       setPostalCode(storedPostalCode);
-      //console.log(storedBillingMethod);
       setBillingMethod(storedBillingMethod);
-      
-      if(storedBillingMethod.includes("online")) {
-        setCanLinkAccount(true);
-      } else {
-        setCanLinkAccount(false);
-      }
+      setCanLinkAccount(storedBillingMethod.includes("online"));
     } finally {
       getLinks();
     }
