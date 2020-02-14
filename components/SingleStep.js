@@ -24,7 +24,7 @@ function SingleStep(props) {
   } = props;
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
-  const { pathname, query } = router;
+  const { pathname } = router;
 
   const renderLoader = () => {
     return (

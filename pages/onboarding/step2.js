@@ -16,6 +16,7 @@ const { API } =
 
 function Step2() {
   const router = useRouter();
+  const [LMI, setLMI] = useState();
   const [utility, setUtility] = useState({
     project: {
       imageUrl: "/static/images/illustrations/t&c.png",
@@ -54,23 +55,34 @@ function Step2() {
     return axios(`${API}/v1/utilities?${generatedParams}`)
       .then(response => {
         const data = response?.data?.data[0];
-        setUtility({
-          project: {
-            imageUrl:
-              data?.projects[0]?.imageUrl ||
-              "/static/images/illustrations/t&c.png",
-            name: data?.projects[0]?.displayName || false,
-            state: data?.projects[0]?.state || false,
-            completion: data?.projects[0]?.completion || false
-          },
-          billingMethod: storedBillingMethod
-        });
+        if (data?.projects?.length) {
+          setUtility({
+            project: {
+              imageUrl:
+                data.projects[0].imageUrl ||
+                "/static/images/illustrations/t&c.png",
+              name: data.projects[0].displayName || false,
+              state: data.projects[0].state || false,
+              completion: data.projects[0].completion || false
+            },
+            billingMethod: storedBillingMethod
+          });
+        }
       })
       .catch(error => console.log(error));
   };
 
   useEffect(() => {
     global.analytics.page("Step 2");
+    let isLMI = "";
+
+    if (localStorage.getItem("offer")) {
+      isLMI = localStorage.getItem("offer") === "lmi";
+      console.log("isLMI:", isLMI);
+    }
+
+    setLMI(isLMI);
+
     getData();
   }, []);
 
@@ -159,20 +171,31 @@ function Step2() {
         <Button
           primary
           onClick={() => {
-            if (utility?.billingMethod?.indexOf("paper") >= 0) {
+            if (LMI && utility?.state === "MD") {
+              console.log("state is MD and LMI is true");
               router.push({
-                pathname: "/onboarding/step4",
+                pathname: "/onboarding/stepLMI",
                 query: {
                   next: true
                 }
               });
             } else {
-              router.push({
-                pathname: "/onboarding/step3",
-                query: {
-                  next: true
-                }
-              });
+              console.log("ah ah ah");
+              // if (utility?.billingMethod?.indexOf("paper") >= 0) {
+              //   router.push({
+              //     pathname: "/onboarding/step4",
+              //     query: {
+              //       next: true
+              //     }
+              //   });
+              // } else {
+              //   router.push({
+              //     pathname: "/onboarding/step3",
+              //     query: {
+              //       next: true
+              //     }
+              //   });
+              // }
             }
           }}
         >
