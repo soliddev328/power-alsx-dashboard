@@ -45,6 +45,7 @@ function Step1(props) {
     let storedReferrerPage = Cookie.get("ce_aff_slug");
     let storedCustomerReferral = Cookie.get("customer_referral");
     let storedPartnerReferral = Cookie.get("partner_referral");
+    let storedOffer = Cookie.get("ce_offer");
     let storedSalesRep = Cookie.get("ce_rep_referral");
     let storedUtmCampaign = Cookie.get("_ce_campaign");
     let storedUtmSource = Cookie.get("_ce_source");
@@ -89,6 +90,11 @@ function Step1(props) {
       localStorage.setItem("SalesRep", storedSalesRep);
     }
 
+    if (query.offer) {
+      storedOffer = query.offer;
+      localStorage.setItem("offer", storedOffer);
+    }
+
     if (query.affiliate) {
       storedAffiliate = query.affiliate;
       localStorage.setItem("Affiliate", storedAffiliate);
@@ -120,7 +126,7 @@ function Step1(props) {
     setUtmCampaign(storedUtmCampaign);
     setUtmSource(storedUtmSource);
     setUtmMedium(storedUtmMedium);
-  }, []);
+  }, [query]);
 
   const authenticate = values => {
     let utility = "";
