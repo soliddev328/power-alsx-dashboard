@@ -24,7 +24,7 @@ function SingleStep(props) {
   } = props;
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
-  const { pathname } = router;
+  const { pathname, query } = router;
 
   const renderLoader = () => {
     return (
@@ -75,6 +75,10 @@ function SingleStep(props) {
     const isEmailSignIn = pathname.includes("/emailsignin");
     const isForgotPassword = pathname.includes("/forgot-password");
     const isResetPassword = pathname.includes("/reset-password");
+
+    if (query.offer) {
+      localStorage.setItem("offer", query.offer);
+    }
 
     props.firebase.doGetCurrentUser(firebaseUser => {
       if (!!firebaseUser) {
