@@ -324,6 +324,11 @@ function Step1(props) {
           padding: 1em 0;
           text-align: center;
         }
+        @media (max-width: 1024px) {
+          main {
+            padding: 0 15px;
+          }
+        }
       `}</style>
     </main>
   );
