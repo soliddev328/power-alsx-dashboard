@@ -18,7 +18,7 @@ const { API } =
 function Step1(props) {
   const selectRef = useRef(null);
   const router = useRouter();
-  const { query } = router;
+  const [queryData, setQueryData] = useState(false);
   const [error, setError] = useState(false);
   const [partner, setPartner] = useState(false);
   const [referrer, setReferrer] = useState(false);
@@ -41,6 +41,17 @@ function Step1(props) {
     localStorage.removeItem("utility");
     localStorage.removeItem("email");
     localStorage.removeItem("username");
+  }, []);
+
+  useEffect(() => {
+    const { query } = router;
+
+    setQueryData({
+      zipcode: query.zipcode,
+      email: query.email,
+      fname: query.fname,
+      lname: query.lname
+    });
 
     let storedReferrerPage = Cookie.get("ce_aff_slug");
     let storedCustomerReferral = Cookie.get("customer_referral");
@@ -120,7 +131,7 @@ function Step1(props) {
     setUtmCampaign(storedUtmCampaign);
     setUtmSource(storedUtmSource);
     setUtmMedium(storedUtmMedium);
-  }, []);
+  }, [router]);
 
   const authenticate = values => {
     let utility = "";
@@ -241,11 +252,11 @@ function Step1(props) {
       <SingleStep title="Hi, I’m Martin. If you provide a little information, I can check to see your savings opportunities.">
         <Formik
           initialValues={{
-            postalCode: query.zipcode,
+            postalCode: queryData?.zipcode,
             currentUtility: "",
-            emailAddress: query.email,
-            firstName: query.fname,
-            lastName: query.lname
+            emailAddress: queryData?.email,
+            firstName: queryData?.fname,
+            lastName: queryData?.lname
           }}
           onSubmit={values => {
             authenticate(values);
