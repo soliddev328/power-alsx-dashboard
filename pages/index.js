@@ -36,7 +36,6 @@ function Index(props) {
               location.href.split("?")[0]
             );
           }
-          authenticatedLogic(firebaseUser);
         })
         .catch(error => {
           setError({ code: error.code, message: error.message });
