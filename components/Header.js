@@ -14,7 +14,6 @@ function Header(props) {
       Object.entries(query).length === 0 && query.constructor === Object;
 
     if (pathname.includes("/step1") && !queryIsEmpty) {
-      console.log("is first", query);
       localStorage.setItem("query", JSON.stringify(query));
     }
   }, [router]);
@@ -39,7 +38,6 @@ function Header(props) {
         >
           ⟲
         </button>
-        {console.log(queryData)}
         <span className="tooltip">Start Over</span>
         <style jsx>{`
           .wrapper {
