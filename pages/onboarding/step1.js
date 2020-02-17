@@ -18,6 +18,7 @@ const { API } =
 function Step1(props) {
   const selectRef = useRef(null);
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const [queryData, setQueryData] = useState(false);
   const [error, setError] = useState(false);
   const [partner, setPartner] = useState(false);
@@ -134,6 +135,7 @@ function Step1(props) {
   }, [router]);
 
   const authenticate = values => {
+    setIsLoading(true);
     let utility = "";
     const options = selectRef.current.state.options;
     const singleOption = selectRef.current.state.singleOption;
@@ -298,7 +300,8 @@ function Step1(props) {
                   !!props.values.firstName !== true ||
                   !!props.values.lastName !== true ||
                   !!props.values.postalCode !== true ||
-                  !!props.values.emailAddress !== true
+                  !!props.values.emailAddress !== true ||
+                  isLoading
                 }
               >
                 Next
