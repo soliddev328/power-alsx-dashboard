@@ -183,6 +183,12 @@ function Step42(props) {
           color: red;
           text-align: center;
         }
+
+        @media (max-width: 1024px) {
+          main {
+            padding: 0 15px;
+          }
+        }
       `}</style>
     </main>
   );
