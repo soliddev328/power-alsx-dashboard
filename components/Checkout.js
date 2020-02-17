@@ -9,9 +9,11 @@ import Button from "../components/Button";
 
 function CheckoutForm({ stripe, callback }) {
   const [error, setError] = useState();
+  const [isLoading, setIsLoading] = useState(false);
 
   const submit = ev => {
     ev.preventDefault();
+    setIsLoading(true);
     if (stripe) {
       stripe.createToken({ type: "card" }).then(payload => {
         if (payload.token) {
@@ -110,8 +112,8 @@ function CheckoutForm({ stripe, callback }) {
         </div>
       </div>
       {error && <p className="error">{error}</p>}
-      <Button primary onClick={submit}>
-        Next
+      <Button primary onClick={submit} disabled={isLoading}>
+        {isLoading ? "Loading..." : "Next"}
       </Button>
       <style jsx>{`
         .card {

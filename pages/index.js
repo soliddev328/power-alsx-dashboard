@@ -157,6 +157,12 @@ function Index(props) {
           justify-content: center;
           margin: 25px 0;
         }
+
+        @media (max-width: 1024px) {
+          main {
+            padding: 0 15px;
+          }
+        }
       `}</style>
     </main>
   );

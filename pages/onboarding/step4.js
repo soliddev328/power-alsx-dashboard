@@ -427,6 +427,12 @@ function Step4(props) {
           align-items: center;
           justify-content: center;
         }
+
+        @media (max-width: 1024px) {
+          main {
+            padding: 0 15px;
+          }
+        }
       `}</style>
     </main>
   );
