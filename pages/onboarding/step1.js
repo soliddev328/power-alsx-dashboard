@@ -213,6 +213,7 @@ function Step1(props) {
               });
             })
             .catch(failure => {
+              setIsLoading(false);
               const { response } = failure;
               const { data } = response;
               const { errors } = data;
