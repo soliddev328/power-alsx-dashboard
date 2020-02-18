@@ -30,9 +30,9 @@ function Index(props) {
         .doSignInWithEmailLink(email, windowLocationHref)
         .then(response => {
           const { user } = response;
-          global.analytics.track("User Signed In", {});
           console.log(response.additionalUserInfo);
           console.log(response.additionalUserInfo.isNewUser);
+          global.analytics.track("User Signed In", {});
           // if a lead that is tied to an anonymous user signs in through email
           // then we need to update the lead with the new firebase uid.
           //if (response.additionalUserInfo.isNewUser) {
@@ -70,7 +70,7 @@ function Index(props) {
           });
           //}
           console.log(response);
-          global.analytics.track("User Signed In", {});
+
           if (history && history.replaceState) {
             history.replaceState(
               {},
