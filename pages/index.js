@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Formik, Form } from "formik";
-import axios from "axios";
 
 import { withFirebase } from "../firebase";
 
@@ -10,10 +9,6 @@ import Header from "../components/Header";
 import Separator from "../components/Separator";
 import Input from "../components/Input";
 import Button from "../components/Button";
-import CONSTANTS from "../globals";
-
-const { API } =
-  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 function Index(props) {
   const router = useRouter();
@@ -28,7 +23,9 @@ function Index(props) {
       }
       props.firebase
         .doSignInWithEmailLink(email, windowLocationHref)
-        .then(firebaseUser => {
+        .then(response => {
+          const { user } = response;
+          global.analytics.track("User Signed In", {});
           if (history && history.replaceState) {
             history.replaceState(
               {},
@@ -46,6 +43,10 @@ function Index(props) {
   const authenticate = values => {
     props.firebase
       .doSignInWithEmailAndPassword(values.emailAddress, values.password)
+      .then(response => {
+        const { user } = response;
+        global.analytics.track("User Signed In", {});
+      })
       .catch(failure => {
         localStorage.setItem("email", values.emailAddress);
         if (failure.code === "auth/wrong-password") {
@@ -149,6 +150,12 @@ function Index(props) {
           display: flex;
           justify-content: center;
           margin: 25px 0;
+        }
+
+        @media (max-width: 1024px) {
+          main {
+            padding: 0 15px;
+          }
         }
       `}</style>
     </main>
