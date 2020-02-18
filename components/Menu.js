@@ -115,6 +115,12 @@ function MainMenu(props) {
           position: absolute;
           bottom: 0;
         }
+
+        @media (max-width: 1024px) {
+          .sign-out {
+            bottom: 100px;
+          }
+        }
       `}</style>
       <style jsx global>{`
         .select__label {

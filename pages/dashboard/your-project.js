@@ -151,6 +151,33 @@ function MySource(props) {
                 </div>
                 <div className="item">
                   <Text noMargin bold>
+                    Project Size:
+                  </Text>
+                  <Text noMargin>
+                    {projectInfo ? (
+                      <NumberFormat
+                        value={projectInfo.sizeDC}
+                        displayType={"text"}
+                        thousandSeparator={true}
+                        suffix={" kW DC"}
+                      />
+                    ) : (
+                      ""
+                    )}{" "}
+                  </Text>
+                </div>
+                <div className="item">
+                  <Text noMargin bold>
+                    Project Address:
+                  </Text>
+                  <Text noMargin>
+                    {projectInfo && projectInfo.address
+                      ? `${projectInfo.address}`
+                      : ""}
+                  </Text>
+                </div>
+                <div className="item">
+                  <Text noMargin bold>
                     Annual generation:
                   </Text>
                   <Text noMargin>
@@ -168,12 +195,10 @@ function MySource(props) {
                 </div>
                 <div className="item">
                   <Text noMargin bold>
-                    Project Address:
+                    Project City:
                   </Text>
                   <Text noMargin>
-                    {projectInfo
-                      ? `${projectInfo.town}, ${projectInfo.state}`
-                      : ""}
+                    {projectInfo ? `${projectInfo.town}` : ""}
                   </Text>
                 </div>
                 <div className="item">
@@ -195,22 +220,12 @@ function MySource(props) {
                 </div>
                 <div className="item">
                   <Text noMargin bold>
-                    Project Size:
+                    Project State:
                   </Text>
                   <Text noMargin>
-                    {projectInfo ? (
-                      <NumberFormat
-                        value={projectInfo.sizeDC}
-                        displayType={"text"}
-                        thousandSeparator={true}
-                        suffix={" kW DC"}
-                      />
-                    ) : (
-                      ""
-                    )}{" "}
+                    {projectInfo ? `${projectInfo.state}` : ""}
                   </Text>
                 </div>
-
                 <div className="item">
                   <Text noMargin bold>
                     Equivalent trees planted:

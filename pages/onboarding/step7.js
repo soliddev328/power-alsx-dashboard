@@ -95,6 +95,12 @@ function Step7() {
         p svg {
           margin-right: 10px;
         }
+
+        @media (max-width: 1024px) {
+          main {
+            padding: 0 15px;
+          }
+        }
       `}</style>
     </main>
   );

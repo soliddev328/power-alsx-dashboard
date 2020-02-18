@@ -88,6 +88,12 @@ function Step6() {
         h3 {
           text-align: center;
         }
+
+        @media (max-width: 1024px) {
+          main {
+            padding: 0 15px;
+          }
+        }
       `}</style>
     </main>
   );
