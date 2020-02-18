@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import LogoIcon from "./Icons/LogoIcon";
 import ProfilePic from "./ProfilePic";
@@ -5,14 +6,34 @@ import { withFirebase } from "../firebase";
 
 function Header(props) {
   const router = useRouter();
-  const { query } = router;
+  const [queryData, setQueryData] = useState(false);
+
+  useEffect(() => {
+    const { query, pathname } = router;
+    const queryIsEmpty =
+      Object.entries(query).length === 0 && query.constructor === Object;
+
+    if (pathname.includes("/step1") && !queryIsEmpty) {
+      localStorage.setItem("query", JSON.stringify(query));
+    }
+  }, [router]);
+
+  useEffect(() => {
+    if (localStorage.getItem("query")) {
+      setQueryData(JSON.parse(localStorage.getItem("query")));
+    }
+  }, []);
+
   const renderRestart = () => {
     return (
       <div className="wrapper">
         <button
           onClick={() => {
             props.firebase.doSignOut();
-            router.push({ pathname: "/onboarding/step1", query: query });
+            router.push({
+              pathname: "/onboarding/step1",
+              query: queryData
+            });
           }}
         >
           ⟲

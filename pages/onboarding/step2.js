@@ -269,6 +269,9 @@ function Step2() {
           }
         }
         @media (max-width: 1000px) {
+          main {
+            padding: 0 15px;
+          }
           .content {
             display: grid;
             grid-template-columns: 1fr;
