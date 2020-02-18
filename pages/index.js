@@ -23,7 +23,9 @@ function Index(props) {
       }
       props.firebase
         .doSignInWithEmailLink(email, windowLocationHref)
-        .then(firebaseUser => {
+        .then(response => {
+          const { user } = response;
+          global.analytics.track("User Signed In", {});
           if (history && history.replaceState) {
             history.replaceState(
               {},
@@ -31,7 +33,6 @@ function Index(props) {
               location.href.split("?")[0]
             );
           }
-          authenticatedLogic(firebaseUser);
         })
         .catch(error => {
           setError({ code: error.code, message: error.message });
@@ -42,6 +43,10 @@ function Index(props) {
   const authenticate = values => {
     props.firebase
       .doSignInWithEmailAndPassword(values.emailAddress, values.password)
+      .then(response => {
+        const { user } = response;
+        global.analytics.track("User Signed In", {});
+      })
       .catch(failure => {
         localStorage.setItem("email", values.emailAddress);
         if (failure.code === "auth/wrong-password") {
@@ -145,6 +150,12 @@ function Index(props) {
           display: flex;
           justify-content: center;
           margin: 25px 0;
+        }
+
+        @media (max-width: 1024px) {
+          main {
+            padding: 0 15px;
+          }
         }
       `}</style>
     </main>
