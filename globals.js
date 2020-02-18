@@ -2,7 +2,7 @@ module.exports = {
   NODE_ENV: "development",
   dev: {
     API: "https://comenergy-api-staging.herokuapp.com",
-    // API: "http://localhost:5000",
+    //API: "http://localhost:5001",
     SEGMENT_KEY: "zAFMGeybdkriupfPqCYanAHc9HUNhAug",
     FULLSTORY_KEY: "NULL",
     STRIPE_KEY: "pk_test_XZitL2jhXqRuAGQuzzYnIcwW",
