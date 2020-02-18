@@ -25,9 +25,6 @@ function Index(props) {
         .doSignInWithEmailLink(email, windowLocationHref)
         .then(response => {
           const { user } = response;
-          global.analytics.identify(user?.uid, {
-            email: user?.email
-          });
           global.analytics.track("User Signed In", {});
           if (history && history.replaceState) {
             history.replaceState(
@@ -48,9 +45,6 @@ function Index(props) {
       .doSignInWithEmailAndPassword(values.emailAddress, values.password)
       .then(response => {
         const { user } = response;
-        global.analytics.identify(user?.uid, {
-          email: user?.email
-        });
         global.analytics.track("User Signed In", {});
       })
       .catch(failure => {
