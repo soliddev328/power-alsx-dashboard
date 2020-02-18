@@ -150,12 +150,21 @@ function Step4(props) {
                   if (data[0]) {
                     if (data[0].hasLoggedIn) {
                       localStorage.setItem("partialConnection", false);
-                      router.push({
-                        pathname: "/onboarding/step5",
-                        query: {
-                          next: true
-                        }
-                      });
+                      if (user.isAnonymous) {
+                        router.push({
+                          pathname: "/onboarding/step5",
+                          query: {
+                            next: true
+                          }
+                        });
+                      } else {
+                        router.push({
+                          pathname: "/onboarding/step6",
+                          query: {
+                            next: true
+                          }
+                        });
+                      }
                     } else {
                       setIsLoading(false);
                       router.push({
@@ -167,12 +176,21 @@ function Step4(props) {
                     }
                   } else {
                     localStorage.setItem("partialConnection", true);
-                    router.push({
-                      pathname: "/onboarding/step5",
-                      query: {
-                        next: true
-                      }
-                    });
+                    if (user.isAnonymous) {
+                      router.push({
+                        pathname: "/onboarding/step5",
+                        query: {
+                          next: true
+                        }
+                      });
+                    } else {
+                      router.push({
+                        pathname: "/onboarding/step6",
+                        query: {
+                          next: true
+                        }
+                      });
+                    }
                   }
                 })
                 .catch(err => {
@@ -408,6 +426,12 @@ function Step4(props) {
           flex-direction: column;
           align-items: center;
           justify-content: center;
+        }
+
+        @media (max-width: 1024px) {
+          main {
+            padding: 0 15px;
+          }
         }
       `}</style>
     </main>

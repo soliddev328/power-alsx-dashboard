@@ -18,7 +18,8 @@ const { API } =
 function Step1(props) {
   const selectRef = useRef(null);
   const router = useRouter();
-  const { query } = router;
+  const [isLoading, setIsLoading] = useState(false);
+  const [queryData, setQueryData] = useState(false);
   const [error, setError] = useState(false);
   const [partner, setPartner] = useState(false);
   const [referrer, setReferrer] = useState(false);
@@ -41,6 +42,17 @@ function Step1(props) {
     localStorage.removeItem("utility");
     localStorage.removeItem("email");
     localStorage.removeItem("username");
+  }, []);
+
+  useEffect(() => {
+    const { query } = router;
+
+    setQueryData({
+      zipcode: query.zipcode,
+      email: query.email,
+      fname: query.fname,
+      lname: query.lname
+    });
 
     let storedReferrerPage = Cookie.get("ce_aff_slug");
     let storedCustomerReferral = Cookie.get("customer_referral");
@@ -120,9 +132,10 @@ function Step1(props) {
     setUtmCampaign(storedUtmCampaign);
     setUtmSource(storedUtmSource);
     setUtmMedium(storedUtmMedium);
-  }, []);
+  }, [router]);
 
   const authenticate = values => {
+    setIsLoading(true);
     let utility = "";
     const options = selectRef.current.state.options;
     const singleOption = selectRef.current.state.singleOption;
@@ -202,6 +215,7 @@ function Step1(props) {
               });
             })
             .catch(failure => {
+              setIsLoading(false);
               const { response } = failure;
               const { data } = response;
               const { errors } = data;
@@ -243,11 +257,11 @@ function Step1(props) {
       <SingleStep title="Hi, I’m Martin. If you provide a little information, I can check to see your savings opportunities.">
         <Formik
           initialValues={{
-            postalCode: query.zipcode,
+            postalCode: queryData?.zipcode,
             currentUtility: "",
-            emailAddress: query.email,
-            firstName: query.fname,
-            lastName: query.lname
+            emailAddress: queryData?.email,
+            firstName: queryData?.fname,
+            lastName: queryData?.lname
           }}
           onSubmit={values => {
             authenticate(values);
@@ -289,7 +303,8 @@ function Step1(props) {
                   !!props.values.firstName !== true ||
                   !!props.values.lastName !== true ||
                   !!props.values.postalCode !== true ||
-                  !!props.values.emailAddress !== true
+                  !!props.values.emailAddress !== true ||
+                  isLoading
                 }
               >
                 Next
@@ -310,6 +325,11 @@ function Step1(props) {
           margin: 0;
           padding: 1em 0;
           text-align: center;
+        }
+        @media (max-width: 1024px) {
+          main {
+            padding: 0 15px;
+          }
         }
       `}</style>
     </main>

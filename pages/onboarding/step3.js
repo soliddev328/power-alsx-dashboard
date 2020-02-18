@@ -61,6 +61,11 @@ function Step3() {
           max-width: 700px;
           margin: 0 auto;
         }
+        @media (max-width: 1024px) {
+          main {
+            padding: 0 15px;
+          }
+        }
       `}</style>
     </main>
   );

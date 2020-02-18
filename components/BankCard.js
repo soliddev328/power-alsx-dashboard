@@ -4,16 +4,7 @@ function BankCard({ code, image, largeIcon, accent }) {
   const router = useRouter();
 
   return (
-    <button
-      onClick={() => {
-        router.push({
-          pathname: "/onboarding/step13",
-          query: {
-            bankCode: code
-          }
-        });
-      }}
-    >
+    <button onClick={() => {}}>
       <figure>
         <img src={image.src} alt={image.altText} />
       </figure>
