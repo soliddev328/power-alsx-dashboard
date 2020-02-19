@@ -37,7 +37,7 @@ function Step3() {
                 <RadioCard
                   number="1"
                   name="isPaperOnly"
-                  value="electronic"
+                  value="online"
                   heading="Yes"
                 />
                 <RadioCard
