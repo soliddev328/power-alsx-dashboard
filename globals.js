@@ -1,5 +1,5 @@
 module.exports = {
-  NODE_ENV: "production",
+  NODE_ENV: "development",
   dev: {
     API: "https://comenergy-api-staging.herokuapp.com",
     //API: "http://localhost:5001",
