@@ -30,8 +30,6 @@ function Index(props) {
         .doSignInWithEmailLink(email, windowLocationHref)
         .then(response => {
           const { user } = response;
-          console.log(response.additionalUserInfo);
-          console.log(response.additionalUserInfo.isNewUser);
           global.analytics.track("User Signed In", {});
           // if a lead that is tied to an anonymous user signs in through email
           // then we need to update the lead with the new firebase uid.
@@ -53,8 +51,6 @@ function Index(props) {
                 }
               )
               .then(crmResponse => {
-                console.log("Update made");
-                console.log({ crmResponse });
                 const user = crmResponse?.data?.data;
                 if (user) {
                   user.isAnonymous = false;
@@ -69,7 +65,6 @@ function Index(props) {
               });
           });
           //}
-          console.log(response);
 
           if (history && history.replaceState) {
             history.replaceState(
