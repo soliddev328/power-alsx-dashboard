@@ -105,12 +105,26 @@ function Step8(props) {
                         router.push({
                           pathname: "/dashboard"
                         });
+                      })
+                      .catch(error => {
+                        if (error.response) {
+                          setError(error.response.data.message);
+
+                          console.log(error.response.status);
+                          console.log(error.response.headers);
+                        } else if (error.request) {
+                          console.log(error.request);
+                        } else {
+                          console.log("Error", error.message);
+                        }
+                        console.log(error.config);
                       });
                   });
                 }}
               />
             </Elements>
           </StripeProvider>
+          {error && <p className="error">{error}</p>}
         </div>
         <style jsx>{`
           p {
@@ -154,6 +168,12 @@ function Step8(props) {
             right: 0;
             bottom: 0;
             transform: translate(50%, 30%);
+          }
+
+          .error {
+            text-align: center;
+            color: red;
+            margin: 0;
           }
         `}</style>
       </SingleStep>
