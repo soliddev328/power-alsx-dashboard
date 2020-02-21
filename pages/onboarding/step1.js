@@ -18,6 +18,7 @@ const { API } =
 function Step1(props) {
   const selectRef = useRef(null);
   const router = useRouter();
+  const { query } = router;
   const [isLoading, setIsLoading] = useState(false);
   const [queryData, setQueryData] = useState(false);
   const [error, setError] = useState(false);
@@ -45,8 +46,6 @@ function Step1(props) {
   }, []);
 
   useEffect(() => {
-    const { query } = router;
-
     setQueryData({
       zipcode: query.zipcode,
       email: query.email,
