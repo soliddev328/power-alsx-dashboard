@@ -19,19 +19,6 @@ function EmailLogin(props) {
     });
   }, []);
 
-  const sendSecureLoginLink = values => {
-    const { email } = values;
-    props.firebase
-      .doSendSignInEmail(email, actionCodeSettings)
-      .then(() => {
-        setEmailSent(true);
-        localStorage.setItem("email", email);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
-
   return (
     <main>
       <Header first />
@@ -52,7 +39,16 @@ function EmailLogin(props) {
               email: email
             }}
             onSubmit={values => {
-              sendSecureLoginLink(values);
+              const { email } = values;
+
+              props.firebase.doSendSignInEmail(
+                email,
+                actionCodeSettings,
+                () => {
+                  setEmailSent(true);
+                  localStorage.setItem("email", email);
+                }
+              );
             }}
           >
             {props => (
