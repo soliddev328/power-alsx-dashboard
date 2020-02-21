@@ -4,9 +4,9 @@
   "repository": "https://github.com/CommonEnergy/comenergy-customer-portal",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=development next start",
-    "dev-old": "NODE_ENV=development next",
-    "build": "NODE_ENV=development next build",
+    "start": "next start",
+    "dev-old": "next",
+    "build": "next build",
     "now-build": "next build",
     "lint:staged": "lint-staged"
   },
