@@ -1,73 +1,26 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { useRouter } from "next/router";
+import { useState } from "react";
 import {
   injectStripe,
   CardNumberElement,
   CardExpiryElement,
   CardCVCElement
 } from "react-stripe-elements";
-import withFirebase from "../firebase";
 import Button from "../components/Button";
-import CONSTANTS from "../globals";
 
-const { API } =
-  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
-
-function CheckoutForm(props) {
-  const router = useRouter();
-  const [leadId, setLeadId] = useState("");
-  const [email, setEmail] = useState("");
+function CheckoutForm({ stripe, callback }) {
   const [error, setError] = useState();
-
-  useEffect(() => {
-    let storedLeadId = "";
-    let storedEmail = "";
-
-    if (localStorage.getItem("leadId")) {
-      storedLeadId = localStorage.getItem("leadId");
-    }
-
-    if (localStorage.getItem("email")) {
-      storedEmail = localStorage.getItem("email");
-    }
-
-    setLeadId(storedLeadId);
-    setEmail(storedEmail);
-  }, []);
+  const [isLoading, setIsLoading] = useState(false);
 
   const submit = ev => {
     ev.preventDefault();
-    props.firebase.doGetCurrentUserIdToken(idToken => {
-      if (stripe) {
-        stripe.createToken({ type: "card" }).then(payload => {
-          if (payload.token) {
-            axios
-              .put(
-                `${API}/v1/subscribers`,
-                {
-                  leadId: leadId,
-                  email: email,
-                  stripeToken: payload.token.id
-                },
-                {
-                  headers: {
-                    Authorization: idToken
-                  }
-                }
-              )
-              .then(() => {
-                global.analytics.track("Sign-Up Completed", {});
-                localStorage.setItem("showPopup", true);
-                localStorage.setItem("usercreated", true);
-                router.push({
-                  pathname: "/dashboard"
-                });
-              });
-          }
-        });
-      }
-    });
+    setIsLoading(true);
+    if (stripe) {
+      stripe.createToken({ type: "card" }).then(payload => {
+        if (payload.token) {
+          callback(payload);
+        }
+      });
+    }
   };
 
   return (
@@ -159,8 +112,8 @@ function CheckoutForm(props) {
         </div>
       </div>
       {error && <p className="error">{error}</p>}
-      <Button primary onClick={submit}>
-        Next
+      <Button primary onClick={submit} disabled={isLoading}>
+        {isLoading ? "Loading..." : "Next"}
       </Button>
       <style jsx>{`
         .card {
@@ -204,6 +157,4 @@ function CheckoutForm(props) {
   );
 }
 
-const FirebaseCheckoutForm = withFirebase(CheckoutForm);
-
-export default injectStripe(FirebaseCheckoutForm);
+export default injectStripe(CheckoutForm);
