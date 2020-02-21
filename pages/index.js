@@ -94,8 +94,8 @@ function Index(props) {
             code: failure.code,
             message: (
               <>
-                The password is invalid or the user does not have a password.{" "}
-                <a href="/emailsignin">Click here</a> to access your account
+                The password is invalid. Try again or{" "}
+                <a href="/emailsignin">click here</a> to access your account
                 through an email link.
               </>
             )
