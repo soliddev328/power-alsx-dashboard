@@ -48,7 +48,7 @@ function ElectricityMixChart(props) {
     props.firebase.doUpdateUser(async (user, idToken) => {
       if (user) {
         const userInfo = await getUserData(user.uid, idToken);
-        const { electricityMix } = userInfo.accounts[selectedAccount.value];
+        const { electricityMix } = userInfo?.accounts[selectedAccount.value];
         setElectricityMixInfo(electricityMix);
       }
     });
