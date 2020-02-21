@@ -104,12 +104,21 @@ function Step42(props) {
         );
       })
       .then(() => {
-        router.push({
-          pathname: "/onboarding/step5",
-          query: {
-            next: true
-          }
-        });
+        if (props.firebase.auth.currentUser.isAnonymous) {
+          router.push({
+            pathname: "/onboarding/step5",
+            query: {
+              next: true
+            }
+          });
+        } else {
+          router.push({
+            pathname: "/onboarding/step6",
+            query: {
+              next: true
+            }
+          });
+        }
       });
     // } else {
     //   setError("Address has different zip code than the one initially provided.")
@@ -173,6 +182,12 @@ function Step42(props) {
           height: 45px;
           color: red;
           text-align: center;
+        }
+
+        @media (max-width: 1024px) {
+          main {
+            padding: 0 15px;
+          }
         }
       `}</style>
     </main>

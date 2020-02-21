@@ -18,19 +18,6 @@ function ResetPassword(props) {
     setCode(parsedURL.oobCode);
   }, []);
 
-  const saveNewPassword = values => {
-    props.firebase
-      .doConfirmPasswordReset(code, values.password)
-      .then(() => {
-        router.push({
-          pathname: "/"
-        });
-      })
-      .catch(error => {
-        setError(error.message);
-      });
-  };
-
   const renderForm = () => {
     return (
       <Formik
@@ -39,7 +26,11 @@ function ResetPassword(props) {
           passwordConfirmation: ""
         }}
         onSubmit={values => {
-          saveNewPassword(values);
+          props.firebase.doConfirmPasswordReset(code, values.password, () => {
+            router.push({
+              pathname: "/"
+            });
+          });
         }}
       >
         {props => (
