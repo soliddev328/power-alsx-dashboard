@@ -10,18 +10,6 @@ function ForgotPassword(props) {
   const [emailSent, setEmailSent] = useState(false);
   const [error, setError] = useState();
 
-  const sendEmail = values => {
-    props.firebase
-      .doSendPasswordResetEmail(values.emailAddress)
-      .then(() => {
-        setEmailSent(true);
-      })
-      .catch(error => {
-        setEmailSent(false);
-        setError(error.message);
-      });
-  };
-
   const renderForm = () => {
     return (
       <Formik
@@ -29,7 +17,17 @@ function ForgotPassword(props) {
           emailAddress: ""
         }}
         onSubmit={values => {
-          sendEmail(values);
+          if (!values.email) {
+            setError("Required");
+          } else if (
+            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
+          ) {
+            setError("Invalid email address");
+          }
+
+          props.firebase.doSendPasswordResetEmail(values.emailAddress, () => {
+            setEmailSent(true);
+          });
         }}
       >
         {props => (
@@ -61,27 +59,21 @@ function ForgotPassword(props) {
     );
   };
 
-  const renderThanks = () => {
-    return (
-      <p>
-        Thanks! please check your email in order to restore your account.
-        <style jsx>{`
-          p {
-            text-align: center;
-          }
-        `}</style>
-      </p>
-    );
-  };
-
   const renderContent = () => {
-    return emailSent ? renderThanks() : renderForm();
+    return emailSent ? null : renderForm();
   };
 
   return (
     <main>
       <Header first firstStep />
-      <SingleStep isFirst prefix="Please enter your email address">
+      <SingleStep
+        isFirst
+        prefix={
+          emailSent
+            ? "Thanks! please check your email in order to restore your account."
+            : "Please enter your email address"
+        }
+      >
         {renderContent()}
       </SingleStep>
       <style jsx>{`

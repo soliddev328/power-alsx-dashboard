@@ -37,7 +37,7 @@ function Step3() {
                 <RadioCard
                   number="1"
                   name="isPaperOnly"
-                  value="electronic"
+                  value="online"
                   heading="Yes"
                 />
                 <RadioCard
@@ -60,6 +60,11 @@ function Step3() {
           height: 88vh;
           max-width: 700px;
           margin: 0 auto;
+        }
+        @media (max-width: 1024px) {
+          main {
+            padding: 0 15px;
+          }
         }
       `}</style>
     </main>
