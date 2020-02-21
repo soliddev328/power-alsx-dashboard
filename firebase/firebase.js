@@ -89,18 +89,20 @@ class Firebase {
       }
     );
 
-  doSendPasswordResetEmail = email => {
+  doSendPasswordResetEmail = (email, callback) => {
     const actionCodeSettings = {
       url: "https://my.commonenergy.us/"
     };
-    this.auth.sendPasswordResetEmail(email, actionCodeSettings);
+    this.auth
+      .sendPasswordResetEmail(email, actionCodeSettings)
+      .then(callback());
   };
 
-  doConfirmPasswordReset = (code, newPassword) =>
-    this.auth.confirmPasswordReset(code, newPassword);
+  doConfirmPasswordReset = (code, newPassword, callback) =>
+    this.auth.confirmPasswordReset(code, newPassword).then(callback());
 
-  doSendSignInEmail = (email, config) =>
-    this.auth.sendSignInLinkToEmail(email, config);
+  doSendSignInEmail = (email, config, callback) =>
+    this.auth.sendSignInLinkToEmail(email, config).then(callback());
 
   doCheckIsSignInWithEmailLink = url => this.auth.isSignInWithEmailLink(url);
 
