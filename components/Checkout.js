@@ -112,8 +112,8 @@ function CheckoutForm({ stripe, callback }) {
         </div>
       </div>
       {error && <p className="error">{error}</p>}
-      <Button primary onClick={submit} disabled={isLoading}>
-        {isLoading ? "Loading..." : "Next"}
+      <Button primary onClick={submit}>
+        Next
       </Button>
       <style jsx>{`
         .card {
