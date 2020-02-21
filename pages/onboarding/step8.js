@@ -110,8 +110,6 @@ function Step8(props) {
                         if (error.response) {
                           setError(error.response.data.message);
                           setTimeout(() => setError(false), 3000);
-                          console.log(error.response.status);
-                          console.log(error.response.headers);
                         } else if (error.request) {
                           console.log(error.request);
                         } else {
