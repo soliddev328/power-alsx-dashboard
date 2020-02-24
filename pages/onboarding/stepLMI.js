@@ -83,7 +83,7 @@ function StepLMI(props) {
   return (
     <main>
       <Header />
-      <SingleStep title="Great! Let's see if you qualify for a 25% discount under MD's low and moderate income program (if you don't tou still save 10%)">
+      <SingleStep title="Great! Let's see if you qualify for a 25% discount under MD's low and moderate income program (if you don't you will still save 10%)">
         <div className="content">
           <Formik
             initialValues={{
@@ -101,7 +101,7 @@ function StepLMI(props) {
             {props => (
               <Form>
                 <div className="dropdown">
-                  <p>How many members of your household?</p>
+                  <p>How many members are in your household?</p>
                   <Dropdown
                     options={[
                       { value: "1", label: "1" },
@@ -130,7 +130,8 @@ function StepLMI(props) {
                 />
 
                 <p>
-                  If a joint return, enter spouse's info shown on tax return.
+                  If a joint return, please enter your spouse's information as
+                  shown on the tax return.
                 </p>
                 <Input
                   disabled={parseInt(props.values.householdMembers.value) < 2}
@@ -152,7 +153,7 @@ function StepLMI(props) {
                 <Checkbox fieldname="attestInformation">
                   <p className="checkbox__label">
                     I authorize Common Energy to verify my income to see if I
-                    qualify for the additional LMI discount.
+                    qualify for Maryland's additional LMI discount.
                   </p>
                 </Checkbox>
                 {console.log(!props.values.userSSN.includes(" "))}
