@@ -30,6 +30,7 @@ function Step1(props) {
   const [utmCampaign, setUtmCampaign] = useState(false);
   const [utmSource, setUtmSource] = useState(false);
   const [utmMedium, setUtmMedium] = useState(false);
+  const [offer, setOffer] = useState(false);
 
   useEffect(() => {
     global.analytics.page("Step 1");
@@ -137,6 +138,7 @@ function Step1(props) {
     setUtmCampaign(storedUtmCampaign);
     setUtmSource(storedUtmSource);
     setUtmMedium(storedUtmMedium);
+    setOffer(storedOffer);
   }, [query]);
 
   const authenticate = values => {
@@ -189,7 +191,8 @@ function Step1(props) {
                 utmCampaign: utmCampaign,
                 utmMedium: utmMedium,
                 utmSource: utmSource,
-                referrerPage: referrerPage
+                referrerPage: referrerPage,
+                offer: offer
               },
               {
                 headers: {
