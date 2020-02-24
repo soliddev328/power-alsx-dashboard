@@ -56,7 +56,8 @@ function StepLMI(props) {
           `${API}/v1/subscribers`,
           {
             leadId: leadId,
-            lmiProgram: true,
+            lmiInfoCompleted: true,
+            offer: "lmi",
             householdMembers: values.householdMembers.value,
             ssn: values.userSSN,
             spouseFirstName: values.spouseFirstName,
