@@ -161,9 +161,11 @@ function StepLMI(props) {
                   primary
                   disabled={
                     !props.values.householdMembers != "" ||
+                    parseInt(props.values.householdMembers.value) < 1 ||
                     !props.values.userName != "" ||
                     !props.values.userSSN != "" ||
-                    props.values.userSSN.includes(" ")
+                    props.values.userSSN.includes(" ") ||
+                    !props.values.attestInformation != ""
                   }
                 >
                   Next
