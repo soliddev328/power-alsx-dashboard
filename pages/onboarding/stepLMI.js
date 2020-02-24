@@ -38,17 +38,17 @@ function StepLMI(props) {
   }, []);
 
   const saveData = values => {
-    const spouseData = {};
+    // const spouseData = {};
 
-    if (values.householdMembers > 1) {
-      spouseData.spouseFirstName = values.spouseFirstName;
-      spouseData.spouseLastName = values.spouseLastName;
-      spouseData.spouseSSN = values.spouseSSN;
-    } else {
-      spouseData.spouseFirstName = "";
-      spouseData.spouseLastName = "";
-      spouseData.spouseSSN = "";
-    }
+    // if (values.householdMembers > 1) {
+    //   spouseData.spouseFirstName = values.spouseFirstName;
+    //   spouseData.spouseLastName = values.spouseLastName;
+    //   spouseData.spouseSSN = values.spouseSSN;
+    // } else {
+    //   spouseData.spouseFirstName = "";
+    //   spouseData.spouseLastName = "";
+    //   spouseData.spouseSSN = "";
+    // }
 
     props.firebase
       .doGetCurrentUserIdToken(idToken => {
@@ -57,9 +57,9 @@ function StepLMI(props) {
           {
             leadId: leadId,
             ssn: values.userSSN,
-            spouseFirstName: spouseData.spouseFirstName,
-            spouseLastName: spouseData.spouseLastName,
-            spouseSSN: spouseData.spouseSSN
+            spouseFirstName: values.spouseFirstName,
+            spouseLastName: values.spouseLastName,
+            spouseSSN: values.spouseSSN
           },
           {
             headers: {
@@ -136,13 +136,11 @@ function StepLMI(props) {
                   disabled={parseInt(props.values.householdMembers.value) < 2}
                   label="Spouse First Name"
                   fieldname="spouseFirstName"
-                  required={props.values.householdMembers.value}
                 />
                 <Input
                   disabled={parseInt(props.values.householdMembers.value) < 2}
                   label="Spouse Last Name"
                   fieldname="spouseLastName"
-                  required={props.values.householdMembers.value}
                 />
                 <SSNInput
                   disabled={parseInt(props.values.householdMembers.value) < 2}
@@ -150,7 +148,6 @@ function StepLMI(props) {
                   fieldname="spouseSSN"
                   onChangeEvent={props.setFieldValue}
                   onBlurEvent={props.setFieldTouched}
-                  required={props.values.householdMembers.value}
                 />
                 <Checkbox fieldname="attestInformation">
                   <p className="checkbox__label">
@@ -165,14 +162,7 @@ function StepLMI(props) {
                     !props.values.householdMembers != "" ||
                     !props.values.userName != "" ||
                     !props.values.userSSN != "" ||
-                    props.values.userSSN.includes(" ") ||
-                    !props.values.attestInformation != "" ||
-                    parseInt(props.values.householdMembers.value) > 1
-                      ? !props.values.spouseSSN != "" ||
-                        props.values.spouseSSN.includes(" ") ||
-                        !props.values.spouseLastName != "" ||
-                        !props.values.spouseFirstName != ""
-                      : false
+                    props.values.userSSN.includes(" ")
                   }
                 >
                   Next
