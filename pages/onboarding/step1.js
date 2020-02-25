@@ -18,6 +18,7 @@ const { API } =
 function Step1(props) {
   const selectRef = useRef(null);
   const router = useRouter();
+  const { query } = router;
   const [isLoading, setIsLoading] = useState(false);
   const [queryData, setQueryData] = useState(false);
   const [error, setError] = useState(false);
@@ -29,6 +30,7 @@ function Step1(props) {
   const [utmCampaign, setUtmCampaign] = useState(false);
   const [utmSource, setUtmSource] = useState(false);
   const [utmMedium, setUtmMedium] = useState(false);
+  const [offer, setOffer] = useState(false);
 
   useEffect(() => {
     global.analytics.page("Step 1");
@@ -45,8 +47,6 @@ function Step1(props) {
   }, []);
 
   useEffect(() => {
-    const { query } = router;
-
     setQueryData({
       zipcode: query.zipcode,
       email: query.email,
@@ -57,6 +57,7 @@ function Step1(props) {
     let storedReferrerPage = Cookie.get("ce_aff_slug");
     let storedCustomerReferral = Cookie.get("customer_referral");
     let storedPartnerReferral = Cookie.get("partner_referral");
+    let storedOffer = Cookie.get("ce_offer");
     let storedSalesRep = Cookie.get("ce_rep_referral");
     let storedUtmCampaign = Cookie.get("_ce_campaign");
     let storedUtmSource = Cookie.get("_ce_source");
@@ -101,6 +102,11 @@ function Step1(props) {
       localStorage.setItem("SalesRep", storedSalesRep);
     }
 
+    if (query.offer) {
+      storedOffer = query.offer;
+      localStorage.setItem("offer", storedOffer);
+    }
+
     if (query.affiliate) {
       storedAffiliate = query.affiliate;
       localStorage.setItem("Affiliate", storedAffiliate);
@@ -132,7 +138,8 @@ function Step1(props) {
     setUtmCampaign(storedUtmCampaign);
     setUtmSource(storedUtmSource);
     setUtmMedium(storedUtmMedium);
-  }, [router]);
+    setOffer(storedOffer);
+  }, [query]);
 
   const authenticate = values => {
     setIsLoading(true);
@@ -184,7 +191,8 @@ function Step1(props) {
                 utmCampaign: utmCampaign,
                 utmMedium: utmMedium,
                 utmSource: utmSource,
-                referrerPage: referrerPage
+                referrerPage: referrerPage,
+                offer: offer
               },
               {
                 headers: {
