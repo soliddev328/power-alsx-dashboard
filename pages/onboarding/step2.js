@@ -16,6 +16,7 @@ const { API } =
 
 function Step2() {
   const router = useRouter();
+  const [LMI, setLMI] = useState();
   const [utility, setUtility] = useState({
     project: {
       imageUrl: "/static/images/illustrations/t&c.png",
@@ -54,23 +55,40 @@ function Step2() {
     return axios(`${API}/v1/utilities?${generatedParams}`)
       .then(response => {
         const data = response?.data?.data[0];
-        setUtility({
-          project: {
-            imageUrl:
-              data?.projects[0]?.imageUrl ||
-              "/static/images/illustrations/t&c.png",
-            name: data?.projects[0]?.displayName || false,
-            state: data?.projects[0]?.state || false,
-            completion: data?.projects[0]?.completion || false
-          },
-          billingMethod: storedBillingMethod
-        });
+        if (data?.projects?.length) {
+          setUtility({
+            project: {
+              imageUrl:
+                data?.projects[0]?.imageUrl ||
+                "/static/images/illustrations/t&c.png",
+              name: data?.projects[0]?.displayName || false,
+              state: data?.projects[0]?.state || false,
+              completion: data?.projects[0]?.completion || false
+            },
+            billingMethod: storedBillingMethod
+          });
+        } else if (data) {
+          setUtility({
+            project: {
+              imageUrl: "/static/images/illustrations/t&c.png",
+              name: data?.utility || false,
+              state: data?.state || false,
+              completion: false
+            },
+            billingMethod: storedBillingMethod
+          });
+        }
       })
       .catch(error => console.log(error));
   };
 
   useEffect(() => {
     global.analytics.page("Step 2");
+    let offer = localStorage.getItem("offer");
+    let isLMI = offer === "lmi";
+
+    setLMI(isLMI);
+
     getData();
   }, []);
 
@@ -160,20 +178,29 @@ function Step2() {
           primary
           onClick={() => {
             const hasBillingMethod = !!utility?.billingMethod;
-            if (hasBillingMethod) {
+            if (LMI && utility?.project?.state === "MD") {
               router.push({
-                pathname: "/onboarding/step4",
+                pathname: "/onboarding/stepLMI",
                 query: {
                   next: true
                 }
               });
             } else {
-              router.push({
-                pathname: "/onboarding/step3",
-                query: {
-                  next: true
-                }
-              });
+              if (hasBillingMethod) {
+                router.push({
+                  pathname: "/onboarding/step4",
+                  query: {
+                    next: true
+                  }
+                });
+              } else {
+                router.push({
+                  pathname: "/onboarding/step3",
+                  query: {
+                    next: true
+                  }
+                });
+              }
             }
           }}
         >
@@ -217,9 +244,6 @@ function Step2() {
         .disclaimer {
           text-align: center;
           font-size: 0.8rem;
-          margin-top: 0;
-        }
-        :global(.checkbox__label) {
           margin-top: 0;
         }
         .disclaimer {
@@ -282,6 +306,9 @@ function Step2() {
           }
           .content aside:last-child {
             padding: 30px;
+          }
+          .state-graphic {
+            bottom: 0;
           }
         }
       `}</style>
