@@ -173,6 +173,14 @@ function Step1(props) {
         localStorage.setItem("billingMethod", JSON.stringify(""));
       }
 
+      //Exception: last minute request by ceo
+      if (
+        query.affiliate &&
+        (query.affiliate == "Immerge" || query.affiliate == "NPartner1")
+      ) {
+        localStorage.setItem("billingMethod", JSON.stringify(""));
+      }
+
       props.firebase.doSignInAnonymously(userCredential => {
         localStorage.setItem("firebaseUserId", userCredential.user.uid);
         props.firebase.doUpdateUser((user, idToken) => {
