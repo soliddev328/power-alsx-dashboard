@@ -45,9 +45,9 @@ function Header(props) {
             align-items: center;
             justify-content: center;
             width: 32px;
-            position: fixed;
-            right: 20px;
-            top: 20px;
+            position: absolute;
+            right: 0;
+            top: -10px;
           }
 
           .tooltip {

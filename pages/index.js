@@ -1,18 +1,23 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Formik, Form } from "formik";
-
 import { withFirebase } from "../firebase";
-
+import axios from "axios";
 import SingleStep from "../components/SingleStep";
 import Header from "../components/Header";
 import Separator from "../components/Separator";
 import Input from "../components/Input";
 import Button from "../components/Button";
+import CONSTANTS from "../globals";
+import routeUser from "../lib/route-user";
+
+const { API } =
+  CONSTANTS.NODE_ENV !== "production" ? CONSTANTS.dev : CONSTANTS.prod;
 
 function Index(props) {
   const router = useRouter();
   const [error, setError] = useState();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const windowLocationHref = location.href;
@@ -26,6 +31,41 @@ function Index(props) {
         .then(response => {
           const { user } = response;
           global.analytics.track("User Signed In", {});
+          // if a lead that is tied to an anonymous user signs in through email
+          // then we need to update the lead with the new firebase uid.
+          //if (response.additionalUserInfo.isNewUser) {
+          user.getIdToken(true).then(async idToken => {
+            axios
+              .put(
+                `${API}/v1/subscribers`,
+                {
+                  leadFirebaseMerge: true,
+                  email: email,
+                  firebaseUserId: user.uid
+                  // email verified checkbox
+                },
+                {
+                  headers: {
+                    Authorization: idToken
+                  }
+                }
+              )
+              .then(crmResponse => {
+                const user = crmResponse?.data?.data;
+                if (user) {
+                  user.isAnonymous = false;
+                  // forward user to the right page
+                  routeUser(user);
+                } else {
+                  console.log(`No user with ${email} in the system.`);
+                }
+              })
+              .catch(error => {
+                console.log(error);
+              });
+          });
+          //}
+
           if (history && history.replaceState) {
             history.replaceState(
               {},
@@ -54,9 +94,9 @@ function Index(props) {
             code: failure.code,
             message: (
               <>
-                The password is invalid or the user does not have a password.{" "}
-                <a href="/emailsignin">Click here</a> to access your account and
-                complete sign-up.
+                The password is invalid. Try again or{" "}
+                <a href="/emailsignin">click here</a> to access your account
+                through an email link.
               </>
             )
           });

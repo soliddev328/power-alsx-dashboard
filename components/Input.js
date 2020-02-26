@@ -13,6 +13,7 @@ function Input({
   maxLength,
   style,
   value,
+  disabled,
   readOnly,
   className,
   placeholder,
@@ -55,6 +56,7 @@ function Input({
       className={cn("input__wrapper", { "outer-label": outerLabel })}
     >
       <Field
+        disabled={disabled}
         type={type ? type : "text"}
         name={fieldname}
         id={fieldname}
@@ -74,6 +76,11 @@ function Input({
       <style jsx global>{`
         input {
           background-color: ${secondary ? "#F6F9FF" : "#fff"};
+        }
+
+        input[disabled] {
+          opacity: 0.5;
+          filter: grayscale(1);
         }
 
         input:not([type="checkbox"]):active,

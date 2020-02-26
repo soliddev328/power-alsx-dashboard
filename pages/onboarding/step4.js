@@ -35,6 +35,8 @@ function Step4(props) {
   const getLinks = () => {
     let storedPostalCode = JSON.parse(localStorage.getItem("postalCode"));
     let storedUtility = JSON.parse(localStorage.getItem("utility"));
+    let storedOffer = localStorage.getItem("offer");
+    let isLmi = storedOffer && storedOffer.includes("lmi");
 
     if (storedPostalCode) {
       axios(`${API}/v1/zipcodes/${storedPostalCode}`).then(response => {
@@ -59,6 +61,15 @@ function Step4(props) {
                 terms: data.agreement.termsLink,
                 conditions: data.agreement.conditionsLink
               });
+              // hack
+              if (isLmi) {
+                setAgreement({
+                  terms:
+                    "https://s3.amazonaws.com/phinx.public/docs/Common+Energy+-+Agency+Authorization+2019-1.pdf",
+                  conditions:
+                    "https://s3.amazonaws.com/phinx.public/docs/Common+Energy+-+Subscriber+Agreement+2020N+-+LMI.pdf"
+                });
+              }
             }
           });
         }
