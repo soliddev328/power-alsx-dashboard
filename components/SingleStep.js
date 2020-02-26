@@ -76,6 +76,10 @@ function SingleStep(props) {
     const isForgotPassword = pathname.includes("/forgot-password");
     const isResetPassword = pathname.includes("/reset-password");
 
+    if (query.offer) {
+      localStorage.setItem("offer", query.offer);
+    }
+
     props.firebase.doGetCurrentUser(firebaseUser => {
       if (!!firebaseUser) {
         firebaseUser.getIdToken(true).then(idToken => {
