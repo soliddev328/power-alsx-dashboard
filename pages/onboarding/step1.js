@@ -64,9 +64,10 @@ function Step1(props) {
     let storedUtmMedium = Cookie.get("_ce_medium");
     let storedAffiliate = Cookie.get("ce_aff");
 
-    if (document.referrer) {
+    const isAffiliatePage =
+      storedReferrerPage && storedReferrerPage.includes("rep");
+    if (!isAffiliatePage && document.referrer) {
       storedReferrerPage = document.referrer;
-      setReferrerPage(storedReferrerPage);
     }
     if (storedPartnerReferral) {
       localStorage.setItem("Partner", storedPartnerReferral);
@@ -139,6 +140,7 @@ function Step1(props) {
     setUtmSource(storedUtmSource);
     setUtmMedium(storedUtmMedium);
     setOffer(storedOffer);
+    setReferrerPage(storedReferrerPage);
   }, [query]);
 
   const authenticate = values => {
