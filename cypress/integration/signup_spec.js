@@ -204,3 +204,26 @@ describe("Signup Step5: Check signup with valid information", () => {
     cy.url().should("include", "/onboarding/step2");
   });
 });
+
+describe("Signup Step6: URL parameters that populate fields", () => {
+  before(() => {
+    cy.clearLocalStorage();
+    cy.logout();
+  });
+  it("Zipcode, utility, email, first and last names should be populated with the correct data", () => {
+    cy.visit(
+      "/onboarding/step1?zipcode=02461&utility=National+Grid&email=test%40commonenergy.us&fname=John&lname=Major&phone=%28617%29+6781706"
+    );
+    cy.get("#__next .content").contains("form");
+    cy.get("form #postalCode").should("have.value", "02461");
+    cy.get("#currentUtility .select__value-container")
+      .find(".select__option")
+      .should($el => {
+        expect($el).to.have.length(1);
+        expect($el[0]).to.have.contain("National Grid");
+      });
+    cy.get("form #firstName").should("have.value", "John");
+    cy.get("form #lastName").should("have.value", "Major");
+    cy.get("form #emailAddress").should("have.value", "test@commonenergy.us");
+  });
+});
