@@ -1,6 +1,10 @@
 // Signup Flow Testing
 
 describe("Signup Step1: Check if there is one utility, it is seleted automatically", () => {
+  before(() => {
+    cy.clearLocalStorage();
+    cy.logout();
+  });
   it("Step1 page should have Zipcode and Utility inputs.", () => {
     cy.visit("/onboarding/step1");
     cy.get("#__next .content").contains("form");
@@ -171,5 +175,32 @@ describe("Signup Step4: Check signup when zipcode is out of region", () => {
     });
     cy.get(".content form").find("#email");
     cy.get(".content form #email").should("be.visible");
+  });
+});
+
+describe("Signup Step5: Check signup with valid information", () => {
+  before(() => {
+    cy.clearLocalStorage();
+    cy.logout();
+  });
+  it("User should be moved to the next page - Step2", () => {
+    cy.visit("/onboarding/step1");
+    cy.get("#__next .content").contains("form");
+    cy.get("#postalCode").clear();
+    cy.get("#postalCode").type("10128");
+    cy.wait(1500);
+    cy.get("#firstName").clear();
+    cy.get("#firstName").type("John");
+    cy.get("#lastName").clear();
+    cy.get("#lastName").type("Major");
+    cy.get("#emailAddress").clear();
+    const timestamp = new Date().getTime() / 1000;
+    cy.get("#emailAddress").type(`ce-randomnumber@test${timestamp}.com`);
+    cy.get(".content form")
+      .find("button[type='submit']")
+      .click();
+    cy.wait(1500);
+    cy.url().should("not.include", "/onboarding/step1");
+    cy.url().should("include", "/onboarding/step2");
   });
 });
