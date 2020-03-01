@@ -199,7 +199,7 @@ describe("Signup Step5: Check signup with valid information", () => {
     cy.get(".content form")
       .find("button[type='submit']")
       .click();
-    cy.wait(1500);
+    cy.wait(15000);
     cy.url().should("not.include", "/onboarding/step1");
     cy.url().should("include", "/onboarding/step2");
   });
@@ -225,5 +225,98 @@ describe("Signup Step6: URL parameters that populate fields", () => {
     cy.get("form #firstName").should("have.value", "John");
     cy.get("form #lastName").should("have.value", "Major");
     cy.get("form #emailAddress").should("have.value", "test@commonenergy.us");
+  });
+});
+
+describe("Signup Step7: Affiliate parameters", () => {
+  before(() => {
+    cy.clearLocalStorage();
+    cy.logout();
+  });
+  it("Localstorage.get('Affiliate') should return 'Bteal'", () => {
+    cy.visit("/onboarding/step1?affiliate=Bteal");
+    cy.get("#__next .content")
+      .contains("form")
+      .should(() => {
+        expect(localStorage.getItem("Affiliate")).to.eq("Bteal");
+      });
+  });
+});
+
+describe("Signup Step8: Existing lead (with firebase user) should get error message when trying to signup", () => {
+  before(() => {
+    cy.clearLocalStorage();
+    cy.logout();
+  });
+  it("User should not continue to next step", () => {
+    const timestamp = new Date().getTime() / 1000;
+
+    cy.visit("/onboarding/step1");
+    cy.get("#__next .content").contains("form");
+    cy.get("#postalCode").clear();
+    cy.get("#postalCode").type("10128");
+    cy.wait(1500);
+    cy.get("#firstName").clear();
+    cy.get("#firstName").type("John");
+    cy.get("#lastName").clear();
+    cy.get("#lastName").type("Major");
+    cy.get("#emailAddress").clear();
+    cy.get("#emailAddress").type(`ce-randomnumber@test${timestamp}.com`);
+    cy.get(".content form")
+      .find("button[type='submit']")
+      .click();
+    cy.wait(15000);
+    cy.url().should("not.include", "/onboarding/step1");
+    cy.url().should("include", "/onboarding/step2");
+
+    cy.clearLocalStorage();
+    cy.logout();
+    cy.visit("/onboarding/step1");
+    cy.get("#postalCode").clear();
+    cy.get("#postalCode").type("10128");
+    cy.wait(1500);
+    cy.get("#firstName").clear();
+    cy.get("#firstName").type("John2");
+    cy.get("#lastName").clear();
+    cy.get("#lastName").type("Major2");
+    cy.get("#emailAddress").clear();
+    cy.get("#emailAddress").type(`ce-randomnumber@test${timestamp}.com`);
+    cy.get(".content form")
+      .find("button[type='submit']")
+      .click();
+    cy.wait(15000);
+    cy.url().should("include", "/onboarding/step1");
+    cy.url().should("not.include", "/onboarding/step2");
+    cy.get("#__next .content").contains("form");
+    cy.get("form p.error").should($el => {
+      expect($el).to.be.length(1);
+      expect($el[0]).to.be.visible;
+    });
+  });
+});
+
+describe("Signup Step9: Referral lead should be able to go to step2", () => {
+  before(() => {
+    cy.clearLocalStorage();
+    cy.logout();
+  });
+  it("User should go to next step - Step2", () => {
+    cy.visit("/onboarding/step1");
+    cy.get("#__next .content").contains("form");
+    cy.get("#postalCode").clear();
+    cy.get("#postalCode").type("10128");
+    cy.wait(1500);
+    cy.get("#firstName").clear();
+    cy.get("#firstName").type("John2");
+    cy.get("#lastName").clear();
+    cy.get("#lastName").type("Major2");
+    cy.get("#emailAddress").clear();
+    const timestamp = new Date().getTime() / 1000;
+    cy.get("#emailAddress").type(`ce-randomnumber@test${timestamp}.com`);
+    cy.get(".content form")
+      .find("button[type='submit']")
+      .click();
+    cy.wait(15000);
+    cy.url().should("include", "/onboarding/step2");
   });
 });
