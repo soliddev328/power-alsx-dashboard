@@ -177,6 +177,7 @@ function Step2() {
         <Button
           primary
           onClick={() => {
+            const hasBillingMethod = !!utility?.billingMethod;
             if (LMI && utility?.project?.state === "MD") {
               router.push({
                 pathname: "/onboarding/stepLMI",
@@ -185,7 +186,7 @@ function Step2() {
                 }
               });
             } else {
-              if (utility?.billingMethod?.indexOf("paper") >= 0) {
+              if (hasBillingMethod) {
                 router.push({
                   pathname: "/onboarding/step4",
                   query: {
