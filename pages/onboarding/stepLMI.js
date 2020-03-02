@@ -11,6 +11,7 @@ import Dropdown from "../../components/Dropdown";
 import Checkbox from "../../components/Checkbox";
 import SingleStep from "../../components/SingleStep";
 import Button from "../../components/Button";
+import RadioCard from "../../components/RadioCard";
 import CONSTANTS from "../../globals";
 
 const { API } =
@@ -153,10 +154,46 @@ function StepLMI(props) {
                   onChangeEvent={props.setFieldValue}
                   onBlurEvent={props.setFieldTouched}
                 />
-                <Checkbox fieldname="attestInformation">
+                <RadioCard
+                  number="1"
+                  name="attestInformation"
+                  value="option1"
+                  heading="Option 1"
+                  content="I authorize Common Energy to verify my income to see if I qualify for Maryland's additional LMI discount."
+                />
+                <RadioCard
+                  number="2"
+                  name="attestInformation"
+                  value="option2"
+                  heading="Option 2"
+                  content="I attest that I meet Maryland's low and middle income
+									requirements"
+                />
+                <RadioCard
+                  number="3"
+                  name="attestInformation"
+                  value="option3"
+                  heading="Option 3"
+                  content="I do not believe I meet Maryland's low and middle income
+									requirements."
+                />
+
+                <Checkbox fieldname="attestInformation1">
                   <p className="checkbox__label">
                     I authorize Common Energy to verify my income to see if I
                     qualify for Maryland's additional LMI discount.
+                  </p>
+                </Checkbox>
+                <Checkbox fieldname="attestInformation2">
+                  <p className="checkbox__label">
+                    I attest that I meet Maryland's low and middle income
+                    requirements.
+                  </p>
+                </Checkbox>
+                <Checkbox fieldname="attestInformation3">
+                  <p className="checkbox__label">
+                    I do not believe I meet Maryland's low and middle income
+                    requirements.
                   </p>
                 </Checkbox>
                 {console.log(!props.values.userSSN.includes(" "))}
