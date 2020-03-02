@@ -41,6 +41,7 @@
   },
   "devDependencies": {
     "cypress": "^4.0.2",
+    "cypress-firebase": "^0.10.2",
     "lint-staged": "^10.0.7",
     "pre-commit": "1.2.2",
     "prettier": "^1.19.1",
