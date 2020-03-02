@@ -169,7 +169,17 @@ function Step1(props) {
 
       if (utility.paperOnly) {
         localStorage.setItem("billingMethod", JSON.stringify("paper"));
+      } else if (query.affiliate) {
+        localStorage.setItem("billingMethod", JSON.stringify("online"));
       } else {
+        localStorage.setItem("billingMethod", JSON.stringify(""));
+      }
+
+      //Exception: last minute request by ceo
+      if (
+        query.affiliate &&
+        (query.affiliate == "Immerge" || query.affiliate == "NPartner1")
+      ) {
         localStorage.setItem("billingMethod", JSON.stringify(""));
       }
 
