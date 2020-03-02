@@ -64,9 +64,10 @@ function Step1(props) {
     let storedUtmMedium = Cookie.get("_ce_medium");
     let storedAffiliate = Cookie.get("ce_aff");
 
-    if (document.referrer) {
+    const isAffiliatePage =
+      storedReferrerPage && storedReferrerPage.includes("rep");
+    if (!isAffiliatePage && document.referrer) {
       storedReferrerPage = document.referrer;
-      setReferrerPage(storedReferrerPage);
     }
     if (storedPartnerReferral) {
       localStorage.setItem("Partner", storedPartnerReferral);
@@ -139,6 +140,7 @@ function Step1(props) {
     setUtmSource(storedUtmSource);
     setUtmMedium(storedUtmMedium);
     setOffer(storedOffer);
+    setReferrerPage(storedReferrerPage);
   }, [query]);
 
   const authenticate = values => {
@@ -167,7 +169,17 @@ function Step1(props) {
 
       if (utility.paperOnly) {
         localStorage.setItem("billingMethod", JSON.stringify("paper"));
+      } else if (query.affiliate) {
+        localStorage.setItem("billingMethod", JSON.stringify("online"));
       } else {
+        localStorage.setItem("billingMethod", JSON.stringify(""));
+      }
+
+      //Exception: last minute request by ceo
+      if (
+        query.affiliate &&
+        (query.affiliate == "Immerge" || query.affiliate == "NPartner1")
+      ) {
         localStorage.setItem("billingMethod", JSON.stringify(""));
       }
 
