@@ -20,15 +20,15 @@ class Sorry extends React.PureComponent {
   componentDidMount() {
     global.analytics.page("Out of area");
 
-    const storedName = "";
-    const storedPostalCode = "";
-    const storedAddress = "";
-    const storedPartner = "";
-    const storedReferrer = "";
-    const storedSalesRep = "";
-    const storedUtmCampaign = "";
-    const storedUtmMedium = "";
-    const storedUtmSource = "";
+    let storedName = "";
+    let storedPostalCode = "";
+    let storedAddress = "";
+    let storedPartner = "";
+    let storedReferrer = "";
+    let storedSalesRep = "";
+    let storedUtmCampaign = "";
+    let storedUtmMedium = "";
+    let storedUtmSource = "";
 
     if (localStorage.getItem("username")) {
       storedName = JSON.parse(localStorage.getItem("username"));
