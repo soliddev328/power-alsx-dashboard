@@ -21,7 +21,7 @@ function Index(props) {
 
   useEffect(() => {
     const windowLocationHref = location.href;
-    const email = localStorage.getItem("email") || false;
+    let email = localStorage.getItem("email") || false;
     if (props.firebase.doCheckIsSignInWithEmailLink(windowLocationHref)) {
       if (!email) {
         email = prompt("Please provide your email for confirmation");
