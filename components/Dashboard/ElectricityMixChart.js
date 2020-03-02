@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { PieChart, Pie, Cell } from "recharts";
+import { PieChart, Pie, Cell, Tooltip } from "recharts";
 import axios from "axios";
 import Text from "../Text";
 import { useStateValue } from "../../state";
@@ -126,6 +126,10 @@ function ElectricityMixChart(props) {
         <aside>
           <Text style={{ textAlign: "center" }}>Utility's Electricity Mix</Text>
           <PieChart width={180} height={180}>
+            <Tooltip
+              formatter={(value, name, props) => [`${value.toFixed(2)}%`, name]}
+              contentStyle={{ padding: "0 8px" }}
+            />
             <Pie
               data={oldData}
               dataKey="value"
@@ -149,6 +153,10 @@ function ElectricityMixChart(props) {
             Your Electricity Mix with Common Energy
           </Text>
           <PieChart width={180} height={180}>
+            <Tooltip
+              formatter={(value, name, props) => [`${value.toFixed(2)}%`, name]}
+              contentStyle={{ padding: "0 8px" }}
+            />
             <Pie
               data={newData}
               dataKey="value"
