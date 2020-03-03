@@ -11,7 +11,7 @@ import Dropdown from "../../components/Dropdown";
 import Checkbox from "../../components/Checkbox";
 import SingleStep from "../../components/SingleStep";
 import Button from "../../components/Button";
-import RadioCard from "../../components/RadioCard";
+import RadioCard from "../../components/RadioCard2";
 import CONSTANTS from "../../globals";
 
 const { API } =
@@ -39,18 +39,6 @@ function StepLMI(props) {
   }, []);
 
   const saveData = values => {
-    // const spouseData = {};
-
-    // if (values.householdMembers > 1) {
-    //   spouseData.spouseFirstName = values.spouseFirstName;
-    //   spouseData.spouseLastName = values.spouseLastName;
-    //   spouseData.spouseSSN = values.spouseSSN;
-    // } else {
-    //   spouseData.spouseFirstName = "";
-    //   spouseData.spouseLastName = "";
-    //   spouseData.spouseSSN = "";
-    // }
-
     props.firebase
       .doGetCurrentUserIdToken(idToken => {
         axios.put(
@@ -104,112 +92,114 @@ function StepLMI(props) {
           >
             {props => (
               <Form>
-                <div className="dropdown">
-                  <p>How many members are in your household?</p>
-                  <Dropdown
-                    options={[
-                      { value: "1", label: "1" },
-                      { value: "2", label: "2" },
-                      { value: "3", label: "3" },
-                      { value: "4", label: "4" },
-                      { value: "5", label: "5" },
-                      { value: "6", label: "6" },
-                      { value: "7", label: "7" },
-                      { value: "8", label: "8" }
-                    ]}
-                    value={props.householdMembers}
-                    onChange={props.setFieldValue}
-                    onBlur={props.setFieldTouched}
-                    touched={props.touched}
-                    fieldname="householdMembers"
-                  ></Dropdown>
-                </div>
-                <Input fieldname="userName" required value={name || ""} />
-                <SSNInput
-                  label="SSN"
-                  fieldname="userSSN"
-                  onChangeEvent={props.setFieldValue}
-                  onBlurEvent={props.setFieldTouched}
-                  required
-                />
-
-                <p>
-                  If a joint return, please enter your spouse's information as
-                  shown on the tax return.
-                </p>
-                <Input
-                  disabled={parseInt(props.values.householdMembers.value) < 2}
-                  label="Spouse First Name"
-                  fieldname="spouseFirstName"
-                />
-                <Input
-                  disabled={parseInt(props.values.householdMembers.value) < 2}
-                  label="Spouse Last Name"
-                  fieldname="spouseLastName"
-                />
-                <SSNInput
-                  disabled={parseInt(props.values.householdMembers.value) < 2}
-                  label="Spouse SSN"
-                  fieldname="spouseSSN"
-                  onChangeEvent={props.setFieldValue}
-                  onBlurEvent={props.setFieldTouched}
-                />
                 <RadioCard
                   number="1"
                   name="attestInformation"
                   value="option1"
                   heading="Option 1"
-                  content="I authorize Common Energy to verify my income to see if I qualify for Maryland's additional LMI discount."
+                  content="I attest that I meet Maryland's low and middle income
+									requirements"
                 />
                 <RadioCard
                   number="2"
                   name="attestInformation"
                   value="option2"
                   heading="Option 2"
-                  content="I attest that I meet Maryland's low and middle income
-									requirements"
+                  content="I do not believe I meet Maryland's low and middle income
+									requirements."
                 />
                 <RadioCard
                   number="3"
                   name="attestInformation"
                   value="option3"
                   heading="Option 3"
-                  content="I do not believe I meet Maryland's low and middle income
-									requirements."
+                  content="I authorize Common Energy to verify my income to see if I qualify for Maryland's additional LMI discount."
                 />
 
-                <Checkbox fieldname="attestInformation1">
-                  <p className="checkbox__label">
-                    I authorize Common Energy to verify my income to see if I
-                    qualify for Maryland's additional LMI discount.
-                  </p>
-                </Checkbox>
-                <Checkbox fieldname="attestInformation2">
-                  <p className="checkbox__label">
-                    I attest that I meet Maryland's low and middle income
-                    requirements.
-                  </p>
-                </Checkbox>
-                <Checkbox fieldname="attestInformation3">
-                  <p className="checkbox__label">
-                    I do not believe I meet Maryland's low and middle income
-                    requirements.
-                  </p>
-                </Checkbox>
-                {console.log(!props.values.userSSN.includes(" "))}
-                <Button
-                  primary
-                  disabled={
-                    !props.values.householdMembers != "" ||
-                    parseInt(props.values.householdMembers.value) < 1 ||
-                    !props.values.userName != "" ||
-                    !props.values.userSSN != "" ||
-                    props.values.userSSN.includes(" ") ||
-                    !props.values.attestInformation != ""
-                  }
-                >
-                  Next
-                </Button>
+                {console.log(props.values.attestInformation)}
+                {props?.values?.attestInformation == "option3" ? (
+                  <div>
+                    {" "}
+                    <div className="dropdown">
+                      <p>How many members are in your household?</p>
+                      <Dropdown
+                        options={[
+                          { value: "1", label: "1" },
+                          { value: "2", label: "2" },
+                          { value: "3", label: "3" },
+                          { value: "4", label: "4" },
+                          { value: "5", label: "5" },
+                          { value: "6", label: "6" },
+                          { value: "7", label: "7" },
+                          { value: "8", label: "8" }
+                        ]}
+                        value={props.householdMembers}
+                        onChange={props.setFieldValue}
+                        onBlur={props.setFieldTouched}
+                        touched={props.touched}
+                        fieldname="householdMembers"
+                      ></Dropdown>
+                    </div>
+                    <Input fieldname="userName" required value={name || ""} />
+                    <SSNInput
+                      label="SSN"
+                      fieldname="userSSN"
+                      onChangeEvent={props.setFieldValue}
+                      onBlurEvent={props.setFieldTouched}
+                      required
+                    />
+                    <p>
+                      If a joint return, please enter your spouse's information
+                      as shown on the tax return.
+                    </p>
+                    <Input
+                      disabled={
+                        parseInt(props.values.householdMembers.value) < 2
+                      }
+                      label="Spouse First Name"
+                      fieldname="spouseFirstName"
+                    />
+                    <Input
+                      disabled={
+                        parseInt(props.values.householdMembers.value) < 2
+                      }
+                      label="Spouse Last Name"
+                      fieldname="spouseLastName"
+                    />
+                    <SSNInput
+                      disabled={
+                        parseInt(props.values.householdMembers.value) < 2
+                      }
+                      label="Spouse SSN"
+                      fieldname="spouseSSN"
+                      onChangeEvent={props.setFieldValue}
+                      onBlurEvent={props.setFieldTouched}
+                    />
+                    <Button
+                      primary
+                      disabled={
+                        !props.values.householdMembers != "" ||
+                        parseInt(props.values.householdMembers.value) < 1 ||
+                        !props.values.userName != "" ||
+                        !props.values.userSSN != "" ||
+                        props.values.userSSN.includes(" ") ||
+                        !props.values.attestInformation != ""
+                      }
+                    >
+                      Next
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    primary
+                    disabled={
+                      props.values.attestInformation != "option1" &&
+                      props.values.attestInformation != "option2"
+                    }
+                  >
+                    Next
+                  </Button>
+                )}
               </Form>
             )}
           </Formik>
