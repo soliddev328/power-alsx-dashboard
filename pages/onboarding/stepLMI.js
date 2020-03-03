@@ -51,7 +51,8 @@ function StepLMI(props) {
             ssn: values.userSSN,
             spouseFirstName: values.spouseFirstName,
             spouseLastName: values.spouseLastName,
-            spouseSSN: values.spouseSSN
+            spouseSSN: values.spouseSSN,
+            lmiApplicationType: values.attestInformation
           },
           {
             headers: {
@@ -95,7 +96,7 @@ function StepLMI(props) {
                 <RadioCard
                   number="1"
                   name="attestInformation"
-                  value="option1"
+                  value="Subscriber attests"
                   heading="Option 1"
                   content="I attest that I meet Maryland's low and middle income
 									requirements"
@@ -103,7 +104,7 @@ function StepLMI(props) {
                 <RadioCard
                   number="2"
                   name="attestInformation"
-                  value="option2"
+                  value="N/A"
                   heading="Option 2"
                   content="I do not believe I meet Maryland's low and middle income
 									requirements."
@@ -111,13 +112,13 @@ function StepLMI(props) {
                 <RadioCard
                   number="3"
                   name="attestInformation"
-                  value="option3"
+                  value="Common to verify"
                   heading="Option 3"
                   content="I authorize Common Energy to verify my income to see if I qualify for Maryland's additional LMI discount."
                 />
 
                 {console.log(props.values.attestInformation)}
-                {props?.values?.attestInformation == "option3" ? (
+                {props?.values?.attestInformation == "Common to verify" ? (
                   <div>
                     {" "}
                     <div className="dropdown">
@@ -193,8 +194,8 @@ function StepLMI(props) {
                   <Button
                     primary
                     disabled={
-                      props.values.attestInformation != "option1" &&
-                      props.values.attestInformation != "option2"
+                      props.values.attestInformation != "Subscriber attests" &&
+                      props.values.attestInformation != "N/A"
                     }
                   >
                     Next
