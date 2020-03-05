@@ -20,15 +20,15 @@ class Sorry extends React.PureComponent {
   componentDidMount() {
     global.analytics.page("Out of area");
 
-    const storedName = "";
-    const storedPostalCode = "";
-    const storedAddress = "";
-    const storedPartner = "";
-    const storedReferrer = "";
-    const storedSalesRep = "";
-    const storedUtmCampaign = "";
-    const storedUtmMedium = "";
-    const storedUtmSource = "";
+    let storedName = "";
+    let storedPostalCode = "";
+    let storedAddress = "";
+    let storedPartner = "";
+    let storedReferrer = "";
+    let storedSalesRep = "";
+    let storedUtmCampaign = "";
+    let storedUtmMedium = "";
+    let storedUtmSource = "";
 
     if (localStorage.getItem("username")) {
       storedName = JSON.parse(localStorage.getItem("username"));
@@ -86,46 +86,8 @@ class Sorry extends React.PureComponent {
         <Header />
         <SingleStep
           toast="I'm Sorry"
-          title="We don't have a project in your area at this time. Join our subscriber list and help us get one!"
-        >
-          <Formik
-            initialValues={{
-              email: ""
-            }}
-            onSubmit={values => {
-              axios
-                .post(`${API}/v1/subscribers`, {
-                  LastName: values.email,
-                  postalCode: postalCode,
-                  Phone: "9999999999",
-                  Email: values.email,
-                  Referrer: referrer,
-                  Partner: partner,
-                  SalesRep: salesRep,
-                  utmCampaign: utmCampaign,
-                  utmMedium: utmMedium,
-                  utmSource: utmSource
-                })
-                .then(() => {
-                  Router.push({
-                    pathname: "/"
-                  });
-                })
-                .catch(() => {});
-            }}
-          >
-            {props => (
-              <>
-                <Form>
-                  <Input label="email" fieldname="email" />
-                  <Button primary disabled={!!props.values.email === false}>
-                    Next
-                  </Button>
-                </Form>
-              </>
-            )}
-          </Formik>
-        </SingleStep>
+          title="We don't have a project in your area at this time. We have added you to our waitlist, and will update when we have a project!"
+        ></SingleStep>
         <style jsx>{`
           main {
             display: block;
