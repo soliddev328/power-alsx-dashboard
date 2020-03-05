@@ -98,8 +98,7 @@ function StepLMI(props) {
                   name="attestInformation"
                   value="Subscriber attests"
                   heading="Option 1"
-                  content="I attest that I meet Maryland's low and middle income
-									requirements"
+                  content="I attest that I meet Maryland's low income requirements."
                 />
                 <RadioCard
                   number="2"
