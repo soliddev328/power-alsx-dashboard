@@ -158,7 +158,7 @@ function Step4(props) {
 
                   localStorage.setItem("linkedUtility", JSON.stringify(data));
 
-                  if (data[0]) {
+                  if (data && data[0]) {
                     if (data[0].hasLoggedIn) {
                       localStorage.setItem("partialConnection", false);
                       if (user.isAnonymous) {
