@@ -108,15 +108,14 @@ function StepLMI(props) {
                   content="I do not believe I meet Maryland's low and middle income
 									requirements."
                 />
-                <RadioCard
+                {/* <RadioCard
                   number="3"
                   name="attestInformation"
                   value="Common to verify"
                   heading="Option 3"
                   content="I authorize Common Energy to verify my income to see if I qualify for Maryland's additional LMI discount."
-                />
+                /> */}
 
-                {console.log(props.values.attestInformation)}
                 {props?.values?.attestInformation == "Common to verify" ? (
                   <div>
                     {" "}
