@@ -353,7 +353,7 @@ function Step4(props) {
           />
           <p>Connecting your account</p>
         </div>
-        <p className="suffix">(this may take up to 10 seconds)</p>
+        <p className="suffix">(this may take up to 20 seconds)</p>
         <style jsx>{`
           .loading {
             display: flex;
