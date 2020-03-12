@@ -8,7 +8,9 @@
     "dev-old": "next",
     "build": "next build",
     "now-build": "next build",
-    "lint:staged": "lint-staged"
+    "lint:staged": "lint-staged",
+    "e2e": "start-test dev-old 3000 cy:open",
+    "cy:open": "cypress open"
   },
   "keywords": [],
   "author": "",
@@ -38,9 +40,12 @@
     "zippo": "^1.0.1"
   },
   "devDependencies": {
+    "cypress": "^4.0.2",
+    "cypress-firebase": "^0.10.2",
     "lint-staged": "^10.0.7",
     "pre-commit": "1.2.2",
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "start-server-and-test": "^1.10.8"
   },
   "lint-staged": {
     "*.js": [
