@@ -51,6 +51,7 @@ class Firebase {
     );
 
   doSignOut = () => {
+    global.analytics.reset();
     localStorage.clear();
     this.auth.signOut();
   };
