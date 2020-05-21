@@ -1,7 +1,6 @@
 {
-  "name": "common-energy",
+  "name": "power-alsx-dashboard",
   "version": "0.1.0",
-  "repository": "https://github.com/CommonEnergy/comenergy-customer-portal",
   "main": "index.js",
   "scripts": {
     "start": "next start",
